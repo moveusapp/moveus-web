@@ -24,6 +24,7 @@ import {
   surveyInfoKeyToOptions,
   surveyInfoKeyToTitle,
 } from "@/utils/maps/survery-info-maps";
+import duckHappy from '@/assets/duck/duck-happy.svg'
 
 enum ProfileSetupState {
   START,
@@ -285,7 +286,7 @@ function ProfileSetupPage() {
           </Link>
 
           <img
-            src="/duck/happy.svg"
+            src={duckHappy}
             alt="Happy duck"
             className="fixed right-6 h-[30vh] bottom-2"
           />

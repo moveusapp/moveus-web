@@ -78,7 +78,7 @@ function EventPage() {
                 <EventParticipantsTab
                   members={
                     event === undefined
-                      ? Array(8).fill(undefined)
+                      ? Array(6).fill(undefined)
                       : event!.members
                   }
                 />

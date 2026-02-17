@@ -1,5 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 import { HiBell, HiMagnifyingGlass } from "react-icons/hi2";
+import moveusLogo from "@/assets/logos/moveus-logo.svg"
 
 function HeaderRoutes() {
   return (
@@ -8,7 +9,7 @@ function HeaderRoutes() {
         <Link to="/notifications">
           <HiBell />
         </Link>
-        <img src="/logo.svg" className="w-24" />
+        <img src={moveusLogo} className="w-24" />
         <Link to="/search">
           <HiMagnifyingGlass />
         </Link>

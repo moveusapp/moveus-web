@@ -4,6 +4,7 @@ import InputImage from "./image-crop";
 import { apolloClient } from "@/appolo/client";
 import { GetProfilePictureUploadUrlDocument } from "@/graphql/generated";
 import { base64ToBlob } from "@/utils/image-data";
+import defaultAvatar from "@/assets/default-images/user-default-avatar.svg"
 
 function UserAvatar({ userId, canChange, className }: UserImageProps) {
   const [image, setImage] = useState<string>(
@@ -79,7 +80,7 @@ function UserAvatar({ userId, canChange, className }: UserImageProps) {
           className="aspect-square"
           alt="User"
           onError={() => {
-            setImage("/default-images/user.svg");
+            setImage(defaultAvatar);
           }}
         />
       </div>
