@@ -7,6 +7,11 @@ function EventTab({
   event: { id, title, startTime, location, participantCount },
   ongoing = false,
 }: EventTabProps) {
+  // TODO: Hack fix. Find root cause.
+  if (typeof(startTime) === 'string') {
+    startTime = new Date(startTime)
+  } 
+
   return (
     <div
       className={
