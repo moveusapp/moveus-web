@@ -1,0 +1,55 @@
+.usertab {
+  @apply flex items-center gap-4;
+}
+
+.usertab img {
+  @apply w-12 aspect-square rounded-full;
+}
+
+.usertab .inner {
+  @apply flex flex-col !m-0;
+}
+
+.usertab .tags {
+  @apply flex gap-2 text-xs text-background;
+}
+
+.usertab .tags p {
+  @apply bg-block-accent px-2 rounded-full;
+}
+
+.usertab h4 {
+  @apply p-0 !m-0 leading-tight;
+}
+
+.usertab .username {
+  @apply text-sm leading-tight;
+}
+
+.event-detail p:first-child {
+  @apply text-xs leading-tight font-medium;
+}
+
+.event-detail p:last-child {
+  @apply font-medium;
+}
+
+.notification {
+  @apply bg-block p-6 rounded-[15px];
+}
+
+.notification div {
+  @apply flex items-end;
+}
+
+.notification h3 {
+  @apply font-medium text-lg;
+}
+
+.notification div p {
+  @apply text-xs text-right grow;
+}
+
+.notification > p {
+  @apply text-sm;
+}

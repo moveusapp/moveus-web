@@ -1,4 +1,4 @@
-mutation UpdateAllPrivacySettings ($scope: PrivacyScope!) {
+mutation UpdateAllPrivacySettings($scope: PrivacyScope!) {
   updateAllPrivacySettings(scope: $scope) {
     success
   }

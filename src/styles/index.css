@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: Quicksand, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @apply p-0 text-foreground bg-background overflow-hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ceefff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #60ccf2;
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+main {
+  @apply max-w-2xl mx-auto h-screen px-8 flex flex-col;
+  height: 100dvh;
+}
+
+.container-center {
+  @apply h-full flex flex-col items-center justify-center;
+}
+
+button,
+input[type="submit"] {
+  @apply block text-center bg-accent rounded-[15px] px-1 py-4
+  md:text-xl font-semibold text-background w-full;
+}
+
+label {
+  @apply block w-full;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+textarea {
+  @apply block w-full rounded-[15px] border-solid border border-foreground md:p-6 p-4 outline-foreground bg-background;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+input[type="email"]::placeholder,
+textarea::placeholder {
+  @apply text-accent;
+}
+
+.main-text {
+  @apply text-3xl font-medium mb-4 self-start;
+}
+
+h4 {
+  @apply text-xl mb-2 mt-4 self-start;
+}
+
+.vertical {
+  @apply flex flex-col flex-1 overflow-hidden;
+}

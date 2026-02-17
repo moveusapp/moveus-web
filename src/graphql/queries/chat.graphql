@@ -1,5 +1,5 @@
 query GetUserChat($userId: Int!) {
-  userChat (userId: $userId) {
+  userChat(userId: $userId) {
     id
     members {
       user {

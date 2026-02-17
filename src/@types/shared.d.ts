@@ -1,10 +1,9 @@
 interface Option<T> {
-    name: string,
-    value: T
+  name: string;
+  value: T;
 }
 
 interface LocationCoordinates {
-    lat: number,
-    lng: number
+  lat: number;
+  lng: number;
 }
-

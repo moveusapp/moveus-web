@@ -1,4 +1,4 @@
-subscription ChatMessages ($chatId: Int!) {
+subscription ChatMessages($chatId: Int!) {
   chatMessages(chatId: $chatId) {
     ...WSChatMessagesFragment
   }

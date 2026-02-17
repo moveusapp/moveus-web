@@ -1,5 +1,5 @@
-query GetUserQuery ($userId: Int!) {
-    user (id: $userId) {
-        ...UserFragment
-    }
+query GetUserQuery($userId: Int!) {
+  user(id: $userId) {
+    ...UserFragment
+  }
 }

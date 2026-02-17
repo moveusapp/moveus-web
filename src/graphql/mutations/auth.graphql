@@ -1,21 +1,14 @@
 mutation LoginUser($user: String!, $password: String!) {
-  login (
-    user: $user,
-    password: $password
-  ) {
-    myProfile { 
+  login(user: $user, password: $password) {
+    myProfile {
       ...ContextProfileFragment
     }
   }
 }
 
 mutation SignupUser($username: String!, $password: String!, $email: String!) {
-  signup (
-    username: $username,
-    email: $email,
-    password: $password
-  ) {
-    myProfile { 
+  signup(username: $username, email: $email, password: $password) {
+    myProfile {
       ...ContextProfileFragment
     }
   }

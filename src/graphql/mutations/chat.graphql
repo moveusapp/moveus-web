@@ -1,11 +1,7 @@
-mutation SendMessage (
-  $chatId: Int!,
-  $message: String,
-  $attachmentId: String
-) {
-  sendChatMessage (
-    chatId: $chatId,
-    message: $message,
+mutation SendMessage($chatId: Int!, $message: String, $attachmentId: String) {
+  sendChatMessage(
+    chatId: $chatId
+    message: $message
     attachmentId: $attachmentId
   ) {
     success

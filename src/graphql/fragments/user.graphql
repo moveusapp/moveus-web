@@ -19,7 +19,7 @@ fragment BasicInfoFragment on ProfileType {
   gender
 }
 
-fragment ContextProfileFragment on ProfileType{
+fragment ContextProfileFragment on ProfileType {
   id
   username
   email
@@ -58,7 +58,7 @@ fragment UserFragment on UserType {
     chat {
       id
     }
-  } 
+  }
   organizes {
     ...EventTabFragment
   }
