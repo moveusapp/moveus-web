@@ -46,12 +46,12 @@ function Dropdown<T>({
       >
         <p className="pr-4">{name}</p>
         {open ? (
-          <GoTriangleDown
+          <GoTriangleUp
             className="text-foreground"
             onClick={() => setOpen(false)}
           />
         ) : (
-          <GoTriangleUp
+          <GoTriangleDown
             className="text-foreground"
             onClick={(e) => {
               setOpen(true);
