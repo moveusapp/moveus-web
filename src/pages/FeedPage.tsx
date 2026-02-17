@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import { HashLoader } from "react-spinners";
-import UserImage from "@/components/images/UserImage";
-import { LOADER_COLOR } from "@/constants";
+import UserAvatar from "@/components/images/UserAvatar";
 import { useGetFeedQuery } from "@/graphql/generated";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function FeedPage() {
   useDocumentTitle("Feed");
@@ -30,15 +30,11 @@ function FeedPage() {
 
   return (
     <div className="vertical">
-      {loading ? (
-        <div className="grow flex justify-center items-center">
-          <HashLoader color={LOADER_COLOR} />
-        </div>
-      ) : posts?.length === 0 ? (
-        <p className="text-center mt-8 text-sm">feed empty</p>
-      ) : (
-        <div className="grow overflow-y-auto gap-4 flex flex-col pb-8">
-          {posts?.map(
+      <div className="grow overflow-y-auto gap-4 flex flex-col pb-8">
+        {loading ? (
+          <Skeleton count={3} height={170} borderRadius={10}/>
+        ) : (
+          posts?.map(
             (post) =>
               post && (
                 <div
@@ -49,7 +45,7 @@ function FeedPage() {
                     {timeAgo(post.timePosted)}
                   </p>
                   <div className="usertab mt-auto mb-8">
-                    <UserImage
+                    <UserAvatar
                       canChange={false}
                       userId={post.organizer!.user.id!}
                       className="inline-block"
@@ -65,9 +61,7 @@ function FeedPage() {
                           post.organizer!.user.lastName,
                         )}
                       </h4>
-                      <p className="username">
-                        @{post.organizer!.user.username}
-                      </p>
+                      <p className="username">@{post.organizer!.user.username}</p>
                     </div>
                   </div>
                   <h2 className="main-text">{post.title}</h2>
@@ -80,9 +74,9 @@ function FeedPage() {
                   <p>{post.content}</p>
                 </div>
               ),
-          )}
-        </div>
-      )}
+          )
+        )}
+      </div>
     </div>
   );
 }

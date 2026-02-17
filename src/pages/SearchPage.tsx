@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useCallback, useMemo, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import { HashLoader } from "react-spinners";
-import UserImage from "@/components/images/UserImage";
+import UserAvatar from "@/components/images/UserAvatar";
 import BackButton from "@/components/routes/BackButton";
 import { LOADER_COLOR } from "@/constants";
 import { useProfile } from "@/context/profile-context";
@@ -135,7 +135,7 @@ function SearchPage() {
                     key={`user-${item.id}`}
                     className="flex gap-4 bg-block p-6 rounded-[15px] items-center"
                   >
-                    <UserImage
+                    <UserAvatar
                       canChange={false}
                       userId={item.id!}
                       className="w-10 h-10 rounded-full"

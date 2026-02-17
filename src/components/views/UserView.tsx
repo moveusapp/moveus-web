@@ -1,7 +1,7 @@
 import { RelationshipStatus, UserFragment } from "@/graphql/generated";
 import { displayName } from "@/utils/display-name";
 import { getAge } from "@/utils/time-utils";
-import UserImage from "../images/UserImage";
+import UserAvatar from "../images/UserAvatar";
 import { HiThumbDown, HiThumbUp } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { HiCog6Tooth } from "react-icons/hi2";
@@ -21,7 +21,7 @@ function UserView({ user, isSelf }: UserViewProps) {
         )}
       </div>
       <div className="flex gap-4">
-        <UserImage
+        <UserAvatar
           userId={user.id!}
           canChange={isSelf}
           className="aspect-square w-20 rounded-full"

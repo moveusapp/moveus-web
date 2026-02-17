@@ -17,7 +17,7 @@ function EventButtons({ event, reFetch }: EventButtonsProps) {
   const navigate = useNavigate();
 
   const handleJoin = useCallback(() => {
-    if (joinLoading) return;
+    if (joinLoading || !event) return;
     joinEvent({
       variables: { eventId: event.id! },
     })
@@ -28,7 +28,7 @@ function EventButtons({ event, reFetch }: EventButtonsProps) {
   }, [event, joinEvent, joinLoading, reFetch]);
 
   const handleLeave = useCallback(() => {
-    if (leaveLoading) return;
+    if (leaveLoading || !event) return;
     leaveEvent({
       variables: { eventId: event.id! },
     })
@@ -39,7 +39,7 @@ function EventButtons({ event, reFetch }: EventButtonsProps) {
   }, [event, leaveEvent, leaveLoading, reFetch]);
 
   const handleShare = useCallback(() => {
-    if (navigator.share)
+    if (navigator.share && event)
       navigator.share({
         url: window.location.href,
         title: `You've been invited to a MoveUs event: ${event.title}`,
@@ -48,6 +48,7 @@ function EventButtons({ event, reFetch }: EventButtonsProps) {
   }, [event]);
 
   const handleCancel = useCallback(() => {
+    if (!event) return;
     cancelEvent({
       variables: { eventId: event.id! },
     })
@@ -55,7 +56,7 @@ function EventButtons({ event, reFetch }: EventButtonsProps) {
         navigate("/");
       })
       .catch((e) => console.error(e));
-  }, [cancelEvent, event.id, navigate]);
+  }, [cancelEvent, event?.id, navigate]);
 
   return (
     <div>
@@ -63,21 +64,21 @@ function EventButtons({ event, reFetch }: EventButtonsProps) {
         <button className="bg-block-accent" onClick={handleShare}>
           Share
         </button>
-        {event.role === "ORGANIZER" ? (
+        {event?.role === "ORGANIZER" ? (
           <button className="bg-block-accent" onClick={handleCancel}>
             Cancel
           </button>
         ) : (
-          <Link to={`/chat/${event.organizer?.user.id}`} className="w-full">
+          <Link to={`/chat/${event?.organizer?.user.id}`} className="w-full">
             <button className="bg-block-accent">Message organizer</button>
           </Link>
         )}
       </div>
-      {event.role === "ORGANIZER" ? (
-        <Link className="w-full" to={`/create-post/${event.id}`}>
+      {event?.role === "ORGANIZER" ? (
+        <Link className="w-full" to={`/create-post/${event?.id}`}>
           <button>Create post</button>
         </Link>
-      ) : event.role === null ? (
+      ) : event?.role === null ? (
         joinLoading ? (
           <HashLoader className="mx-auto" color={LOADER_COLOR} />
         ) : (
@@ -97,6 +98,6 @@ function EventButtons({ event, reFetch }: EventButtonsProps) {
 export default EventButtons;
 
 interface EventButtonsProps {
-  event: EventFragment;
+  event?: EventFragment;
   reFetch: () => void;
 }

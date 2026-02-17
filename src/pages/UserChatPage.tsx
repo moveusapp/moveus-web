@@ -2,7 +2,7 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import { HashLoader } from "react-spinners";
-import UserImage from "@/components/images/UserImage";
+import UserAvatar from "@/components/images/UserAvatar";
 import SendMessage from "@/components/misc/SendMessage";
 import BackButton from "@/components/routes/BackButton";
 import { LOADER_COLOR } from "@/constants";
@@ -100,7 +100,7 @@ function UserChatPage() {
       <Fragment key={message.id}>
         {message.userId === member?.user.id ? (
           <div className="flex gap-4">
-            <UserImage
+            <UserAvatar
               canChange={false}
               userId={message.userId!}
               className="w-10 h-10 rounded-full"

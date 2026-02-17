@@ -5,7 +5,7 @@ import { apolloClient } from "@/appolo/client";
 import { GetProfilePictureUploadUrlDocument } from "@/graphql/generated";
 import { base64ToBlob } from "@/utils/image-data";
 
-function UserImage({ userId, canChange, className }: UserImageProps) {
+function UserAvatar({ userId, canChange, className }: UserImageProps) {
   const [image, setImage] = useState<string>(
     `${import.meta.env.VITE_BUCKET_URL}profile-pictures/${userId}`,
   );
@@ -101,7 +101,7 @@ function UserImage({ userId, canChange, className }: UserImageProps) {
   );
 }
 
-export default UserImage;
+export default UserAvatar;
 
 interface UserImageProps {
   userId: number;

@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import { HashLoader } from "react-spinners";
-import UserImage from "@/components/images/UserImage";
-import { LOADER_COLOR } from "@/constants";
+import UserAvatar from "@/components/images/UserAvatar";
 import { useMyChatsQuery, useMyFriendsQuery } from "@/graphql/generated";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 type ChatPageTab = "chats" | "friends";
 
@@ -56,14 +56,11 @@ function ChatPage() {
         </p>
       </div>
       {tab === "chats" ? (
-        chatsLoading ? (
-          <HashLoader color={LOADER_COLOR} className="mx-auto mt-24" />
-        ) : (
-          <div className="overflow-auto pb-8 flex-1 flex flex-col gap-3">
-            {chats?.length === 0 && (
-              <p className="text-center text-sm">no chats</p>
-            )}
-            {chats?.map((chat) => (
+        <div className="overflow-auto pb-8 flex-1 flex flex-col gap-3">
+          {chatsLoading ? (
+            <Skeleton count={4} height={90}/>
+          ) : (
+            chats?.map((chat) => (
               <Link
                 key={chat?.id}
                 className="p-6 rounded-[15px] relative bg-block block w-full box-border"
@@ -73,7 +70,7 @@ function ChatPage() {
                   {timeAgo(chat?.lastMessage?.timeSent!)}
                 </span>
                 <div className="flex gap-4 font-medium relative items-center">
-                  <UserImage
+                  <UserAvatar
                     canChange={false}
                     userId={chat?.members[0]!.user.id!}
                     className="w-10 h-10 rounded-full"
@@ -106,39 +103,38 @@ function ChatPage() {
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
-        )
-      ) : friendsLoading ? (
-        <HashLoader color={LOADER_COLOR} className="mx-auto mt-24" />
+            ))
+          )}
+        </div>
       ) : (
         <div className="overflow-auto pb-8 flex-1 flex flex-col gap-8">
-          {friends?.friends?.length === 0 && (
-            <p className="text-center text-sm">no friends</p>
+          {friendsLoading ? (
+            <Skeleton count={4} height={90}/>
+          ) : (
+            friends?.friends?.map((friend) => (
+              <Link
+                key={friend?.user?.id}
+                className="flex gap-4 items-center w-full"
+                to={`/user/${friend?.user?.id}`}
+              >
+                <UserAvatar
+                  canChange={false}
+                  userId={friend?.user?.id!}
+                  className="w-10 rounded-full"
+                />
+                <div>
+                  <h2 className="font-medium">
+                    {displayName(
+                      friend?.user?.username!,
+                      friend?.user?.firstName!,
+                      friend?.user?.lastName!,
+                    )}
+                  </h2>
+                  <p className="text-sm mb-1">@{friend?.user?.username}</p>
+                </div>
+              </Link>
+            ))
           )}
-          {friends?.friends?.map((friend) => (
-            <Link
-              key={friend?.user?.id}
-              className="flex gap-4 items-center w-full"
-              to={`/user/${friend?.user?.id}`}
-            >
-              <UserImage
-                canChange={false}
-                userId={friend?.user?.id!}
-                className="w-10 rounded-full"
-              />
-              <div>
-                <h2 className="font-medium">
-                  {displayName(
-                    friend?.user?.username!,
-                    friend?.user?.firstName!,
-                    friend?.user?.lastName!,
-                  )}
-                </h2>
-                <p className="text-sm mb-1">@{friend?.user?.username}</p>
-              </div>
-            </Link>
-          ))}
         </div>
       )}
     </div>
