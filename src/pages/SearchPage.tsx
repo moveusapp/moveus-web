@@ -74,7 +74,7 @@ function SearchPage() {
           value={searchString}
           onChange={handleSearchChange}
           placeholder="search for something"
-          className="!p-0 !border-0 !outline-0 placeholder:opacity-50 placeholder:!text-foreground placeholder:text-xl text-xl"
+          className="p-0! border-0! outline-0! placeholder:opacity-50 placeholder:text-foreground! placeholder:text-xl text-xl"
         />
         <button
           type="submit"
@@ -125,7 +125,7 @@ function SearchPage() {
       {loading ? (
         <HashLoader color={LOADER_COLOR} className="mt-32 mx-auto" />
       ) : (
-        <div className="vertical !overflow-y-auto gap-3 pb-8">
+        <div className="vertical overflow-y-auto! gap-3 pb-8">
           {items?.map((item) => {
             switch (item?.__typename) {
               case "UserType":

@@ -27,7 +27,7 @@ function UserView({ user, isSelf }: UserViewProps) {
           className="aspect-square w-20 rounded-full"
         />
         <div className="h-full flex flex-col">
-          <h2 className="main-text !mb-1">{name}</h2>
+          <h2 className="main-text mb-1!">{name}</h2>
           <p className="text-accent text-lg">@{user.username}</p>
         </div>
       </div>
@@ -38,7 +38,7 @@ function UserView({ user, isSelf }: UserViewProps) {
           <p>{user.gender.toLocaleLowerCase().replace("_", " ")}</p>
         )}
       </div>
-      <div className="flex [&>*]:mr-4 items-center font-medium">
+      <div className="flex *:mr-4 items-center font-medium">
         <p>{user.friendCount} friends</p>
         <div className="flex px-2 py-1 gap-1 items-center text-background rounded-full bg-block-accent">
           <HiThumbUp />
@@ -67,7 +67,7 @@ function UserView({ user, isSelf }: UserViewProps) {
       {!!user.organizes?.length && (
         <>
           <p className="font-medium">Organizes: </p>
-          <div className="vertical !overflow-y-auto gap-4">
+          <div className="vertical overflow-y-auto! gap-4">
             {user.organizes.map((e) => (
               <EventTab event={e!} key={e?.id} />
             ))}

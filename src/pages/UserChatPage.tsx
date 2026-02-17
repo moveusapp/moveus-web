@@ -105,7 +105,7 @@ function UserChatPage() {
               userId={message.userId!}
               className="w-10 h-10 rounded-full"
             />
-            <div className="relative p-[10px] pr-12 font-medium bg-block max-w-[75%] break-words rounded-[15px]">
+            <div className="relative p-[10px] pr-12 font-medium bg-block max-w-[75%] wrap-break-word rounded-[15px]">
               <p>{message.textContent}</p>
               <span className="text-xs absolute right-[10px] bottom-[10px]">
                 {`${prependZero(message.timeSent!.getHours())}:${prependZero(message.timeSent!.getMinutes())}`}
@@ -120,7 +120,7 @@ function UserChatPage() {
             </div>
           </div>
         ) : (
-          <div className="relative p-[10px] font-medium bg-accent text-background pr-16 self-end max-w-[75%] break-words rounded-[15px]">
+          <div className="relative p-[10px] font-medium bg-accent text-background pr-16 self-end max-w-[75%] wrap-break-word rounded-[15px]">
             <p>{message.textContent}</p>
             <span className="text-xs absolute right-[10px] bottom-[10px]">
               {`${prependZero(message.timeSent!.getHours())}:${prependZero(message.timeSent!.getMinutes())}`}

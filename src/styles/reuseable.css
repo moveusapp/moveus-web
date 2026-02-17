@@ -1,3 +1,5 @@
+@reference "./index.css";
+
 .usertab {
   @apply flex items-center gap-4;
 }

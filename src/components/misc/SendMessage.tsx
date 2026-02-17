@@ -86,7 +86,7 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
     <div className="my-8 flex flex-col gap-4">
       {selectedImage && (
         <button
-          className="!text-sm !px-2 !py-1 !inline !w-auto bg-block-accent"
+          className="text-sm! px-2! py-1! inline! w-auto! bg-block-accent"
           onClick={clearImageInput}
         >
           Image selected, click to remove
@@ -112,13 +112,13 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
           name="message"
           value={text}
           onChange={(e) => setText(e.currentTarget.value)}
-          className="!p-0 !border-0 !outline-none !rounded-none"
+          className="p-0! border-0! outline-hidden! rounded-none!"
           autoComplete="off"
           accept="image/*"
         />
         <button
           type="submit"
-          className="!p-0 !inline !w-auto !text-foreground !bg-transparent"
+          className="p-0! inline! w-auto! text-foreground! bg-transparent!"
         >
           <HiPaperAirplane className="text-3xl shrink-0" />
         </button>

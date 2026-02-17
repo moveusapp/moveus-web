@@ -1,3 +1,5 @@
+@reference "./index.css";
+
 .react-datetime-picker {
   display: inline-flex;
   position: relative;

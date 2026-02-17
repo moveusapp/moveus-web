@@ -1,4 +1,3 @@
-import { error } from "console";
 import { useEffect, useRef } from "react";
 import { apolloClient } from "@/appolo/client";
 import { useProfile } from "@/context/profile-context";

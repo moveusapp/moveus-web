@@ -70,27 +70,27 @@ function DateOfBirth({ dob, setDob }: ProfileBioProps) {
   return (
     <div>
       <h2 className="main-text">What is your day of birth?</h2>
-      <div className="flex gap-[10px] [&>*]:basis-0">
+      <div className="flex gap-[10px] *:basis-0">
         <Dropdown
           defaultName="Day"
           options={dayOptions as any}
           value={day}
           setValue={setDay}
-          classname="flex-grow"
+          classname="grow"
         />
         <Dropdown
           defaultName="Month"
           options={monthOptions as any}
           value={month}
           setValue={setMonth}
-          classname="flex-grow"
+          classname="grow"
         />
         <Dropdown
           defaultName="Year"
           options={yearOptions as any}
           value={year}
           setValue={setYear}
-          classname="flex-grow-[2]"
+          classname="grow-2"
         />
       </div>
       <p className="text-right text-error mt-3">{error}</p>

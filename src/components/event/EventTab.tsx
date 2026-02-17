@@ -8,13 +8,13 @@ function EventTab({
   ongoing = false,
 }: EventTabProps) {
   return (
-    <Link
-      to={`/event/${id}`}
+    <div
       className={
         "w-full relative p-6 shrink-0 rounded-[15px] overflow-hidden h-44 font-medium flex flex-col " +
         (ongoing ? "bg-block-accent text-background" : "bg-block")
       }
     >
+      <Link to={`/event/${id}`} className="absolute inset-0" />
       <svg
         viewBox="0 0 239.714 133.748"
         fill="none"
@@ -46,7 +46,7 @@ function EventTab({
             {prependZero(startTime.getMinutes())}
           </p>
         </div>
-        <div className="event-detail col-span-3 justify-self-end">
+        <div className="event-detail col-span-3 justify-self-end relative z-10">
           <p>location</p>
           <p className="text-nowrap">
             <a
@@ -60,7 +60,7 @@ function EventTab({
           </p>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 

@@ -47,7 +47,7 @@ function TextArea({
         cols={cols}
         value={value}
         onChange={handleChange}
-        className={error && "!border-error !outline-error"}
+        className={error && "border-error! outline-error!"}
       />
       <p className="text-error my-1 mx-4 text-sm">{error}</p>
     </label>

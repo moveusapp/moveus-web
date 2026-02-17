@@ -1,6 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-block-accent: #f58431;
+  --color-foreground: #303b70;
+  --color-accent: #0091d4;
+  --color-block: #ceefff;
+  --color-background: #fffdf8;
+  --color-primary: #60ccf2;
+  --color-error: #b54e36;
+}
 
 body {
   margin: 0;
@@ -42,8 +50,12 @@ main {
 
 button,
 input[type="submit"] {
-  @apply block text-center bg-accent rounded-[15px] px-1 py-4
+  @apply block text-center rounded-[15px] px-1 py-4
   md:text-xl font-semibold text-background w-full;
+}
+
+button:not([class*="bg-"]) {
+  @apply bg-accent;
 }
 
 label {

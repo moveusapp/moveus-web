@@ -143,7 +143,7 @@ function CreateEventPage() {
           onChange={onTextFieldsChange}
         />
 
-        <div className="flex md:gap-4 flex-col md:flex-row md:[&>*]:grow w-full">
+        <div className="flex md:gap-4 flex-col md:flex-row md:*:grow w-full">
           <div>
             <h4>Start time</h4>
             <DateTimePicker
