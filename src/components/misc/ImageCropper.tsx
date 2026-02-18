@@ -43,7 +43,7 @@ function ImageCropper({
   );
 
   return (
-    <div className="fixed w-screen h-screen top-0 left-0 bg-[#3339] flex justify-center items-center">
+    <div className="fixed w-screen h-screen top-0 left-0 bg-[#3339] flex justify-center items-center z-1">
       <div className="max-w-80 w-full flex flex-col gap-3">
         <div className="relative w-full aspect-square rounded-[15px] overflow-hidden">
           <Cropper

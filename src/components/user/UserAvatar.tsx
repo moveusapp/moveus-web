@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { HiPencil } from "react-icons/hi";
-import InputImage from "@/components/misc/ImageCropper";
+import ImageCropper from "@/components/misc/ImageCropper";
 import { apolloClient } from "@/appolo/client";
 import { GetProfilePictureUploadUrlDocument } from "@/graphql/graphql-types";
 import { base64ToBlob } from "@/utils/image-data";
@@ -87,7 +87,7 @@ function UserAvatar({ userId, canChange, className }: UserImageProps) {
         />
       </div>
       {inputImage && (
-        <InputImage
+        <ImageCropper
           image={inputImage!}
           handleCancel={handleCancel}
           handleUpload={handleUpload}
