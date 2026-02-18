@@ -1,5 +1,5 @@
 import { useProfile } from "@/context/profile-context";
-import useDocumentTitle from "../hooks/use-document-title";
+import useDocumentTitle from "@/hooks/use-document-title";
 import BackButton from "@/components/routes/BackButton";
 import { useCallback, useEffect, useState } from "react";
 import {

@@ -42,4 +42,8 @@ function prependZero(number: number): string {
   return number + "";
 }
 
-export { getAge, timeAgo, prependZero };
+function formatTime(date: Date): string {
+  return `${prependZero(date.getHours())}:${prependZero(date.getMinutes())}`;
+}
+
+export { getAge, timeAgo, prependZero, formatTime };

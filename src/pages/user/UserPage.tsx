@@ -1,10 +1,10 @@
-import { setDocumentTitle } from "../hooks/use-document-title";
+import { setDocumentTitle } from "../../hooks/use-document-title";
 import { useParams } from "react-router-dom";
 import BackButton from "@/components/routes/BackButton";
 import { HashLoader } from "react-spinners";
 import { LOADER_COLOR } from "@/constants";
 import { useEffect } from "react";
-import UserView from "@/components/views/UserView";
+import UserView from "@/components/user/UserView";
 import { useLazyQuery } from "@apollo/client/react";
 import { GetUserDocument } from "@/graphql/graphql-types";
 

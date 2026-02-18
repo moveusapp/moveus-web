@@ -16,7 +16,7 @@ query SearchItems(
     }
     ...on PostType {
       __typename
-      ...Post
+      ...PostCard
     }
   }
 }

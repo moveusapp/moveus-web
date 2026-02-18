@@ -8,7 +8,7 @@ query GetProfilePictureUploadURL {
   profilePictureGcloudUrl
 }
 
-query GetNotfications {
+query GetNotifications {
   myNotifications(lastFetch: "1971-01-01") {
     id
     time

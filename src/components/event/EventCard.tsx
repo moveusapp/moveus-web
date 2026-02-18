@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { EventCardFragment } from "@/graphql/graphql-types";
 import { prependZero } from "@/utils/time-utils";
 
-function EventTab({
+function EventCard({
   event: { id, title, startTime, location, participantCount },
   ongoing = false,
-}: EventTabProps) {
+}: EventCardProps) {
   // TODO: Hack fix. Find root cause.
   if (typeof(startTime) === 'string') {
     startTime = new Date(startTime)
@@ -27,7 +27,6 @@ function EventTab({
         xmlnsXlink="http://www.w3.org/1999/xlink"
         className="absolute -top-4 -right-2 h-[80%]"
       >
-        <desc>Created with Pixso.</desc>
         <path
           id="Vector 2"
           d="M0 0C1.79 20.27 58.68 61.5 108 61.5C159.8 61.5 183.58 85.39 205.5 115.5C223.03 139.58 236.9 134.2 239.71 130.45L232.05 13.82L0 0Z"
@@ -69,9 +68,9 @@ function EventTab({
   );
 }
 
-export default EventTab;
+export default EventCard;
 
-interface EventTabProps {
+interface EventCardProps {
   event: EventCardFragment;
   ongoing?: boolean;
 }

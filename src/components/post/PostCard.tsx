@@ -1,0 +1,50 @@
+import { PostCardFragment } from "@/graphql/graphql-types";
+import { timeAgo } from "@/utils/time-utils";
+import UserAvatar from "../user/UserAvatar";
+import { displayName } from "@/utils/display-name";
+
+function PostCard({ post }: PostCardProps) {
+  return (
+    <div
+      className="rounded-[15px] box-border p-6 bg-block relative"
+    >
+      <p className="text-sm absolute top-6 right-6">
+        {timeAgo(post.timePosted)}
+      </p>
+      <div className="user-card mt-auto mb-8">
+        <UserAvatar
+          canChange={false}
+          userId={post.event?.organizer?.user.id!}
+          className="inline-block"
+        />
+        <div className="inner">
+          <div className="tags">
+            <p>organizer</p>
+          </div>
+          <h4>
+            {displayName(
+              post.event!.organizer!.user.username,
+              post.event!.organizer!.user.firstName,
+              post.event!.organizer!.user.lastName,
+            )}
+          </h4>
+          <p className="username">@{post.event?.organizer?.user?.username}</p>
+        </div>
+      </div>
+      <h2 className="main-text">{post.title}</h2>
+      <img
+        src={`${import.meta.env.VITE_BUCKET_URL}post-pictures/${post.id}`}
+        alt="Post"
+        onError={(e) => (e.currentTarget.style.display = "none")}
+        className="my-4"
+      />
+      <p>{post.content}</p>
+    </div>
+  );
+}
+
+interface PostCardProps {
+  post: PostCardFragment;
+}
+
+export default PostCard;

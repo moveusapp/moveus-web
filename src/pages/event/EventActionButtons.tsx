@@ -10,7 +10,7 @@ import {
 } from "@/graphql/graphql-types";
 import { useMutation } from "@apollo/client/react";
 
-function EventButtons({ event, reFetch }: EventButtonsProps) {
+function EventActionButtons({ event, reFetch }: EventButtonsProps) {
   const [joinEvent, { loading: joinLoading }] = useMutation(JoinEventDocument);
   const [leaveEvent, { loading: leaveLoading }] = useMutation(LeaveEventDocument);
   const [deleteEvent] = useMutation(DeleteEventDocument);
@@ -96,7 +96,7 @@ function EventButtons({ event, reFetch }: EventButtonsProps) {
   );
 }
 
-export default EventButtons;
+export default EventActionButtons;
 
 interface EventButtonsProps {
   event?: EventFragment;

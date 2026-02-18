@@ -40,7 +40,7 @@ code {
 }
 
 main {
-  @apply max-w-2xl mx-auto h-screen px-8 flex flex-col;
+  @apply max-w-2xl mx-auto h-screen px-4 flex flex-col;
   height: 100dvh;
 }
 

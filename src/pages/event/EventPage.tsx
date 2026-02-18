@@ -1,12 +1,12 @@
-import { setDocumentTitle } from "../hooks/use-document-title";
+import { setDocumentTitle } from "@/hooks/use-document-title";
 import { useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import { GetEventDocument } from "@/graphql/graphql-types";
 import BackButton from "@/components/routes/BackButton";
-import EventInfoTab from "@/components/event/EventInfoTab";
-import EventParticipantsTab from "@/components/event/EventParticipantsTab";
-import EventPostsTab from "@/components/event/EventPostsTab";
-import EventButtons from "@/components/event/EventButtons";
+import EventInfoTab from "@/pages/event/EventInfoTab";
+import EventParticipantsTab from "@/pages/event/EventParticipantsTab";
+import EventPostsTab from "@/pages/event/EventPostsTab";
+import EventActionButtons from "@/pages/event/EventActionButtons";
 import { useLazyQuery } from "@apollo/client/react";
 
 type EventTab = "info" | "participants" | "posts";
@@ -76,24 +76,19 @@ function EventPage() {
             case "participants":
               return (
                 <EventParticipantsTab
-                  members={
-                    event === undefined
-                      ? Array(6).fill(undefined)
-                      : event!.members
-                  }
+                  members={event === undefined ? undefined : event!.members}
                 />
               );
             case "posts":
               return (
                 <EventPostsTab
                   posts={event === undefined ? undefined : event!.posts}
-                  organizer={event === undefined ? undefined : event!.organizer!}
                 />
               );
           }
         })()}
         <div className="h-16 shrink-0" />
-        <EventButtons event={event!} reFetch={fetchEvent} />
+        <EventActionButtons event={event!} reFetch={fetchEvent} />
       </div>
     </div>
   );

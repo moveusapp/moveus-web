@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { HiPencil } from "react-icons/hi";
-import InputImage from "./image-crop";
+import InputImage from "@/components/misc/ImageCropper";
 import { apolloClient } from "@/appolo/client";
 import { GetProfilePictureUploadUrlDocument } from "@/graphql/graphql-types";
 import { base64ToBlob } from "@/utils/image-data";

@@ -1,14 +1,11 @@
 fragment EventMember on EventMemberType {
   role
   user {
-    id
-    username
-    firstName
-    lastName
+    ...UserCard
   }
 }
 
-fragment Post on PostType {
+fragment PostCard on PostType {
   id
   title
   content
@@ -16,15 +13,17 @@ fragment Post on PostType {
   likes
   event {
     id
+    organizer {
+      user {
+        ...UserCard
+      }
+    }
   }
 }
 
 fragment EventOrganizer on EventMemberType {
   user {
-    id
-    username
-    firstName
-    lastName
+    ...UserCard
   }
 }
 
@@ -55,7 +54,7 @@ fragment Event on EventType {
     ...EventMember
   }
   posts {
-    ...Post
+    ...PostCard
   }
   finished
   role

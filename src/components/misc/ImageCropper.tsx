@@ -2,11 +2,11 @@ import { useCallback, useState } from "react";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "@/utils/image-data";
 
-const CroppedImage = ({
+function ImageCropper({
   image,
   handleCancel,
   handleUpload,
-}: CroppedImageProps) => {
+}: ImageCropperProps) {
   const [crop, onCropChange] = useState({ x: 0, y: 0 });
   const [zoom, onZoomChange] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
@@ -69,12 +69,12 @@ const CroppedImage = ({
       </div>
     </div>
   );
-};
+}
 
-interface CroppedImageProps {
+interface ImageCropperProps {
   image: string;
   handleCancel: () => void;
   handleUpload: (cropped: any) => void;
 }
 
-export default CroppedImage;
+export default ImageCropper;

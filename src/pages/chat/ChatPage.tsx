@@ -2,8 +2,8 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import { HashLoader } from "react-spinners";
-import UserAvatar from "@/components/images/UserAvatar";
-import SendMessage from "@/components/misc/SendMessage";
+import UserAvatar from "@/components/user/UserAvatar";
+import SendMessage from "@/pages/chat/SendMessage";
 import BackButton from "@/components/routes/BackButton";
 import { LOADER_COLOR } from "@/constants";
 import {
@@ -17,7 +17,7 @@ import { displayName } from "@/utils/display-name";
 import { prependZero } from "@/utils/time-utils";
 import { useQuery, useSubscription } from "@apollo/client/react";
 
-function UserChatPage() {
+function ChatPage() {
   const { userId } = useParams();
   const { data, loading } = useQuery(GetUserChatDocument, {
     variables: { userId: parseInt(userId!) },
@@ -182,4 +182,4 @@ function UserChatPage() {
   );
 }
 
-export default UserChatPage;
+export default ChatPage;

@@ -1,6 +1,6 @@
 import { useProfile } from "@/context/profile-context";
-import useDocumentTitle from "../hooks/use-document-title";
-import UserView from "@/components/views/UserView";
+import useDocumentTitle from "@/hooks/use-document-title";
+import UserView from "@/components/user/UserView";
 
 function ProfilePage() {
   useDocumentTitle("Your profile");

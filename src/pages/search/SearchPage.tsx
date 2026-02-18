@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useCallback, useMemo, useState } from "react";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import { HashLoader } from "react-spinners";
-import UserAvatar from "@/components/images/UserAvatar";
+import UserAvatar from "@/components/user/UserAvatar";
 import BackButton from "@/components/routes/BackButton";
 import { LOADER_COLOR } from "@/constants";
 import { useProfile } from "@/context/profile-context";

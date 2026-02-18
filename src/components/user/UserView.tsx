@@ -1,12 +1,12 @@
 import { RelationshipStatus, UserFragment } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { getAge } from "@/utils/time-utils";
-import UserAvatar from "../images/UserAvatar";
+import UserAvatar from "@/components/user/UserAvatar";
 import { HiThumbDown, HiThumbUp } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { HiCog6Tooth } from "react-icons/hi2";
-import FriendshipButton from "../misc/FriendshipButton";
-import EventTab from "../event/EventTab";
+import FriendshipButton from "./FriendshipButton";
+import EventCard from "../event/EventCard";
 
 function UserView({ user, isSelf }: UserViewProps) {
   const name = displayName(user.username, user.firstName, user.lastName);
@@ -69,7 +69,7 @@ function UserView({ user, isSelf }: UserViewProps) {
           <p className="font-medium">Organizes: </p>
           <div className="vertical overflow-y-auto! gap-4">
             {user.organizes.map((e) => (
-              <EventTab event={e!} key={e?.id} />
+              <EventCard event={e!} key={e?.id} />
             ))}
           </div>
         </>

@@ -1,11 +1,12 @@
 import { useProfile } from "@/context/profile-context";
-import useDocumentTitle from "../hooks/use-document-title";
+import useDocumentTitle from "@/hooks/use-document-title";
 import { useMemo } from "react";
-import { useQuery } from "@apollo/client/react"
+import { useQuery } from "@apollo/client/react";
 import { GetHomeEventsDocument } from "@/graphql/graphql-types";
-import EventTab from "@/components/event/EventTab";
+import EventCard from "@/components/event/EventCard";
 import Skeleton from "react-loading-skeleton";
-import 'react-loading-skeleton/dist/skeleton.css';
+import "react-loading-skeleton/dist/skeleton.css";
+import EventCardSkeleton from "@/components/event/EventCardSkeleton";
 
 function HomePage() {
   useDocumentTitle("Home Page");
@@ -24,7 +25,7 @@ function HomePage() {
   );
 
   if (error) {
-    return <p>{`Error: ${error.message}`}</p>
+    return <p>{`Error: ${error.message}`}</p>;
   }
 
   return (
@@ -33,17 +34,21 @@ function HomePage() {
         Hello, {profile?.firstName ? profile.firstName : profile?.username}!
       </div>
       {loading ? (
-        <Skeleton count={3} height={160} borderRadius={10}/>
+        <div className="flex flex-col grow overflow-y-auto gap-4">
+          {[...Array(3)].map((_, index) => (
+            <EventCardSkeleton key={`event-skeleton-${index}`} />
+          ))}
+        </div>
       ) : upcoming.length + ongoing.length === 0 ? (
         <p>No upcoming events</p>
       ) : (
         <div className="flex flex-col grow overflow-y-auto gap-4">
           {ongoing.map((e) => (
-            <EventTab event={e!} key={e?.id} />
+            <EventCard event={e!} key={e?.id} />
           ))}
           <p className="font-medium">Upcoming events: </p>
           {upcoming.map((e) => (
-            <EventTab event={e!} key={e?.id} />
+            <EventCard event={e!} key={e?.id} />
           ))}
         </div>
       )}

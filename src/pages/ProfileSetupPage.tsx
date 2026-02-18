@@ -1,7 +1,7 @@
 import { useProfile } from "@/context/profile-context";
 import useDocumentTitle from "../hooks/use-document-title";
 import { useCallback, useEffect, useRef, useState } from "react";
-import QuestionSlider from "@/components/views/QuestionSlider";
+import QuestionSlider from "@/components/misc/QuestionSlider";
 import { Link } from "react-router-dom";
 import {
   Gender,
@@ -11,11 +11,11 @@ import {
   UpdateProfileSurveyInfoDocument,
 } from "@/graphql/graphql-types";
 import { pick } from "@/utils/pick";
-import FirstLastName from "@/components/basic-info/FirstLastName";
+import FirstLastName from "@/components/user/FirstLastName";
 import SingleChoice from "@/components/input/SingleChoice";
 import { enumToOptions } from "@/utils/enum-to-options";
-import ProfileBio from "@/components/basic-info/ProfileBio";
-import DateOfBirth from "@/components/basic-info/DateOfBirth";
+import ProfileBio from "@/components/user/ProfileBio";
+import DateOfBirth from "@/components/user/DateOfBirth";
 import { apolloClient } from "@/appolo/client";
 import MultiChoice from "@/components/input/MultiChoice";
 import {
