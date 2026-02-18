@@ -1,0 +1,15 @@
+mutation CreatePost(
+  $eventId: Int!,
+  $title: String!,
+  $content: String!
+){
+  createPost(
+    eventId: $eventId,
+    title: $title,
+    content: $content
+  ) {
+    post {
+      imageUploadUrl
+    }
+  }
+}

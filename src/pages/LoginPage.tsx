@@ -3,12 +3,13 @@ import useDocumentTitle from "../hooks/use-document-title";
 import { FormEvent, useCallback, useState } from "react";
 import {
   ContextProfileFragment,
-  useLoginUserMutation,
-} from "@/graphql/generated";
+  LoginDocument,
+} from "@/graphql/graphql-types";
 import TextInput from "@/components/input/TextInput";
 import { HashLoader } from "react-spinners";
 import { LOADER_COLOR } from "@/constants";
 import { useProfile } from "@/context/profile-context";
+import { useMutation } from "@apollo/client/react";
 
 export function LoginPage() {
   useDocumentTitle("Login");
@@ -18,7 +19,7 @@ export function LoginPage() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
 
-  const [login, { loading, error }] = useLoginUserMutation();
+  const [login, { loading, error }] = useMutation(LoginDocument);
   const navigate = useNavigate();
 
   const handleSubmit = useCallback(

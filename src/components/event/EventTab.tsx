@@ -1,6 +1,6 @@
 import { RiShareForwardBoxLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import { EventTabFragment } from "@/graphql/generated";
+import { EventCardFragment } from "@/graphql/graphql-types";
 import { prependZero } from "@/utils/time-utils";
 
 function EventTab({
@@ -72,6 +72,6 @@ function EventTab({
 export default EventTab;
 
 interface EventTabProps {
-  event: EventTabFragment;
+  event: EventCardFragment;
   ongoing?: boolean;
 }

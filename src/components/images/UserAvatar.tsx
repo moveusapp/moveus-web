@@ -2,7 +2,7 @@ import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { HiPencil } from "react-icons/hi";
 import InputImage from "./image-crop";
 import { apolloClient } from "@/appolo/client";
-import { GetProfilePictureUploadUrlDocument } from "@/graphql/generated";
+import { GetProfilePictureUploadUrlDocument } from "@/graphql/graphql-types";
 import { base64ToBlob } from "@/utils/image-data";
 import defaultAvatar from "@/assets/default-images/user-default-avatar.svg"
 
@@ -44,14 +44,16 @@ function UserAvatar({ userId, canChange, className }: UserImageProps) {
           query: GetProfilePictureUploadUrlDocument,
         })
         .then((result) => {
-          const url = result.data.profilePictureGcloudUrl;
-          fetch(url, {
-            method: "PUT",
-            body: base64ToBlob(cropped),
-            headers: {
-              "cache-control": "must-revalidate",
-            },
-          });
+          const url = result.data?.profilePictureGcloudUrl;
+          if (url) {
+            fetch(url, {
+              method: "PUT",
+              body: base64ToBlob(cropped),
+              headers: {
+                "cache-control": "must-revalidate",
+              },
+            });
+          }
         });
 
       setInputImage(null);

@@ -1,7 +1,0 @@
-query MyFriends {
-  friends {
-    user {
-      ...FriendTabFragment
-    }
-  }
-}

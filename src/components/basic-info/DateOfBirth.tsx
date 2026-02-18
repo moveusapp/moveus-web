@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Dropdown from "../input/Dropdown";
 
 const dayOptions: Option<number>[] = new Array(31).fill(null).map((_, i) => {

@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import UserAvatar from "@/components/images/UserAvatar";
-import { useMyChatsQuery, useMyFriendsQuery } from "@/graphql/generated";
+import { useQuery } from "@apollo/client/react";
+import { GetMyChatsDocument, GetMyFriendsDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
@@ -16,22 +17,23 @@ function ChatPage() {
 
   const [tab, setTab] = useState<ChatPageTab>("chats");
 
-  const { data: unfilteredChats, loading: chatsLoading } = useMyChatsQuery({
+  const { loading: chatsLoading, error: chatsError, data: chatsData } = useQuery(GetMyChatsDocument, {
     fetchPolicy: "network-only",
   });
-  const { data: friends, loading: friendsLoading } = useMyFriendsQuery({
+
+  const { loading: friendsLoading, error: friendsError, data: friendsData } = useQuery(GetMyFriendsDocument, {
     fetchPolicy: "network-only",
   });
 
   const chats = useMemo(() => {
-    return unfilteredChats?.myChats
+    return chatsData?.myChats
       ?.filter((c) => c?.lastMessage)
       .sort(
         (a, b) =>
           b!.lastMessage!.timeSent!.getTime() -
           a!.lastMessage!.timeSent!.getTime(),
       );
-  }, [unfilteredChats]);
+  }, [chatsData]);
 
   return (
     <div className="vertical">
@@ -111,7 +113,7 @@ function ChatPage() {
           {friendsLoading ? (
             <Skeleton count={4} height={90}/>
           ) : (
-            friends?.friends?.map((friend) => (
+            friendsData?.friends?.map((friend) => (
               <Link
                 key={friend?.user?.id}
                 className="flex gap-4 items-center w-full"

@@ -3,12 +3,11 @@ import {
   ApolloClient,
   InMemoryCache,
   HttpLink,
-  split,
-  from,
+  ApolloLink,
 } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
-import { getMainDefinition } from "@apollo/client/utilities";
+import { isSubscriptionOperation } from "@apollo/client/utilities";
 import { DateParsingLink } from "./date-parsing-link";
 
 const isDev = import.meta.env.DEV;
@@ -26,18 +25,13 @@ const wsLink = new GraphQLWsLink(
   }),
 );
 
-const splitLink = split(
-  ({ query }) => {
-    const def = getMainDefinition(query);
-    return (
-      def.kind === "OperationDefinition" && def.operation === "subscription"
-    );
-  },
+const splitLink = ApolloLink.split(
+  ({ query }) => isSubscriptionOperation(query),
   wsLink,
   httpLink,
 );
 
 export const apolloClient = new ApolloClient({
-  link: from([DateParsingLink, splitLink]),
-  cache: new InMemoryCache(),
+  link: ApolloLink.from([DateParsingLink, splitLink]),
+  cache: new InMemoryCache()
 });

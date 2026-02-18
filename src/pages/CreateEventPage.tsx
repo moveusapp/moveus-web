@@ -11,8 +11,9 @@ import {
   Activity,
   GenderNoPnts,
   SkillLevel,
-  useCreateNewEventMutation,
-} from "@/graphql/generated";
+  CreateEventDocument,
+} from "@/graphql/graphql-types";
+import { useMutation } from "@apollo/client/react";
 import { enumToOptions } from "@/utils/enum-to-options";
 import LocationPicker from "@/components/input/LocationPicker";
 import MultiChoice from "@/components/input/MultiChoice";
@@ -84,7 +85,7 @@ function CreateEventPage() {
 
   const navigate = useNavigate();
 
-  const [createEvent, { loading, error }] = useCreateNewEventMutation();
+  const [createEvent, { loading, error }] = useMutation(CreateEventDocument);
 
   const onCreateEvent = useCallback(() => {
     if (!activity || !skillLevel || !location) return;

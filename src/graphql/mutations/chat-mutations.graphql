@@ -1,0 +1,15 @@
+mutation SendChatMessage (
+  $chatId: Int!,
+  $message: String,
+  $attachmentId: String
+) {
+  sendChatMessage (
+    chatId: $chatId,
+    message: $message,
+    attachmentId: $attachmentId
+  ) {
+    chatMessage {
+      ...ChatMessage
+    }
+  }
+}

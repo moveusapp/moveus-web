@@ -7,8 +7,8 @@ import {
 } from "react";
 import {
   ContextProfileFragment,
-  FetchProfileDocument,
-} from "@/graphql/generated";
+  GetMyProfileDocument,
+} from "@/graphql/graphql-types";
 import { apolloClient } from "@/appolo/client";
 
 type ProfileContextType = {
@@ -51,10 +51,12 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     if (localStorage.getItem("profile")) {
       apolloClient
         .query({
-          query: FetchProfileDocument,
+          query: GetMyProfileDocument,
         })
         .then((result) => {
-          setProfile(result.data.myProfile);
+          if (result && result.data && result.data.myProfile) {
+            setProfile(result.data.myProfile);
+          }
         })
         .catch((_) => {
           setProfile(null);

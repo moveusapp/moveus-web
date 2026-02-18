@@ -2,15 +2,16 @@ import { Link } from "react-router-dom";
 import { HashLoader } from "react-spinners";
 import BackButton from "@/components/routes/BackButton";
 import { LOADER_COLOR } from "@/constants";
-import { useGetNotficationsQuery } from "@/graphql/generated";
+import { GetNotficationsDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { displayName } from "@/utils/display-name";
 import { prependZero } from "@/utils/time-utils";
+import { useQuery } from "@apollo/client/react";
 
 function NotificationsPage() {
   useDocumentTitle("Notfications");
 
-  const { data, loading } = useGetNotficationsQuery();
+  const { data, loading } = useQuery(GetNotficationsDocument);
 
   return (
     <div className="vertical">

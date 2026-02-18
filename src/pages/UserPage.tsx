@@ -3,21 +3,21 @@ import { useParams } from "react-router-dom";
 import BackButton from "@/components/routes/BackButton";
 import { HashLoader } from "react-spinners";
 import { LOADER_COLOR } from "@/constants";
-import { useGetUserQueryLazyQuery } from "@/graphql/generated";
 import { useEffect } from "react";
 import UserView from "@/components/views/UserView";
+import { useLazyQuery } from "@apollo/client/react";
+import { GetUserDocument } from "@/graphql/graphql-types";
 
 function UserPage() {
   const { userId } = useParams();
 
-  const [getUser, { loading, error, data }] = useGetUserQueryLazyQuery();
+  const [getUser, { loading, error, data }] = useLazyQuery(GetUserDocument);
   const user = data?.user;
 
   useEffect(() => {
     if (!userId) return;
     getUser({
       variables: { userId: parseInt(userId) },
-      fetchPolicy: "network-only",
     })
       .then((result) => {
         setDocumentTitle(result.data?.user?.username ?? "Uh Oh");

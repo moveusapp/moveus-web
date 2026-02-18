@@ -1,5 +1,5 @@
 import { useProfile } from "@/context/profile-context";
-import { EventFragment } from "@/graphql/generated";
+import { EventFragment } from "@/graphql/graphql-types";
 import UserAvatar from "../images/UserAvatar";
 import { displayName } from "@/utils/display-name";
 import { Link } from "react-router-dom";

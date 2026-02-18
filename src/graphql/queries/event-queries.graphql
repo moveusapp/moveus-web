@@ -1,5 +1,5 @@
 query GetEvent($eventId: Int!) {
   event(id: $eventId) {
-    ...EventFragment
+    ...Event
   }
 }

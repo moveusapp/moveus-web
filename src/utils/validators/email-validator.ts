@@ -1,5 +1,5 @@
 import { apolloClient } from "@/appolo/client";
-import { EmailTakenDocument } from "@/graphql/generated";
+import { EmailTakenDocument } from "@/graphql/graphql-types";
 
 export function emailValidator(email: string): string | undefined {
   if (!/^[^\s@]+@[^@\s]+\.[^@\s]+$/.test(email)) return "Email not valid.";
@@ -13,7 +13,9 @@ export function emailTaken(email: string): Promise<boolean> {
         variables: { email },
       })
       .then((result) => {
-        resolve(result.data.emailTaken);
+        if (result && result.data) {
+          resolve(result.data.emailTaken);
+        }
       })
       .catch((err) => {});
   });

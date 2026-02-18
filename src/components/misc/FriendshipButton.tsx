@@ -1,24 +1,25 @@
-import { useCallback, useMemo, useState } from "react";
+import { use, useCallback, useMemo, useState } from "react";
 import { HashLoader } from "react-spinners";
 import { LOADER_COLOR } from "@/constants";
 import {
   RelationshipStatus,
-  useAcceptFriendRequestMutation,
-  useCancelFriendRequestMutation,
-  useRemoveFriendMutation,
-  useSendFriendRequestMutation,
-} from "@/graphql/generated";
+  AcceptFriendRequestDocument,
+  CancelFriendRequestDocument,
+  RemoveFriendDocument,
+  SendFriendRequestDocument,
+} from "@/graphql/graphql-types";
+import { useMutation } from "@apollo/client/react";
 
 function FriendshipButton({ status: ogStatus, userId }: FriendshipButtonProps) {
   const [status, setStatus] = useState(ogStatus);
 
   const [sendRequest, { loading: sendLoading }] =
-    useSendFriendRequestMutation();
+    useMutation(SendFriendRequestDocument);
   const [acceptRequest, { loading: acceptLoading }] =
-    useAcceptFriendRequestMutation();
+    useMutation(AcceptFriendRequestDocument);
   const [cancelRequest, { loading: cancelLoading }] =
-    useCancelFriendRequestMutation();
-  const [removeFriend, { loading: removeLoading }] = useRemoveFriendMutation();
+    useMutation(CancelFriendRequestDocument);
+  const [removeFriend, { loading: removeLoading }] = useMutation(RemoveFriendDocument);
 
   const handleSend = useCallback(() => {
     sendRequest({

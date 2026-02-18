@@ -10,7 +10,7 @@ import {
   SocialInteractionImportance,
   SurveyFragment,
   TimeOfTheDay,
-} from "@/graphql/generated";
+} from "@/graphql/graphql-types";
 import { enumToOptions } from "../enum-to-options";
 
 export function surveyInfoKeyToTitle(key: keyof SurveyFragment): string {

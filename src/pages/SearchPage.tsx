@@ -6,10 +6,11 @@ import UserAvatar from "@/components/images/UserAvatar";
 import BackButton from "@/components/routes/BackButton";
 import { LOADER_COLOR } from "@/constants";
 import { useProfile } from "@/context/profile-context";
-import { useSearchItemsLazyQuery } from "@/graphql/generated";
+import { SearchItemsDocument } from "@/graphql/graphql-types";
 import useDocumentTitle, { setDocumentTitle } from "@/hooks/use-document-title";
 import { displayName } from "@/utils/display-name";
 import { FaCalendarDay, FaWindowRestore } from "react-icons/fa";
+import { useLazyQuery } from "@apollo/client/react";
 
 type ItemType = "User" | "Event" | "Post" | "All";
 
@@ -22,7 +23,12 @@ function SearchPage() {
   const [lastSearch, setLastSearch] = useState("");
   const [itemType, setItemType] = useState("All" as ItemType);
 
-  const [searchItems, { loading, data }] = useSearchItemsLazyQuery();
+  const [searchItems, { loading, data }] = useLazyQuery(
+    SearchItemsDocument, {
+      fetchPolicy: "no-cache",
+      nextFetchPolicy: "no-cache"
+    }
+  );
 
   const handleSearchChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +52,7 @@ function SearchPage() {
   );
 
   const items = useMemo(() => {
-    const filterSelf = data?.searchResult?.filter(
+    const filterSelf = data?.search?.filter(
       (item) => item?.__typename !== "UserType" || item.id !== profile?.id,
     );
     switch (itemType) {
@@ -78,9 +84,9 @@ function SearchPage() {
         />
         <button
           type="submit"
-          className="text-3xl bg-transparent text-foreground w-auto"
+          className="bg-transparent"
         >
-          <HiMagnifyingGlass />
+          <HiMagnifyingGlass className="text-2xl text-foreground ml-auto"/>
         </button>
       </form>
       {lastSearch && <p>Results for '{lastSearch}'</p>}
@@ -157,7 +163,7 @@ function SearchPage() {
                 return (
                   <Link
                     to={`/event/${item.id}`}
-                    key={`user-${item.id}`}
+                    key={`event-${item.id}`}
                     className="flex gap-4 bg-block p-6 rounded-[15px] items-center"
                   >
                     <FaCalendarDay className="text-4xl shrink-0 text-accent" />
@@ -178,7 +184,7 @@ function SearchPage() {
                 return (
                   <Link
                     to={`/event/${item.event?.id}`}
-                    key={`user-${item.id}`}
+                    key={`post-${item.id}`}
                     className="flex gap-4 bg-block p-6 rounded-[15px] items-center"
                   >
                     <FaWindowRestore className="text-4xl shrink-0 text-accent" />

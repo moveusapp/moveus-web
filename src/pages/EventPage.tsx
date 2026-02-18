@@ -1,12 +1,13 @@
 import { setDocumentTitle } from "../hooks/use-document-title";
 import { useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
-import { useGetEventLazyQuery } from "@/graphql/generated";
+import { GetEventDocument } from "@/graphql/graphql-types";
 import BackButton from "@/components/routes/BackButton";
 import EventInfoTab from "@/components/event/EventInfoTab";
 import EventParticipantsTab from "@/components/event/EventParticipantsTab";
 import EventPostsTab from "@/components/event/EventPostsTab";
 import EventButtons from "@/components/event/EventButtons";
+import { useLazyQuery } from "@apollo/client/react";
 
 type EventTab = "info" | "participants" | "posts";
 
@@ -15,14 +16,13 @@ function EventPage() {
 
   const [tab, setTab] = useState<EventTab>("info");
 
-  const [getEvent, { loading, error, data }] = useGetEventLazyQuery();
+  const [getEvent, { loading, error, data }] = useLazyQuery(GetEventDocument);
   const event = data?.event;
 
   const fetchEvent = useCallback(() => {
     if (!eventId) return;
     getEvent({
       variables: { eventId: parseInt(eventId) },
-      fetchPolicy: "network-only",
     })
       .then((result) => {
         setDocumentTitle(result.data?.event?.title ?? "Uh Oh");

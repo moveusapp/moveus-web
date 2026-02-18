@@ -1,7 +1,0 @@
-query usernameTaken($username: String!) {
-  usernameTaken(username: $username)
-}
-
-query emailTaken($email: String!) {
-  emailTaken(email: $email)
-}

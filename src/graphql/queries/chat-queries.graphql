@@ -1,5 +1,5 @@
 query GetUserChat($userId: Int!) {
-  userChat(userId: $userId) {
+  userChat (userId: $userId) {
     id
     members {
       user {
@@ -12,9 +12,9 @@ query GetUserChat($userId: Int!) {
   }
 }
 
-query MyChats {
+query GetMyChats {
   myChats {
-    ...ChatFragment
+    ...Chat
   }
 }
 

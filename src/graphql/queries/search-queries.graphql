@@ -1,0 +1,22 @@
+query SearchItems(
+  $searchString: String!,
+  $categories: [SearchCategory]
+) {
+  search(
+    searchString: $searchString,
+    categories: $categories
+  ) {
+    ...on EventType {
+      __typename
+      ...EventCard
+    }
+    ...on UserType {
+      __typename
+      ...UserCard
+    }
+    ...on PostType {
+      __typename
+      ...Post
+    }
+  }
+}

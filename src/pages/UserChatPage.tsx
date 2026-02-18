@@ -7,18 +7,19 @@ import SendMessage from "@/components/misc/SendMessage";
 import BackButton from "@/components/routes/BackButton";
 import { LOADER_COLOR } from "@/constants";
 import {
-  useChatMessagesSubscription,
-  useGetUserChatQuery,
-  useLastOpenSubscription,
+  ChatMessagesDocument,
+  GetUserChatDocument,
+  LastOpenDocument,
   WsChatMessageType,
-} from "@/graphql/generated";
+} from "@/graphql/graphql-types";
 import { setDocumentTitle } from "@/hooks/use-document-title";
 import { displayName } from "@/utils/display-name";
 import { prependZero } from "@/utils/time-utils";
+import { useQuery, useSubscription } from "@apollo/client/react";
 
 function UserChatPage() {
   const { userId } = useParams();
-  const { data, loading } = useGetUserChatQuery({
+  const { data, loading } = useQuery(GetUserChatDocument, {
     variables: { userId: parseInt(userId!) },
     skip: !userId,
   });
@@ -45,13 +46,13 @@ function UserChatPage() {
   }, [chat]);
 
   const { data: messageSubData, loading: messageSubLoading } =
-    useChatMessagesSubscription({
+    useSubscription(ChatMessagesDocument, {
       variables: { chatId: chat?.id! },
       skip: !chat?.id,
     });
 
   const { data: lastOpenData, loading: lastOpenLoading } =
-    useLastOpenSubscription({
+    useSubscription(LastOpenDocument, {
       variables: { chatId: chat?.id! },
       skip: !chat?.id,
     });

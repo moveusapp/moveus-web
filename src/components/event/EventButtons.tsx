@@ -4,15 +4,16 @@ import { HashLoader } from "react-spinners";
 import { LOADER_COLOR } from "@/constants";
 import {
   EventFragment,
-  useCancelEventMutation,
-  useJoinEventMutation,
-  useLeaveEventMutation,
-} from "@/graphql/generated";
+  DeleteEventDocument,
+  JoinEventDocument,
+  LeaveEventDocument,
+} from "@/graphql/graphql-types";
+import { useMutation } from "@apollo/client/react";
 
 function EventButtons({ event, reFetch }: EventButtonsProps) {
-  const [joinEvent, { loading: joinLoading }] = useJoinEventMutation();
-  const [leaveEvent, { loading: leaveLoading }] = useLeaveEventMutation();
-  const [cancelEvent] = useCancelEventMutation();
+  const [joinEvent, { loading: joinLoading }] = useMutation(JoinEventDocument);
+  const [leaveEvent, { loading: leaveLoading }] = useMutation(LeaveEventDocument);
+  const [deleteEvent] = useMutation(DeleteEventDocument);
 
   const navigate = useNavigate();
 
@@ -49,14 +50,14 @@ function EventButtons({ event, reFetch }: EventButtonsProps) {
 
   const handleCancel = useCallback(() => {
     if (!event) return;
-    cancelEvent({
+    deleteEvent({
       variables: { eventId: event.id! },
     })
       .then(() => {
         navigate("/");
       })
       .catch((e) => console.error(e));
-  }, [cancelEvent, event?.id, navigate]);
+  }, [deleteEvent, event?.id, navigate]);
 
   return (
     <div>

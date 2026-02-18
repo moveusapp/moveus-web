@@ -5,12 +5,13 @@ import TextArea from "@/components/input/TextArea";
 import TextInput from "@/components/input/TextInput";
 import BackButton from "@/components/routes/BackButton";
 import { LOADER_COLOR } from "@/constants";
-import { useCreatePostMutation } from "@/graphql/generated";
+import { CreatePostDocument } from "@/graphql/graphql-types";
+import { useMutation } from "@apollo/client/react";
 
 function CreatePostPage() {
   const { eventId } = useParams();
 
-  const [createPost, { loading, error }] = useCreatePostMutation();
+  const [createPost, { loading, error }] = useMutation(CreatePostDocument);
 
   const [input, setInput] = useState({
     title: "",

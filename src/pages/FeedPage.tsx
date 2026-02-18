@@ -1,16 +1,17 @@
 import { useMemo } from "react";
 import UserAvatar from "@/components/images/UserAvatar";
-import { useGetFeedQuery } from "@/graphql/generated";
+import { GetFeedDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useQuery } from "@apollo/client/react";
 
 function FeedPage() {
   useDocumentTitle("Feed");
 
-  const { data, loading } = useGetFeedQuery({ fetchPolicy: "network-only" });
+  const { data, loading } = useQuery(GetFeedDocument, { fetchPolicy: "network-only" });
 
   const posts = useMemo(
     () =>

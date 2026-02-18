@@ -1,4 +1,4 @@
-import { EventOrganizerFragment, EventPostFragment } from "@/graphql/generated";
+import { EventOrganizerFragment, PostFragment } from "@/graphql/graphql-types";
 import UserAvatar from "../images/UserAvatar";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
@@ -57,6 +57,6 @@ function EventPostsTab({ posts, organizer }: EventPostsTabProps) {
 export default EventPostsTab;
 
 interface EventPostsTabProps {
-  posts?: EventPostFragment[];
+  posts?: PostFragment[];
   organizer?: EventOrganizerFragment;
 }

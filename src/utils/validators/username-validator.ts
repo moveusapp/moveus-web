@@ -1,5 +1,5 @@
 import { apolloClient } from "@/appolo/client";
-import { UsernameTakenDocument } from "@/graphql/generated";
+import { UsernameTakenDocument } from "@/graphql/graphql-types";
 
 export function usernameValidator(username: string): string | undefined {
   if (username.length < 3)
@@ -18,7 +18,9 @@ export function usernameTaken(username: string): Promise<boolean> {
         variables: { username },
       })
       .then((result) => {
-        resolve(result.data.usernameTaken);
+        if (result && result.data) {
+          resolve(result.data.usernameTaken);
+        }
       })
       .catch((err) => {});
   });

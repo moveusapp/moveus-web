@@ -1,23 +1,31 @@
 mutation SendFriendRequest($userId: Int!) {
   sendFriendRequest(userId: $userId) {
-    success
+    relationship {
+      status
+    }
   }
 }
 
 mutation AcceptFriendRequest($userId: Int!) {
   acceptFriendRequest(userId: $userId) {
-    success
-  }
+    relationship {
+      status
+    }
+  } 
 }
 
 mutation CancelFriendRequest($userId: Int!) {
   cancelFriendRequest(userId: $userId) {
-    success
-  }
+    relationship {
+      status
+    }
+  } 
 }
 
 mutation RemoveFriend($userId: Int!) {
   removeFriend(userId: $userId) {
-    success
-  }
+    relationship {
+      status
+    }
+  } 
 }

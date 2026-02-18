@@ -4,14 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import QuestionSlider from "@/components/views/QuestionSlider";
 import { Link } from "react-router-dom";
 import {
-  BasicInfoFragment,
-  ContextProfileFragment,
   Gender,
   SurveyFragment,
-  SurveyFragmentDoc,
+  BasicInfoFragment,
   UpdateProfileBasicInfoDocument,
   UpdateProfileSurveyInfoDocument,
-} from "@/graphql/generated";
+} from "@/graphql/graphql-types";
 import { pick } from "@/utils/pick";
 import FirstLastName from "@/components/basic-info/FirstLastName";
 import SingleChoice from "@/components/input/SingleChoice";
@@ -79,12 +77,14 @@ function ProfileSetupPage() {
           .mutate({
             mutation: UpdateProfileBasicInfoDocument,
             variables: {
-              ...basicInfo!,
+              bio: basicInfo!.bio,
+              firstName: basicInfo!.firstName,
+              lastName: basicInfo!.lastName,
               dateOfBirth: basicInfo!.dateOfBirth?.toISOString().slice(0, 10),
             },
           })
           .then(() => {
-            setProfile((p) => {
+            setProfile((p: any) => {
               return {
                 ...p,
                 ...basicInfo,
@@ -108,7 +108,7 @@ function ProfileSetupPage() {
             variables: surveyInfo!,
           })
           .then(() => {
-            setProfile((p) => {
+            setProfile((p: any) => {
               return {
                 ...p,
                 ...surveyInfo,

@@ -1,4 +1,4 @@
-fragment EventMemberFragment on EventMemberType {
+fragment EventMember on EventMemberType {
   role
   user {
     id
@@ -8,15 +8,18 @@ fragment EventMemberFragment on EventMemberType {
   }
 }
 
-fragment EventPostFragment on PostType {
+fragment Post on PostType {
   id
   title
   content
   timePosted
   likes
+  event {
+    id
+  }
 }
 
-fragment EventOrganizerFragment on EventMemberType {
+fragment EventOrganizer on EventMemberType {
   user {
     id
     username
@@ -25,7 +28,7 @@ fragment EventOrganizerFragment on EventMemberType {
   }
 }
 
-fragment EventFragment on EventType {
+fragment Event on EventType {
   id
   title
   description
@@ -46,22 +49,23 @@ fragment EventFragment on EventType {
   minAge
   maxAge
   organizer {
-    ...EventOrganizerFragment
+    ...EventOrganizer
   }
   members {
-    ...EventMemberFragment
+    ...EventMember
   }
   posts {
-    ...EventPostFragment
+    ...Post
   }
   finished
   role
 }
 
-fragment EventTabFragment on EventType {
+fragment EventCard on EventType {
   id
   title
   startTime
+  description
   participantCount
   location {
     longitude

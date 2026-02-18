@@ -1,0 +1,37 @@
+fragment ChatMember on ChatMemberType {
+  user {
+    id
+    username
+    firstName
+    lastName
+  }
+  lastOpen
+}
+
+fragment ChatMessage on ChatMessageType {
+  id
+  user {
+    id
+  }
+  textContent
+  timeSent
+  attachmentUrl
+}
+
+fragment Chat on ChatType {
+  id
+  lastMessage {
+    ...ChatMessage
+  }
+  members {
+    ...ChatMember
+  }
+}
+
+fragment WSChatMessage on WSChatMessageType {
+  id
+  userId
+  textContent
+  timeSent
+  attachmentUrl
+}

@@ -1,7 +1,7 @@
 query GetFeed {
   joinedEvents {
     posts {
-      ...EventPostFragment
+      ...Post
     }
     organizer {
       user {
@@ -16,9 +16,9 @@ query GetFeed {
 
 query GetHomeEvents {
   futureJoinedEvents {
-    ...EventTabFragment
+    ...EventCard
   }
   ongoingJoinedEvents {
-    ...EventTabFragment
+    ...EventCard
   }
 }

@@ -5,26 +5,27 @@ import { useCallback, useEffect, useState } from "react";
 import {
   PrivacyScope,
   UpdateAllPrivacySettingsDocument,
-  useLogOutMutation,
-} from "@/graphql/generated";
+  LogOutDocument,
+} from "@/graphql/graphql-types";
 import Dropdown from "@/components/input/Dropdown";
 import { apolloClient } from "@/appolo/client";
 import { HashLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { LOADER_COLOR } from "@/constants";
+import { useMutation } from "@apollo/client/react";
 
 const privacyScopeOptions: Option<PrivacyScope>[] = [
   {
     name: "Only you",
-    value: "NOONE",
+    value: PrivacyScope.Noone,
   },
   {
     name: "Only friends",
-    value: "FRIENDS",
+    value: PrivacyScope.Friends,
   },
   {
     name: "Everyone",
-    value: "EVERYONE",
+    value: PrivacyScope.Everyone,
   },
 ];
 
@@ -37,7 +38,7 @@ function SettingsPage() {
     profile!.privacySettings[0].scope as PrivacyScope,
   );
 
-  const [logout, { loading: logoutLoading }] = useLogOutMutation();
+  const [logout, { loading: logoutLoading }] = useMutation(LogOutDocument);
   const navigate = useNavigate();
 
   const onLogout = useCallback(() => {
@@ -61,8 +62,8 @@ function SettingsPage() {
           variables: { scope: newScope },
         })
         .then(() => {
-          setProfile((p) => {
-            const newPrivacySettings = p?.privacySettings.map((setting) => {
+          setProfile((p: any) => {
+            const newPrivacySettings = p?.privacySettings.map((setting: any) => {
               return {
                 ...setting,
                 scope: newScope,

@@ -1,7 +1,7 @@
-query FetchProfile {
-  myProfile {
-    ...ContextProfileFragment
-  }
+query GetMyProfile {
+    myProfile {
+        ...ContextProfile
+    }
 }
 
 query GetProfilePictureUploadURL {

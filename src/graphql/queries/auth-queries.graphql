@@ -1,0 +1,7 @@
+query UsernameTaken($username: String!) {
+    usernameTaken(username: $username)
+}
+
+query EmailTaken($email: String!) {
+    emailTaken(email: $email)
+}

@@ -1,4 +1,4 @@
-import { RelationshipStatus, UserFragment } from "@/graphql/generated";
+import { RelationshipStatus, UserFragment } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { getAge } from "@/utils/time-utils";
 import UserAvatar from "../images/UserAvatar";

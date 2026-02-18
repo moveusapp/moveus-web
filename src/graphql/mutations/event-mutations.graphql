@@ -1,9 +1,9 @@
-mutation CreateNewEventMutation(
+mutation CreateEvent(
   $title: String!
   $description: String
   $startTime: DateTime!
   $endTime: DateTime!
-  $requrements: String
+  $requirements: String
   $locationLongitude: Float
   $locationLatitude: Float
   $activity: Activity!
@@ -19,7 +19,7 @@ mutation CreateNewEventMutation(
     description: $description
     startTime: $startTime
     endTime: $endTime
-    requrements: $requrements
+    requirements: $requirements
     locationLongitude: $locationLongitude
     locationLatitude: $locationLatitude
     activity: $activity
@@ -36,19 +36,26 @@ mutation CreateNewEventMutation(
   }
 }
 
-mutation JoinEventMutation($eventId: Int!) {
+mutation JoinEvent($eventId: Int!) {
   joinEvent(eventId: $eventId) {
-    success
+    event {
+      ...Event
+    }
+    member {
+      ...EventMember
+    }
   }
 }
 
-mutation LeaveEventMutation($eventId: Int!) {
+mutation LeaveEvent($eventId: Int!) {
   leaveEvent(eventId: $eventId) {
-    success
+    event {
+      ...Event
+    }
   }
 }
 
-mutation CancelEventMutation($eventId: Int!) {
+mutation DeleteEvent($eventId: Int!) {
   deleteEvent(eventId: $eventId) {
     success
   }

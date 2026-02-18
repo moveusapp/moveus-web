@@ -3,10 +3,11 @@ import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
 import { apolloClient } from "@/appolo/client";
 import {
   GetAttachmentUploadUrlDocument,
-  useSendMessageMutation,
+  SendChatMessageDocument,
   WsChatMessageType,
-} from "@/graphql/generated";
+} from "@/graphql/graphql-types";
 import { fileToBase64 } from "@/utils/image-data";
+import { useMutation } from "@apollo/client/react";
 
 function SendMessage({ chatId, addMessage }: SendMessageInterface) {
   const [text, setText] = useState("");
@@ -26,7 +27,7 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
     setSelectedImage(null);
   }, [setSelectedImage, imageInput]);
 
-  const [sendMessage] = useSendMessageMutation();
+  const [sendMessage] = useMutation(SendChatMessageDocument);
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
@@ -48,19 +49,26 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
             query: GetAttachmentUploadUrlDocument,
           })
           .then(async (result) => {
-            const { id, url } = result.data.newAttachment;
-            attachmentId = id;
-            const buffer = await selectedImage.arrayBuffer();
-            const blob = new Blob([new Uint8Array(buffer)], {
-              type: selectedImage.type,
-            });
-            await fetch(url, {
-              method: "PUT",
-              body: blob,
-              headers: {
-                "cache-control": "must-revalidate",
-              },
-            });
+            if (!result.data || !result.data.newAttachment) {
+              return;
+            }
+
+            const { id, url } = result.data!.newAttachment!;
+
+            if (id && url) {
+              attachmentId = id;
+              const buffer = await selectedImage.arrayBuffer();
+              const blob = new Blob([new Uint8Array(buffer)], {
+                type: selectedImage.type,
+              });
+              await fetch(url, {
+                method: "PUT",
+                body: blob,
+                headers: {
+                  "cache-control": "must-revalidate",
+                },
+              });
+            }
           });
       }
       sendMessage({

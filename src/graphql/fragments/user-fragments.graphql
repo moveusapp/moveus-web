@@ -1,4 +1,4 @@
-fragment SurveyFragment on ProfileType {
+fragment Survey on ProfileType {
   frequencyOfPhysicalActivity
   socialInteractionImportance
   preferredPartySize
@@ -11,7 +11,7 @@ fragment SurveyFragment on ProfileType {
   mainInterest
 }
 
-fragment BasicInfoFragment on ProfileType {
+fragment BasicInfo on ProfileType {
   firstName
   lastName
   bio
@@ -19,7 +19,7 @@ fragment BasicInfoFragment on ProfileType {
   gender
 }
 
-fragment ContextProfileFragment on ProfileType {
+fragment ContextProfile on ProfileType{
   id
   username
   email
@@ -31,18 +31,18 @@ fragment ContextProfileFragment on ProfileType {
   likes
   dislikes
   friendCount
-  ...BasicInfoFragment
-  ...SurveyFragment
+  ...BasicInfo
+  ...Survey
   privacySettings {
     setting
     scope
   }
   organizes {
-    ...EventTabFragment
+    ...EventCard
   }
 }
 
-fragment UserFragment on UserType {
+fragment User on UserType {
   id
   username
   bio
@@ -58,13 +58,13 @@ fragment UserFragment on UserType {
     chat {
       id
     }
-  }
+  } 
   organizes {
-    ...EventTabFragment
+    ...EventCard
   }
 }
 
-fragment FriendTabFragment on UserType {
+fragment UserCard on UserType {
   id
   username
   firstName

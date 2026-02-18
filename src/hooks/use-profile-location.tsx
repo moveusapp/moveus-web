@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { apolloClient } from "@/appolo/client";
 import { useProfile } from "@/context/profile-context";
-import { UpdateLocationDocument } from "@/graphql/generated";
+import { UpdateLocationDocument } from "@/graphql/graphql-types";
 
 function useProfileLocation() {
   const { profile } = useProfile();

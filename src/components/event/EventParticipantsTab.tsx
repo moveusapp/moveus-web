@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useProfile } from "@/context/profile-context";
-import { EventMemberFragment } from "@/graphql/generated";
+import { EventMemberFragment } from "@/graphql/graphql-types";
 import UserAvatar from "../images/UserAvatar";
 import { displayName } from "@/utils/display-name";
 import Skeleton from "react-loading-skeleton";

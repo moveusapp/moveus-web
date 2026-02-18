@@ -3,8 +3,8 @@ import useDocumentTitle from "../hooks/use-document-title";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import {
   ContextProfileFragment,
-  useSignupUserMutation,
-} from "@/graphql/generated";
+  SignUpDocument,
+} from "@/graphql/graphql-types";
 import TextInput from "@/components/input/TextInput";
 import { HashLoader } from "react-spinners";
 import { LOADER_COLOR } from "@/constants";
@@ -15,6 +15,7 @@ import {
 } from "@/utils/validators/username-validator";
 import { emailTaken, emailValidator } from "@/utils/validators/email-validator";
 import { passwordValidator } from "@/utils/validators/password-validator";
+import { useMutation } from "@apollo/client/react";
 
 export function RegisterPage() {
   useDocumentTitle("Register");
@@ -25,7 +26,7 @@ export function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [login, { loading, error }] = useSignupUserMutation();
+  const [signup, { loading, error }] = useMutation(SignUpDocument);
   const navigate = useNavigate();
 
   const [taken, setTaken] = useState({
@@ -47,7 +48,7 @@ export function RegisterPage() {
       )
         return;
 
-      login({
+      signup({
         variables: { username, email, password },
       })
         .then((response) => {
@@ -58,7 +59,7 @@ export function RegisterPage() {
         })
         .catch((error) => {});
     },
-    [username, email, password, setProfile, navigate, login, taken],
+    [username, email, password, setProfile, navigate, signup, taken],
   );
 
   const handleIsTaken = useCallback(

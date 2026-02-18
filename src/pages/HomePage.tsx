@@ -1,7 +1,8 @@
 import { useProfile } from "@/context/profile-context";
 import useDocumentTitle from "../hooks/use-document-title";
-import { useGetHomeEventsQuery } from "@/graphql/generated";
 import { useMemo } from "react";
+import { useQuery } from "@apollo/client/react"
+import { GetHomeEventsDocument } from "@/graphql/graphql-types";
 import EventTab from "@/components/event/EventTab";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -11,9 +12,7 @@ function HomePage() {
 
   const { profile } = useProfile();
 
-  const { data, loading } = useGetHomeEventsQuery({
-    fetchPolicy: "network-only",
-  });
+  const { loading, error, data } = useQuery(GetHomeEventsDocument);
 
   const upcoming = useMemo(
     () => data?.futureJoinedEvents?.filter((e) => e !== null) || [],
@@ -23,6 +22,10 @@ function HomePage() {
     () => data?.ongoingJoinedEvents?.filter((e) => e !== null) || [],
     [data],
   );
+
+  if (error) {
+    return <p>{`Error: ${error.message}`}</p>
+  }
 
   return (
     <div className="vertical pb-8">

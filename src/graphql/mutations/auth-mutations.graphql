@@ -1,0 +1,28 @@
+mutation Login($user: String!, $password: String!) {
+  login (
+    user: $user,
+    password: $password
+  ) {
+    myProfile { 
+      ...ContextProfile
+    }
+  }
+}
+
+mutation SignUp($username: String!, $password: String!, $email: String!) {
+  signup (
+    username: $username,
+    email: $email,
+    password: $password
+  ) {
+    myProfile { 
+      ...ContextProfile
+    }
+  }
+}
+
+mutation LogOut {
+  logout {
+    success
+  }
+}
