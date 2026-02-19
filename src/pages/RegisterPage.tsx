@@ -17,7 +17,7 @@ import { emailTaken, emailValidator } from "@/utils/validators/email-validator";
 import { passwordValidator } from "@/utils/validators/password-validator";
 import { useMutation } from "@apollo/client/react";
 
-export function RegisterPage() {
+function RegisterPage() {
   useDocumentTitle("Register");
 
   const { setProfile } = useProfile();

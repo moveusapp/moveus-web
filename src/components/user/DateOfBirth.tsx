@@ -1,71 +1,62 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Dropdown from "../input/Dropdown";
 
-const dayOptions: Option<number>[] = new Array(31).fill(null).map((_, i) => {
-  const day = i + 1;
-  return {
-    name: day.toString(),
-    value: day,
-  };
-});
+const dayOptions: Option<number>[] = Array.from({ length: 31 }, (_, i) => ({
+  name: (i + 1).toString(),
+  value: i + 1,
+}));
 
-const monthOptions: Option<number>[] = new Array(12).fill(null).map((_, i) => {
-  const month = i + 1;
-  return {
-    name: month.toString(),
-    value: month,
-  };
-});
+const monthOptions: Option<number>[] = Array.from({ length: 12 }, (_, i) => ({
+  name: (i + 1).toString(),
+  value: i + 1,
+}));
 
 const minYear = new Date().getFullYear() - 18;
-
-const yearOptions: Option<number>[] = new Array(100 - 18)
-  .fill(null)
-  .map((_, i) => {
-    const year = minYear - i;
-    return {
-      name: year.toString(),
-      value: year,
-    };
-  });
+const yearOptions: Option<number>[] = Array.from({ length: 100 - 18 }, (_, i) => ({
+  name: (minYear - i).toString(),
+  value: minYear - i,
+}));
 
 const msInYear = 1000 * 60 * 60 * 24 * 365.25;
 
 function DateOfBirth({ dob, setDob }: ProfileBioProps) {
-  console.log(dob);
-
-  const [error, setError] = useState("");
-
   const [day, setDay] = useState<number | null>(dob?.getDate() ?? null);
-
   const [month, setMonth] = useState<number | null>(
     dob ? dob.getMonth() + 1 : null,
   );
-
   const [year, setYear] = useState<number | null>(dob?.getFullYear() ?? null);
 
-  useEffect(() => {
-    if (!day || !month || !year) return;
+  const error = useMemo(() => {
+    if (!day || !month || !year) return "";
+    
     const date = new Date(`${month}-${day}-${year}`);
 
     if (date.getDate() !== day) {
-      setError("Invalid date.");
-      if (dob) setDob(null);
-      return;
+      return "Invalid date.";
     }
 
     if ((new Date().getTime() - date.getTime()) / msInYear < 18) {
-      setError("Must be over 18.");
-      if (dob) setDob(null);
+      return "Must be over 18.";
+    }
+
+    return "";
+  }, [day, month, year]);
+
+  const validDate = useMemo(() => {
+    if (!day || !month || !year || error) return null;
+    return new Date(`${month}-${day}-${year}`);
+  }, [day, month, year, error]);
+
+  useEffect(() => {
+    if (!validDate) {
+      if (dob !== null) setDob(null);
       return;
     }
 
-    setError("");
-
-    if (dob && date.toDateString() === dob.toDateString()) return;
-
-    setDob(date);
-  }, [day, month, year, dob, setDob, setError]);
+    if (!dob || validDate.toDateString() !== dob.toDateString()) {
+      setDob(validDate);
+    }
+  }, [validDate, dob, setDob]);
 
   return (
     <div>

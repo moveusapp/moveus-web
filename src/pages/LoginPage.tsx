@@ -11,7 +11,7 @@ import { LOADER_COLOR } from "@/constants";
 import { useProfile } from "@/context/profile-context";
 import { useMutation } from "@apollo/client/react";
 
-export function LoginPage() {
+function LoginPage() {
   useDocumentTitle("Login");
 
   const { setProfile } = useProfile();

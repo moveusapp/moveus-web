@@ -40,7 +40,7 @@ const getProfileFromLS = () => {
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
   const [profile, setProfile] = useState<ContextProfileFragment | null>(
-    getProfileFromLS(),
+    () => getProfileFromLS(),
   );
 
   useEffect(() => {

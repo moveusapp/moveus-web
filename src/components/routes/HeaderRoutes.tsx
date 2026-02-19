@@ -9,7 +9,7 @@ function HeaderRoutes() {
         <Link to="/notifications">
           <HiBell />
         </Link>
-        <img src={moveusLogo} className="w-24" />
+        <img src={moveusLogo} alt="MoveUs" className="w-24" />
         <Link to="/search">
           <HiMagnifyingGlass />
         </Link>

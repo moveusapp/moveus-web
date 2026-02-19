@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-function Toggle({ defaultValue, onToggleChanged, className }: ToggleProps) {
+function Toggle({ defaultValue, onToggleChanged, className }: ToggleProps) {  
   const [value, setValue] = useState(defaultValue);
 
   const handleClick = useCallback(() => {

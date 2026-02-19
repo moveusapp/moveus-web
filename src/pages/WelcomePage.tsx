@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import useDocumentTitle from "../hooks/use-document-title";
 
-export function WelcomePage() {
+function WelcomePage() {
   useDocumentTitle("Welcome");
 
   return (

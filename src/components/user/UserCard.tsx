@@ -17,7 +17,7 @@ function UserCard({ user, tags, isSelf }: UserCardProps) {
       <div className="inner">
         <div className="tags">
           {tags?.map((tag) => {
-            return <p>{tag.text}</p>;
+            return <p key={`tag-${tag.text}`}>{tag.text}</p>;
           })}
         </div>
         <h4>
