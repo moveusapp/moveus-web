@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { HiCog6Tooth } from "react-icons/hi2";
 import FriendshipButton from "./FriendshipButton";
 import EventCard from "../event/EventCard";
+import strings from "@/translations/strings";
 
 function UserView({ user, isSelf }: UserViewProps) {
   const name = displayName(user.username, user.firstName, user.lastName);
@@ -33,7 +34,7 @@ function UserView({ user, isSelf }: UserViewProps) {
       </div>
       <p className="text-lg">{user.bio}</p>
       <div className="text-accent [&>p]:mr-4 flex">
-        {user.dateOfBirth && <p>Age: {getAge(user.dateOfBirth)}</p>}
+        {user.dateOfBirth && <p>{strings.age}: {getAge(user.dateOfBirth)}</p>}
         {user.gender && (
           <p>{user.gender.toLocaleLowerCase().replace("_", " ")}</p>
         )}
@@ -51,7 +52,7 @@ function UserView({ user, isSelf }: UserViewProps) {
       </div>
       {isSelf ? (
         <Link to="/profile-setup">
-          <button>setup profile</button>
+          <button>{strings.finishProfileSetup}</button>
         </Link>
       ) : (
         <div className="flex gap-3">

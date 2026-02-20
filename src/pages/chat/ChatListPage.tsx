@@ -9,6 +9,7 @@ import UserCard from "@/components/user/UserCard";
 import ChatCard from "../../components/chat/ChatCard";
 import UserCardSkeleton from "@/components/user/UserCardSkeleton";
 import ChatCardSkeleton from "@/components/chat/ChatCardSkeleton";
+import strings from "@/translations/strings";
 
 type ChatsPageTab = "chats" | "friends";
 
@@ -47,7 +48,7 @@ function ChatListPage() {
             " w-full cursor-pointer font-medium text-lg"
           }
         >
-          chats
+          {strings.chat}
         </p>
         <p
           onClick={() => setTab("friends")}
@@ -56,13 +57,15 @@ function ChatListPage() {
             " w-full cursor-pointer font-medium text-lg"
           }
         >
-          friends
+          {strings.friends}
         </p>
       </div>
       {tab === "chats" ? (
         <div className="overflow-auto pb-8 flex-1 flex flex-col gap-3">
           {chatsLoading
-            ? [...Array(4)].map((_, index) => <ChatCardSkeleton key={`chat-skeleton-${index}`} />)
+            ? [...Array(4)].map((_, index) => (
+                <ChatCardSkeleton key={`chat-skeleton-${index}`} />
+              ))
             : chats?.map((chat, index) => (
                 <ChatCard key={`chat-${index}`} chat={chat} />
               ))}

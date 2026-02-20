@@ -4,9 +4,8 @@ import { useMemo } from "react";
 import { useQuery } from "@apollo/client/react";
 import { GetHomeEventsDocument } from "@/graphql/graphql-types";
 import EventCard from "@/components/event/EventCard";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import EventCardSkeleton from "@/components/event/EventCardSkeleton";
+import strings from "@/translations/strings";
 
 function HomePage() {
   useDocumentTitle("Home Page");
@@ -31,7 +30,9 @@ function HomePage() {
   return (
     <div className="vertical pb-8">
       <div className="main-text">
-        Hello, {profile?.firstName ? profile.firstName : profile?.username}!
+        {strings.formatString(strings.hello, {
+          name: profile?.firstName ? profile.firstName! : profile?.username!,
+        })}
       </div>
       {loading ? (
         <div className="flex flex-col grow overflow-y-auto gap-4">
@@ -40,13 +41,12 @@ function HomePage() {
           ))}
         </div>
       ) : upcoming.length + ongoing.length === 0 ? (
-        <p>No upcoming events</p>
+        <p>{strings.noUpcomingEvents}</p>
       ) : (
         <div className="flex flex-col grow overflow-y-auto gap-4">
           {ongoing.map((e) => (
             <EventCard event={e!} key={e?.id} />
           ))}
-          <p className="font-medium">Upcoming events: </p>
           {upcoming.map((e) => (
             <EventCard event={e!} key={e?.id} />
           ))}
