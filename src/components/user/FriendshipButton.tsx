@@ -1,6 +1,4 @@
 import { use, useCallback, useMemo, useState } from "react";
-import { HashLoader } from "react-spinners";
-import { LOADER_COLOR } from "@/constants";
 import {
   RelationshipStatus,
   AcceptFriendRequestDocument,

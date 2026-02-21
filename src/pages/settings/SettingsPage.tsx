@@ -8,10 +8,9 @@ import {
 } from "@/graphql/graphql-types";
 import Dropdown from "@/components/ui/Dropdown";
 import { apolloClient } from "@/appolo/client";
-import { HashLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
-import { LOADER_COLOR } from "@/constants";
 import { useMutation } from "@apollo/client/react";
+import Button from "@/components/ui/Button";
 
 const privacyScopeOptions: Option<PrivacyScope>[] = [
   {
@@ -62,12 +61,14 @@ function SettingsPage() {
         })
         .then(() => {
           setProfile((p: any) => {
-            const newPrivacySettings = p?.privacySettings.map((setting: any) => {
-              return {
-                ...setting,
-                scope: newScope,
-              };
-            });
+            const newPrivacySettings = p?.privacySettings.map(
+              (setting: any) => {
+                return {
+                  ...setting,
+                  scope: newScope,
+                };
+              },
+            );
             return {
               ...p,
               privacySettings: newPrivacySettings!,
@@ -100,13 +101,38 @@ function SettingsPage() {
           classname="text-nowrap shrink-0"
         />
       </div>
-      {logoutLoading ? (
-        <HashLoader color={LOADER_COLOR} className=" mt-auto mb-8 mx-auto" />
-      ) : (
-        <button className="mt-auto mb-8" onClick={onLogout}>
-          Logout
-        </button>
-      )}
+      <button
+        className="mt-auto mb-8"
+        onClick={() =>
+          (document.getElementById("logoutModal") as any).showModal()
+        }
+      >
+        Logout
+      </button>
+      <dialog id="logoutModal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Logout?</h3>
+          <p className="py-4">Are you sure you'd like to logout?</p>
+          <div className="modal-action">
+            <div className="flex flex-row gap-2">
+              <form method="dialog">
+                <Button
+                  className={`btn w-22 ${logoutLoading ? "btn-disabled" : ""}`}
+                >
+                  Cancel
+                </Button>
+              </form>
+              <Button
+                onClick={onLogout}
+                loading={logoutLoading}
+                className="btn btn-primary w-22"
+              >
+                Logout
+              </Button>
+            </div>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }

@@ -106,7 +106,6 @@ function ChatPage() {
         {message.userId === member?.user.id ? (
           <div className="flex gap-4">
             <UserAvatar
-              canChange={false}
               userId={message.userId!}
               className="w-10 h-10 rounded-full"
             />

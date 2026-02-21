@@ -16,7 +16,7 @@
   --color-base-300: #e2e8f0;
   --color-base-content: #1e293b;
   --color-info: #2563eb;
-  --color-success: #10b981;
+  --color-success: #028ED1;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
 }
@@ -38,6 +38,23 @@
 
 * {
   scrollbar-width: thin;
+}
+
+@utility modal {
+  @apply duration-70;
+}
+
+@utility modal-box {
+  @apply duration-70;
+  @apply rounded-2xl;
+}
+
+@utility btn {
+  @apply rounded-2xl;
+}
+
+@utility input {
+  @apply rounded-2xl;
 }
 
 html, body, #root {

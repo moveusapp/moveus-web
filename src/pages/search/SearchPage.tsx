@@ -7,7 +7,6 @@ import { SearchItemsDocument } from "@/graphql/graphql-types";
 import { useLazyQuery } from "@apollo/client/react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { HashLoader } from "react-spinners";
 import EventCard from "../../components/event/EventCard";
 import UserCard from "@/components/user/UserCard";
 import { useProfile } from "@/context/profile-context";
@@ -82,7 +81,7 @@ function SearchPage() {
         </header>
         <div className="flex flex-col items-center gap-2 w-full mx-auto p-4 max-w-[700px]">
           {searchLoading ? (
-            <HashLoader />
+            <div className="loading loading-dots text-primary"/>
           ) : (
             <>
               {hasResults() ? (
