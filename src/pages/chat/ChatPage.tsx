@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { HashLoader } from "react-spinners";
 import UserAvatar from "@/components/user/UserAvatar";
 import SendMessage from "@/pages/chat/SendMessage";
-import BackButton from "@/components/routes/BackButton";
 import { LOADER_COLOR } from "@/constants";
 import {
   ChatMessagesDocument,
@@ -45,17 +44,21 @@ function ChatPage() {
     }
   }, [chat]);
 
-  const { data: messageSubData, loading: messageSubLoading } =
-    useSubscription(ChatMessagesDocument, {
+  const { data: messageSubData, loading: messageSubLoading } = useSubscription(
+    ChatMessagesDocument,
+    {
       variables: { chatId: chat?.id! },
       skip: !chat?.id,
-    });
+    },
+  );
 
-  const { data: lastOpenData, loading: lastOpenLoading } =
-    useSubscription(LastOpenDocument, {
+  const { data: lastOpenData, loading: lastOpenLoading } = useSubscription(
+    LastOpenDocument,
+    {
       variables: { chatId: chat?.id! },
       skip: !chat?.id,
-    });
+    },
+  );
 
   const addNewMessage = useCallback(
     (message: WsChatMessageType) => {
@@ -99,6 +102,7 @@ function ChatPage() {
     lastDate = message.timeSent!;
     return (
       <Fragment key={message.id}>
+        {dateElement}
         {message.userId === member?.user.id ? (
           <div className="flex gap-4">
             <UserAvatar
@@ -121,7 +125,7 @@ function ChatPage() {
             </div>
           </div>
         ) : (
-          <div className="relative p-[10px] font-medium bg-accent text-background pr-16 self-end max-w-[75%] wrap-break-word rounded-[15px]">
+          <div className="relative p-[10px] font-medium bg-secondary text-background pr-16 self-end max-w-[75%] wrap-break-word rounded-[15px]">
             <p>{message.textContent}</p>
             <span className="text-xs absolute right-[10px] bottom-[10px]">
               {`${prependZero(message.timeSent!.getHours())}:${prependZero(message.timeSent!.getMinutes())}`}
@@ -145,17 +149,15 @@ function ChatPage() {
             )}
           </div>
         )}
-        {dateElement}
       </Fragment>
     );
   });
 
   return (
-    <div className="vertical">
-      <nav className="my-8 grid grid-cols-8">
-        <BackButton />
+    <div className="h-full flex flex-col">
+      <nav className="flex-shrink-0 p-4">
         {member && (
-          <h2 className="text-center text-2xl col-span-6">
+          <h2 className="text-center text-2xl">
             {displayName(
               member.user.username,
               member.user.firstName,
@@ -164,19 +166,20 @@ function ChatPage() {
           </h2>
         )}
       </nav>
+
       {loading || messageSubLoading || lastOpenLoading ? (
-        <div className="vertical justify-center items-center">
+        <div className="flex-1 flex flex-col justify-center items-center">
           <HashLoader color={LOADER_COLOR} />
         </div>
       ) : (
-        <div className="vertical">
-          <div className="vertical gap-4">
-            <div className="grow overflow-y-auto flex flex-col-reverse gap-4">
-              {messageElements.reverse()}
-            </div>
+        <>
+          <div className="flex-1 overflow-y-auto flex flex-col gap-4 px-4">
+            {messageElements}
           </div>
-          <SendMessage chatId={chat?.id!} addMessage={addNewMessage} />
-        </div>
+          <div className="flex-shrink-0 p-4">
+            <SendMessage chatId={chat?.id!} addMessage={addNewMessage} />
+          </div>
+        </>
       )}
     </div>
   );

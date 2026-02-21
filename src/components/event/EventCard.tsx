@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { EventCardFragment } from "@/graphql/graphql-types";
 import { prependZero } from "@/utils/time-utils";
 
-function EventCard({
+function OldEventCard({
   event: { id, title, startTime, location, participantCount },
   ongoing = false,
 }: EventCardProps) {
@@ -68,7 +68,7 @@ function EventCard({
   );
 }
 
-export default EventCard;
+export default OldEventCard;
 
 interface EventCardProps {
   event: EventCardFragment;

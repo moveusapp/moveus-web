@@ -2,7 +2,6 @@ import { setDocumentTitle } from "@/hooks/use-document-title";
 import { useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import { GetEventDocument } from "@/graphql/graphql-types";
-import BackButton from "@/components/routes/BackButton";
 import EventInfoTab from "@/pages/event/EventInfoTab";
 import EventParticipantsTab from "@/pages/event/EventParticipantsTab";
 import EventPostsTab from "@/pages/event/EventPostsTab";
@@ -44,7 +43,6 @@ function EventPage() {
 
   return (
     <div className="pt-8 h-full flex flex-col">
-      <BackButton />
       <div className="grow flex flex-col pb-8 max-h-[calc(100%-2rem)]">
         <div className="flex justify-around py-2 border-b border-foreground bottom-1 [&>p]:cursor-pointer [&>p]:select-none my-4">
           <p

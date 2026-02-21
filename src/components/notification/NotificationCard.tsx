@@ -2,6 +2,7 @@ import { NotificationEnum } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { prependZero } from "@/utils/time-utils";
 import { Link } from "react-router-dom";
+import UserAvatar from "../user/UserAvatar";
 
 function NotificationCard({ notification }: NotificationCardProps) {
   if (notification?.__typename !== "UserNotificationType") return <></>;
@@ -19,28 +20,38 @@ function NotificationCard({ notification }: NotificationCardProps) {
       return (
         <Link
           key={notification.id}
-          className="notification"
+          className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
           to={`/user/${notification.user?.id}`}
         >
-          <div>
-            <h3>New friend!</h3>
-            <p>{time}</p>
+          <div className="flex flex-row gap-2">
+            <UserAvatar
+              userId={notification.user?.id}
+              className="w-12"
+            />
+            <div className="flex flex-col justify-between">
+              <p><b>{name}</b> accepted your friend request.</p>
+              <p className="text-base-content/70 text-sm">{time}</p>
+            </div>
           </div>
-          <p>{name} accepted your friend request.</p>
         </Link>
       );
     case NotificationEnum.FriendRequest:
       return (
         <Link
           key={notification.id}
-          className="notification"
+          className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25"
           to={`/user/${notification.user?.id}`}
         >
-          <div>
-            <h3>New friend request!</h3>
-            <p>{time}</p>
+          <div className="flex flex-row gap-2">
+            <UserAvatar
+              userId={notification.user?.id}
+              className="w-12"
+            />
+            <div className="flex flex-col justify-between">
+              <p><b>{name}</b> sent you a friend request.</p>
+              <p className="text-base-content/70 text-sm">{time}</p>
+            </div>
           </div>
-          <p>{name} sent you friend request.</p>
         </Link>
       );
     default:

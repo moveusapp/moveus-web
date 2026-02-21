@@ -5,6 +5,7 @@ import "@/styles/reuseable.css";
 import App from "./App";
 import { ApolloProvider } from "@apollo/client/react";
 import { apolloClient } from "./appolo/client";
+import { UserProvider } from "./context/profile-context";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -12,7 +13,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
-      <App />
+      <UserProvider>
+        <App />
+      </UserProvider>
     </ApolloProvider>
   </React.StrictMode>,
 );

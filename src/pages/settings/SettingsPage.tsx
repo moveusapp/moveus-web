@@ -1,13 +1,12 @@
 import { useProfile } from "@/context/profile-context";
 import useDocumentTitle from "@/hooks/use-document-title";
-import BackButton from "@/components/routes/BackButton";
 import { useCallback, useEffect, useState } from "react";
 import {
   PrivacyScope,
   UpdateAllPrivacySettingsDocument,
   LogOutDocument,
 } from "@/graphql/graphql-types";
-import Dropdown from "@/components/input/Dropdown";
+import Dropdown from "@/components/ui/Dropdown";
 import { apolloClient } from "@/appolo/client";
 import { HashLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
@@ -86,7 +85,6 @@ function SettingsPage() {
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center my-8 text-3xl gap-4">
-        <BackButton />
         <h2>Settings</h2>
       </div>
 

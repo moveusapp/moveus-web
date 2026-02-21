@@ -12,12 +12,12 @@ import {
 } from "@/graphql/graphql-types";
 import { pick } from "@/utils/pick";
 import FirstLastName from "@/components/user/FirstLastName";
-import SingleChoice from "@/components/input/SingleChoice";
+import SingleChoice from "@/components/ui/SingleChoice";
 import { enumToOptions } from "@/utils/enum-to-options";
 import ProfileBio from "@/components/user/ProfileBio";
 import DateOfBirth from "@/components/user/DateOfBirth";
 import { apolloClient } from "@/appolo/client";
-import MultiChoice from "@/components/input/MultiChoice";
+import MultiChoice from "@/components/ui/MultiChoice";
 import {
   surveyInfoKeyToOptions,
   surveyInfoKeyToTitle,

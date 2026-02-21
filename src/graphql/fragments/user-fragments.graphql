@@ -53,6 +53,7 @@ fragment User on UserType {
   dislikes
   dateOfBirth
   friendCount
+  verified
   relationship {
     status
     chat {
@@ -69,4 +70,5 @@ fragment UserCard on UserType {
   username
   firstName
   lastName
+  verified
 }

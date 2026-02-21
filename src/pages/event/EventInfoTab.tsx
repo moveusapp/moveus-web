@@ -35,7 +35,7 @@ function EventInfoTab({ event }: EventInfoTabProps) {
       ) : (
         <UserCard
           user={organizerUser!}
-          tags={[{ text: "organizer" }]}
+          tags={[{ text: "Organizer" }]}
           isSelf={profile?.id === organizerUser?.id}
         />
       )}

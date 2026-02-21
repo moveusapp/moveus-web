@@ -3,7 +3,7 @@ import {
   firstnameValidator,
   lastnameValidator,
 } from "@/utils/validators/basic-info-validators";
-import TextInput from "../input/TextInput";
+import TextInput from "../ui/TextInput";
 
 function FirstLastName({
   firstname,

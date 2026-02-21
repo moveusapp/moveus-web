@@ -1,12 +1,11 @@
 import { ChangeEvent, useCallback, useState } from "react";
 import DateTimePicker from "react-datetime-picker";
-import TextArea from "@/components/input/TextArea";
-import TextInput from "@/components/input/TextInput";
-import BackButton from "@/components/routes/BackButton";
+import TextArea from "@/components/ui/TextArea";
+import TextInput from "@/components/ui/TextInput";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import "@/styles/date-time-picker.css";
-import Dropdown from "@/components/input/Dropdown";
+import Dropdown from "@/components/ui/Dropdown";
 import {
   Activity,
   GenderNoPnts,
@@ -15,9 +14,9 @@ import {
 } from "@/graphql/graphql-types";
 import { useMutation } from "@apollo/client/react";
 import { enumToOptions } from "@/utils/enum-to-options";
-import LocationPicker from "@/components/input/LocationPicker";
-import MultiChoice from "@/components/input/MultiChoice";
-import Toggle from "@/components/input/Toggle";
+import LocationPicker from "@/components/ui/LocationPicker";
+import MultiChoice from "@/components/ui/MultiChoice";
+import Toggle from "@/components/ui/Toggle";
 import HashLoader from "react-spinners/HashLoader";
 import { LOADER_COLOR } from "@/constants";
 import { useNavigate } from "react-router-dom";
@@ -124,7 +123,6 @@ function CreateEventPage() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center my-8 text-3xl gap-4 shrink-0">
-        <BackButton />
         <h2>Create Event</h2>
       </div>
       <div className="grow overflow-y-auto pb-8">

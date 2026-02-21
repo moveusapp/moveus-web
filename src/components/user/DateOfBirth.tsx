@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import Dropdown from "../input/Dropdown";
+import Dropdown from "../ui/Dropdown";
 
 const dayOptions: Option<number>[] = Array.from({ length: 31 }, (_, i) => ({
   name: (i + 1).toString(),

@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useState } from "react";
 import { bioValidator } from "@/utils/validators/basic-info-validators";
-import TextArea from "../input/TextArea";
+import TextArea from "../ui/TextArea";
 
 function ProfileBio({ bio, setBio }: ProfileBioProps) {
   const [localBio, setLocalBio] = useState(bio);

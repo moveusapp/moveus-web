@@ -9,17 +9,22 @@ import {
   SendFriendRequestDocument,
 } from "@/graphql/graphql-types";
 import { useMutation } from "@apollo/client/react";
+import Button from "../ui/Button";
 
 function FriendshipButton({ status: ogStatus, userId }: FriendshipButtonProps) {
   const [status, setStatus] = useState(ogStatus);
 
-  const [sendRequest, { loading: sendLoading }] =
-    useMutation(SendFriendRequestDocument);
-  const [acceptRequest, { loading: acceptLoading }] =
-    useMutation(AcceptFriendRequestDocument);
-  const [cancelRequest, { loading: cancelLoading }] =
-    useMutation(CancelFriendRequestDocument);
-  const [removeFriend, { loading: removeLoading }] = useMutation(RemoveFriendDocument);
+  const [sendRequest, { loading: sendLoading }] = useMutation(
+    SendFriendRequestDocument,
+  );
+  const [acceptRequest, { loading: acceptLoading }] = useMutation(
+    AcceptFriendRequestDocument,
+  );
+  const [cancelRequest, { loading: cancelLoading }] = useMutation(
+    CancelFriendRequestDocument,
+  );
+  const [removeFriend, { loading: removeLoading }] =
+    useMutation(RemoveFriendDocument);
 
   const handleSend = useCallback(() => {
     sendRequest({
@@ -57,22 +62,33 @@ function FriendshipButton({ status: ogStatus, userId }: FriendshipButtonProps) {
     return sendLoading || acceptLoading || cancelLoading || removeLoading;
   }, [sendLoading, acceptLoading, cancelLoading, removeLoading]);
 
-  if (loading)
-    return (
-      <div className="self-center flex justify-center items-center w-full">
-        <HashLoader color={LOADER_COLOR} />
-      </div>
-    );
-
   switch (status) {
+    case null:
+    case undefined:
     case RelationshipStatus.None:
-      return <button onClick={handleSend}>Send request</button>;
+      return (
+        <Button loading={loading} onClick={handleSend} className="btn-primary w-30">
+          Add Friend
+        </Button>
+      );
     case RelationshipStatus.RequestReceived:
-      return <button onClick={handleAccept}>Accept request</button>;
+      return (
+        <Button loading={loading} onClick={handleAccept} className="btn-primary">
+          Accept Request
+        </Button>
+      );
     case RelationshipStatus.RequestSent:
-      return <button onClick={handleCancel}>Cancel request</button>;
+      return (
+        <Button loading={loading} onClick={handleCancel} className="w-40">
+          Cancel Request
+        </Button>
+      );
     case RelationshipStatus.Friends:
-      return <button onClick={handleRemove}>Remove friend</button>;
+      return (
+        <Button loading={loading} onClick={handleRemove} className="btn-error btn-outline w-38">
+          Remove Friend
+        </Button>
+      );
   }
   return <></>;
 }

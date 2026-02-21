@@ -2,28 +2,43 @@ import { UserCardFragment } from "@/graphql/graphql-types";
 import { Link } from "react-router-dom";
 import UserAvatar from "@/components/user/UserAvatar";
 import { displayName } from "@/utils/display-name";
+import Tag from "@/components/misc/Tag";
+import { HiCheckBadge } from "react-icons/hi2";
 
 function UserCard({ user, tags, isSelf }: UserCardProps) {
+  const name = displayName(
+    user.username!,
+    user.firstName,
+    user.lastName,
+    isSelf,
+  );
+
   return (
     <Link
-      className="user-card mb-3"
-      to={isSelf ? "/profile" : `/user/${user!.id}`}
+      key={user.id}
+      className="bg-base-200 w-full rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
+      to={`/user/${user?.id}`}
     >
-      <UserAvatar
-        canChange={false}
-        userId={user.id!}
-        className="inline-block"
-      />
-      <div className="inner">
-        <div className="tags">
-          {tags?.map((tag) => {
-            return <p key={`tag-${tag.text}`}>{tag.text}</p>;
-          })}
+      <div className="flex flex-row gap-2">
+        <UserAvatar userId={user?.id!} className="w-12" />
+        <div className="flex flex-col w-full justify-between">
+          <div className="flex flex-row justify-between">
+            <div className="flex flex-row items-center gap-1">
+              <b>{name}</b>
+              {user.verified && <HiCheckBadge className="text-primary" />}
+            </div>
+            <div className="flex flex-row gap-1">
+              {tags?.map((tag) => (
+                <Tag
+                  key={`tag-${tag.text}`}
+                  text={tag.text}
+                  className={tag.className}
+                />
+              ))}
+            </div>
+          </div>
+          <p className="text-base-content/70 text-sm">@{user.username}</p>
         </div>
-        <h4>
-          {displayName(user.username, user.firstName, user.lastName, isSelf)}
-        </h4>
-        <p className="username">@{user.username}</p>
       </div>
     </Link>
   );
@@ -37,7 +52,7 @@ interface UserCardProps {
 
 interface UserCardTag {
   text: string;
-  color?: string;
+  className?: string;
 }
 
 export default UserCard;

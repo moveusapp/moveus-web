@@ -13,11 +13,11 @@
 }
 
 .user-card .tags {
-  @apply flex gap-2 text-xs text-background;
+  @apply flex gap-2 text-xs;
 }
 
 .user-card .tags p {
-  @apply bg-block-accent px-2 rounded-full;
+  @apply px-2 rounded-full;
 }
 
 .user-card h4 {
@@ -37,7 +37,7 @@
 }
 
 .notification {
-  @apply bg-block p-6 rounded-[15px];
+  @apply p-6 rounded-[15px];
 }
 
 .notification div {

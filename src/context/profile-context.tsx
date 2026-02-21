@@ -9,7 +9,7 @@ import {
   ContextProfileFragment,
   GetMyProfileDocument,
 } from "@/graphql/graphql-types";
-import { apolloClient } from "@/appolo/client";
+import { useQuery } from "@apollo/client/react";
 
 type ProfileContextType = {
   profile: ContextProfileFragment | null;
@@ -43,26 +43,22 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     () => getProfileFromLS(),
   );
 
-  useEffect(() => {
-    localStorage.setItem("profile", JSON.stringify(profile));
-  }, [profile, setProfile]);
+  const { data } = useQuery(GetMyProfileDocument, {
+    skip: !localStorage.getItem("profile"),
+    fetchPolicy: "cache-first"
+  });
 
   useEffect(() => {
-    if (localStorage.getItem("profile")) {
-      apolloClient
-        .query({
-          query: GetMyProfileDocument,
-        })
-        .then((result) => {
-          if (result && result.data && result.data.myProfile) {
-            setProfile(result.data.myProfile);
-          }
-        })
-        .catch((_) => {
-          setProfile(null);
-        });
+    if (data?.myProfile) {
+      setProfile(data.myProfile);
     }
-  }, []);
+  }, [data]);
+
+  useEffect(() => {
+    if (profile) {
+      localStorage.setItem("profile", JSON.stringify(profile));
+    }
+  }, [profile]);
 
   return (
     <ProfileContext.Provider value={{ profile, setProfile }}>

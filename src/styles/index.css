@@ -1,90 +1,77 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@theme {
-  --color-block-accent: #f58431;
-  --color-foreground: #303b70;
-  --color-accent: #0091d4;
-  --color-block: #ceefff;
-  --color-background: #fffdf8;
-  --color-primary: #60ccf2;
-  --color-error: #b54e36;
+@plugin "daisyui" {
+  themes: light --default;
+}
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: #028ED1;
+  --color-secondary: #e8f2ff;
+  --color-accent: #E77A34;
+  --color-neutral: #64748b;
+  --color-base-100: #f8fafc;
+  --color-base-200: #ffffff;
+  --color-base-300: #e2e8f0;
+  --color-base-content: #1e293b;
+  --color-info: #2563eb;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: false;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+}
+
+* {
+  scrollbar-width: thin;
+}
+
+html, body, #root {
+  height: 50%;
 }
 
 body {
-  margin: 0;
-  font-family: Quicksand, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  @apply p-0 text-foreground bg-background overflow-hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  display: none;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  display: none;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #ceefff;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #60ccf2;
+  background: #cbd5e1;
+  border-radius: 999px;
 }
 
-code {
-  font-family:
-    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
 }
 
-main {
-  @apply max-w-2xl mx-auto h-screen px-4 flex flex-col;
-  height: 100dvh;
-}
-
-.container-center {
-  @apply h-full flex flex-col items-center justify-center;
-}
-
-button,
-input[type="submit"] {
-  @apply block text-center rounded-[15px] px-1 py-4
-  md:text-xl font-semibold text-background w-full;
-}
-
-button:not([class*="bg-"]) {
-  @apply bg-accent;
-}
-
-label {
-  @apply block w-full;
-}
-
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="number"],
-textarea {
-  @apply block w-full rounded-[15px] border-solid border border-foreground md:p-6 p-4 outline-foreground bg-background;
-}
-
-input[type="text"]::placeholder,
-input[type="password"]::placeholder,
-input[type="email"]::placeholder,
-textarea::placeholder {
-  @apply text-accent;
-}
-
-.main-text {
-  @apply text-3xl font-medium mb-4 self-start;
-}
-
-h4 {
-  @apply text-xl mb-2 mt-4 self-start;
-}
-
-.vertical {
-  @apply flex flex-col flex-1 overflow-hidden;
+@layer base {
+  button {
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    cursor: not-allowed;
+  }
 }

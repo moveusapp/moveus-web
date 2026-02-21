@@ -1,9 +1,8 @@
 import { ChangeEvent, FormEvent, useCallback, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { HashLoader } from "react-spinners";
-import TextArea from "@/components/input/TextArea";
-import TextInput from "@/components/input/TextInput";
-import BackButton from "@/components/routes/BackButton";
+import TextArea from "@/components/ui/TextArea";
+import TextInput from "@/components/ui/TextInput";
 import { LOADER_COLOR } from "@/constants";
 import { CreatePostDocument } from "@/graphql/graphql-types";
 import { useMutation } from "@apollo/client/react";
@@ -68,7 +67,6 @@ function CreatePostPage() {
 
   return (
     <div className="py-8 h-full flex flex-col">
-      <BackButton />
       <form
         className="grow w-full mt-8 flex flex-col gap-4"
         onSubmit={onCreateEvent}

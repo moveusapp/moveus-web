@@ -63,10 +63,20 @@ fragment Event on EventType {
 fragment EventCard on EventType {
   id
   title
+  activity {
+    id
+  }
+  organizer {
+    user {
+      ...UserCard
+    }
+  }
   startTime
   description
   participantCount
+  maxParticipants
   location {
+    name
     longitude
     latitude
   }

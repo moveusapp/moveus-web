@@ -8,26 +8,27 @@ import { Link } from "react-router-dom";
 function ChatCard({ chat }: ChatCardProps) {
   return (
     <Link
-      className="p-6 rounded-[15px] relative bg-block block w-full box-border"
+      className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
       to={`/chat/${chat?.members[0]!.user.id}`}
     >
-      <span className="absolute top-6 right-6 text-[10px] font-medium">
-        {!chat ? "" : timeAgo(chat?.lastMessage?.timeSent!)}
-      </span>
       <div className="flex gap-4 font-medium relative items-center">
         <UserAvatar
-          canChange={false}
           userId={chat?.members[0]!.user.id!}
-          className="w-10 h-10 rounded-full"
+          className="w-12"
         />
-        <div className="max-w-[55%] overflow-hidden">
-          <h5>
-            {displayName(
-              chat?.members[0]!.user.username!,
-              chat?.members[0]!.user.firstName!,
-              chat?.members[0]!.user.lastName!,
-            )}
-          </h5>
+        <div className="w-full overflow-hidden">
+          <div className="flex flex-row justify-between">
+            <p>
+              {displayName(
+                chat?.members[0]!.user.username!,
+                chat?.members[0]!.user.firstName!,
+                chat?.members[0]!.user.lastName!,
+              )}
+            </p>
+          <span className="text-xs text-base-content/70">
+            {!chat ? "" : timeAgo(chat?.lastMessage?.timeSent!)}
+          </span>
+          </div>
           <p className="text-xs">
             {chat?.lastMessage?.user.id !== chat?.members[0]!.user.id &&
               (chat!.lastMessage!.timeSent.getTime() >

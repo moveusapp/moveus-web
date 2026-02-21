@@ -1,206 +1,134 @@
-import { ChangeEvent, FormEvent, useCallback, useMemo, useState } from "react";
-import { HiMagnifyingGlass } from "react-icons/hi2";
-import { Link } from "react-router-dom";
-import { HashLoader } from "react-spinners";
-import UserAvatar from "@/components/user/UserAvatar";
-import BackButton from "@/components/routes/BackButton";
-import { LOADER_COLOR } from "@/constants";
-import { useProfile } from "@/context/profile-context";
+import useDocumentTitle from "@/hooks/use-document-title";
+import GlobalSearchWidget from "@/components/widgets/GlobalSearchWidget";
+import UserProgressWidget from "@/components/widgets/UserProgressWidget";
+import UserActivityWidget from "@/components/widgets/UserActivityWidget";
+import MainFooter from "@/components/misc/MainFooter";
 import { SearchItemsDocument } from "@/graphql/graphql-types";
-import useDocumentTitle, { setDocumentTitle } from "@/hooks/use-document-title";
-import { displayName } from "@/utils/display-name";
-import { FaCalendarDay, FaWindowRestore } from "react-icons/fa";
 import { useLazyQuery } from "@apollo/client/react";
-
-type ItemType = "User" | "Event" | "Post" | "All";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { HashLoader } from "react-spinners";
+import EventCard from "../home/EventCard";
+import UserCard from "@/components/user/UserCard";
+import { useProfile } from "@/context/profile-context";
 
 function SearchPage() {
-  useDocumentTitle("Search");
+  useDocumentTitle("Explore");
 
+  const tabs = ['All', 'Events', 'People', 'Posts']
+  const [activeTab, setActiveTab] = useState('All')
+
+  const [searchParams] = useSearchParams();
   const { profile } = useProfile();
 
-  const [searchString, setSearchString] = useState("");
-  const [lastSearch, setLastSearch] = useState("");
-  const [itemType, setItemType] = useState("All" as ItemType);
-
-  const [searchItems, { loading, data }] = useLazyQuery(
-    SearchItemsDocument, {
+  const [searchItems, { loading: searchLoading, data: searchData }] =
+    useLazyQuery(SearchItemsDocument, {
       fetchPolicy: "no-cache",
-      nextFetchPolicy: "no-cache"
+      nextFetchPolicy: "no-cache",
+    });
+
+  useEffect(() => {
+    const query = searchParams.get("q");
+    if (query) {
+      searchItems({ variables: { searchString: query } });
     }
-  );
+  }, [searchParams]);
 
-  const handleSearchChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const { value } = e.currentTarget;
-      setSearchString(value);
-    },
-    [setSearchString],
-  );
-
-  const handleSearch = useCallback(
-    (e: FormEvent) => {
-      e.preventDefault();
-      if (loading) return;
-      setDocumentTitle(`${searchString} - Search`);
-      setLastSearch(searchString);
-      searchItems({
-        variables: { searchString },
-      }).catch((e) => console.error(e));
-    },
-    [searchString, setLastSearch, loading, searchItems],
-  );
-
-  const items = useMemo(() => {
-    const filterSelf = data?.search?.filter(
-      (item) => item?.__typename !== "UserType" || item.id !== profile?.id,
-    );
-    switch (itemType) {
-      case "User":
-        return filterSelf?.filter((item) => item?.__typename === "UserType");
-      case "Event":
-        return filterSelf?.filter((item) => item?.__typename === "EventType");
-      case "Post":
-        return filterSelf?.filter((item) => item?.__typename === "PostType");
-      default:
-        return filterSelf;
+  const hasResults = () => {
+    if (searchLoading) {
+      return false;
     }
-  }, [data, itemType, profile?.id]);
+
+    if (!searchData || !searchData.search || searchData.search.length <= 0) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const canCreateCard = (type: string) => {
+    if (activeTab === "All") return true;
+
+    if (type === "EventType" && activeTab == "Events") return true;
+    if (type === "UserType" && activeTab == "People") return true;
+    if (type === "PostType" && activeTab == "Posts") return true;
+
+    return false;
+  }
 
   return (
-    <div className="vertical gap-4">
-      <div className="mt-8">
-        <BackButton />
-      </div>
-      <form className="flex" onSubmit={handleSearch}>
-        <input
-          type="text"
-          name="search"
-          autoComplete="off"
-          value={searchString}
-          onChange={handleSearchChange}
-          placeholder="search for something"
-          className="p-0! border-0! outline-0! placeholder:opacity-50 placeholder:text-foreground! placeholder:text-xl text-xl"
-        />
-        <button
-          type="submit"
-          className="bg-transparent"
-        >
-          <HiMagnifyingGlass className="text-2xl text-foreground ml-auto"/>
-        </button>
-      </form>
-      {lastSearch && <p>Results for '{lastSearch}'</p>}
-      <div className="flex justify-between items-center">
-        <p
-          className={
-            "cursor-pointer select-none font-medium " +
-            (itemType === "All" && "text-block-accent")
-          }
-          onClick={() => setItemType("All")}
-        >
-          All
-        </p>
-        <p
-          className={
-            "cursor-pointer select-none font-medium " +
-            (itemType === "User" && "text-block-accent")
-          }
-          onClick={() => setItemType("User")}
-        >
-          Users
-        </p>
-        <p
-          className={
-            "cursor-pointer select-none font-medium " +
-            (itemType === "Event" && "text-block-accent")
-          }
-          onClick={() => setItemType("Event")}
-        >
-          Events
-        </p>
-        <p
-          className={
-            "cursor-pointer select-none font-medium " +
-            (itemType === "Post" && "text-block-accent")
-          }
-          onClick={() => setItemType("Post")}
-        >
-          Posts
-        </p>
-      </div>
-      {loading ? (
-        <HashLoader color={LOADER_COLOR} className="mt-32 mx-auto" />
-      ) : (
-        <div className="vertical overflow-y-auto! gap-3 pb-8">
-          {items?.map((item) => {
-            switch (item?.__typename) {
-              case "UserType":
-                return (
-                  <Link
-                    to={`/user/${item.id}`}
-                    key={`user-${item.id}`}
-                    className="flex gap-4 bg-block p-6 rounded-[15px] items-center"
-                  >
-                    <UserAvatar
-                      canChange={false}
-                      userId={item.id!}
-                      className="w-10 h-10 rounded-full"
-                    />
-                    <div>
-                      <h5 className="font-medium text-lg">
-                        {displayName(
-                          item.username,
-                          item.firstName,
-                          item.lastName,
-                        )}
-                      </h5>
-                      <p className="text-sm">@{item.username}</p>
-                    </div>
-                  </Link>
-                );
+    <div className="flex flex-row">
+      <div className="flex flex-col mx-auto grow">
+        <header className="sticky top-0 z-20 bg-base-100/80 backdrop-blur-lg border-b border-base-300">
+          <div className="m-4 mb-0">
+            <GlobalSearchWidget />
+          </div>
+          <div className="flex px-4 pt-2 gap-1 justify-between overflow-x-auto scrollbar-none">
+            {tabs.map((tab) => (
+              <button
+                key={tab}
+                className={`px-4 py-2.5 text-sm font-medium whitespace-nowrap grow rounded-t-lg border-b-2 transition-all
+                ${
+                  activeTab === tab
+                    ? "border-primary text-primary bg-primary/5"
+                    : "border-transparent text-neutral hover:text-base-content hover:bg-base-200"
+                }`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </header>
+        <div className="flex flex-col items-center gap-2 w-full mx-auto p-4 max-w-[700px]">
+          {searchLoading ? (
+            <HashLoader />
+          ) : (
+            <>
+              {hasResults() ? (
+                <>
+                  {searchData?.search?.map((item) => {
+                    if (!canCreateCard(item?.__typename!)) {
+                      return;
+                    }
+                    switch (item?.__typename) {
+                      case "UserType":
+                        return (
+                          <UserCard
+                            key={item.id}
+                            user={item}
+                            isSelf={item.id === profile?.id}
+                          />
+                        );
 
-              case "EventType":
-                return (
-                  <Link
-                    to={`/event/${item.id}`}
-                    key={`event-${item.id}`}
-                    className="flex gap-4 bg-block p-6 rounded-[15px] items-center"
-                  >
-                    <FaCalendarDay className="text-4xl shrink-0 text-accent" />
-                    <div className="flex-1 overflow-hidden">
-                      <h5 className="font-medium text-lg">{item.title}</h5>
-                      <p className="text-sm overflow-hidden text-nowrap">
-                        {item.description ? (
-                          item.description
-                        ) : (
-                          <i>no description</i>
-                        )}
-                      </p>
-                    </div>
-                  </Link>
-                );
+                      case "EventType":
+                        return <EventCard key={item.id} event={item} />;
 
-              case "PostType":
-                return (
-                  <Link
-                    to={`/event/${item.event?.id}`}
-                    key={`post-${item.id}`}
-                    className="flex gap-4 bg-block p-6 rounded-[15px] items-center"
-                  >
-                    <FaWindowRestore className="text-4xl shrink-0 text-accent" />
-                    <div className="flex-1 overflow-hidden">
-                      <h5 className="font-medium text-lg">{item.title}</h5>
-                      <p className="text-sm overflow-hidden text-nowrap">
-                        {item.content ? item.content : <i>no content</i>}
-                      </p>
-                    </div>
-                  </Link>
-                );
-            }
-            return <></>;
-          })}
+                      case "PostType":
+                        return <></>;
+                    }
+                    return <></>;
+                  })}
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-base-content/70">
+                    {searchParams.get("q") &&
+                      `No results for query '${searchParams.get("q")}'`}
+                  </p>
+                </>
+              )}
+            </>
+          )}
         </div>
-      )}
+      </div>
+      <aside className="hidden lg:block lg:w-[280px] xl:w-[330px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto">
+        <div className="flex flex-col py-4 pr-4 gap-2">
+          <UserProgressWidget />
+          <UserActivityWidget />
+          <MainFooter />
+        </div>
+      </aside>
     </div>
   );
 }

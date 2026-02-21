@@ -5,7 +5,7 @@ import {
   ContextProfileFragment,
   SignUpDocument,
 } from "@/graphql/graphql-types";
-import TextInput from "@/components/input/TextInput";
+import TextInput from "@/components/ui/TextInput";
 import { HashLoader } from "react-spinners";
 import { LOADER_COLOR } from "@/constants";
 import { useProfile } from "@/context/profile-context";

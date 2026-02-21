@@ -1,13 +1,13 @@
 const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365;
 
-function getAge(dob: Date): number {
+export function getAge(dob: Date): number {
   const nowMS = new Date().getTime();
   const dobMS = dob.getTime();
   const d = nowMS - dobMS;
   return Math.trunc(d / MS_IN_YEAR);
 }
 
-function timeAgo(inputDate: Date | string): string {
+export function timeAgo(inputDate: Date | string): string {
   const date = new Date(inputDate);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -37,13 +37,20 @@ function timeAgo(inputDate: Date | string): string {
   }
 }
 
-function prependZero(number: number): string {
+export function prependZero(number: number): string {
   if (number < 10) return "0" + number;
   return number + "";
 }
 
-function formatTime(date: Date): string {
+export function formatDate(date: Date, locale: string = 'en-US'): string {
+  return new Intl.DateTimeFormat(locale, {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric'
+  }).format(date);
+}
+
+export function formatTime(date: Date): string {
   return `${prependZero(date.getHours())}:${prependZero(date.getMinutes())}`;
 }
 
-export { getAge, timeAgo, prependZero, formatTime };

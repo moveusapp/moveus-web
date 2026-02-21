@@ -7,7 +7,7 @@ function displayName(
   let formatted = "";
   if (!firstname) formatted = username;
   else formatted = firstname + (lastname ? " " + lastname : "");
-  return formatted + (isSelf ? " (you)" : "");
+  return formatted + (isSelf ? " (You)" : "");
 }
 
 export { displayName };

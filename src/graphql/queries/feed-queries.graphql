@@ -21,4 +21,7 @@ query GetHomeEvents {
   ongoingJoinedEvents {
     ...EventCard
   }
+  myRecommendedEvents {
+    ...EventCard
+  }
 }

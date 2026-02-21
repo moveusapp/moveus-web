@@ -91,7 +91,7 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
   );
 
   return (
-    <div className="my-8 flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       {selectedImage && (
         <button
           className="text-sm! px-2! py-1! inline! w-auto! bg-block-accent"
@@ -101,7 +101,7 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
         </button>
       )}
       <form
-        className="px-4 py-2 border border-foreground rounded-[15px] flex items-center gap-3 w-full"
+        className="px-4 py-2 border border-base-content/70 rounded-2xl flex justify-between items-center gap-3 w-full"
         onSubmit={handleSubmit}
       >
         <input
@@ -120,14 +120,11 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
           name="message"
           value={text}
           onChange={(e) => setText(e.currentTarget.value)}
-          className="p-0! border-0! outline-hidden! rounded-none!"
+          className="p-0! border-0! outline-hidden! grow rounded-none!"
           autoComplete="off"
           accept="image/*"
         />
-        <button
-          type="submit"
-          className="p-0! inline! w-auto! text-foreground! bg-transparent!"
-        >
+        <button type="submit">
           <HiPaperAirplane className="text-3xl shrink-0" />
         </button>
       </form>
