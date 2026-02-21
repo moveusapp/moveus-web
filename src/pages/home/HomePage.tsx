@@ -1,5 +1,5 @@
 import GlobalSearchWidget from "@/components/widgets/GlobalSearchWidget";
-import EventCard from "./EventCard";
+import EventCard from "../../components/event/EventCard";
 import MainFooter from "@/components/misc/MainFooter";
 import UserProgressWidget from "@/components/widgets/UserProgressWidget";
 import UserActivityWidget from "@/components/widgets/UserActivityWidget";

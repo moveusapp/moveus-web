@@ -8,7 +8,7 @@ import { useLazyQuery } from "@apollo/client/react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { HashLoader } from "react-spinners";
-import EventCard from "../home/EventCard";
+import EventCard from "../../components/event/EventCard";
 import UserCard from "@/components/user/UserCard";
 import { useProfile } from "@/context/profile-context";
 

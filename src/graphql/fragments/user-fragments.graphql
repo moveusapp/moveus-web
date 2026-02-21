@@ -37,7 +37,10 @@ fragment ContextProfile on ProfileType{
     setting
     scope
   }
-  organizes {
+  attendingEvents {
+    ...EventCard
+  }
+  organizingEvents {
     ...EventCard
   }
 }
@@ -60,7 +63,10 @@ fragment User on UserType {
       id
     }
   } 
-  organizes {
+  attendingEvents {
+    ...EventCard
+  }
+  organizingEvents {
     ...EventCard
   }
 }

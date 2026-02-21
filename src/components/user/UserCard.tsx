@@ -29,11 +29,9 @@ function UserCard({ user, tags, isSelf }: UserCardProps) {
             </div>
             <div className="flex flex-row gap-1">
               {tags?.map((tag) => (
-                <Tag
-                  key={`tag-${tag.text}`}
-                  text={tag.text}
-                  className={tag.className}
-                />
+                <Tag key={`tag-${tag.text}`} className={tag.className}>
+                  {tag.text}
+                </Tag>
               ))}
             </div>
           </div>

@@ -1,18 +1,25 @@
-import Tag from "@/components/misc/Tag";
 import Button from "@/components/ui/Button";
 import FriendshipButton from "@/components/user/FriendshipButton";
 import UserAvatar from "@/components/user/UserAvatar";
 import { useProfile } from "@/context/profile-context";
 import { GetUserDocument } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
-import { formatDate, formatTime, getAge } from "@/utils/time-utils";
 import { useQuery } from "@apollo/client/react";
-import { HiOutlineChat, HiStar } from "react-icons/hi";
+import {
+  HiOutlineChat,
+  HiOutlineStar,
+  HiOutlineCalendar,
+} from "react-icons/hi";
 import { HiCheckBadge } from "react-icons/hi2";
 import { useParams } from "react-router-dom";
-import EventCard from "../home/EventCard";
+import EventCard from "../../components/event/EventCard";
+import { useState } from "react";
+import UserPageSkeleton from "./UserPageSkeleton";
 
-function UserView() {
+function UserPage() {
+  const tabs = ["attending", "organizing"];
+  const [activeTab, setActiveTab] = useState("attending");
+
   const { userId } = useParams();
   const { data, loading } = useQuery(GetUserDocument, {
     variables: { userId: parseInt(userId!) },
@@ -20,7 +27,7 @@ function UserView() {
   const { profile } = useProfile();
 
   if (loading) {
-    return <></>;
+    return <UserPageSkeleton />;
   }
 
   const isSelf = profile?.id === data?.user?.id;
@@ -70,11 +77,6 @@ function UserView() {
                 <p>{data?.user?.bio}</p>
               )}
             </div>
-
-            <div className="flex flex-row gap-1 mt-1">
-              {data?.user?.dateOfBirth && <Tag text={`${getAge(data?.user?.dateOfBirth)} Years Old`} />}
-              {data?.user?.gender && <Tag text={data?.user?.gender?.toLocaleLowerCase()!} />}
-            </div>
           </div>
 
           {isSelf ? (
@@ -93,22 +95,45 @@ function UserView() {
         </div>
       </div>
 
-      <div className="bg-base-200 rounded-2xl border border-base-300 p-4">
-        <div className="flex flex-row gap-1 justify-center items-center">
-          <HiStar size={18} className="text-accent" />
-          <p className="font-medium">
-            Organizes ({data?.user?.organizes?.length})
-          </p>
+      <div className="bg-base-300 rounded-2xl border border-base-300 p-1">
+        <div className="flex flex-row gap-1 justify-between items-center">
+          <button
+            onClick={() => setActiveTab("attending")}
+            className={`hover:bg-base-200 transition-all p-2 rounded-2xl grow ${activeTab === "attending" ? "shadow-md bg-base-200" : ""}`}
+          >
+            <div className="flex flex-row gap-1 justify-center items-center">
+              <HiOutlineCalendar size={16} className="text-base-content/70" />
+              <p className="text-sm font-medium">
+                Attending ({data?.user?.attendingEvents?.length})
+              </p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("organizing")}
+            className={`hover:bg-base-200 transition-all p-2 rounded-2xl grow ${activeTab === "organizing" ? "shadow-md bg-base-200" : ""}`}
+          >
+            <div className="flex flex-row gap-1 justify-center grow items-center">
+              <HiOutlineStar size={16} className="text-base-content/70" />
+              <p className="text-sm font-medium">
+                Organizing ({data?.user?.organizingEvents?.length})
+              </p>
+            </div>
+          </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        {data?.user?.organizes?.map((event) => (
-          <EventCard key={event?.id} event={event!} />
-        ))}
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
+        {activeTab === "attending"
+          ? data?.user?.attendingEvents?.map((event) => (
+              <EventCard key={event?.id} event={event!} />
+            ))
+          : data?.user?.organizingEvents?.map((event) => (
+              <EventCard key={event?.id} event={event!} />
+            ))}
       </div>
     </div>
   );
 }
 
-export default UserView;
+export default UserPage;

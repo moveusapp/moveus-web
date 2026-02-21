@@ -1,15 +1,16 @@
-function Tag({ text, className }: TagProps) {
+import { PropsWithChildren } from "react";
+
+function Tag({ children, className }: TagProps) {
   return (
     <span
       className={`${className} px-3 py-1 rounded-full bg-accent text-white text-xs font-bold shadow-lg backdrop-blur-sm`}
     >
-      {text}
+      {children}
     </span>
   );
 }
 
-interface TagProps {
-  text: string;
+interface TagProps extends PropsWithChildren {
   className?: string;
 }
 
