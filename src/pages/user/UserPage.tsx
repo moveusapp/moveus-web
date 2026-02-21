@@ -83,13 +83,18 @@ function UserPage() {
             <Button>Edit Profile</Button>
           ) : (
             <div className="flex flex-row gap-1">
-              <Button>
-                <HiOutlineChat size={18} />
-              </Button>
-              <FriendshipButton
-                userId={data?.user?.id!}
-                status={data?.user?.relationship?.status!}
-              />
+              {profile && (
+                <>
+                  <Button>
+                    <HiOutlineChat size={18} />
+                  </Button>
+
+                  <FriendshipButton
+                    userId={data?.user?.id!}
+                    status={data?.user?.relationship?.status!}
+                  />
+                </>
+              )}
             </div>
           )}
         </div>
