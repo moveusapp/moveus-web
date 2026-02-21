@@ -117,6 +117,9 @@ function SettingsPage() {
             <div className="flex flex-row gap-2">
               <form method="dialog">
                 <Button
+                  onClick={() =>
+                    (document.getElementById("logoutModal") as any).close()
+                  }
                   className={`btn w-22 ${logoutLoading ? "btn-disabled" : ""}`}
                 >
                   Cancel
