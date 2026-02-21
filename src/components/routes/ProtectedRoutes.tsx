@@ -7,5 +7,5 @@ export function ProtectedRoutes() {
 
   const { profile } = useProfile();
 
-  return profile ? <Outlet /> : <Navigate to="/welcome" replace />;
+  return profile ? <Outlet /> : <Navigate to="/login" replace />;
 }

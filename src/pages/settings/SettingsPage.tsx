@@ -42,7 +42,8 @@ function SettingsPage() {
   const onLogout = useCallback(() => {
     logout()
       .then(() => {
-        navigate("/welcome");
+        localStorage.clear();
+        navigate("/login");
       })
       .catch((_) => {});
   }, [logout, navigate]);
