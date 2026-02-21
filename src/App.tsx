@@ -1,8 +1,6 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import HomePage from "./pages/home/HomePage";
-import { useProfile, UserProvider } from "./context/profile-context";
-import WelcomePage from "./pages/WelcomePage";
 import { ProtectedRoutes } from "./components/routes/ProtectedRoutes";
+import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfileSetupPage from "./pages/ProfileSetupPage";
@@ -35,15 +33,14 @@ function App() {
             </Route>
             <Route path="/profile-setup" element={<ProfileSetupPage />} />
             <Route path="/create-event" element={<CreateEventPage />} />
+            <Route path="/create-post/:eventId" element={<CreatePostPage />} />
           </Route>
           <Route element={<NavRoutes />}>
             <Route path="/user/:userId" element={<UserPage />} />
           </Route>
-          <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/event/:eventId" element={<EventPage />} />
-          <Route path="/create-post/:eventId" element={<CreatePostPage />} />
         </Routes>
       </Router>
     </main>
