@@ -13,21 +13,28 @@ function NotificationsPage() {
 
   const { data, loading } = useQuery(GetNotificationsDocument);
 
+  const hasNotifications = () =>
+    data && data.myNotifications && data.myNotifications.length > 0;
+
   return (
     <div className="flex flex-row">
       <div className="flex flex-col mx-auto grow">
         <div className="flex flex-col m-4 gap-2">
           <h1 className="font-medium text-xl">Notifications</h1>
-          {loading
-            ? [...Array(10)].map((_, index) => (
-                <NotificationCardSkeleton key={`notif-skeleton-${index}`} />
-              ))
-            : data?.myNotifications?.map((notification) => (
-                <NotificationCard
-                  key={`notif-${notification?.id}`}
-                  notification={notification}
-                />
-              ))}
+          {loading ? (
+            [...Array(10)].map((_, index) => (
+              <NotificationCardSkeleton key={`notif-skeleton-${index}`} />
+            ))
+          ) : hasNotifications() ? (
+            data?.myNotifications?.map((notification) => (
+              <NotificationCard
+                key={`notif-${notification?.id}`}
+                notification={notification}
+              />
+            ))
+          ) : (
+            <p className="text-sm text-base-content/70">No notifications at this time.</p>
+          )}
         </div>
       </div>
       <aside className="hidden lg:block lg:w-[280px] xl:w-[330px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto">

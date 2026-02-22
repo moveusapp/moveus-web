@@ -11,34 +11,39 @@ import MainFooter from "@/components/misc/MainFooter";
 function ChatListPage() {
   useDocumentTitle("Chats");
 
-  const { loading: chatsLoading, data: chatsData } =
-    useQuery(GetMyChatsDocument);
+  const { loading, data } = useQuery(GetMyChatsDocument);
 
   const chats = useMemo(() => {
-    if (chatsLoading) {
-      return Array(4).fill(undefined);
+    if (loading) {
+      return null;
     }
 
-    return chatsData?.myChats
+    return data?.myChats
       ?.filter((c) => c?.lastMessage)
       .sort(
         (a, b) =>
           b!.lastMessage!.timeSent!.getTime() -
           a!.lastMessage!.timeSent!.getTime(),
       );
-  }, [chatsData]);
+  }, [data]);
+
+  const hasChats = () => chats && chats.length > 0;
 
   return (
     <div className="flex flex-row">
       <div className="flex flex-col w-full mx-auto gap-3 p-4">
         <h1 className="font-medium text-xl">Messages</h1>
-        {chatsLoading
-          ? [...Array(10)].map((_, index) => (
-              <ChatCardSkeleton key={`chat-skeleton-${index}`} />
-            ))
-          : chats?.map((chat, index) => (
-              <ChatCard key={`chat-${index}`} chat={chat} />
-            ))}
+        {loading ? (
+          [...Array(10)].map((_, index) => (
+            <ChatCardSkeleton key={`chat-skeleton-${index}`} />
+          ))
+        ) : hasChats() ? (
+          chats?.map((chat, index) => (
+            <ChatCard key={`chat-${index}`} chat={chat!} />
+          ))
+        ) : (
+          <p className="text-sm text-base-content/70">No messages.</p>
+        )}
       </div>
       <aside className="hidden lg:block lg:w-[280px] xl:w-[330px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto">
         <div className="flex flex-col py-4 pr-4 gap-2">

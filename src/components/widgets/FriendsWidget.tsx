@@ -6,6 +6,8 @@ import UserCardSkeleton from "../user/UserCardSkeleton";
 function FriendsWidget() {
   const { data, loading } = useQuery(GetMyFriendsDocument);
 
+  const hasFriends = () => data && data.friends && data.friends.length > 0;
+
   return (
     <div className="bg-base-200 rounded-2xl border border-base-300 p-4">
       <h3 className="text-xs font-bold uppercase tracking-wider text-neutral mb-3">
@@ -13,11 +15,15 @@ function FriendsWidget() {
       </h3>
       <div className="flex flex-col gap-2.5">
         {loading ? (
-          [...Array(4)].map((_, index) => <UserCardSkeleton key={`user-skeleton-${index}`}/>)
-        ) : (
-          data!.friends!.map((friend) => 
+          [...Array(4)].map((_, index) => (
+            <UserCardSkeleton key={`user-skeleton-${index}`} />
+          ))
+        ) : hasFriends() ? (
+          data!.friends!.map((friend) => (
             <UserCard key={`user-${friend?.user?.id}`} user={friend?.user!} />
-          )
+          ))
+        ) : (
+          <p className="text-sm text-base-content/70">No friends.</p>
         )}
       </div>
     </div>

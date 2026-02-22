@@ -1,71 +1,34 @@
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  FocusEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { InputHTMLAttributes } from "react";
 
-function TextInput({
-  validate,
-  value,
-  setValue,
-  name,
-  label,
-  placeholder,
-  onBlur,
-  onChange,
-  className,
-  type = "text",
-}: TextInputProps) {
-  const id = `textinput-${name}`;
-  placeholder = placeholder ?? name;
-  const [error, setError] = useState("");
+interface TextInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> {
+  label: string;
+  error?: string;
+  className?: string;
+}
 
-  useEffect(() => {
-    if (validate === undefined || value === "") {
-      setError("");
-      return;
-    }
-    setError(validate(value) ?? "");
-  }, [setError, value, validate]);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue && setValue(e.currentTarget.value);
-    if (onChange) {
-      onChange(e);
-    }
-  };
+const TextInput = ({ 
+  label, 
+  error,
+  className = "", 
+  ...props 
+}: TextInputProps) => {
+  const hasError = !!error;
 
   return (
-    <label htmlFor={id} className={className}>
-      {label && <p className="my-2">{label}</p>}
+    <fieldset className={`fieldset ${className}`}>
+      <legend className="fieldset-legend">{label}</legend>
       <input
-        type={type}
-        name={name}
-        id={id}
-        placeholder={placeholder}
-        onBlur={onBlur}
-        value={value}
-        onChange={handleChange}
-        className={error && "border-error! outline-error!"}
+        {...props}
+        className="input w-full"
+        aria-invalid={hasError}
       />
-      <p className="text-error my-1 mx-4 text-sm">{error}</p>
-    </label>
+      {hasError && (
+        <div className="fieldset-helper-text text-error">
+          {error}
+        </div>
+      )}
+    </fieldset>
   );
-}
+};
 
 export default TextInput;
-
-interface TextInputProps {
-  validate?: (value: string) => string | undefined;
-  name: string;
-  label?: string;
-  placeholder?: string;
-  value: string;
-  className?: string;
-  type?: "text" | "password" | "email" | "number";
-  setValue?: React.Dispatch<React.SetStateAction<string>>;
-  onBlur?: FocusEventHandler<HTMLInputElement>;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
-}
