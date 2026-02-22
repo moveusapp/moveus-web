@@ -21,13 +21,21 @@ function UserPage() {
   const [activeTab, setActiveTab] = useState("attending");
 
   const { username } = useParams();
-  const { data, loading } = useQuery(GetUserByUsernameDocument, {
+  const { data, loading, error } = useQuery(GetUserByUsernameDocument, {
     variables: { username: username! },
   });
   const { profile } = useProfile();
 
   if (loading) {
     return <UserPageSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="m-4">
+        <p>No user with username '{username} found.</p>
+      </div>
+    );
   }
 
   const isSelf = profile?.id === data?.user?.id;
