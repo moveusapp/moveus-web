@@ -102,7 +102,7 @@ function SettingsPage() {
       </div>
 
       <button
-        className="btn btn-error btn-outline mt-auto mb-8"
+        className="btn btn-error btn-outline mt-auto"
         onClick={() =>
           (document.getElementById("logoutModal") as any).showModal()
         }
