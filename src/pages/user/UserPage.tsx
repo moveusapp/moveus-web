@@ -38,6 +38,17 @@ function UserPage() {
     );
   }
 
+  const hasAttendingEvents = () =>
+    data &&
+    data.user &&
+    data.user.attendingEvents &&
+    data.user.attendingEvents.length > 0;
+  const hasOrganizingEvents = () =>
+    data &&
+    data.user &&
+    data.user.organizingEvents &&
+    data.user.organizingEvents.length > 0;
+
   const isSelf = profile?.id === data?.user?.id;
   const name = displayName(
     data!.user!.username!,
@@ -137,13 +148,25 @@ function UserPage() {
       </div>
 
       <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
-        {activeTab === "attending"
-          ? data?.user?.attendingEvents?.map((event) => (
+        {activeTab === "attending" ? (
+          hasAttendingEvents() ? (
+            data?.user?.attendingEvents?.map((event) => (
               <EventCard key={event?.id} event={event!} />
             ))
-          : data?.user?.organizingEvents?.map((event) => (
-              <EventCard key={event?.id} event={event!} />
-            ))}
+          ) : (
+            <p className="text-sm text-base-content/70">
+              Not attending any events.
+            </p>
+          )
+        ) : hasOrganizingEvents() ? (
+          data?.user?.organizingEvents?.map((event) => (
+            <EventCard key={event?.id} event={event!} />
+          ))
+        ) : (
+          <p className="text-sm text-base-content/70">
+            Not organizing any events.
+          </p>
+        )}
       </div>
     </div>
   );
