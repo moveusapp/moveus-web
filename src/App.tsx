@@ -38,11 +38,11 @@ function App() {
           </Route>
           <Route element={<NavRoutes />}>
             <Route path="/user/:userId" element={<UserPage />} />
+            <Route path="/event/:eventId" element={<EventPage />} />
           </Route>
           <Route element={<AuthRoutes />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/event/:eventId" element={<EventPage />} />
           </Route>
         </Routes>
       </Router>
