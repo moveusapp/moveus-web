@@ -15,6 +15,7 @@ import ChatListPage from "./pages/chat/MessagesPage";
 import ChatPage from "./pages/chat/ChatPage";
 import NotificationsPage from "./pages/notifications/NotificationsPage";
 import SearchPage from "./pages/search/SearchPage";
+import { AuthRoutes } from "./components/routes/AuthRoutes";
 
 function App() {
   return (
@@ -38,9 +39,11 @@ function App() {
           <Route element={<NavRoutes />}>
             <Route path="/user/:userId" element={<UserPage />} />
           </Route>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/event/:eventId" element={<EventPage />} />
+          <Route element={<AuthRoutes />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/event/:eventId" element={<EventPage />} />
+          </Route>
         </Routes>
       </Router>
     </main>

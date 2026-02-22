@@ -12,9 +12,9 @@ function UserPageSkeleton() {
               <div className="skeleton h-5 w-50"/>
             </div>
 
-            <p className="text-sm text-base-content/70">
+            <div className="text-sm text-base-content/70">
               <div className="skeleton h-4 w-25"/>
-            </p>
+            </div>
 
             <div className="flex flex-col gap-1 mt-1">
               <div className="skeleton h-4 w-100"/>
