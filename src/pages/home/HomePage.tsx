@@ -63,7 +63,9 @@ function HomePage() {
               </>
             )}
 
+            <div className="border-t border-base-300 my-4" />
             <p className="text-md text-base-content/70">You might like...</p>
+            
             {data?.myRecommendedEvents?.map((event) => (
               <EventCard key={`event-recommended-${event?.id}`} event={event!} />
             ))}

@@ -8,5 +8,3 @@ const strings = new LocalizedStrings({
 });
 
 export default strings;
-
-strings.setLanguage("hr")
