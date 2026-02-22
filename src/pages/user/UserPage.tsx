@@ -33,7 +33,7 @@ function UserPage() {
   if (error) {
     return (
       <div className="m-4">
-        <p>No user with username '{username} found.</p>
+        <p>No user with username '{username}' found.</p>
       </div>
     );
   }
