@@ -216,7 +216,7 @@ function RegisterPage() {
       <button
         type="button"
         onClick={handleGoogleSignup}
-        className="btn btn-outline w-full gap-2"
+        className="btn w-full gap-2"
       >
         <FaGoogle size={20} />
         Sign up with Google
