@@ -1,5 +1,11 @@
-query GetUser($userId: Int!) {
+query GetUserById($userId: Int!) {
     user (id: $userId) {
+        ...User
+    }
+}
+
+query GetUserByUsername($username: String!) {
+    user (username: $username) {
         ...User
     }
 }

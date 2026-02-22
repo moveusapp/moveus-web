@@ -45,7 +45,7 @@ function MobileNav() {
     if (location.pathname === to) {
       return true;
     }
-    if (to === "/profile" && location.pathname === `/user/${profile?.id}`) {
+    if (to === "/profile" && location.pathname === `/user/${profile?.username}`) {
       return true;
     }
 

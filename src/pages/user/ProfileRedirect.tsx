@@ -8,7 +8,7 @@ function ProfileRedirect() {
     return <div>Loading...</div>;
   }
 
-  return <Navigate to={`/user/${profile.id}`} replace />;
+  return <Navigate to={`/user/${profile.username}`} replace />;
 }
 
 export default ProfileRedirect;

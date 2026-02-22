@@ -21,11 +21,11 @@ function NotificationCard({ notification }: NotificationCardProps) {
         <Link
           key={notification.id}
           className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
-          to={`/user/${notification.user?.id}`}
+          to={`/user/${notification.user?.username}`}
         >
           <div className="flex flex-row gap-2">
             <UserAvatar
-              userId={notification.user?.id}
+              userId={notification.user?.username}
               className="w-12"
             />
             <div className="flex flex-col justify-between">
@@ -40,11 +40,11 @@ function NotificationCard({ notification }: NotificationCardProps) {
         <Link
           key={notification.id}
           className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25"
-          to={`/user/${notification.user?.id}`}
+          to={`/user/${notification.user?.username}`}
         >
           <div className="flex flex-row gap-2">
             <UserAvatar
-              userId={notification.user?.id}
+              userId={notification.user?.username}
               className="w-12"
             />
             <div className="flex flex-col justify-between">

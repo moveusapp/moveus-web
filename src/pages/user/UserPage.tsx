@@ -2,7 +2,7 @@ import Button from "@/components/ui/Button";
 import FriendshipButton from "@/components/user/FriendshipButton";
 import UserAvatar from "@/components/user/UserAvatar";
 import { useProfile } from "@/context/profile-context";
-import { GetUserDocument } from "@/graphql/graphql-types";
+import { GetUserByUsernameDocument } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { useQuery } from "@apollo/client/react";
 import {
@@ -20,9 +20,9 @@ function UserPage() {
   const tabs = ["attending", "organizing"];
   const [activeTab, setActiveTab] = useState("attending");
 
-  const { userId } = useParams();
-  const { data, loading } = useQuery(GetUserDocument, {
-    variables: { userId: parseInt(userId!) },
+  const { username } = useParams();
+  const { data, loading } = useQuery(GetUserByUsernameDocument, {
+    variables: { username: username! },
   });
   const { profile } = useProfile();
 
@@ -54,7 +54,7 @@ function UserPage() {
       <div className="bg-base-200 rounded-2xl border border-base-300 p-4">
         <div className="flex flex-row gap-3">
           <UserAvatar
-            userId={parseInt(userId!)}
+            userId={loading ? -1 : data?.user?.id!}
             className="flex-shrink-0 w-18 h-18"
           />
 

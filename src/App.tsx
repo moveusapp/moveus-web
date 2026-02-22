@@ -37,7 +37,7 @@ function App() {
             <Route path="/create-post/:eventId" element={<CreatePostPage />} />
           </Route>
           <Route element={<NavRoutes />}>
-            <Route path="/user/:userId" element={<UserPage />} />
+            <Route path="/user/:username" element={<UserPage />} />
             <Route path="/event/:eventId" element={<EventPage />} />
           </Route>
           <Route element={<AuthRoutes />}>

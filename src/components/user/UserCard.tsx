@@ -17,7 +17,7 @@ function UserCard({ user, tags, isSelf }: UserCardProps) {
     <Link
       key={user.id}
       className="bg-base-200 w-full rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
-      to={`/user/${user?.id}`}
+      to={`/user/${user?.username}`}
     >
       <div className="flex flex-row gap-2">
         <UserAvatar userId={user?.id!} className="w-12" />
