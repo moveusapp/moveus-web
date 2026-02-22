@@ -17,7 +17,6 @@ import { useState } from "react";
 import UserPageSkeleton from "./UserPageSkeleton";
 
 function UserPage() {
-  const tabs = ["attending", "organizing"];
   const [activeTab, setActiveTab] = useState("attending");
 
   const { username } = useParams();

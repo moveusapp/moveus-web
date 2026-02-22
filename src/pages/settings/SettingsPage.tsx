@@ -86,31 +86,30 @@ function SettingsPage() {
   );
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center my-8 text-3xl gap-4">
-        <h2>Settings</h2>
-      </div>
-
-      <div className="flex items-center justify-between">
+    <div className="h-full flex flex-col m-4 gap-2">
+      <h1 className="font-medium text-xl">Settings</h1>
+      
+      <div className="flex flex-row justify-between bg-base-200 rounded-2xl border border-base-300 p-4">
         <div>
-          <h3 className="text-xl font-medium">Privacy</h3>
-          <p className="text-sm text-accent">Who can see your profile info.</p>
+          <p className="text-md font-medium">Privacy</p>
+          <p className="text-sm text-base-content/70">Who can see your profile info.</p>
         </div>
         <Dropdown
           options={privacyScopeOptions}
           value={scope}
           setValue={handleSetScope}
-          classname="text-nowrap shrink-0"
         />
       </div>
+
       <button
-        className="mt-auto mb-8"
+        className="btn btn-error btn-outline mt-auto mb-8"
         onClick={() =>
           (document.getElementById("logoutModal") as any).showModal()
         }
       >
         Logout
       </button>
+
       <dialog id="logoutModal" className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Logout?</h3>
