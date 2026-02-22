@@ -14,8 +14,8 @@ import { useProfile } from "@/context/profile-context";
 function SearchPage() {
   useDocumentTitle("Explore");
 
-  const tabs = ['All', 'Events', 'People', 'Posts']
-  const [activeTab, setActiveTab] = useState('All')
+  const tabs = ["All", "Events", "People", "Posts"];
+  const [activeTab, setActiveTab] = useState("All");
 
   const [searchParams] = useSearchParams();
   const { profile } = useProfile();
@@ -53,7 +53,7 @@ function SearchPage() {
     if (type === "PostType" && activeTab == "Posts") return true;
 
     return false;
-  }
+  };
 
   return (
     <div className="flex flex-row">
@@ -81,7 +81,7 @@ function SearchPage() {
         </header>
         <div className="flex flex-col items-center gap-2 w-full mx-auto p-4 max-w-[700px]">
           {searchLoading ? (
-            <div className="loading loading-dots text-primary"/>
+            <div className="loading loading-dots text-primary" />
           ) : (
             <>
               {hasResults() ? (
@@ -94,14 +94,16 @@ function SearchPage() {
                       case "UserType":
                         return (
                           <UserCard
-                            key={item.id}
+                            key={`user-${item.id}`}
                             user={item}
                             isSelf={item.id === profile?.id}
                           />
                         );
 
                       case "EventType":
-                        return <EventCard key={item.id} event={item} />;
+                        return (
+                          <EventCard key={`event-${item.id}`} event={item} />
+                        );
 
                       case "PostType":
                         return <></>;
