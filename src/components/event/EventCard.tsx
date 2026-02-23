@@ -13,9 +13,8 @@ import {
 import { Link } from "react-router-dom";
 
 function EventCard({ event }: EventCardProps) {
-  const spotsLeft = event.maxParticipants! - event.participantCount!;
   const spotsPercent = (event.participantCount! / event.maxParticipants!) * 100;
-  const almostFull = !event.maxParticipants ? false : spotsLeft <= 5;
+  const almostFull = event.maxParticipants && spotsPercent >= 50;
 
   const activity = Object.keys(Activity)[event.activity.id!];
 
@@ -101,20 +100,15 @@ function EventCard({ event }: EventCardProps) {
                 <strong
                   className={`font-semibold text-sm ${almostFull ? "text-error" : "text-primary"}`}
                 >
-                  {event.maxParticipants ? spotsLeft : event.participantCount}
+                  {event.participantCount}
                 </strong>{" "}
                 <span className="text-xs">
                   {event.maxParticipants
-                    ? `spots left of ${event.maxParticipants}`
+                    ? `participant(s) out of ${event.maxParticipants}`
                     : "participant(s)"}
                 </span>
               </span>
             </div>
-            <span className="text-xs text-base-content/50 font-medium">
-              {event.maxParticipants
-                ? `${Math.round(spotsPercent)}% filled`
-                : "No limit"}
-            </span>
           </div>
           {event.maxParticipants && (
             <div className="w-full bg-base-300 mt-2 rounded-full h-2 overflow-hidden">
