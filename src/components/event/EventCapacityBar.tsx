@@ -5,7 +5,7 @@ function EventCapacityBar({
   maxParticipants,
 }: EventCapacityBarProps) {
   const spotsLeft = maxParticipants - participantCount;
-  const spotsPercent = (participantCount! / maxParticipants!) * 100;
+  const spotsPercent = Math.floor((participantCount! / maxParticipants!) * 100);
   const almostFull = maxParticipants && spotsPercent >= 50;
 
   return (
@@ -26,7 +26,7 @@ function EventCapacityBar({
         </div>
         {maxParticipants && (
           <div className="badge rounded-2xl bg-accent text-xs text-white">
-            {spotsLeft} spots left
+            {spotsLeft} spot(s) left
           </div>
         )}
       </div>

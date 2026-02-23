@@ -1,4 +1,5 @@
 import EventCapacityBar from "@/components/event/EventCapacityBar";
+import Button from "@/components/ui/Button";
 import UserAvatar from "@/components/user/UserAvatar";
 import {
   DeleteEventDocument,
@@ -42,10 +43,9 @@ function EventPage() {
     );
   }
 
-  const isFull = data.event?.members.length! >= data.event?.maxParticipants!;
-  const spotsLeft = data.event?.maxParticipants! - data.event?.members.length!;
-  const fillPercent =
-    (data.event?.members.length! / data.event?.maxParticipants!) * 100;
+  const isFull =
+    data.event?.maxParticipants &&
+    data.event?.members.length! >= data.event?.maxParticipants!;
   const organizerName = displayName(
     data.event?.organizer?.user.username!,
     data.event?.organizer?.user.firstName!,
@@ -125,7 +125,7 @@ function EventPage() {
 
             {/* Join/Leave button */}
             {data.event?.role === MemberRole.Organizer ? (
-              <div className="rounded-lg bg-primary/10 p-3 text-center text-sm font-medium text-primary">
+              <div className="rounded-2xl bg-primary/10 p-3 text-center text-sm font-medium text-primary">
                 You are hosting this event
               </div>
             ) : [
@@ -133,33 +133,29 @@ function EventPage() {
                 MemberRole.Moderator,
                 MemberRole.Spectator,
               ].includes(data.event?.role!) ? (
-              <button
+              <Button
                 onClick={() =>
                   leaveEvent({ variables: { eventId: parseInt(eventId!) } })
                 }
-                disabled={leaveLoading}
-                className="w-full rounded-lg border border-base-300 bg-base-200 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 disabled:opacity-50"
+                loading={leaveLoading}
+                className="btn btn-error btn-outline w-full"
               >
-                {leaveLoading ? "Leaving..." : "Leave Event"}
-              </button>
+                Leave Event
+              </Button>
             ) : (
-              <button
+              <Button
                 onClick={() =>
                   !isFull &&
                   joinEvent({ variables: { eventId: parseInt(eventId!) } })
                 }
-                disabled={isFull || joinLoading}
-                className="btn btn-primary w-full rounded-lg bg-primary py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                loading={joinLoading}
+                className={`btn btn-primary w-full ${isFull ? "btn-disabled" : ""}`}
               >
-                {joinLoading
-                  ? "Joining..."
-                  : isFull
-                    ? "Event Full"
-                    : "Join Event"}
-              </button>
+                {isFull ? "Event Full" : "Join Event"}
+              </Button>
             )}
 
-            <button className="btn flex items-center justify-center gap-2 rounded-lg border border-base-300 bg-base-200 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary">
+            <button className="btn flex items-center justify-center gap-2 bg-base-200 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary">
               <HiOutlineShare className="h-4 w-4" />
               Share
             </button>
