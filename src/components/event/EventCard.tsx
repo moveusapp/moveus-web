@@ -11,6 +11,7 @@ import {
   HiOutlineCalendarDays,
 } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import EventCapacityBar from "./EventCapacityBar";
 
 function EventCard({ event }: EventCardProps) {
   const spotsPercent = (event.participantCount! / event.maxParticipants!) * 100;
@@ -91,38 +92,13 @@ function EventCard({ event }: EventCardProps) {
           </div>
         </div>
 
+        <div className="border-t border-base-300 mb-4" />
+
         {/* Spots progress */}
-        <div className="pt-3 border-t border-base-300">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs text-base-content/70">
-              <HiUsers size={14} className="text-primary" />
-              <span>
-                <strong
-                  className={`font-semibold text-sm ${almostFull ? "text-error" : "text-primary"}`}
-                >
-                  {event.participantCount}
-                </strong>{" "}
-                <span className="text-xs">
-                  {event.maxParticipants
-                    ? `participant(s) out of ${event.maxParticipants}`
-                    : "participant(s)"}
-                </span>
-              </span>
-            </div>
-          </div>
-          {event.maxParticipants && (
-            <div className="w-full bg-base-300 mt-2 rounded-full h-2 overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-500 ${
-                  almostFull ? "bg-error" : "bg-primary"
-                }`}
-                style={{
-                  width: `${event.maxParticipants ? spotsPercent : 100}%`,
-                }}
-              />
-            </div>
-          )}
-        </div>
+        <EventCapacityBar
+          maxParticipants={event.maxParticipants!}
+          participantCount={event.participantCount!}
+        />
       </div>
     </Link>
   );

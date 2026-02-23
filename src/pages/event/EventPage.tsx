@@ -1,3 +1,4 @@
+import EventCapacityBar from "@/components/event/EventCapacityBar";
 import UserAvatar from "@/components/user/UserAvatar";
 import {
   DeleteEventDocument,
@@ -117,28 +118,10 @@ function EventPage() {
           </div>
           {/* Action card */}
           <div className="rounded-xl border border-base-300 bg-base-200 p-5 flex flex-col gap-4">
-            {/* Capacity bar */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-foreground">
-                  Capacity
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  {data.event?.maxParticipants
-                    ? `${data.event?.members.length!} / ${data.event?.maxParticipants}`
-                    : data.event?.members.length}
-                </span>
-              </div>
-              <div className="h-2 w-full rounded-full bg-secondary overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-primary transition-all"
-                  style={{ width: `${fillPercent}%` }}
-                />
-              </div>
-              <p className="mt-1.5 text-xs text-muted-foreground">
-                {isFull ? "This event is full" : `${spotsLeft} spots remaining`}
-              </p>
-            </div>
+            <EventCapacityBar
+              maxParticipants={data.event?.maxParticipants!}
+              participantCount={data.event?.members.length!}
+            />
 
             {/* Join/Leave button */}
             {data.event?.role === MemberRole.Organizer ? (
@@ -212,7 +195,7 @@ function EventPage() {
             </div>
           </div>
         </div>
-        
+
         <div className="lg:hidden rounded-xl border border-base-300 bg-base-200 p-5">
           <h3 className="font-display text-sm font-semibold text-foreground mb-3">
             Participants ({data.event?.members.length})
