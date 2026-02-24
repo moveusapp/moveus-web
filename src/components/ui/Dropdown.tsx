@@ -1,61 +1,62 @@
-import { useState } from "react";
-import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
-import { HiCheck } from "react-icons/hi";
+interface DropdownProps<T> {
+  label?: string;
+  value: T | null;
+  setValue: (value: T) => void;
+  options: { label: string; value: T }[];
+  placeholder?: string;
+  error?: string;
+  helperText?: string;
+  className?: string;
+  required?: boolean;
+}
 
-function Dropdown<T>({
+function Dropdown<T = string>({
+  label,
   value,
-  setValue,
+  setValue: onChange,
   options,
-  defaultName,
+  placeholder = "Select an option",
+  error,
+  helperText,
+  className = "",
+  required = false
 }: DropdownProps<T>) {
-  const [open, setOpen] = useState(false);
-
-  const name = options.find((o) => o.value === value)?.name ?? defaultName;
-
-  const selectItem = (option: Option<T>) => {
-    if (document.activeElement) {
-      (document.activeElement as HTMLDivElement).blur();
-    }
-    setValue(option.value);
-  };
+  const hasError = !!error;
 
   return (
-    <div className="dropdown dropdown-end">
-      <div
-        tabIndex={0}
-        onFocus={() => setOpen(true)}
-        onBlur={() => setOpen(false)}
-        role="button"
-        className="btn btn-primary m-1"
+    <fieldset className={`fieldset ${className}`}>
+      {label && <legend className="fieldset-legend">{label}</legend>}
+      <select
+        required={required}
+        className="rounded-2xl w-full select"
+        value={value !== null ? String(value) : ""}
+        onChange={(e) => {
+          const selectedOption = options.find(
+            (opt) => String(opt.value) === e.target.value
+          );
+          if (selectedOption) {
+            onChange(selectedOption.value);
+          }
+        }}
+        aria-invalid={hasError}
       >
-        {name}
-        {open ? <GoTriangleUp /> : <GoTriangleDown />}
-      </div>
-      <div
-        tabIndex={-1}
-        onFocus={() => setOpen(true)}
-        onBlur={() => setOpen(false)}
-        className="dropdown-content menu bg-base-100 rounded-2xl gap-1 z-1 w-52 p-2 shadow-sm"
-      >
-        {options.map((option) => (
-          <button
-            onClick={() => selectItem(option)}
-            className="btn justify-between"
-          >
-            {option.name}
-            {option.value === value && <HiCheck />}
-          </button>
+        <option value="" disabled>
+          {placeholder}
+        </option>
+        {options.map((option, index) => (
+          <option key={index} value={String(option.value)}>
+            {option.label}
+          </option>
         ))}
-      </div>
-    </div>
+      </select>
+      {helperText && !hasError && (
+        <span className="fieldset-helper-text">{helperText}</span>
+      )}
+      {hasError && (
+        <span className="fieldset-helper-text text-error">{error}</span>
+      )}
+    </fieldset>
   );
 }
 
 export default Dropdown;
-
-interface DropdownProps<T> {
-  value: T;
-  setValue: (x: T) => void;
-  options: Option<T>[];
-  defaultName?: string;
-}

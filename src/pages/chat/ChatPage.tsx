@@ -1,7 +1,6 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
 import { useParams } from "react-router-dom";
-import { HashLoader } from "react-spinners";
 import UserAvatar from "@/components/user/UserAvatar";
 import SendMessage from "@/pages/chat/SendMessage";
 import { LOADER_COLOR } from "@/constants";
@@ -168,7 +167,7 @@ function ChatPage() {
 
       {loading || messageSubLoading || lastOpenLoading ? (
         <div className="flex-1 flex flex-col justify-center items-center">
-          <HashLoader color={LOADER_COLOR} />
+          <div className="loading loading-dots text-primary"/>
         </div>
       ) : (
         <>

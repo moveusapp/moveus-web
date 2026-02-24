@@ -50,7 +50,10 @@ function LeftSidebar() {
     if (location.pathname === to) {
       return true;
     }
-    if (to === "/profile" && location.pathname === `/user/${profile?.username}`) {
+    if (
+      to === "/profile" &&
+      location.pathname === `/user/${profile?.username}`
+    ) {
       return true;
     }
 
@@ -94,10 +97,13 @@ function LeftSidebar() {
         })}
 
         {/* Create Event CTA */}
-        <button className="flex items-center gap-3 px-3 py-2.5 mt-4 rounded-xl bg-secondary text-primary text-sm font-semibold hover:brightness-95 transition-all">
+        <Link
+          to="/create-event"
+          className="flex items-center gap-3 px-3 py-2.5 mt-4 rounded-xl bg-secondary text-primary text-sm font-semibold hover:brightness-95 transition-all"
+        >
           <HiPlus size={20} />
           <span>Create Event</span>
-        </button>
+        </Link>
       </nav>
 
       {/* Divider */}
@@ -109,8 +115,8 @@ function LeftSidebar() {
         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
           ${
             isNavItemActive("/settings")
-            ? "bg-primary text-primary-content shadow-sm"
-            : "text-base-content/70 hover:bg-base-100 hover:text-base-content"
+              ? "bg-primary text-primary-content shadow-sm"
+              : "text-base-content/70 hover:bg-base-100 hover:text-base-content"
           }`}
       >
         <HiOutlineCog6Tooth
@@ -121,13 +127,10 @@ function LeftSidebar() {
       </Link>
 
       <div className="my-1" />
-      
+
       {/* User card */}
       <div className="flex items-center gap-3 p-3 rounded-xl bg-base-100 border border-base-300">
-        <UserAvatar
-          userId={profile?.id!}
-          className="w-9 h-9"
-        />
+        <UserAvatar userId={profile?.id!} className="w-9 h-9" />
         <div className="flex flex-col min-w-0">
           <span className="text-sm font-semibold truncate text-base-content">
             {displayName(

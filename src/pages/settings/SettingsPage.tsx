@@ -12,18 +12,18 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
 import Button from "@/components/ui/Button";
 
-const privacyScopeOptions: Option<PrivacyScope>[] = [
+const privacyScopeOptions = [
   {
-    name: "Only you",
     value: PrivacyScope.Noone,
+    label: "Only you",
   },
   {
-    name: "Only friends",
     value: PrivacyScope.Friends,
+    label: "Only friends",
   },
   {
-    name: "Everyone",
     value: PrivacyScope.Everyone,
+    label: "Everyone",
   },
 ];
 

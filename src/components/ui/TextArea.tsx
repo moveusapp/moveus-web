@@ -1,70 +1,33 @@
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import {  TextareaHTMLAttributes } from "react";
 
-function TextArea({
-  validate,
-  value,
-  setValue,
-  name,
-  label,
-  placeholder,
-  onChange,
-  className,
-  rows,
-  cols,
-}: TextAreaProps) {
-  const id = `TextArea-${name}`;
-  placeholder = placeholder ?? name;
-  const [error, setError] = useState("");
+interface TextAreaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className'> {
+  label: string;
+  error?: string;
+  className?: string;
+}
 
-  useEffect(() => {
-    if (validate === undefined || value === "") {
-      setError("");
-      return;
-    }
-    setError(validate(value) ?? "");
-  }, [setError, value, validate]);
-
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue && setValue(e.currentTarget.value);
-    if (onChange) {
-      onChange(e);
-    }
-  };
+const TextArea = ({ 
+  label, 
+  error,
+  className = "", 
+  ...props 
+}: TextAreaProps) => {
+  const hasError = !!error;
 
   return (
-    <label htmlFor={id} className={className}>
-      {label && <p className="my-2">{label}</p>}
+    <fieldset className={`fieldset ${className}`}>
+      <legend className="fieldset-legend">{label}</legend>
       <textarea
-        name={name}
-        id={id}
-        placeholder={placeholder}
-        rows={rows}
-        cols={cols}
-        value={value}
-        onChange={handleChange}
-        className={error && "border-error! outline-error!"}
+        {...props}
+        className="textarea rounded-2xl h-24 w-full"
       />
-      <p className="text-error my-1 mx-4 text-sm">{error}</p>
-    </label>
+      {hasError && (
+        <div className="fieldset-helper-text text-error">
+          {error}
+        </div>
+      )}
+    </fieldset>
   );
-}
+};
 
 export default TextArea;
-
-interface TextAreaProps {
-  validate?: (value: string) => string | undefined;
-  name: string;
-  label?: string;
-  placeholder?: string;
-  value: string;
-  className?: string;
-  rows?: number;
-  cols?: number;
-  setValue?: React.Dispatch<React.SetStateAction<string>>;
-  onChange?: ChangeEventHandler<HTMLTextAreaElement>;
-}

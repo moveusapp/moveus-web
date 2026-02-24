@@ -12,7 +12,7 @@ function LocationPicker({
   setLocation,
   classname,
   width = "100%",
-  height = 300,
+  height = 400,
 }: LocationPickerInterface) {
   const handleClick = (e: google.maps.MapMouseEvent) => {
     if (e.latLng)

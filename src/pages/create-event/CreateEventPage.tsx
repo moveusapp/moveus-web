@@ -1,255 +1,275 @@
-import { ChangeEvent, useCallback, useState } from "react";
-import DateTimePicker from "react-datetime-picker";
-import TextArea from "@/components/ui/TextArea";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@apollo/client/react";
+import { HiPlus, HiArrowRight, HiX } from "react-icons/hi";
+import Button from "@/components/ui/Button";
 import TextInput from "@/components/ui/TextInput";
-import useDocumentTitle from "@/hooks/use-document-title";
-import { IoCalendarClearOutline } from "react-icons/io5";
-import "@/styles/date-time-picker.css";
+import TextArea from "@/components/ui/TextArea";
 import Dropdown from "@/components/ui/Dropdown";
+import LocationPicker from "@/components/ui/LocationPicker";
+import MultiChoice from "@/components/ui/MultiChoice";
 import {
   Activity,
   GenderNoPnts,
   SkillLevel,
   CreateEventDocument,
 } from "@/graphql/graphql-types";
-import { useMutation } from "@apollo/client/react";
 import { enumToOptions } from "@/utils/enum-to-options";
-import LocationPicker from "@/components/ui/LocationPicker";
-import MultiChoice from "@/components/ui/MultiChoice";
-import Toggle from "@/components/ui/Toggle";
-import HashLoader from "react-spinners/HashLoader";
-import { LOADER_COLOR } from "@/constants";
-import { useNavigate } from "react-router-dom";
-
-interface TextFields {
-  title: string;
-  description: string | null;
-}
-
-interface NumberFields {
-  minAge: number | null;
-  maxAge: number | null;
-  maxParticipants: number | null;
-}
+import useDocumentTitle from "@/hooks/use-document-title";
 
 function CreateEventPage() {
-  useDocumentTitle("Create event");
+  useDocumentTitle("Create Event");
 
-  const [textFields, setTextFields] = useState<TextFields>({
-    title: "",
-    description: null,
-  });
+  const navigate = useNavigate();
+  const [createEvent, { loading, error: apiError }] =
+    useMutation(CreateEventDocument);
 
-  const [numberFields, setNumberFields] = useState<NumberFields>({
-    minAge: null,
-    maxAge: null,
-    maxParticipants: null,
-  });
-
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
+  // Form state
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [activity, setActivity] = useState<Activity | null>(null);
   const [skillLevel, setSkillLevel] = useState<SkillLevel | null>(null);
   const [location, setLocation] = useState<LocationCoordinates | null>(null);
+  const [maxParticipants, setMaxParticipants] = useState("");
+  const [minAge, setMinAge] = useState("");
+  const [maxAge, setMaxAge] = useState("");
   const [acceptedGenders, setAcceptedGenders] = useState<GenderNoPnts[]>([]);
   const [allowSpectators, setAllowSpectators] = useState(true);
+  const [userError, setUserError] = useState("");
 
-  const onTextFieldsChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.currentTarget;
-      setTextFields((p) => {
-        return {
-          ...p,
-          [name]: value ? value : null,
-        };
+  const getError = () => {
+    if (apiError) return apiError.message;
+    return userError;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!activity || !skillLevel || !location || !startDate || !startTime) {
+      setUserError("You haven't filled out all fields.");
+      return;
+    }
+
+    setUserError("");
+
+    const startDateTime = new Date(`${startDate}T${startTime}`);
+    const endDateTime =
+      endDate && endTime
+        ? new Date(`${endDate}T${endTime}`)
+        : new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000); // Default: 2 hours later
+
+    try {
+      const result = await createEvent({
+        variables: {
+          title,
+          description: description || null,
+          startTime: startDateTime,
+          endTime: endDateTime,
+          activity,
+          skillLevel,
+          locationLatitude: location.lat,
+          locationLongitude: location.lng,
+          maxParticipants: maxParticipants ? parseInt(maxParticipants) : null,
+          minAge: minAge ? parseInt(minAge) : null,
+          maxAge: maxAge ? parseInt(maxAge) : null,
+          acceptedGenders,
+          allowSpectators,
+        },
       });
-    },
-    [setTextFields],
-  );
 
-  const onNumberFieldsChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.currentTarget;
-      const parsed = value ? parseInt(value) : null;
-      if (!Number.isNaN(parsed))
-        setNumberFields((p) => {
-          return {
-            ...p,
-            [name]: parsed,
-          };
-        });
-    },
-    [setNumberFields],
-  );
-
-  const navigate = useNavigate();
-
-  const [createEvent, { loading, error }] = useMutation(CreateEventDocument);
-
-  const onCreateEvent = useCallback(() => {
-    if (!activity || !skillLevel || !location) return;
-    createEvent({
-      variables: {
-        ...textFields,
-        ...numberFields,
-        startTime,
-        endTime,
-        activity,
-        skillLevel,
-        locationLatitude: location.lat,
-        locationLongitude: location.lng,
-        acceptedGenders,
-        allowSpectators,
-      },
-    })
-      .then((result) => {
-        navigate(`/event/${result.data?.createEvent?.event?.id}`);
-      })
-      .catch((err) => {});
-  }, [
-    createEvent,
-    navigate,
-    textFields,
-    numberFields,
-    startTime,
-    endTime,
-    activity,
-    skillLevel,
-    location,
-    allowSpectators,
-    acceptedGenders,
-  ]);
+      if (result.data?.createEvent?.event?.id) {
+        navigate(`/event/${result.data.createEvent.event.id}`);
+      }
+    } catch (err) {
+      console.error("Error creating event:", err);
+    }
+  };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center my-8 text-3xl gap-4 shrink-0">
-        <h2>Create Event</h2>
-      </div>
-      <div className="grow overflow-y-auto pb-8">
-        <h4 className="m-0">Title</h4>
-        <TextInput
-          name="title"
-          value={textFields.title ?? ""}
-          placeholder="title (required)"
-          onChange={onTextFieldsChange}
-        />
+    <div className="w-full mx-auto max-w-3xl p-4">
+      <h1 className="font-medium text-xl mb-4">Create Event</h1>
 
-        <h4>Description</h4>
-        <TextArea
-          name="description"
-          value={textFields.description ?? ""}
-          placeholder="description"
-          onChange={onTextFieldsChange}
-        />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="bg-base-200 border border-base-300 rounded-2xl p-6 space-y-6">
+          <TextInput
+            label="Title"
+            placeholder="e.g., Saturday Morning Basketball"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
 
-        <div className="flex md:gap-4 flex-col md:flex-row md:*:grow w-full">
+          <TextArea
+            label="Description"
+            placeholder="Tell people what your event is about..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+
           <div>
-            <h4>Start time</h4>
-            <DateTimePicker
-              onChange={setStartTime as any}
-              value={startTime}
-              locale="en-GB"
-              minDate={new Date()}
-              clearIcon={null}
-              calendarIcon={<IoCalendarClearOutline className="text-xl" />}
-              disableClock
-            />
+            <h3 className="text-sm font-medium mb-3">Start Time</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <TextInput
+                label="Date"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+              />
+              <TextInput
+                label="Time"
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                required
+              />
+            </div>
           </div>
-          <div>
-            <h4>End time</h4>
-            <DateTimePicker
-              onChange={setEndTime as any}
-              value={endTime}
-              locale="en-GB"
-              minDate={new Date()}
-              clearIcon={null}
-              calendarIcon={<IoCalendarClearOutline className="text-xl" />}
-              disableClock
-            />
-          </div>
-        </div>
 
-        <div className="flex justify-between items-end">
-          <h4>Activity</h4>
+          <div>
+            <h3 className="text-sm font-medium mb-3">End Time (Optional)</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <TextInput
+                label="Date"
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+              <TextInput
+                label="Time"
+                type="time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+              />
+            </div>
+          </div>
+
           <Dropdown
+            label="Activity"
             value={activity}
             setValue={setActivity}
             options={enumToOptions(Activity) as any}
-            defaultName="Activity"
-            classname="text-xl"
+            placeholder="Select an activity"
+            required
           />
-        </div>
 
-        <div className="flex justify-between items-end">
-          <h4>Skill level</h4>
           <Dropdown
+            label="Skill Level"
             value={skillLevel}
             setValue={setSkillLevel}
             options={enumToOptions(SkillLevel) as any}
-            defaultName="Skill level"
-            classname="text-xl"
+            placeholder="Select skill level"
+            required
           />
-        </div>
 
-        <h4>Location</h4>
-        <LocationPicker
-          location={location}
-          setLocation={setLocation}
-          classname="h-20"
-        />
+          <div>
+            <label className="text-sm font-medium mb-2 block">Location</label>
+            <LocationPicker
+              location={location}
+              setLocation={setLocation}
+              classname="h-48 rounded-xl"
+            />
+          </div>
 
-        <h4>Constraints (optional)</h4>
-        <div className="flex gap-4">
           <TextInput
-            name="minAge"
-            value={numberFields.minAge?.toString() ?? ""}
-            placeholder="min age"
-            onChange={onNumberFieldsChange}
+            label="Max Participants"
+            type="number"
+            placeholder="Leave empty for unlimited"
+            value={maxParticipants}
+            onChange={(e) => setMaxParticipants(e.target.value)}
           />
-          <TextInput
-            name="maxAge"
-            value={numberFields.maxAge?.toString() ?? ""}
-            placeholder="max age"
-            onChange={onNumberFieldsChange}
-          />
-        </div>
-        <TextInput
-          name="maxParticipants"
-          value={numberFields.maxParticipants?.toString() ?? ""}
-          placeholder="max participants"
-          onChange={onNumberFieldsChange}
-          className="my-2"
-        />
-        <h5 className="mb-2">
-          Allowed genders{" "}
-          <span className="text-sm">(leave empty to allow all)</span>
-        </h5>
-        <MultiChoice
-          options={enumToOptions(GenderNoPnts) as any}
-          setValue={setAcceptedGenders}
-          value={acceptedGenders}
-        />
 
-        <div className="flex justify-between items-end">
-          <h4>Allow spectators</h4>
-          <Toggle
-            defaultValue={true}
-            onToggleChanged={(value) => setAllowSpectators(value)}
-          />
+          <div>
+            <h3 className="text-sm font-medium mb-3">
+              Age Constraints (Optional)
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <TextInput
+                label="Min Age"
+                type="number"
+                placeholder="e.g., 18"
+                value={minAge}
+                onChange={(e) => setMinAge(e.target.value)}
+              />
+              <TextInput
+                label="Max Age"
+                type="number"
+                placeholder="e.g., 65"
+                value={maxAge}
+                onChange={(e) => setMaxAge(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-medium mb-3">
+              Allowed Genders{" "}
+              <span className="text-xs text-base-content/60">
+                (leave empty to allow all)
+              </span>
+            </h3>
+            <MultiChoice
+              options={enumToOptions(GenderNoPnts) as any}
+              setValue={setAcceptedGenders}
+              value={acceptedGenders}
+            />
+          </div>
+
+          <label className="flex items-center justify-between hover:cursor-pointer">
+            <div>
+              <h3 className="text-sm font-medium">Allow Spectators</h3>
+              <p className="text-xs text-base-content/60">
+                Allow people to watch without participating
+              </p>
+            </div>
+            <input
+              type="checkbox"
+              defaultChecked
+              className="checkbox"
+              onChange={(e) => {
+                setAllowSpectators(e.target.checked);
+              }}
+            />
+          </label>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block">
+              Cover Image (Coming Soon)
+            </label>
+            <div className="border-2 border-dashed border-base-content/20 rounded-xl p-8 text-center hover:border-primary/50 transition cursor-not-allowed opacity-50">
+              <HiPlus className="w-8 h-8 mx-auto mb-2 text-base-content/40" />
+              <p className="text-sm text-base-content/60">
+                Image upload coming soon
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-      {error && (
-        <p className="text-error text-right self-right mb-4 mt-2">
-          {error.message}
-        </p>
-      )}
-      {loading ? (
-        <HashLoader className="mx-auto mt-8" color={LOADER_COLOR} />
-      ) : (
-        <button className="mb-8 shrink-0" onClick={onCreateEvent}>
-          Create Event
-        </button>
-      )}
+
+        {getError() && (
+          <div
+            role="alert"
+            className="alert alert-error text-sm text-error bg-error/10 rounded-2xl"
+          >
+            <HiX />
+            <p>{getError()}</p>
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          loading={loading}
+          className="btn-primary w-full"
+        >
+          <div className="flex flex-row items-center gap-2">
+            Create Event
+            <HiArrowRight className="w-4 h-4" />
+          </div>
+        </Button>
+      </form>
     </div>
   );
 }

@@ -55,7 +55,6 @@ function EventPage() {
   return (
     <div className="w-full mx-auto max-w-4xl p-4">
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Main content */}
         <div className="flex-1 flex flex-col gap-6">
           <div>
             <h1 className="font-display text-3xl font-bold text-foreground text-balance">
@@ -79,7 +78,6 @@ function EventPage() {
             </Link>
           </div>
 
-          {/* Details grid - responsive */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="flex flex-row gap-1 rounded-xl border border-base-300 bg-base-200 p-4">
               <HiOutlineCalendarDays className="h-4 w-4 text-primary mb-1" />
@@ -96,7 +94,6 @@ function EventPage() {
             </div>
           </div>
 
-          {/* Description */}
           <div>
             <h2 className="font-display text-lg font-semibold text-foreground mb-2">
               About this event
@@ -106,7 +103,7 @@ function EventPage() {
             </p>
           </div>
         </div>
-        {/* Sidebar - fixed width on desktop */}
+
         <div className="w-full lg:w-90 flex-shrink-0 flex flex-col gap-4">
           <div className="relative overflow-hidden rounded-xl">
             <img
@@ -116,14 +113,13 @@ function EventPage() {
               crossOrigin="anonymous"
             />
           </div>
-          {/* Action card */}
+
           <div className="rounded-xl border border-base-300 bg-base-200 p-5 flex flex-col gap-4">
             <EventCapacityBar
               maxParticipants={data.event?.maxParticipants!}
               participantCount={data.event?.members.length!}
             />
 
-            {/* Join/Leave button */}
             {data.event?.role === MemberRole.Organizer ? (
               <div className="rounded-2xl bg-primary/10 p-3 text-center text-sm font-medium text-primary">
                 You are hosting this event
@@ -161,7 +157,6 @@ function EventPage() {
             </button>
           </div>
 
-          {/* Participants on desktop - hidden on mobile */}
           <div className="hidden lg:block rounded-xl border border-base-300 bg-base-200 p-5">
             <h3 className="font-display text-sm font-semibold text-foreground mb-3">
               Participants ({data.event?.members.length})
