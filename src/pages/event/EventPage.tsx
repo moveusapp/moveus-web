@@ -14,6 +14,7 @@ import { useMutation, useQuery } from "@apollo/client/react";
 import { HiOutlineShare, HiOutlineChevronRight } from "react-icons/hi";
 import { HiOutlineMapPin, HiOutlineCalendarDays } from "react-icons/hi2";
 import { Link, useParams } from "react-router-dom";
+import EventPageSkeleton from "./EventPageSkeleton";
 
 function EventPage() {
   const { eventId } = useParams();
@@ -27,7 +28,7 @@ function EventPage() {
   const [deleteEvent] = useMutation(DeleteEventDocument);
 
   if (loading) {
-    return <></>;
+    return <EventPageSkeleton />;
   }
 
   if (!data) {
