@@ -13,6 +13,7 @@ fragment PostCard on PostType {
   likes
   event {
     id
+    title
     organizer {
       user {
         ...UserCard

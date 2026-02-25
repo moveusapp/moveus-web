@@ -10,6 +10,7 @@ import { useSearchParams } from "react-router-dom";
 import EventCard from "../../components/event/EventCard";
 import UserCard from "@/components/user/UserCard";
 import { useProfile } from "@/context/profile-context";
+import PostCard from "@/components/post/PostCard";
 
 function SearchPage() {
   useDocumentTitle("Explore");
@@ -106,7 +107,7 @@ function SearchPage() {
                         );
 
                       case "PostType":
-                        return <></>;
+                        return <PostCard key={`post-${item.id}`} post={item} />;
                     }
                     return <></>;
                   })}
