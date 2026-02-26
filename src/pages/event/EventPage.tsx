@@ -15,6 +15,7 @@ import { HiOutlineShare, HiOutlineChevronRight } from "react-icons/hi";
 import { HiOutlineMapPin, HiOutlineCalendarDays } from "react-icons/hi2";
 import { Link, useParams } from "react-router-dom";
 import EventPageSkeleton from "./EventPageSkeleton";
+import PostCard from "@/components/post/PostCard";
 
 function EventPage() {
   const { eventId } = useParams();
@@ -33,7 +34,7 @@ function EventPage() {
 
   if (!data) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-6">
+      <div className="mx-auto w-full px-4 py-6">
         <div className="flex flex-col items-center justify-center rounded-xl border border-base-300 bg-base-200 py-16">
           <p className="text-lg font-medium text-foreground">Event not found</p>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -95,6 +96,58 @@ function EventPage() {
             </div>
           </div>
 
+          <div className="lg:hidden relative overflow-hidden rounded-xl">
+            <img
+              src="https://cdn.pixabay.com/photo/2020/02/01/20/43/youth-4811405_1280.jpg"
+              alt="Event"
+              className="w-full aspect-video object-cover"
+              crossOrigin="anonymous"
+            />
+          </div>
+
+          <div className="lg:hidden rounded-xl border border-base-300 bg-base-200 p-5 flex flex-col gap-4">
+            <EventCapacityBar
+              maxParticipants={data.event?.maxParticipants!}
+              participantCount={data.event?.members.length!}
+            />
+
+            {data.event?.role === MemberRole.Organizer ? (
+              <div className="rounded-2xl bg-primary/10 p-3 text-center text-sm font-medium text-primary">
+                You are hosting this event
+              </div>
+            ) : [
+                MemberRole.Participant,
+                MemberRole.Moderator,
+                MemberRole.Spectator,
+              ].includes(data.event?.role!) ? (
+              <Button
+                onClick={() =>
+                  leaveEvent({ variables: { eventId: parseInt(eventId!) } })
+                }
+                loading={leaveLoading}
+                className="btn btn-error btn-outline w-full"
+              >
+                Leave Event
+              </Button>
+            ) : (
+              <Button
+                onClick={() =>
+                  !isFull &&
+                  joinEvent({ variables: { eventId: parseInt(eventId!) } })
+                }
+                loading={joinLoading}
+                className={`btn btn-primary w-full ${isFull ? "btn-disabled" : ""}`}
+              >
+                {isFull ? "Event Full" : "Join Event"}
+              </Button>
+            )}
+
+            <button className="btn flex items-center justify-center gap-2 bg-base-200 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary">
+              <HiOutlineShare className="h-4 w-4" />
+              Share
+            </button>
+          </div>
+
           <div>
             <h2 className="font-display text-lg font-semibold text-foreground mb-2">
               About this event
@@ -103,14 +156,56 @@ function EventPage() {
               {data.event?.description}
             </p>
           </div>
+
+          {data.event?.posts && data.event.posts.length > 0 && (
+            <div>
+              <h2 className="font-display text-lg font-semibold text-foreground mb-4">
+                Posts ({data.event.posts.length})
+              </h2>
+              <div className="flex flex-col gap-4">
+                {data.event.posts.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="lg:hidden rounded-xl border border-base-300 bg-base-200 p-5">
+            <h3 className="font-display text-sm font-semibold text-foreground mb-3">
+              Participants ({data.event?.members.length})
+            </h3>
+            <div className="flex flex-col gap-2">
+              {data.event?.members.map((member) => (
+                <Link
+                  to={`/user/${member.user.username}`}
+                  key={member.user.id}
+                  className="flex items-center gap-3 rounded-lg p-2 text-left transition-colors hover:bg-secondary"
+                >
+                  <UserAvatar userId={member.user.id!} className="w-8 h-8" />
+                  <span className="text-sm font-medium text-foreground">
+                    {displayName(
+                      member.user.username,
+                      member.user.firstName,
+                      member.user.lastName,
+                    )}
+                  </span>
+                  {member.user.id === data.event?.organizer?.user.id && (
+                    <span className="ml-auto text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                      Organizer
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="w-full lg:w-90 flex-shrink-0 flex flex-col gap-4">
+        <div className="hidden lg:flex w-full lg:w-90 flex-shrink-0 flex-col gap-4">
           <div className="relative overflow-hidden rounded-xl">
             <img
               src="https://cdn.pixabay.com/photo/2020/02/01/20/43/youth-4811405_1280.jpg"
               alt="Event"
-              className="w-full video-cover"
+              className="w-full aspect-video object-cover"
               crossOrigin="anonymous"
             />
           </div>
@@ -158,7 +253,7 @@ function EventPage() {
             </button>
           </div>
 
-          <div className="hidden lg:block rounded-xl border border-base-300 bg-base-200 p-5">
+          <div className="rounded-xl border border-base-300 bg-base-200 p-5">
             <h3 className="font-display text-sm font-semibold text-foreground mb-3">
               Participants ({data.event?.members.length})
             </h3>
@@ -185,35 +280,6 @@ function EventPage() {
                 </Link>
               ))}
             </div>
-          </div>
-        </div>
-
-        <div className="lg:hidden rounded-xl border border-base-300 bg-base-200 p-5">
-          <h3 className="font-display text-sm font-semibold text-foreground mb-3">
-            Participants ({data.event?.members.length})
-          </h3>
-          <div className="flex flex-col gap-2">
-            {data.event?.members.map((member) => (
-              <Link
-                to={`/user/${member.user.username}`}
-                key={member.user.id}
-                className="flex items-center gap-3 rounded-lg p-2 text-left transition-colors hover:bg-secondary"
-              >
-                <UserAvatar userId={member.user.id!} className="w-8 h-8" />
-                <span className="text-sm font-medium text-foreground">
-                  {displayName(
-                    member.user.username,
-                    member.user.firstName,
-                    member.user.lastName,
-                  )}
-                </span>
-                {member.user.id === data.event?.organizer?.user.id && (
-                  <span className="ml-auto text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                    Organizer
-                  </span>
-                )}
-              </Link>
-            ))}
           </div>
         </div>
       </div>
