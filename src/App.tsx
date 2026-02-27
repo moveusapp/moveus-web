@@ -8,7 +8,6 @@ import { NavRoutes } from "./components/routes/nav/NavRoutes";
 import ProfileRedirect from "./pages/user/ProfileRedirect";
 import SettingsPage from "./pages/settings/SettingsPage";
 import EventPage from "./pages/event/EventPage";
-import CreatePostPage from "./pages/create-post/CreatePostPost";
 import UserPage from "./pages/user/UserPage";
 import ChatListPage from "./pages/chat/MessagesPage";
 import ChatPage from "./pages/chat/ChatPage";
@@ -34,7 +33,6 @@ function App() {
               <Route path="/create-event" element={<CreateEventPage />} />
             </Route>
             <Route path="/profile-setup" element={<ProfileSetupPage />} />
-            <Route path="/create-post/:eventId" element={<CreatePostPage />} />
           </Route>
           <Route element={<NavRoutes />}>
             <Route path="/user/:username" element={<UserPage />} />

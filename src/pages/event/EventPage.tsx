@@ -11,17 +11,21 @@ import {
 import { displayName } from "@/utils/display-name";
 import { formatDate, formatTime } from "@/utils/time-utils";
 import { useMutation, useQuery } from "@apollo/client/react";
-import { HiOutlineShare, HiOutlineChevronRight } from "react-icons/hi";
+import { HiOutlineShare, HiOutlineChevronRight, HiPlus } from "react-icons/hi";
 import { HiOutlineMapPin, HiOutlineCalendarDays } from "react-icons/hi2";
 import { Link, useParams } from "react-router-dom";
+import { useState } from "react";
 import EventPageSkeleton from "./EventPageSkeleton";
 import PostCard from "@/components/post/PostCard";
+import CreatePostModal from "@/pages/event/CreatePostModal";
 
 function EventPage() {
   const { eventId } = useParams();
-  const { data, loading } = useQuery(GetEventDocument, {
+  const { data, loading, refetch } = useQuery(GetEventDocument, {
     variables: { eventId: parseInt(eventId!) },
   });
+
+  const [showCreatePostModal, setShowCreatePostModal] = useState(false);
 
   const [joinEvent, { loading: joinLoading }] = useMutation(JoinEventDocument);
   const [leaveEvent, { loading: leaveLoading }] =
@@ -34,7 +38,7 @@ function EventPage() {
 
   if (!data) {
     return (
-      <div className="mx-auto w-full px-4 py-6">
+      <div className="mx-auto max-w-3xl px-4 py-6">
         <div className="flex flex-col items-center justify-center rounded-xl border border-base-300 bg-base-200 py-16">
           <p className="text-lg font-medium text-foreground">Event not found</p>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -53,6 +57,14 @@ function EventPage() {
     data.event?.organizer?.user.firstName!,
     data.event?.organizer?.user.lastName!,
   );
+
+  const canCreatePost = [MemberRole.Organizer, MemberRole.Moderator].includes(
+    data.event?.role!
+  );
+
+  const handlePostCreated = () => {
+    refetch();
+  };
 
   return (
     <div className="w-full mx-auto max-w-4xl p-4">
@@ -157,18 +169,36 @@ function EventPage() {
             </p>
           </div>
 
-          {data.event?.posts && data.event.posts.length > 0 && (
-            <div>
-              <h2 className="font-display text-lg font-semibold text-foreground mb-4">
-                Posts ({data.event.posts.length})
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-lg font-semibold text-foreground">
+                Posts ({data.event?.posts?.length || 0})
               </h2>
+              {canCreatePost && (
+                <button
+                  onClick={() => setShowCreatePostModal(true)}
+                  className="btn btn-primary btn-sm gap-1"
+                >
+                  <HiPlus className="w-4 h-4" />
+                  Create Post
+                </button>
+              )}
+            </div>
+            
+            {data.event?.posts && data.event.posts.length > 0 ? (
               <div className="flex flex-col gap-4">
-                {data.event.posts.map((post) => (
+                {data.event.posts.toReversed().map((post) => (
                   <PostCard key={post.id} post={post} />
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="rounded-xl border border-base-300 bg-base-200 p-8 text-center">
+                <p className="text-sm text-base-content/60">
+                  No posts yet. {canCreatePost && "Be the first to create one!"}
+                </p>
+              </div>
+            )}
+          </div>
 
           <div className="lg:hidden rounded-xl border border-base-300 bg-base-200 p-5">
             <h3 className="font-display text-sm font-semibold text-foreground mb-3">
@@ -283,6 +313,13 @@ function EventPage() {
           </div>
         </div>
       </div>
+
+      <CreatePostModal
+        eventId={parseInt(eventId!)}
+        isOpen={showCreatePostModal}
+        onClose={() => setShowCreatePostModal(false)}
+        onSuccess={handlePostCreated}
+      />
     </div>
   );
 }
