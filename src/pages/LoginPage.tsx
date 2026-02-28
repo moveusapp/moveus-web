@@ -60,7 +60,6 @@ function LoginPage() {
 
       <p className="text-sm text-error mt-2">{apiError?.message}</p>
 
-      {/* Remember me & Forgot password */}
       <div className="flex mt-6 items-center justify-between">
         <label className="flex items-center gap-2 cursor-pointer">
           <input
@@ -79,7 +78,6 @@ function LoginPage() {
         </a>
       </div>
 
-      {/* Login button */}
       <Button
         loading={loading}
         type="submit"
@@ -88,10 +86,8 @@ function LoginPage() {
         Sign In
       </Button>
 
-      {/* Divider */}
       <div className="divider text-xs text-base-content/40">OR</div>
 
-      {/* Google login */}
       <button
         type="button"
         onClick={handleGoogleLogin}
@@ -101,7 +97,6 @@ function LoginPage() {
         Continue with Google
       </button>
 
-      {/* Sign up link */}
       <p className="text-center text-sm text-base-content/60 mt-6">
         Don't have an account?{" "}
         <a

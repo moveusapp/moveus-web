@@ -19,7 +19,7 @@ const TextArea = ({
       <legend className="fieldset-legend">{label}</legend>
       <textarea
         {...props}
-        className="textarea rounded-2xl h-24 w-full"
+        className="textarea rounded-2xl w-full"
       />
       {hasError && (
         <div className="fieldset-helper-text text-error">
