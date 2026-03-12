@@ -15,12 +15,14 @@ import NotificationsPage from "./pages/notifications/NotificationsPage";
 import SearchPage from "./pages/search/SearchPage";
 import { AuthRoutes } from "./components/routes/AuthRoutes";
 import CreateEventPage from "./pages/create-event/CreateEventPage";
+import LandingPage from "./pages/start/LandingPage";
 
 function App() {
   return (
     <main>
       <Router>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route element={<ProtectedRoutes />}>
             <Route element={<NavRoutes />}>
               <Route path="/home" element={<HomePage />} />

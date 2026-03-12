@@ -3,3 +3,9 @@ query GetEvent($eventId: Int!) {
     ...Event
   }
 }
+
+query GetAnonymousUserEvents {
+  anonymousUserEvents {
+    ...EventCard
+  }
+}

@@ -38,7 +38,7 @@ function EventPage() {
 
   if (!data) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-6">
+      <div className="mx-auto max-w-3xl px-4 w-full py-6">
         <div className="flex flex-col items-center justify-center rounded-xl border border-base-300 bg-base-200 py-16">
           <p className="text-lg font-medium text-foreground">Event not found</p>
           <p className="mt-1 text-sm text-muted-foreground">

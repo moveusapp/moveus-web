@@ -1,9 +1,9 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
 import { useParams } from "react-router-dom";
+import { useQuery, useSubscription } from "@apollo/client/react";
 import UserAvatar from "@/components/user/UserAvatar";
 import SendMessage from "@/pages/chat/SendMessage";
-import { LOADER_COLOR } from "@/constants";
 import {
   ChatMessagesDocument,
   GetUserChatDocument,
@@ -13,7 +13,11 @@ import {
 import { setDocumentTitle } from "@/hooks/use-document-title";
 import { displayName } from "@/utils/display-name";
 import { prependZero } from "@/utils/time-utils";
-import { useQuery, useSubscription } from "@apollo/client/react";
+
+const ensureDateObject = (value: any): Date => {
+  if (value instanceof Date) return value;
+  return new Date(value);
+};
 
 function ChatPage() {
   const { userId } = useParams();
@@ -61,7 +65,13 @@ function ChatPage() {
 
   const addNewMessage = useCallback(
     (message: WsChatMessageType) => {
-      setMessages((p) => [...p, message]);
+      setMessages((p) => [
+        ...p,
+        {
+          ...message,
+          timeSent: ensureDateObject(message.timeSent),
+        },
+      ]);
     },
     [setMessages],
   );
@@ -70,7 +80,10 @@ function ChatPage() {
     if (Array.isArray(messageSubData?.chatMessages)) {
       setMessages((p) => [
         ...p.filter((m) => m.id !== null),
-        ...(messageSubData!.chatMessages as any),
+        ...(messageSubData!.chatMessages as any).map((msg: any) => ({
+          ...msg,
+          timeSent: ensureDateObject(msg.timeSent),
+        })),
       ]);
     }
   }, [messageSubData, setMessages]);
@@ -80,7 +93,7 @@ function ChatPage() {
       lastOpenData?.chatLastOpen &&
       lastOpenData.chatLastOpen[0]?.userId === member?.user.id
     ) {
-      setLastOpen(lastOpenData.chatLastOpen[0]?.lastOpen!);
+      setLastOpen(ensureDateObject(lastOpenData.chatLastOpen[0]?.lastOpen));
     }
   }, [lastOpenData, setLastOpen, member]);
 
@@ -167,7 +180,7 @@ function ChatPage() {
 
       {loading || messageSubLoading || lastOpenLoading ? (
         <div className="flex-1 flex flex-col justify-center items-center">
-          <div className="loading loading-dots text-primary"/>
+          <div className="loading loading-dots text-primary" />
         </div>
       ) : (
         <>

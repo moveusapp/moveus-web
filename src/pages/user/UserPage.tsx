@@ -11,7 +11,7 @@ import {
   HiOutlineCalendar,
 } from "react-icons/hi";
 import { HiCheckBadge } from "react-icons/hi2";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import EventCard from "../../components/event/EventCard";
 import { useState } from "react";
 import UserPageSkeleton from "./UserPageSkeleton";
@@ -24,6 +24,7 @@ function UserPage() {
     variables: { username: username! },
   });
   const { profile } = useProfile();
+  
 
   if (loading) {
     return <UserPageSkeleton />;
@@ -103,9 +104,9 @@ function UserPage() {
             <div className="flex flex-row gap-1">
               {profile && (
                 <>
-                  <Button>
+                  <Link to={`/chat/${data?.user!.id}`} className="btn">
                     <HiOutlineChat size={18} />
-                  </Button>
+                  </Link>
 
                   <FriendshipButton
                     userId={data?.user?.id!}
