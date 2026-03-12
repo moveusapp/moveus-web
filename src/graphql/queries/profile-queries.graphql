@@ -5,7 +5,7 @@ query GetMyProfile {
 }
 
 query GetProfilePictureUploadURL {
-  profilePictureGcloudUrl
+  profilePictureUrl
 }
 
 query GetNotifications {

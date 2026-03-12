@@ -6,7 +6,7 @@ mutation CreateEvent(
   $requirements: String
   $locationLongitude: Float
   $locationLatitude: Float
-  $activity: Activity!
+  $activity: ActivityType!
   $skillLevel: SkillLevel!
   $maxParticipants: Int
   $allowSpectators: Boolean

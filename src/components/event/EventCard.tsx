@@ -1,6 +1,6 @@
 import Tag from "@/components/misc/Tag";
 import UserAvatar from "@/components/user/UserAvatar";
-import { Activity, EventCardFragment } from "@/graphql/graphql-types";
+import { ActivityType, EventCardFragment } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { formatDate, formatTime, timeAgo } from "@/utils/time-utils";
 import {
@@ -17,7 +17,7 @@ function EventCard({ event }: EventCardProps) {
   const spotsPercent = (event.participantCount! / event.maxParticipants!) * 100;
   const almostFull = event.maxParticipants && spotsPercent >= 50;
 
-  const activity = Object.keys(Activity)[event.activity.id!];
+  const activity = Object.keys(ActivityType)[event.activity.id!];
 
   const organizerName = displayName(
     event.organizer?.user.username!,
