@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import { useQuery, useSubscription } from "@apollo/client/react";
@@ -28,6 +28,7 @@ function ChatPage() {
 
   const [messages, setMessages] = useState<WsChatMessageType[]>([]);
   const [lastOpen, setLastOpen] = useState(new Date("1971-01-01"));
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const chat = useMemo(() => {
     return data?.userChat;
@@ -96,6 +97,10 @@ function ChatPage() {
       setLastOpen(ensureDateObject(lastOpenData.chatLastOpen[0]?.lastOpen));
     }
   }, [lastOpenData, setLastOpen, member]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   let lastDate = new Date("1971-01-01");
 
@@ -186,6 +191,7 @@ function ChatPage() {
         <>
           <div className="flex-1 overflow-y-auto flex flex-col gap-4 px-4">
             {messageElements}
+            <div ref={messagesEndRef} />
           </div>
           <div className="flex-shrink-0 p-4">
             <SendMessage chatId={chat?.id!} addMessage={addNewMessage} />
