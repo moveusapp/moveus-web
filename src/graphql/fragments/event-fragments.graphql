@@ -10,15 +10,13 @@ fragment PostCard on PostType {
   title
   content
   timePosted
+  author {
+    ...UserCard
+  }
   likes
   event {
     id
     title
-    organizer {
-      user {
-        ...UserCard
-      }
-    }
   }
 }
 

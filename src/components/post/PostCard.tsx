@@ -10,9 +10,9 @@ function PostCard({ post }: PostCardProps) {
   const [showImageModal, setShowImageModal] = useState(false);
 
   const organizerName = displayName(
-    post.event!.organizer!.user.username,
-    post.event!.organizer!.user.firstName,
-    post.event!.organizer!.user.lastName,
+    post.author!.username,
+    post.author!.firstName,
+    post.author!.lastName,
   );
 
   const imageUrl = post.id
@@ -25,11 +25,11 @@ function PostCard({ post }: PostCardProps) {
         <div className="p-5 space-y-4">
           <div className="flex items-start justify-between gap-3">
             <Link
-              to={`/user/${post.event?.organizer?.user.username}`}
+              to={`/user/${post?.author?.username}`}
               className="flex items-center gap-3 flex-1 min-w-0 group"
             >
               <UserAvatar
-                userId={post.event?.organizer?.user.id!}
+                userId={post?.author?.id!}
                 className="w-10 h-10 flex-shrink-0"
               />
               <div className="flex flex-col min-w-0">
@@ -37,12 +37,12 @@ function PostCard({ post }: PostCardProps) {
                   <span className="text-sm font-semibold text-base-content truncate group-hover:text-primary transition-colors">
                     {organizerName}
                   </span>
-                  {post.event?.organizer?.user.verified && (
+                  {post?.author?.verified && (
                     <HiCheckBadge className="w-4 h-4 text-primary flex-shrink-0" />
                   )}
                 </div>
                 <span className="text-xs text-base-content/60 truncate">
-                  @{post.event?.organizer?.user?.username}
+                  @{post?.author?.username}
                 </span>
               </div>
             </Link>
