@@ -1,48 +1,24 @@
-import { HiUsers } from "react-icons/hi";
-
 function EventCapacityBar({
   participantCount,
   maxParticipants,
 }: EventCapacityBarProps) {
-  const spotsLeft = maxParticipants - participantCount;
-  const spotsPercent = Math.floor((participantCount! / maxParticipants!) * 100);
-  const almostFull = maxParticipants && spotsPercent >= 50;
+  if (!maxParticipants) return null;
+
+  const spotsLeft = Math.max(0, maxParticipants - participantCount);
+  const almostFull = participantCount / maxParticipants >= 0.5;
+
+  if (spotsLeft === 0) {
+    return <span className="text-sm font-medium whitespace-nowrap text-error">Full</span>;
+  }
 
   return (
-    <div>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs text-base-content/70">
-          <HiUsers size={14} className="text-primary" />
-          <span>
-            <strong
-              className={`font-semibold text-sm ${almostFull ? "text-error" : "text-primary"}`}
-            >
-              {maxParticipants ? `${spotsPercent}%` : "No participant limit"}
-            </strong>{" "}
-            <span className="text-xs">
-              {maxParticipants ? "filled" : ""}
-            </span>
-          </span>
-        </div>
-        {maxParticipants && (
-          <div className="badge rounded-2xl bg-accent text-xs text-white">
-            {spotsLeft} spot(s) left
-          </div>
-        )}
-      </div>
-      {maxParticipants && (
-        <div className="w-full bg-base-300 mt-2 rounded-full h-2 overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ${
-              almostFull ? "bg-error" : "bg-primary"
-            }`}
-            style={{
-              width: `${maxParticipants ? spotsPercent : 100}%`,
-            }}
-          />
-        </div>
-      )}
-    </div>
+    <span
+      className={`text-sm font-medium whitespace-nowrap ${
+        almostFull ? "text-accent" : "text-base-content/50"
+      }`}
+    >
+      {spotsLeft} {spotsLeft === 1 ? "spot" : "spots"} left
+    </span>
   );
 }
 
