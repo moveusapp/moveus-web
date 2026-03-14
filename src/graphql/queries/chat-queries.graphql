@@ -12,6 +12,20 @@ query GetUserChat($userId: Int!) {
   }
 }
 
+query GetChat($chatId: Int!) {
+  chat(chatId: $chatId) {
+    id
+    members {
+      user {
+        id
+        username
+        firstName
+        lastName
+      }
+    }
+  }
+}
+
 query GetMyChats {
   myChats {
     ...Chat

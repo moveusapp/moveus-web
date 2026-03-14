@@ -9,7 +9,6 @@ import ProfileRedirect from "./pages/user/ProfileRedirect";
 import SettingsPage from "./pages/settings/SettingsPage";
 import EventPage from "./pages/event/EventPage";
 import UserPage from "./pages/user/UserPage";
-import ChatListPage from "./pages/chat/MessagesPage";
 import ChatPage from "./pages/chat/ChatPage";
 import NotificationsPage from "./pages/notifications/NotificationsPage";
 import SearchPage from "./pages/search/SearchPage";
@@ -26,11 +25,11 @@ function App() {
           <Route element={<ProtectedRoutes />}>
             <Route element={<NavRoutes />}>
               <Route path="/home" element={<HomePage />} />
-              <Route path="/chat" element={<ChatListPage />} />
+              <Route path="/chat" element={<ChatPage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/profile" element={<ProfileRedirect />} />
               <Route path="/notifications" element={<NotificationsPage />} />
-              <Route path="/chat/:userId" element={<ChatPage />} />
+
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/create-event" element={<CreateEventPage />} />
             </Route>

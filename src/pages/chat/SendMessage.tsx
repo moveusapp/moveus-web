@@ -32,7 +32,10 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      if (!text && !selectedImage) return;
+      if (
+        (!text || text.trim().length <= 0) 
+        && !selectedImage
+      ) return;
       clearImageInput();
       setText("");
       addMessage({

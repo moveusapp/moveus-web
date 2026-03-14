@@ -1,14 +1,10 @@
 function ChatCardSkeleton() {
   return (
-    <div
-      className="bg-base-200 rounded-2xl border border-base-300 p-4"
-    >
-      <div className="flex gap-4 font-medium relative items-center">
-        <div className="skeleton h-12 w-12 shrink-0 rounded-full" />
-        <div className="flex flex-col overflow-hidden gap-1">
-          <div className="skeleton h-4 w-40"/>
-          <div className="skeleton h-4 w-100"/>
-        </div>
+    <div className="flex items-center gap-3 px-3 py-2.5">
+      <div className="skeleton h-10 w-10 shrink-0 rounded-full" />
+      <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+        <div className="skeleton h-3.5 w-24 rounded" />
+        <div className="skeleton h-3 w-36 rounded" />
       </div>
     </div>
   );

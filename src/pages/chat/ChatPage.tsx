@@ -1,203 +1,97 @@
-import { Fragment, useCallback, useEffect, useMemo, useState, useRef } from "react";
-import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
-import { useParams } from "react-router-dom";
-import { useQuery, useSubscription } from "@apollo/client/react";
-import UserAvatar from "@/components/user/UserAvatar";
-import SendMessage from "@/pages/chat/SendMessage";
-import {
-  ChatMessagesDocument,
-  GetUserChatDocument,
-  LastOpenDocument,
-  WsChatMessageType,
-} from "@/graphql/graphql-types";
-import { setDocumentTitle } from "@/hooks/use-document-title";
-import { displayName } from "@/utils/display-name";
-import { prependZero } from "@/utils/time-utils";
-
-const ensureDateObject = (value: any): Date => {
-  if (value instanceof Date) return value;
-  return new Date(value);
-};
+import { useMemo, useState } from "react";
+import { useQuery } from "@apollo/client/react";
+import { GetMyChatsDocument } from "@/graphql/graphql-types";
+import useDocumentTitle from "@/hooks/use-document-title";
+import ChatCard from "@/components/chat/ChatCard";
+import ChatCardSkeleton from "@/components/chat/ChatCardSkeleton";
+import ChatView from "@/pages/chat/ChatView";
+import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
+import { RiArrowLeftLine } from "react-icons/ri";
 
 function ChatPage() {
-  const { userId } = useParams();
-  const { data, loading } = useQuery(GetUserChatDocument, {
-    variables: { userId: parseInt(userId!) },
-    skip: !userId,
-  });
+  useDocumentTitle("Chats");
 
-  const [messages, setMessages] = useState<WsChatMessageType[]>([]);
-  const [lastOpen, setLastOpen] = useState(new Date("1971-01-01"));
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
 
-  const chat = useMemo(() => {
-    return data?.userChat;
+  const { loading, data } = useQuery(GetMyChatsDocument);
+
+  const chats = useMemo(() => {
+    if (loading) return null;
+    return [...(data?.myChats ?? [])]
+      .filter((chat) => (chat?.members?.length ?? 0) > 0)
+      .sort((a, b) => {
+        const aTime = a?.lastMessage?.timeSent?.getTime() ?? 0;
+        const bTime = b?.lastMessage?.timeSent?.getTime() ?? 0;
+        return bTime - aTime;
+      });
   }, [data]);
 
-  const member = useMemo(() => {
-    if (chat?.members) {
-      const member = chat.members[0];
-      setDocumentTitle(
-        displayName(
-          member?.user.username!,
-          member?.user.firstName!,
-          member?.user.lastName!,
-        ) + " - Chat",
-      );
-      return member;
-    }
-  }, [chat]);
-
-  const { data: messageSubData, loading: messageSubLoading } = useSubscription(
-    ChatMessagesDocument,
-    {
-      variables: { chatId: chat?.id! },
-      skip: !chat?.id,
-    },
-  );
-
-  const { data: lastOpenData, loading: lastOpenLoading } = useSubscription(
-    LastOpenDocument,
-    {
-      variables: { chatId: chat?.id! },
-      skip: !chat?.id,
-    },
-  );
-
-  const addNewMessage = useCallback(
-    (message: WsChatMessageType) => {
-      setMessages((p) => [
-        ...p,
-        {
-          ...message,
-          timeSent: ensureDateObject(message.timeSent),
-        },
-      ]);
-    },
-    [setMessages],
-  );
-
-  useEffect(() => {
-    if (Array.isArray(messageSubData?.chatMessages)) {
-      setMessages((p) => [
-        ...p.filter((m) => m.id !== null),
-        ...(messageSubData!.chatMessages as any).map((msg: any) => ({
-          ...msg,
-          timeSent: ensureDateObject(msg.timeSent),
-        })),
-      ]);
-    }
-  }, [messageSubData, setMessages]);
-
-  useEffect(() => {
-    if (
-      lastOpenData?.chatLastOpen &&
-      lastOpenData.chatLastOpen[0]?.userId === member?.user.id
-    ) {
-      setLastOpen(ensureDateObject(lastOpenData.chatLastOpen[0]?.lastOpen));
-    }
-  }, [lastOpenData, setLastOpen, member]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  let lastDate = new Date("1971-01-01");
-
-  const messageElements = messages.map((message) => {
-    const dateElement =
-      message.timeSent!.toDateString() !== lastDate.toDateString() ? (
-        <p
-          className="self-center text-sm font-medium"
-          key={message.id + "date"}
-        >
-          {message.timeSent!.toDateString()}
-        </p>
-      ) : (
-        <></>
-      );
-    lastDate = message.timeSent!;
-    return (
-      <Fragment key={message.id}>
-        {dateElement}
-        {message.userId === member?.user.id ? (
-          <div className="flex gap-4">
-            <UserAvatar
-              userId={message.userId!}
-              className="w-10 h-10 rounded-full"
-            />
-            <div className="relative p-[10px] pr-12 font-medium bg-block max-w-[75%] wrap-break-word rounded-[15px]">
-              <p>{message.textContent}</p>
-              <span className="text-xs absolute right-[10px] bottom-[10px]">
-                {`${prependZero(message.timeSent!.getHours())}:${prependZero(message.timeSent!.getMinutes())}`}
-              </span>
-              {message.attachmentUrl && (
-                <img
-                  src={message.attachmentUrl}
-                  alt={message.id! + ""}
-                  className="rounded-[15px] mt-2"
-                />
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="relative p-[10px] font-medium bg-secondary text-background pr-16 self-end max-w-[75%] wrap-break-word rounded-[15px]">
-            <p>{message.textContent}</p>
-            <span className="text-xs absolute right-[10px] bottom-[10px]">
-              {`${prependZero(message.timeSent!.getHours())}:${prependZero(message.timeSent!.getMinutes())}`}
-              {lastOpen.getTime() > message.timeSent!.getTime() ? (
-                <RiCheckDoubleLine className="inline ml-[2px]" />
-              ) : (
-                <RiCheckLine
-                  className={
-                    "inline ml-[2px] " +
-                    (message.id === null && "text-foreground")
-                  }
-                />
-              )}
-            </span>
-            {message.attachmentUrl && (
-              <img
-                src={message.attachmentUrl}
-                alt={message.id! + ""}
-                className="rounded-[15px] mt-2"
-              />
-            )}
-          </div>
-        )}
-      </Fragment>
-    );
-  });
+  const hasChats = chats && chats.length > 0;
 
   return (
-    <div className="h-full flex flex-col">
-      <nav className="flex-shrink-0 p-4">
-        {member && (
-          <h2 className="text-center text-2xl">
-            {displayName(
-              member.user.username,
-              member.user.firstName,
-              member.user.lastName,
-            )}
-          </h2>
+    <div className="flex h-full">
+      {/* Center: conversation or empty state */}
+      <div
+        className={`flex-1 min-w-0 flex-col ${
+          selectedChatId ? "flex" : "hidden lg:flex"
+        }`}
+      >
+        {selectedChatId ? (
+          <>
+            <button
+              className="lg:hidden flex items-center gap-2 p-4 pb-0 text-sm font-medium text-primary"
+              onClick={() => setSelectedChatId(null)}
+            >
+              <RiArrowLeftLine className="text-lg" />
+              Back
+            </button>
+            <ChatView key={selectedChatId} chatId={selectedChatId} />
+          </>
+        ) : (
+          <div className="flex-1 flex flex-col items-center justify-center gap-3 text-base-content/40">
+            <HiOutlineChatBubbleLeftRight className="text-5xl" />
+            <p className="text-base font-medium">
+              Pick a chat to start talking
+            </p>
+          </div>
         )}
-      </nav>
+      </div>
 
-      {loading || messageSubLoading || lastOpenLoading ? (
-        <div className="flex-1 flex flex-col justify-center items-center">
-          <div className="loading loading-dots text-primary" />
+      {/* Right sidebar: chat list */}
+      <aside
+        className={`${
+          selectedChatId ? "hidden lg:flex" : "flex"
+        } flex-col w-full lg:w-[300px] xl:w-[340px] lg:flex-shrink-0 lg:border-l border-base-300 overflow-y-auto h-full`}
+      >
+        <div className="p-4 pb-2">
+          <h2 className="font-semibold text-lg">Messages</h2>
         </div>
-      ) : (
-        <>
-          <div className="flex-1 overflow-y-auto flex flex-col gap-4 px-4">
-            {messageElements}
-            <div ref={messagesEndRef} />
-          </div>
-          <div className="flex-shrink-0 p-4">
-            <SendMessage chatId={chat?.id!} addMessage={addNewMessage} />
-          </div>
-        </>
-      )}
+        <div className="flex flex-col px-1 pb-4">
+          {loading ? (
+            [...Array(8)].map((_, i) => (
+              <ChatCardSkeleton key={`skeleton-${i}`} />
+            ))
+          ) : hasChats ? (
+            chats!.map((chat) => (
+              <ChatCard
+                key={chat!.id}
+                chat={chat!}
+                onSelect={setSelectedChatId}
+                isActive={chat!.id === selectedChatId}
+              />
+            ))
+          ) : (
+            <div className="px-3 py-8 text-center">
+              <p className="text-sm text-base-content/50">
+                No conversations yet
+              </p>
+              <p className="text-xs text-base-content/35 mt-1">
+                Add friends to start chatting
+              </p>
+            </div>
+          )}
+        </div>
+      </aside>
     </div>
   );
 }
