@@ -30,7 +30,8 @@ fragment ContextProfile on ProfileType{
   verified
   likes
   dislikes
-  friendCount
+  followerCount
+  followingCount
   ...BasicInfo
   ...Survey
   privacySettings {
@@ -55,14 +56,11 @@ fragment User on UserType {
   likes
   dislikes
   dateOfBirth
-  friendCount
+  followerCount
+  followingCount
   verified
-  relationship {
-    status
-    chat {
-      id
-    }
-  } 
+  isFollowing
+  isFollowedBy
   attendingEvents {
     ...EventCard
   }

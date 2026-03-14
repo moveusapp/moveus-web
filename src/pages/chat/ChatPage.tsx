@@ -86,7 +86,7 @@ function ChatPage() {
                 No conversations yet
               </p>
               <p className="text-xs text-base-content/35 mt-1">
-                Add friends to start chatting
+                Find someone to start a conversation
               </p>
             </div>
           )}

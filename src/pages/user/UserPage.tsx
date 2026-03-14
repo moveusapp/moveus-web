@@ -1,5 +1,5 @@
 import Button from "@/components/ui/Button";
-import FriendshipButton from "@/components/user/FriendshipButton";
+import FollowButton from "@/components/user/FollowButton";
 import UserAvatar from "@/components/user/UserAvatar";
 import { useProfile } from "@/context/profile-context";
 import { GetUserByUsernameDocument } from "@/graphql/graphql-types";
@@ -96,6 +96,12 @@ function UserPage() {
                 <p>{data?.user?.bio}</p>
               )}
             </div>
+
+            <p className="text-sm text-base-content/70 mt-1">
+              <span className="font-semibold text-base-content">{data?.user?.followerCount ?? 0}</span> Followers
+              {" · "}
+              <span className="font-semibold text-base-content">{data?.user?.followingCount ?? 0}</span> Following
+            </p>
           </div>
 
           {isSelf ? (
@@ -108,9 +114,9 @@ function UserPage() {
                     <HiOutlineChat size={18} />
                   </Link>
 
-                  <FriendshipButton
+                  <FollowButton
                     userId={data?.user?.id!}
-                    status={data?.user?.relationship?.status!}
+                    isFollowing={data?.user?.isFollowing ?? false}
                   />
                 </>
               )}

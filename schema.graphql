@@ -1,0 +1,985 @@
+schema {
+  query: Queries
+  mutation: Mutations
+  subscription: Subscriptions
+}
+
+type UserNotificationType implements BaseNotificationType {
+  id: Int
+  notificationType: NotificationEnum
+  time: DateTime
+  user: UserType
+}
+
+interface BaseNotificationType {
+  id: Int
+  notificationType: NotificationEnum
+  time: DateTime
+}
+
+"""An enumeration."""
+enum NotificationEnum {
+  NEW_FOLLOWER
+  EVENT_FINISHED
+}
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+type UserType {
+  id: Int
+
+  """
+  Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+  """
+  isActive: Boolean!
+  dateJoined: DateTime!
+  username: String!
+  bio: String!
+  gender: Gender
+  firstName: String!
+  lastName: String!
+  xp: Int!
+  verified: Boolean!
+  preferredActivities: [PreferredActivityType!]!
+  likes: Int
+  dislikes: Int
+  followers: [UserType]
+  followerCount: Int
+  following: [UserType]
+  followingCount: Int
+  organizingEvents: [EventType]
+  attendingEvents: [EventType]
+  posts(start: Int = 0, end: Int = 10): [PostType]
+  location: LocationType
+  email: String
+  dateOfBirth: Date
+  isFollowing: Boolean
+  isFollowedBy: Boolean
+  frequencyOfPhysicalActivity: String
+  socialInteractionImportance: String
+  preferredPartySize: String
+  physicalActivitySatisfaction: String
+  matchedParticipationLikelihood: String
+  mainInterest: String
+}
+
+"""An enumeration."""
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  PREFER_NOT_TO_SAY
+}
+
+type PreferredActivityType {
+  activity: ActivityModelType!
+  skillLevel: String
+}
+
+type ActivityModelType {
+  id: Int
+  name: String
+}
+
+type EventType {
+  id: Int
+  title: String!
+  description: String
+  startTime: DateTime!
+  endTime: DateTime!
+  location: LocationType!
+  requirements: JSONString
+  activity: ActivityModelType!
+  skillLevel: String
+  maxParticipants: Int
+  allowSpectators: Boolean!
+  minAge: Int
+  maxAge: Int
+  acceptedGenders: JSONString
+  finished: Boolean!
+  members: [EventMemberType!]!
+  posts: [PostType!]!
+  socialComments: [CommentType!]!
+  organizer: EventMemberType
+  participants: [EventMemberType]
+  moderators: [EventMemberType]
+  spectators: [EventMemberType]
+  participantCount: Int
+  role: MemberRole
+  averageScore: Float
+  reviews: [EventReviewType]
+  comments(start: Int = 0, end: Int = 10): [CommentType]
+}
+
+type LocationType {
+  id: Int
+  longitude: Float!
+  latitude: Float!
+  addressLine1: String
+  addressLine2: String
+  zipCode: Int
+  countryCode: String
+  region: String
+  name: String
+  city: String
+}
+
+"""
+Allows use of a JSON String for input / output from the GraphQL schema.
+
+Use of this type is *not recommended* as you lose the benefits of having a defined, static
+schema (one of the key benefits of GraphQL).
+"""
+scalar JSONString
+
+type EventMemberType {
+  user: UserType!
+  role: String
+  hasParticipated: Boolean
+  score: String
+  comment: String
+  participates: Boolean!
+}
+
+type PostType {
+  id: Int
+  content: String!
+  timePosted: DateTime!
+  author: UserType
+  event: EventType
+  likedBy: [UserType!]!
+  comments(start: Int = 0, end: Int = 10): [CommentType]
+  likes: Int
+  isLiked: Boolean
+}
+
+type CommentType {
+  id: Int
+  user: UserType!
+  post: PostType
+  event: EventType
+  text: String!
+  timePosted: DateTime!
+  parent: CommentType
+  replies: [CommentType!]!
+  hasReplies: Boolean
+  likes: Int
+  isLiked: Boolean
+}
+
+"""An enumeration."""
+enum MemberRole {
+  SPECTATOR
+  PARTICIPANT
+  MODERATOR
+  ORGANIZER
+}
+
+type EventReviewType {
+  member: EventMemberType
+  comment: String
+}
+
+"""
+The `Date` scalar type represents a Date
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar Date
+
+type EventNotificationType implements BaseNotificationType {
+  id: Int
+  notificationType: NotificationEnum
+  time: DateTime
+  event: EventType
+}
+
+type Queries {
+  allActivities: [ActivityModelType]
+  usernameTaken(username: String): Boolean!
+  emailTaken(email: String): Boolean!
+  isLoggedIn: Boolean
+  myChats: [ChatType]
+  chat(chatId: Int!): ChatType
+  userChat(userId: Int): ChatType
+  event(id: Int): EventType
+  anonymousUserEvents: [EventType]
+  joinedEvents: [EventType]
+  ownedEvents: [EventType]
+  pastJoinedEvents: [EventType]
+  ongoingJoinedEvents: [EventType]
+  futureJoinedEvents: [EventType]
+  unfinishedEvents: [UnfinishedEventType]
+  unratedEvents: [EventType]
+  myRecommendedEvents: [EventType]
+  search(searchString: String!, categories: [SearchCategory]): [SearchUnion]
+  profilePictureUrl: String
+  eventPictureUrl(eventId: Int!): String
+  newAttachment: AttachmentType
+  myNotifications(lastFetch: DateTime!): [BaseNotificationType]
+  followers: [FollowType]
+  followerCount: Int
+  following: [FollowType]
+  followingCount: Int
+  post(id: Int): PostType
+  myProfile: ProfileType
+  user(id: Int, username: String): UserType
+}
+
+type ChatType {
+  id: Int
+  timeCreated: DateTime!
+  members: [ChatMemberType]!
+  messages: [ChatMessageType!]!
+  notifications: ChatNotifications
+  lastMessage: ChatMessageType
+}
+
+type ChatMemberType {
+  user: UserType!
+  chat: ChatType!
+  nickname: String!
+  lastOpen: DateTime
+  notifications: ChatNotifications
+}
+
+"""An enumeration."""
+enum ChatNotifications {
+  NONE
+  ALL
+  MENTIONS_ONLY
+}
+
+type ChatMessageType {
+  id: Int
+  user: UserType!
+  textContent: String!
+  timeSent: DateTime!
+  attachmentUrl: String
+}
+
+type UnfinishedEventType {
+  id: Int
+  title: String!
+  description: String
+  startTime: DateTime!
+  endTime: DateTime!
+  location: LocationType!
+  requirements: JSONString
+  activity: ActivityModelType!
+  skillLevel: String
+  maxParticipants: Int
+  allowSpectators: Boolean!
+  minAge: Int
+  maxAge: Int
+  acceptedGenders: JSONString
+  finished: Boolean!
+  members: [EventMemberType!]!
+  posts: [PostType!]!
+  socialComments: [CommentType!]!
+  organizer: EventMemberType
+  participants: [EventMemberType]
+  moderators: [EventMemberType]
+  spectators: [EventMemberType]
+  participantCount: Int
+  role: MemberRole
+  averageScore: Float
+  reviews: [EventReviewType]
+  comments(start: Int = 0, end: Int = 10): [CommentType]
+  unconfirmedParticipants: [EventMemberType]
+}
+
+union SearchUnion = UserType | EventType | PostType
+
+"""An enumeration."""
+enum SearchCategory {
+  EVENTS
+  USERS
+  POSTS
+}
+
+type AttachmentType {
+  id: String
+  url: String
+}
+
+type FollowType {
+  timeCreated: DateTime!
+  user: UserType
+}
+
+type ProfileType {
+  id: Int
+  password: String!
+  lastLogin: DateTime
+
+  """
+  Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+  """
+  isActive: Boolean!
+  dateJoined: DateTime!
+  username: String!
+  email: String!
+  bio: String!
+  gender: String
+  dateOfBirth: Date
+  longitude: Float
+  latitude: Float
+  frequencyOfPhysicalActivity: FrequencyOfPhycicalActivity
+  socialInteractionImportance: SocialInteractionImportance
+  preferredPartySize: PreferredPartySize
+  formedRelationshipTypes: [FormedRelationshipsType]
+  physicalActivitySatisfaction: PhysicalActivitySatisfaction
+  preferredPartnerCharacteristics: [PreferredPartnerCharacteristics]
+  matchedParticipationLikelihood: MatchedParticipationLikelihood
+  preferredTimeOfTheDay: [TimeOfTheDay]
+  preferredEventDuration: Int
+  genderPreference: [GenderNoPNTS]
+  maxTravelDistance: Int
+  mainInterest: MainInterest
+  isCapeable: Boolean!
+  firstName: String!
+  lastName: String!
+  xp: Int!
+  verified: Boolean!
+  preferredActivities: [PreferredActivityType!]!
+  privacySettings: [PrivacySettingType!]!
+  chatmemberSet: [ChatMemberType!]!
+  chatmessageSet: [ChatMessageType!]!
+  eventmemberSet: [EventMemberType!]!
+  likes: Int
+  postSet: [PostType!]!
+  dislikes: Int
+  followers: [UserType]
+  followerCount: Int
+  following: [UserType]
+  followingCount: Int
+  organizingEvents: [EventType]
+  attendingEvents: [EventType]
+  posts(start: Int = 0, end: Int = 10): [PostType]
+}
+
+"""An enumeration."""
+enum FrequencyOfPhycicalActivity {
+  DAILY
+  FEW_TIMES_A_WEEK
+  ONCE_A_WEEK
+  OCCASIONALLY
+  RARELY
+}
+
+"""An enumeration."""
+enum SocialInteractionImportance {
+  VERY_IMPORTANT
+  SOMEWHAT_IMPORTANT
+  NEUTRAL
+  NOT_VERY_IMPORTANT
+  NOT_IMPORTANT_AT_ALL
+}
+
+"""An enumeration."""
+enum PreferredPartySize {
+  ALONE
+  SMALL_GROUP
+  LARGE_GROUP
+}
+
+"""An enumeration."""
+enum FormedRelationshipsType {
+  ACQUAINTANCES
+  FRIENDS
+  ROMANTIC_RELATIONSHIPS
+}
+
+"""An enumeration."""
+enum PhysicalActivitySatisfaction {
+  VERY_SATISFIED
+  SATISFIED
+  NEUTRAL
+  DISSATISFIED
+  VERY_DISSATISFIED
+}
+
+"""An enumeration."""
+enum PreferredPartnerCharacteristics {
+  SIMILAR_SKILL_LEVEL
+  SIMILAR_AGE
+  SAME_GENDER
+  SIMILAR_INTERESTS
+  SIMILAR_HEALTH_GOALS
+  PROXIMITY
+  SIMILAR_HOBBIES
+}
+
+"""An enumeration."""
+enum MatchedParticipationLikelihood {
+  VERY_LIKELY
+  LIKELY
+  NEUTRAL
+  UNLIKELY
+  VERY_UNLIKELY
+}
+
+"""An enumeration."""
+enum TimeOfTheDay {
+  MORNING
+  AFTERNOON
+  EVENING
+  NIGHT
+}
+
+"""An enumeration."""
+enum GenderNoPNTS {
+  MALE
+  FEMALE
+  NON_BINARY
+}
+
+"""An enumeration."""
+enum MainInterest {
+  SOCIALIZE
+  FUN
+  SPORT
+}
+
+type PrivacySettingType {
+  setting: String
+  scope: String
+}
+
+type Mutations {
+  setPreferredActivity(activity: ActivityType, skillLevel: SkillLevel): SetPreferredActivity
+  removePreferredActivity(activity: ActivityType): RemovePreferredActivity
+  login(password: String, user: String): LoginMutation
+  signup(email: String!, password: String!, username: String!): SignupMutation
+  logout: LogoutMutation
+  deleteAccount: DeleteAccountMutation
+  sendConfirmationEmail: SendConfirmationEmailMutation
+  sendPasswordResetEmail: SendPasswordResetEmailMutation
+  setChatNotifications(chatId: Int!, notifications: ChatNotifications!): SetChatNotifications
+  setChatNickname(chatId: Int!, nickname: String!): SetChatNickname
+  sendChatMessage(attachmentId: String, chatId: Int!, message: String): SendChatMessage
+  createGroupChat(userIds: [Int]!): CreateGroupChat
+  addChatMember(chatId: Int!, userId: Int!): AddChatMember
+  leaveChat(chatId: Int!): LeaveChat
+  createEvent(acceptedGenders: [GenderNoPNTS], activity: ActivityType!, allowSpectators: Boolean, description: String, endTime: DateTime!, locationAddressLine1: String, locationAddressLine2: String, locationCountryCode: CountryCode, locationId: Int, locationLatitude: Float, locationLongitude: Float, locationName: String, locationRegion: String, locationZipCode: Int, maxAge: Int, maxParticipants: Int, minAge: Int, requirements: String, skillLevel: SkillLevel!, startTime: DateTime!, title: String!): CreateEventMutation
+  alterEvent(description: String, endTime: DateTime, eventId: Int!, maxParticipants: Int, requirements: String, startTime: DateTime, title: String): AlterEventMutation
+  deleteEvent(eventId: Int!): DeleteEventMutation
+  joinEvent(eventId: Int!): JoinEventMutation
+  spectateEvent(eventId: Int!): SpectateEventMutation
+  leaveEvent(eventId: Int!): LeaveEventMutation
+  kickEventMember(eventId: Int!, userId: Int!): KickEventMemberMutation
+  confirmMemberParticipation(eventId: Int!, participated: Boolean!, userId: Int!): ConfirmMemberParticipationMutation
+  finishEvent(eventId: Int!): FinishEventMutation
+  rateEvent(comment: String, eventId: Int!, score: EventRating!): RateEventMutation
+  likeEventMember(eventId: Int!, like: Boolean!, userId: Int!): LikeEventMemberMutation
+  updateProfileLocation(latitude: Float, longitude: Float): UpdateProfileLocation
+  alterEventLocation(eventId: Int, locationAddressLine1: String, locationAddressLine2: String, locationCountryCode: CountryCode, locationLatitude: Float, locationLongitude: Float, locationName: String, locationRegion: String, locationZipCode: Int): AlterEventLocation
+  setEventLocation(eventId: Int, locationId: Float): SetEventLocation
+  reportUserMutation(comment: String, userId: Int!): ReportUserMutation
+  reportEventMutation(comment: String, eventId: Int!): ReportEventMutation
+  followUser(userId: Int): FollowUserMutation
+  unfollowUser(userId: Int): UnfollowUserMutation
+  blockUser(userId: Int): BlockUserMutation
+  unblockUser(userId: Int): UnblockUserMutation
+  createPost(content: String!, eventId: Int = null): CreatePostMutation
+  likePost(postId: Int!): LikePostMutation
+  unlikePost(postId: Int!): UnlikePostMutation
+  commentOnPost(postId: Int!, text: String!): CommentOnPostMutation
+  commentOnEvent(eventId: Int!, text: String!): CommentOnEventMutation
+  replyOnComment(commentId: Int!, text: String!): ReplyOnCommentMutation
+  likeComment(commentId: Int!): LikeCommentMutation
+  unlikeComment(commentId: Int!): UnlikeCommentMutation
+  updateSurveyInfo(formedRelationshipTypes: [FormedRelationshipsType], frequencyOfPhysicalActivity: FrequencyOfPhycicalActivity, genderPreference: [GenderNoPNTS], mainInterest: MainInterest, matchedParticipationLikelihood: MatchedParticipationLikelihood, physicalActivitySatisfaction: PhysicalActivitySatisfaction, preferredEventDuration: Int, preferredPartnerCharacteristics: [PreferredPartnerCharacteristics], preferredPartySize: PreferredPartySize, preferredTimeOfTheDay: [TimeOfTheDay], socialInteractionImportance: SocialInteractionImportance): UpdateSurveyInfoMutation
+  updateBasicInfo(bio: String, dateOfBirth: Date, firstName: String, gender: Gender, lastName: String): UpdateBasicInfoMutation
+  updateMaxTravelDistance(distance: Int): UpdateMaxTravelDistanceMutation
+  updateAllPrivacySettings(scope: PrivacyScope!): UpdateAllPrivacySettingsMutation
+}
+
+type SetPreferredActivity {
+  success: Boolean
+}
+
+"""An enumeration."""
+enum ActivityType {
+  AEROBICS
+  BADMINTON
+  BASEBALL
+  BASKETBALL
+  BIKING
+  BOXING
+  CLIMBING
+  CRICKET
+  CROSSFIT
+  DANCING
+  FOOTBALL
+  GOLF
+  GYM
+  HANDBALL
+  HIKING
+  KAYAKING
+  MARTIAL_ARTS
+  PILATES
+  RUGBY
+  RUNNING
+  SAILING
+  SKATEBOARDING
+  SKIING
+  SNOWBOARDING
+  SOCCER
+  SURFING
+  SWIMMING
+  TENNIS
+  VOLLEYBALL
+  WALKING
+  YOGA
+}
+
+"""An enumeration."""
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+type RemovePreferredActivity {
+  success: Boolean
+}
+
+type LoginMutation {
+  myProfile: ProfileType
+}
+
+type SignupMutation {
+  myProfile: ProfileType
+}
+
+type LogoutMutation {
+  success: Boolean
+}
+
+type DeleteAccountMutation {
+  success: Boolean
+}
+
+type SendConfirmationEmailMutation {
+  success: Boolean
+}
+
+type SendPasswordResetEmailMutation {
+  success: Boolean
+}
+
+type SetChatNotifications {
+  chatMember: ChatMemberType
+}
+
+type SetChatNickname {
+  chatMember: ChatMemberType
+}
+
+type SendChatMessage {
+  chatMessage: ChatMessageType
+}
+
+type CreateGroupChat {
+  chat: ChatType
+}
+
+type AddChatMember {
+  chat: ChatType
+}
+
+type LeaveChat {
+  success: Boolean
+}
+
+type CreateEventMutation {
+  event: EventType
+}
+
+"""An enumeration."""
+enum CountryCode {
+  AF
+  AL
+  DZ
+  AS
+  AD
+  AO
+  AI
+  AQ
+  AG
+  AR
+  AM
+  AW
+  AU
+  AT
+  AZ
+  BS
+  BH
+  BD
+  BB
+  BY
+  BE
+  BZ
+  BJ
+  BM
+  BT
+  BO
+  BA
+  BW
+  BR
+  IO
+  BN
+  BG
+  BF
+  BI
+  KH
+  CM
+  CA
+  CV
+  KY
+  CF
+  TD
+  CL
+  CN
+  CO
+  KM
+  CG
+  CD
+  CK
+  CR
+  CI
+  HR
+  CU
+  CY
+  CZ
+  DK
+  DJ
+  DM
+  DO
+  EC
+  EG
+  SV
+  GQ
+  ER
+  EE
+  SZ
+  ET
+  FJ
+  FI
+  FR
+  GA
+  GM
+  GE
+  DE
+  GH
+  GR
+  GD
+  GT
+  GN
+  GW
+  GY
+  HT
+  HN
+  HU
+  IS
+  IN
+  ID
+  IR
+  IQ
+  IE
+  IL
+  IT
+  JM
+  JP
+  JO
+  KZ
+  KE
+  KI
+  KP
+  KR
+  KW
+  KG
+  LA
+  LV
+  LB
+  LS
+  LR
+  LY
+  LI
+  LT
+  LU
+  MG
+  MW
+  MY
+  MV
+  ML
+  MT
+  MH
+  MR
+  MU
+  MX
+  FM
+  MD
+  MC
+  MN
+  ME
+  MA
+  MZ
+  MM
+  NA
+  NR
+  NP
+  NL
+  NZ
+  NI
+  NE
+  NG
+  MK
+  NO
+  OM
+  PK
+  PW
+  PS
+  PA
+  PG
+  PY
+  PE
+  PH
+  PL
+  PT
+  QA
+  RO
+  RU
+  RW
+  KN
+  LC
+  VC
+  WS
+  SM
+  ST
+  SA
+  SN
+  RS
+  SC
+  SL
+  SG
+  SK
+  SI
+  SB
+  SO
+  ZA
+  SS
+  ES
+  LK
+  SD
+  SR
+  SE
+  CH
+  SY
+  TW
+  TJ
+  TZ
+  TH
+  TL
+  TG
+  TO
+  TT
+  TN
+  TR
+  TM
+  TV
+  UG
+  UA
+  AE
+  GB
+  US
+  UY
+  UZ
+  VU
+  VE
+  VN
+  YE
+  ZM
+  ZW
+}
+
+type AlterEventMutation {
+  event: EventType
+}
+
+type DeleteEventMutation {
+  success: Boolean
+}
+
+type JoinEventMutation {
+  event: EventType
+  member: EventMemberType
+}
+
+type SpectateEventMutation {
+  event: EventType
+  member: EventMemberType
+}
+
+type LeaveEventMutation {
+  event: EventType
+}
+
+type KickEventMemberMutation {
+  event: EventType
+}
+
+type ConfirmMemberParticipationMutation {
+  success: Boolean
+}
+
+type FinishEventMutation {
+  success: Boolean
+}
+
+type RateEventMutation {
+  event: EventType
+}
+
+"""An enumeration."""
+enum EventRating {
+  VERY_BAD
+  BAD
+  NEUTRAL
+  GOOD
+  GREAT
+}
+
+type LikeEventMemberMutation {
+  success: Boolean
+}
+
+type UpdateProfileLocation {
+  success: Boolean
+}
+
+type AlterEventLocation {
+  success: Boolean
+}
+
+type SetEventLocation {
+  success: Boolean
+}
+
+type ReportUserMutation {
+  success: Boolean
+}
+
+type ReportEventMutation {
+  success: Boolean
+}
+
+type FollowUserMutation {
+  follow: FollowType
+}
+
+type UnfollowUserMutation {
+  success: Boolean
+}
+
+type BlockUserMutation {
+  success: Boolean
+}
+
+type UnblockUserMutation {
+  success: Boolean
+}
+
+type CreatePostMutation {
+  post: CreatePostType
+}
+
+type CreatePostType {
+  id: Int
+  content: String!
+  timePosted: DateTime!
+  author: UserType
+  event: EventType
+  likedBy: [UserType!]!
+  comments(start: Int = 0, end: Int = 10): [CommentType]
+  likes: Int
+  isLiked: Boolean
+  imageUploadUrl: String
+}
+
+type LikePostMutation {
+  success: Boolean
+}
+
+type UnlikePostMutation {
+  success: Boolean
+}
+
+type CommentOnPostMutation {
+  comment: CommentType
+}
+
+type CommentOnEventMutation {
+  comment: CommentType
+}
+
+type ReplyOnCommentMutation {
+  comment: CommentType
+}
+
+type LikeCommentMutation {
+  success: Boolean
+}
+
+type UnlikeCommentMutation {
+  success: Boolean
+}
+
+type UpdateSurveyInfoMutation {
+  myProfile: ProfileType
+}
+
+type UpdateBasicInfoMutation {
+  myProfile: ProfileType
+}
+
+type UpdateMaxTravelDistanceMutation {
+  myProfile: ProfileType
+}
+
+type UpdateAllPrivacySettingsMutation {
+  success: Boolean
+}
+
+"""An enumeration."""
+enum PrivacyScope {
+  NOONE
+  FOLLOWERS
+  EVERYONE
+}
+
+type Subscriptions {
+  chatMessages(chatId: Int!): [WSChatMessageType]
+  chatLastOpen(chatId: Int!): [WSLastOpenType]
+}
+
+type WSChatMessageType {
+  id: Int
+  timeSent: DateTime
+  userId: Int
+  textContent: String
+  attachmentUrl: String
+}
+
+type WSLastOpenType {
+  userId: Int
+  lastOpen: DateTime
+}

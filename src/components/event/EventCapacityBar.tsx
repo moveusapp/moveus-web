@@ -8,13 +8,13 @@ function EventCapacityBar({
   const almostFull = participantCount / maxParticipants >= 0.5;
 
   if (spotsLeft === 0) {
-    return <span className="text-sm font-medium whitespace-nowrap text-error">Full</span>;
+    return <span className="text-xs font-medium whitespace-nowrap text-error">Full</span>;
   }
 
   return (
     <span
-      className={`text-sm font-medium whitespace-nowrap ${
-        almostFull ? "text-accent" : "text-base-content/50"
+      className={`text-xs font-medium whitespace-nowrap ${
+        almostFull ? "text-accent" : "text-base-content/60"
       }`}
     >
       {spotsLeft} {spotsLeft === 1 ? "spot" : "spots"} left

@@ -1,31 +1,72 @@
-mutation SendFriendRequest($userId: Int!) {
-  sendFriendRequest(userId: $userId) {
-    relationship {
-      status
+mutation FollowUser($userId: Int!) {
+  followUser(userId: $userId) {
+    follow {
+      timeCreated
+      user {
+        ...UserCard
+      }
     }
   }
 }
 
-mutation AcceptFriendRequest($userId: Int!) {
-  acceptFriendRequest(userId: $userId) {
-    relationship {
-      status
-    }
-  } 
+mutation UnfollowUser($userId: Int!) {
+  unfollowUser(userId: $userId) {
+    success
+  }
 }
 
-mutation CancelFriendRequest($userId: Int!) {
-  cancelFriendRequest(userId: $userId) {
-    relationship {
-      status
+mutation CreatePost($eventId: Int!, $content: String!) {
+  createPost(eventId: $eventId, content: $content) {
+    post {
+      imageUploadUrl
     }
-  } 
+  }
 }
 
-mutation RemoveFriend($userId: Int!) {
-  removeFriend(userId: $userId) {
-    relationship {
-      status
+mutation LikePost($postId: Int!) {
+  likePost(postId: $postId) {
+    success
+  }
+}
+
+mutation UnlikePost($postId: Int!) {
+  unlikePost(postId: $postId) {
+    success
+  }
+}
+
+mutation CommentOnPost($postId: Int!, $text: String!) {
+  commentOnPost(postId: $postId, text: $text) {
+    comment {
+      ...Comment
     }
-  } 
+  }
+}
+
+mutation CommentOnEvent($eventId: Int!, $text: String!) {
+  commentOnEvent(eventId: $eventId, text: $text) {
+    comment {
+      ...Comment
+    }
+  }
+}
+
+mutation ReplyOnComment($commentId: Int!, $text: String!) {
+  replyOnComment(commentId: $commentId, text: $text) {
+    comment {
+      ...Comment
+    }
+  }
+}
+
+mutation LikeComment($commentId: Int!) {
+  likeComment(commentId: $commentId) {
+    success
+  }
+}
+
+mutation UnlikeComment($commentId: Int!) {
+  unlikeComment(commentId: $commentId) {
+    success
+  }
 }

@@ -1,7 +1,33 @@
-query GetMyFriends {
-  friends {
+query GetMyFollowers {
+  followers {
+    timeCreated
     user {
       ...UserCard
+    }
+  }
+}
+
+query GetMyFollowing {
+  following {
+    timeCreated
+    user {
+      ...UserCard
+    }
+  }
+}
+
+query GetFeed {
+  joinedEvents {
+    posts {
+      ...PostCard
+    }
+    organizer {
+      user {
+        id
+        username
+        firstName
+        lastName
+      }
     }
   }
 }

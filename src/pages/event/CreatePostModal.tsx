@@ -1,7 +1,6 @@
 import { ChangeEvent, FormEvent, useCallback, useRef, useState } from "react";
 import { HiXMark, HiPhoto } from "react-icons/hi2";
 import TextArea from "@/components/ui/TextArea";
-import TextInput from "@/components/ui/TextInput";
 import Button from "@/components/ui/Button";
 import { CreatePostDocument } from "@/graphql/graphql-types";
 import { useMutation } from "@apollo/client/react";
@@ -22,21 +21,14 @@ function CreatePostModal({
 }: CreatePostModalProps) {
   const [createPost, { loading, error }] = useMutation(CreatePostDocument);
 
-  const [input, setInput] = useState({
-    title: "",
-    content: "",
-  });
+  const [content, setContent] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const imageRef = useRef<HTMLInputElement>(null);
 
   const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.currentTarget;
-      setInput((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+    (e: ChangeEvent<HTMLTextAreaElement>) => {
+      setContent(e.currentTarget.value);
     },
     [],
   );
@@ -64,7 +56,7 @@ function CreatePostModal({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!input.title || !input.content) {
+    if (!content) {
       return;
     }
 
@@ -72,7 +64,7 @@ function CreatePostModal({
       const result = await createPost({
         variables: {
           eventId,
-          ...input,
+          content,
         },
       });
 
@@ -90,7 +82,7 @@ function CreatePostModal({
         });
       }
 
-      setInput({ title: "", content: "" });
+      setContent("");
       setSelectedImage(null);
       setImagePreview(null);
 
@@ -104,7 +96,7 @@ function CreatePostModal({
   };
 
   const handleClose = () => {
-    setInput({ title: "", content: "" });
+    setContent("");
     setSelectedImage(null);
     setImagePreview(null);
     if (imageRef.current) {
@@ -130,19 +122,10 @@ function CreatePostModal({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <TextInput
-            label="Title"
-            name="title"
-            value={input.title}
-            onChange={onChange}
-            placeholder="Give your post a title"
-            required
-          />
-
           <TextArea
             label="Content"
             name="content"
-            value={input.content}
+            value={content}
             onChange={onChange}
             placeholder="What's on your mind?"
             rows={5}

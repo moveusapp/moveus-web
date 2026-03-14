@@ -1,13 +1,26 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { PostCardFragment } from "@/graphql/graphql-types";
+import { useCallback, useState } from "react";
+import {
+  PostCardFragment,
+  LikePostDocument,
+  UnlikePostDocument,
+} from "@/graphql/graphql-types";
+import { useMutation } from "@apollo/client/react";
 import { timeAgo } from "@/utils/time-utils";
 import UserAvatar from "../user/UserAvatar";
 import { displayName } from "@/utils/display-name";
 import { HiCheckBadge, HiXMark } from "react-icons/hi2";
+import { HiOutlineHeart, HiHeart, HiOutlineChatBubbleLeft } from "react-icons/hi2";
+import CommentSection from "@/components/comment/CommentSection";
 
-function PostCard({ post }: PostCardProps) {
+function PostCard({ post, hideEventLink }: PostCardProps) {
   const [showImageModal, setShowImageModal] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [liked, setLiked] = useState(post.isLiked ?? false);
+  const [likeCount, setLikeCount] = useState(post.likes ?? 0);
+
+  const [likePost] = useMutation(LikePostDocument);
+  const [unlikePost] = useMutation(UnlikePostDocument);
 
   const organizerName = displayName(
     post.author!.username,
@@ -18,6 +31,26 @@ function PostCard({ post }: PostCardProps) {
   const imageUrl = post.id
     ? `${import.meta.env.VITE_BUCKET_URL}/post-pictures/${post.id}`
     : null;
+
+  const commentCount = post.comments?.length ?? 0;
+
+  const handleLike = useCallback(() => {
+    if (liked) {
+      setLiked(false);
+      setLikeCount((c) => c - 1);
+      unlikePost({ variables: { postId: post.id! } }).catch(() => {
+        setLiked(true);
+        setLikeCount((c) => c + 1);
+      });
+    } else {
+      setLiked(true);
+      setLikeCount((c) => c + 1);
+      likePost({ variables: { postId: post.id! } }).catch(() => {
+        setLiked(false);
+        setLikeCount((c) => c - 1);
+      });
+    }
+  }, [liked, post.id, likePost, unlikePost]);
 
   return (
     <>
@@ -52,10 +85,6 @@ function PostCard({ post }: PostCardProps) {
             </span>
           </div>
 
-          <h3 className="text-lg font-bold text-base-content leading-snug">
-            {post.title}
-          </h3>
-
           {post.content && (
             <p className="text-sm text-base-content/80 leading-relaxed">
               {post.content}
@@ -66,11 +95,10 @@ function PostCard({ post }: PostCardProps) {
             <button
               onClick={() => setShowImageModal(true)}
               className="block w-full rounded-xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-              onError={(e) => (e.currentTarget.style.display = "none")}
             >
               <img
                 src={imageUrl}
-                alt={post.title}
+                alt="Post image"
                 onError={(e) =>
                   (e.currentTarget.parentElement!.style.display = "none")
                 }
@@ -79,13 +107,48 @@ function PostCard({ post }: PostCardProps) {
             </button>
           )}
 
-          {post.event && (
+          {!hideEventLink && post.event && (
             <Link
               to={`/event/${post.event.id}`}
               className="flex items-center gap-2 text-xs text-primary hover:underline"
             >
               <span>Posted in: {post.event.title}</span>
             </Link>
+          )}
+
+          {/* Action bar */}
+          <div className="flex items-center gap-4 pt-3 border-t border-base-300">
+            <button
+              onClick={handleLike}
+              aria-label={liked ? "Unlike" : "Like"}
+              className="flex items-center gap-1.5 text-sm text-base-content/60 hover:text-error transition-colors"
+            >
+              {liked ? (
+                <HiHeart className="w-5 h-5 text-error" />
+              ) : (
+                <HiOutlineHeart className="w-5 h-5" />
+              )}
+              {likeCount > 0 && <span>{likeCount}</span>}
+            </button>
+            <button
+              onClick={() => setShowComments(!showComments)}
+              aria-label={showComments ? "Hide comments" : "Show comments"}
+              className="flex items-center gap-1.5 text-sm text-base-content/60 hover:text-primary transition-colors"
+            >
+              <HiOutlineChatBubbleLeft className="w-5 h-5" />
+              {commentCount > 0 && <span>{commentCount}</span>}
+            </button>
+          </div>
+
+          {/* Comments section */}
+          {showComments && (
+            <div className="pt-2 border-t border-base-300">
+              <CommentSection
+                entityType="post"
+                entityId={post.id!}
+                comments={(post.comments ?? []).filter(Boolean) as any}
+              />
+            </div>
           )}
         </div>
       </article>
@@ -94,23 +157,19 @@ function PostCard({ post }: PostCardProps) {
       {showImageModal && imageUrl && (
         <dialog open className="modal modal-open">
           <div className="modal-box max-w-4xl p-0 bg-transparent shadow-none flex items-center justify-center">
-            {/* Close button */}
             <button
               onClick={() => setShowImageModal(false)}
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10 bg-base-100/80 hover:bg-base-100"
+              aria-label="Close"
             >
               <HiXMark className="w-5 h-5" />
             </button>
-
-            {/* Full image */}
             <img
               src={imageUrl}
-              alt={post.title}
+              alt="Post image"
               className="w-full h-auto max-h-[95vh] object-contain"
             />
           </div>
-
-          {/* Backdrop - click to close */}
           <form method="dialog" className="modal-backdrop">
             <button onClick={() => setShowImageModal(false)}>close</button>
           </form>
@@ -122,6 +181,7 @@ function PostCard({ post }: PostCardProps) {
 
 interface PostCardProps {
   post: PostCardFragment;
+  hideEventLink?: boolean;
 }
 
 export default PostCard;

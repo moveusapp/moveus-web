@@ -5,21 +5,6 @@ fragment EventMember on EventMemberType {
   }
 }
 
-fragment PostCard on PostType {
-  id
-  title
-  content
-  timePosted
-  author {
-    ...UserCard
-  }
-  likes
-  event {
-    id
-    title
-  }
-}
-
 fragment EventOrganizer on EventMemberType {
   user {
     ...UserCard
@@ -54,6 +39,9 @@ fragment Event on EventType {
   }
   posts {
     ...PostCard
+  }
+  comments(start: 0, end: 20) {
+    ...Comment
   }
   finished
   role

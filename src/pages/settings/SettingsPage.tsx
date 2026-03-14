@@ -18,8 +18,8 @@ const privacyScopeOptions = [
     label: "Only you",
   },
   {
-    value: PrivacyScope.Friends,
-    label: "Only friends",
+    value: PrivacyScope.Followers,
+    label: "Only followers",
   },
   {
     value: PrivacyScope.Everyone,

@@ -5,58 +5,63 @@ import { Link } from "react-router-dom";
 import UserAvatar from "../user/UserAvatar";
 
 function NotificationCard({ notification }: NotificationCardProps) {
-  if (notification?.__typename !== "UserNotificationType") return <></>;
+  const time = `${notification.time!.toDateString().slice(4, 10).trim()}, ${prependZero(notification.time!.getHours())}:${prependZero(notification.time!.getMinutes())}`;
 
-  const name = displayName(
-    notification.user?.username!,
-    notification.user?.firstName!,
-    notification.user?.lastName!,
-  );
+  if (notification?.__typename === "UserNotificationType") {
+    const name = displayName(
+      notification.user?.username!,
+      notification.user?.firstName!,
+      notification.user?.lastName!,
+    );
 
-  const time = `${notification.time!.toDateString().slice(4, 10).trim()}, ${prependZero(notification.time!.getHours())}:${prependZero(notification.time!.getHours())}`;
-
-  switch (notification?.notificationType) {
-    case NotificationEnum.FriendAccepted:
-      return (
-        <Link
-          key={notification.id}
-          className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
-          to={`/user/${notification.user?.username}`}
-        >
-          <div className="flex flex-row gap-2">
-            <UserAvatar
-              userId={notification.user?.username}
-              className="w-12"
-            />
-            <div className="flex flex-col justify-between">
-              <p><b>{name}</b> accepted your friend request.</p>
-              <p className="text-base-content/70 text-sm">{time}</p>
+    switch (notification?.notificationType) {
+      case NotificationEnum.NewFollower:
+        return (
+          <Link
+            key={notification.id}
+            className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
+            to={`/user/${notification.user?.username}`}
+          >
+            <div className="flex flex-row gap-2">
+              <UserAvatar
+                userId={notification.user?.id}
+                className="w-12"
+              />
+              <div className="flex flex-col justify-between">
+                <p><b>{name}</b> started following you.</p>
+                <p className="text-base-content/70 text-sm">{time}</p>
+              </div>
             </div>
-          </div>
-        </Link>
-      );
-    case NotificationEnum.FriendRequest:
-      return (
-        <Link
-          key={notification.id}
-          className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25"
-          to={`/user/${notification.user?.username}`}
-        >
-          <div className="flex flex-row gap-2">
-            <UserAvatar
-              userId={notification.user?.username}
-              className="w-12"
-            />
-            <div className="flex flex-col justify-between">
-              <p><b>{name}</b> sent you a friend request.</p>
-              <p className="text-base-content/70 text-sm">{time}</p>
-            </div>
-          </div>
-        </Link>
-      );
-    default:
-      return <></>;
+          </Link>
+        );
+      default:
+        return <></>;
+    }
   }
+
+  if (notification?.__typename === "EventNotificationType") {
+    switch (notification?.notificationType) {
+      case NotificationEnum.EventFinished:
+        return (
+          <Link
+            key={notification.id}
+            className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
+            to={`/event/${notification.event?.id}`}
+          >
+            <div className="flex flex-row gap-2">
+              <div className="flex flex-col justify-between">
+                <p><b>{notification.event?.title}</b> has finished.</p>
+                <p className="text-base-content/70 text-sm">{time}</p>
+              </div>
+            </div>
+          </Link>
+        );
+      default:
+        return <></>;
+    }
+  }
+
+  return <></>;
 }
 
 interface NotificationCardProps {

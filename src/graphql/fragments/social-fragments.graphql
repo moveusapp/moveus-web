@@ -1,0 +1,39 @@
+fragment Comment on CommentType {
+  id
+  text
+  timePosted
+  user {
+    ...UserCard
+  }
+  likes
+  isLiked
+  hasReplies
+  replies {
+    id
+    text
+    timePosted
+    user {
+      ...UserCard
+    }
+    likes
+    isLiked
+  }
+}
+
+fragment PostCard on PostType {
+  id
+  content
+  timePosted
+  author {
+    ...UserCard
+  }
+  likes
+  isLiked
+  event {
+    id
+    title
+  }
+  comments(start: 0, end: 5) {
+    ...Comment
+  }
+}

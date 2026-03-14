@@ -23,13 +23,14 @@ function EventCard({ event }: EventCardProps) {
   return (
     <Link
       to={`/event/${event.id}`}
-      className="bg-base-200 w-full rounded-2xl border border-base-300 motion-safe:hover:-translate-y-1 motion-safe:active:translate-y-0 transition-all duration-200 group p-2.5 flex flex-col gap-2"
+      className="bg-base-200 w-full rounded-2xl border border-base-300 motion-safe:hover:-translate-y-1 motion-safe:active:translate-y-0 transition-all duration-200 group p-2.5 flex flex-col gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
       {/* Thumbnail */}
       <div className="relative w-full aspect-video overflow-hidden rounded-xl bg-base-300">
         <img
           src="https://cdn.pixabay.com/photo/2020/02/01/20/43/youth-4811405_1280.jpg"
-          alt={`${activity} event`}
+          alt={`${event.title} event thumbnail`}
+          loading="lazy"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <Tag className="bg-primary absolute top-2.5 left-2.5">{activity}</Tag>
@@ -55,10 +56,10 @@ function EventCard({ event }: EventCardProps) {
       {/* Footer: organizer + capacity */}
       <div className="px-0.5 flex items-center justify-between gap-3 pt-1.5 border-t border-base-300">
         <div className="flex items-center gap-2 min-w-0">
-          <UserAvatar userId={event.organizer?.user.id!} className="w-6 shrink-0" />
+          <UserAvatar userId={event.organizer?.user.id!} className="w-6 h-6 shrink-0" />
           <div className="min-w-0 flex items-center gap-1">
-            <span className="text-xs text-base-content/50">Hosted by</span>
-            <span className="text-sm font-medium text-base-content/70 truncate">{organizerName}</span>
+            <span className="text-xs text-muted-foreground">Hosted by</span>
+            <span className="text-xs font-medium text-foreground truncate">{organizerName}</span>
             {event.organizer?.user.verified && (
               <HiCheckBadge size={16} className="text-primary shrink-0" />
             )}
