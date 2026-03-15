@@ -6,6 +6,7 @@ import { useQuery, useSubscription } from "@apollo/client/react";
 import UserAvatar from "@/components/user/UserAvatar";
 import SendMessage from "@/pages/chat/SendMessage";
 import {
+  ChatKind,
   ChatMessagesDocument,
   GetChatDocument,
   LastOpenDocument,
@@ -41,28 +42,32 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
     [members],
   );
 
-  const isGroup = members.length > 1;
+  const isGroup = chat?.kind === ChatKind.Group;
 
-  // Set document title based on members
+  // Set document title based on chat type and members
   useEffect(() => {
-    if (members.length === 0) return;
-    if (members.length === 1) {
+    if (!chat) return;
+    if (isGroup) {
+      if (chat.groupName) {
+        setDocumentTitle(chat.groupName + " - Chat");
+      } else {
+        const names = members
+          .slice(0, 3)
+          .map((m) => m!.user.firstName || m!.user.username);
+        const label =
+          members.length > 3
+            ? `${names.join(", ")} +${members.length - 3}`
+            : names.join(", ");
+        setDocumentTitle(label + " - Chat");
+      }
+    } else if (members.length > 0) {
       const m = members[0]!;
       setDocumentTitle(
         displayName(m.user.username, m.user.firstName, m.user.lastName) +
           " - Chat",
       );
-    } else {
-      const names = members
-        .slice(0, 3)
-        .map((m) => m!.user.firstName || m!.user.username);
-      const label =
-        members.length > 3
-          ? `${names.join(", ")} +${members.length - 3}`
-          : names.join(", ");
-      setDocumentTitle(label + " - Chat");
     }
-  }, [members]);
+  }, [chat, members, isGroup]);
 
   const { data: messageSubData } = useSubscription(
     ChatMessagesDocument,
@@ -140,8 +145,9 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
     members.find((m) => m!.user.id === userId);
 
   const headerTitle = useMemo(() => {
+    if (isGroup && chat?.groupName) return chat.groupName;
     if (members.length === 0) return "";
-    if (members.length === 1) {
+    if (!isGroup) {
       const m = members[0]!;
       return displayName(m.user.username, m.user.firstName, m.user.lastName);
     }
@@ -153,7 +159,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
     return members.length > 4
       ? `${names.join(", ")} +${members.length - 4}`
       : names.join(", ");
-  }, [members]);
+  }, [members, isGroup, chat?.groupName]);
 
   const formatTime = (date: Date) =>
     `${prependZero(date.getHours())}:${prependZero(date.getMinutes())}`;

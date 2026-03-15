@@ -20,6 +20,8 @@ fragment ChatMessage on ChatMessageType {
 
 fragment Chat on ChatType {
   id
+  kind
+  groupName
   lastMessage {
     ...ChatMessage
   }

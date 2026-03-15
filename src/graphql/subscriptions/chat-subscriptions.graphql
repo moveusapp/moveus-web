@@ -20,6 +20,8 @@ subscription MyChats {
     }
     chat {
       id
+      kind
+      groupName
       timeCreated
       members {
         userId

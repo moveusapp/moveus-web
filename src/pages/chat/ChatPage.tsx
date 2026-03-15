@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLazyQuery, useSubscription } from "@apollo/client/react";
-import { GetUserChatDocument, MyChatsDocument, WsMyChatUpdateType } from "@/graphql/graphql-types";
+import { ChatKind, GetUserChatDocument, MyChatsDocument, WsMyChatUpdateType } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import ChatCard, { ChatSummary, ChatSummaryMember } from "@/components/chat/ChatCard";
 import ChatCardSkeleton from "@/components/chat/ChatCardSkeleton";
@@ -43,7 +43,13 @@ function ChatPage() {
                 attachmentUrl: wsChat.lastMessage.attachmentUrl ?? null,
               }
             : null;
-          next.set(wsChat.id!, { id: wsChat.id!, lastMessage, members });
+          next.set(wsChat.id!, {
+            id: wsChat.id!,
+            kind: (wsChat.kind as ChatKind) ?? ChatKind.Direct,
+            groupName: wsChat.groupName ?? null,
+            lastMessage,
+            members,
+          });
           return next;
         }
 
