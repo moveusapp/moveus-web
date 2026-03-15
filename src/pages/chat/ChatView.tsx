@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
+import { HiArrowLeft, HiUserGroup } from "react-icons/hi2";
 
 import { useQuery, useSubscription } from "@apollo/client/react";
 import UserAvatar from "@/components/user/UserAvatar";
@@ -19,7 +20,7 @@ const ensureDateObject = (value: any): Date => {
   return new Date(value);
 };
 
-function ChatView({ chatId }: { chatId: number }) {
+function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
   const { data, loading } = useQuery(GetChatDocument, {
     variables: { chatId },
   });
@@ -118,13 +119,18 @@ function ChatView({ chatId }: { chatId: number }) {
     }
   }, [lastOpenData, memberIds]);
 
+  const hasScrolledRef = useRef(false);
+
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (!messagesEndRef.current) return;
+    const behavior = hasScrolledRef.current ? "smooth" : "instant";
+    messagesEndRef.current.scrollIntoView({ behavior });
+    hasScrolledRef.current = true;
+  }, [messages, loading, messageSubLoading, lastOpenLoading]);
 
   // For 1-on-1 chats, check if the single member has read a message
   const hasBeenRead = (message: WsChatMessageType) => {
-    if (isGroup) return false; // skip read receipts for group chats
+    if (isGroup) return false;
     const memberLastOpen = lastOpens.get(members[0]!.user.id!);
     if (!memberLastOpen) return false;
     return memberLastOpen.getTime() > message.timeSent!.getTime();
@@ -149,95 +155,117 @@ function ChatView({ chatId }: { chatId: number }) {
       : names.join(", ");
   }, [members]);
 
+  const formatTime = (date: Date) =>
+    `${prependZero(date.getHours())}:${prependZero(date.getMinutes())}`;
+
   let lastDate = new Date("1971-01-01");
 
   const messageElements = messages.map((message) => {
-    const dateElement =
-      message.timeSent!.toDateString() !== lastDate.toDateString() ? (
-        <p
-          className="self-center text-sm font-medium"
-          key={message.id + "date"}
-        >
-          {message.timeSent!.toDateString()}
-        </p>
-      ) : (
-        <></>
-      );
+    const showDate =
+      message.timeSent!.toDateString() !== lastDate.toDateString();
     lastDate = message.timeSent!;
 
     const isOtherUser = memberIds.has(message.userId!);
+    const chatAlignment = isOtherUser ? "chat-start" : "chat-end";
 
     return (
       <Fragment key={message.id}>
-        {dateElement}
-        {isOtherUser ? (
-          <div className="flex gap-4">
-            <UserAvatar
-              userId={message.userId!}
-              className="w-10 h-10 rounded-full"
-            />
-            <div className="relative p-[10px] pr-12 font-medium bg-block max-w-[75%] wrap-break-word rounded-[15px]">
-              {isGroup && (
-                <p className="text-xs text-primary mb-1">
-                  {(() => {
-                    const m = getMemberForMessage(message.userId!);
-                    return m
-                      ? displayName(
-                          m.user.username,
-                          m.user.firstName,
-                          m.user.lastName,
-                        )
-                      : "";
-                  })()}
-                </p>
-              )}
-              <p>{message.textContent}</p>
-              <span className="text-xs absolute right-[10px] bottom-[10px]">
-                {`${prependZero(message.timeSent!.getHours())}:${prependZero(message.timeSent!.getMinutes())}`}
-              </span>
-              {message.attachmentUrl && (
-                <img
-                  src={message.attachmentUrl}
-                  alt={message.id! + ""}
-                  className="rounded-[15px] mt-2"
-                />
-              )}
-            </div>
+        {showDate && (
+          <div className="divider text-base-content/50 text-xs font-medium">
+            {message.timeSent!.toDateString()}
           </div>
-        ) : (
-          <div className="relative p-[10px] font-medium bg-secondary text-background pr-16 self-end max-w-[75%] wrap-break-word rounded-[15px]">
-            <p>{message.textContent}</p>
-            <span className="text-xs absolute right-[10px] bottom-[10px]">
-              {`${prependZero(message.timeSent!.getHours())}:${prependZero(message.timeSent!.getMinutes())}`}
-              {hasBeenRead(message) ? (
-                <RiCheckDoubleLine className="inline ml-[2px]" />
-              ) : (
-                <RiCheckLine
-                  className={
-                    "inline ml-[2px] " +
-                    (message.id === null && "text-foreground")
-                  }
-                />
-              )}
-            </span>
+        )}
+        <div className={`chat ${chatAlignment}`}>
+          {isOtherUser && (
+            <div className="chat-image">
+              <UserAvatar
+                userId={message.userId!}
+                className="w-8 h-8 rounded-full"
+              />
+            </div>
+          )}
+          {isGroup && isOtherUser && (
+            <div className="chat-header text-xs font-medium mb-0.5">
+              {(() => {
+                const m = getMemberForMessage(message.userId!);
+                return m
+                  ? displayName(
+                      m.user.username,
+                      m.user.firstName,
+                      m.user.lastName,
+                    )
+                  : "";
+              })()}
+            </div>
+          )}
+          <div
+            className={`chat-bubble wrap-break-word ${
+              isOtherUser
+                ? "bg-base-200 text-base-content"
+                : "chat-bubble-primary"
+            }`}
+          >
+            {message.textContent && <p>{message.textContent}</p>}
             {message.attachmentUrl && (
               <img
                 src={message.attachmentUrl}
-                alt={message.id! + ""}
-                className="rounded-[15px] mt-2"
+                alt=""
+                className="rounded-xl max-w-xs mt-1"
               />
             )}
           </div>
-        )}
+          <div className="chat-footer text-xs text-base-content/40 mt-0.5">
+            <span>{formatTime(message.timeSent!)}</span>
+            {!isOtherUser &&
+              (hasBeenRead(message) ? (
+                <RiCheckDoubleLine className="inline ml-1 text-primary" />
+              ) : (
+                <RiCheckLine
+                  className={`inline ml-1 ${
+                    message.id === null ? "text-base-content/30" : ""
+                  }`}
+                />
+              ))}
+          </div>
+        </div>
       </Fragment>
     );
   });
 
   return (
-    <div className="h-full flex flex-col">
-      <nav className="flex-shrink-0 p-4">
+    <div className="flex-1 min-h-0 flex flex-col">
+      <nav className="flex-shrink-0 bg-base-200 border-b border-base-300 p-4">
         {members.length > 0 && (
-          <h2 className="text-center text-2xl">{headerTitle}</h2>
+          <div className="flex items-center gap-3">
+            {onBack && (
+              <button
+                className="btn btn-ghost btn-sm btn-circle lg:hidden"
+                onClick={onBack}
+              >
+                <HiArrowLeft className="text-lg" />
+              </button>
+            )}
+            {isGroup ? (
+              <div className="w-10 h-10 rounded-full bg-base-300 flex items-center justify-center">
+                <HiUserGroup className="text-lg text-base-content/60" />
+              </div>
+            ) : (
+              <UserAvatar
+                userId={members[0]!.user.id!}
+                className="w-10 h-10 rounded-full"
+              />
+            )}
+            <div>
+              <h2 className="font-semibold text-base leading-tight">
+                {headerTitle}
+              </h2>
+              {isGroup && (
+                <p className="text-xs text-base-content/50">
+                  {members.length} members
+                </p>
+              )}
+            </div>
+          </div>
         )}
       </nav>
 
@@ -247,11 +275,11 @@ function ChatView({ chatId }: { chatId: number }) {
         </div>
       ) : (
         <>
-          <div className="flex-1 overflow-y-auto flex flex-col gap-4 px-4">
+          <div className="flex-1 overflow-y-auto px-4 py-2">
             {messageElements}
             <div ref={messagesEndRef} />
           </div>
-          <div className="flex-shrink-0 p-4">
+          <div className="flex-shrink-0 p-3">
             <SendMessage chatId={chat?.id!} addMessage={addNewMessage} />
           </div>
         </>

@@ -6,7 +6,6 @@ import ChatCard from "@/components/chat/ChatCard";
 import ChatCardSkeleton from "@/components/chat/ChatCardSkeleton";
 import ChatView from "@/pages/chat/ChatView";
 import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
-import { RiArrowLeftLine } from "react-icons/ri";
 
 function ChatPage() {
   useDocumentTitle("Chats");
@@ -30,23 +29,13 @@ function ChatPage() {
 
   return (
     <div className="flex h-full">
-      {/* Center: conversation or empty state */}
       <div
         className={`flex-1 min-w-0 flex-col ${
           selectedChatId ? "flex" : "hidden lg:flex"
         }`}
       >
         {selectedChatId ? (
-          <>
-            <button
-              className="lg:hidden flex items-center gap-2 p-4 pb-0 text-sm font-medium text-primary"
-              onClick={() => setSelectedChatId(null)}
-            >
-              <RiArrowLeftLine className="text-lg" />
-              Back
-            </button>
-            <ChatView key={selectedChatId} chatId={selectedChatId} />
-          </>
+          <ChatView key={selectedChatId} chatId={selectedChatId} onBack={() => setSelectedChatId(null)} />
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center gap-3 text-base-content/40">
             <HiOutlineChatBubbleLeftRight className="text-5xl" />
@@ -57,7 +46,6 @@ function ChatPage() {
         )}
       </div>
 
-      {/* Right sidebar: chat list */}
       <aside
         className={`${
           selectedChatId ? "hidden lg:flex" : "flex"
