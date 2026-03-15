@@ -3,6 +3,7 @@ import { HiPaperAirplane, HiPhoto, HiXMark } from "react-icons/hi2";
 import { apolloClient } from "@/appolo/client";
 import {
   GetAttachmentUploadUrlDocument,
+  GetMyChatsDocument,
   SendChatMessageDocument,
   WsChatMessageType,
 } from "@/graphql/graphql-types";
@@ -93,6 +94,7 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
           attachmentId,
           message: text,
         },
+        refetchQueries: [GetMyChatsDocument],
       }).catch((error) => console.error(error));
     },
     [

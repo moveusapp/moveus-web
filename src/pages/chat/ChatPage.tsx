@@ -32,7 +32,6 @@ function ChatPage() {
   }, []);
 
   const chats = useMemo(() => {
-    if (loading) return null;
     return [...(data?.myChats ?? [])]
       .filter((chat) => (chat?.members?.length ?? 0) > 0)
       .sort((a, b) => {
@@ -42,7 +41,7 @@ function ChatPage() {
       });
   }, [data]);
 
-  const hasChats = chats && chats.length > 0;
+  const hasChats = data && chats.length > 0;
 
   return (
     <div className="flex h-full">
@@ -72,7 +71,7 @@ function ChatPage() {
           <h2 className="font-semibold text-lg">Messages</h2>
         </div>
         <div className="flex flex-col px-1 pb-4">
-          {loading ? (
+          {loading && !data ? (
             [...Array(8)].map((_, i) => (
               <ChatCardSkeleton key={`skeleton-${i}`} />
             ))
