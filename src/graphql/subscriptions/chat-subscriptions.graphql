@@ -10,3 +10,31 @@ subscription LastOpen($chatId: Int!) {
     lastOpen
   }
 }
+
+subscription MyChats {
+  myChats {
+    eventType
+    chatId
+    lastMessage {
+      ...WSChatMessage
+    }
+    chat {
+      id
+      timeCreated
+      members {
+        userId
+        nickname
+        lastOpen
+      }
+      lastMessage {
+        ...WSChatMessage
+      }
+    }
+    member {
+      userId
+      nickname
+      lastOpen
+    }
+    removedUserId
+  }
+}

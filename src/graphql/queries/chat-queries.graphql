@@ -26,12 +26,6 @@ query GetChat($chatId: Int!) {
   }
 }
 
-query GetMyChats {
-  myChats {
-    ...Chat
-  }
-}
-
 query GetAttachmentUploadURL {
   newAttachment {
     id
