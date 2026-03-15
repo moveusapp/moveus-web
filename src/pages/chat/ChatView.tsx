@@ -64,7 +64,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
     }
   }, [members]);
 
-  const { data: messageSubData, loading: messageSubLoading } = useSubscription(
+  const { data: messageSubData } = useSubscription(
     ChatMessagesDocument,
     {
       variables: { chatId: chat?.id! },
@@ -72,7 +72,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
     },
   );
 
-  const { data: lastOpenData, loading: lastOpenLoading } = useSubscription(
+  const { data: lastOpenData } = useSubscription(
     LastOpenDocument,
     {
       variables: { chatId: chat?.id! },
@@ -126,7 +126,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
     const behavior = hasScrolledRef.current ? "smooth" : "instant";
     messagesEndRef.current.scrollIntoView({ behavior });
     hasScrolledRef.current = true;
-  }, [messages, loading, messageSubLoading, lastOpenLoading]);
+  }, [messages, loading]);
 
   // For 1-on-1 chats, check if the single member has read a message
   const hasBeenRead = (message: WsChatMessageType) => {
@@ -269,7 +269,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
         )}
       </nav>
 
-      {loading || messageSubLoading || lastOpenLoading ? (
+      {loading ? (
         <div className="flex-1 flex flex-col justify-center items-center">
           <div className="loading loading-dots text-primary" />
         </div>

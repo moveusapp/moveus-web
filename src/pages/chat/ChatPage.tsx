@@ -1,18 +1,35 @@
-import { useMemo, useState } from "react";
-import { useQuery } from "@apollo/client/react";
-import { GetMyChatsDocument } from "@/graphql/graphql-types";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery, useLazyQuery } from "@apollo/client/react";
+import { GetMyChatsDocument, GetUserChatDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import ChatCard from "@/components/chat/ChatCard";
 import ChatCardSkeleton from "@/components/chat/ChatCardSkeleton";
 import ChatView from "@/pages/chat/ChatView";
 import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
+import { useSearchParams } from "react-router-dom";
 
 function ChatPage() {
   useDocumentTitle("Chats");
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
 
-  const { loading, data } = useQuery(GetMyChatsDocument);
+  const { loading, data, refetch: refetchChats } = useQuery(GetMyChatsDocument);
+
+  const [getUserChat] = useLazyQuery(GetUserChatDocument);
+
+  useEffect(() => {
+    const userId = searchParams.get("userId");
+    if (!userId) return;
+
+    getUserChat({ variables: { userId: Number(userId) } }).then(({ data }) => {
+      if (data?.userChat?.id) {
+        setSelectedChatId(data.userChat.id);
+        refetchChats();
+      }
+      setSearchParams({}, { replace: true });
+    });
+  }, []);
 
   const chats = useMemo(() => {
     if (loading) return null;

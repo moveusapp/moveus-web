@@ -110,7 +110,7 @@ function UserPage() {
             <div className="flex flex-row gap-1">
               {profile && (
                 <>
-                  <Link to={`/chat/${data?.user!.id}`} className="btn">
+                  <Link to={`/chat?userId=${data?.user!.id}`} className="btn">
                     <HiOutlineChat size={18} />
                   </Link>
 
