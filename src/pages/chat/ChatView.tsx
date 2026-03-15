@@ -128,8 +128,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
 
   useEffect(() => {
     if (!messagesEndRef.current) return;
-    const behavior = hasScrolledRef.current ? "smooth" : "instant";
-    messagesEndRef.current.scrollIntoView({ behavior });
+    messagesEndRef.current.scrollIntoView("instant" as ScrollIntoViewOptions);
     hasScrolledRef.current = true;
   }, [messages, loading]);
 
