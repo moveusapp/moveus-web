@@ -1,9 +1,9 @@
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const DefaultLocation: LocationCoordinates = {
-  lat: 45.35162319643463,
-  lng: 14.107586146829604,
+  lat: 45.8150,
+  lng: 15.9819,
 };
 const DefaultZoom = 20;
 
@@ -27,17 +27,30 @@ function LocationPicker({
     googleMapsApiKey: import.meta.env.VITE_MAP_API as string,
   });
 
+  const [center, setCenter] = useState<LocationCoordinates | null>(null);
+
+  useEffect(() => {
+    if (!("geolocation" in navigator)) return;
+    navigator.geolocation.getCurrentPosition((postition) => {
+        const { longitude, latitude } = postition.coords;
+        setCenter({
+          lat: latitude,
+          lng: longitude
+        })
+    })
+  }, [])
+
   return !isLoaded ? (
     <></>
   ) : (
     <GoogleMap
-      center={DefaultLocation}
+      center={center ?? DefaultLocation}
       zoom={DefaultZoom}
       mapContainerClassName={classname}
       mapContainerStyle={{ width, height }}
       onClick={handleClick}
     >
-      <Marker position={location ?? DefaultLocation} />
+      <Marker position={location ?? center ?? DefaultLocation} />
     </GoogleMap>
   );
 }
