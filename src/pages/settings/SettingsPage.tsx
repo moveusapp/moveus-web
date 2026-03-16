@@ -3,7 +3,7 @@ import useDocumentTitle from "@/hooks/use-document-title";
 import { useCallback, useEffect, useState } from "react";
 import {
   PrivacyScope,
-  UpdateAllPrivacySettingsDocument,
+  AlterAllPrivacySettingsDocument,
   LogOutDocument,
 } from "@/graphql/graphql-types";
 import Dropdown from "@/components/ui/Dropdown";
@@ -58,7 +58,7 @@ function SettingsPage() {
       if (scope === newScope) return;
       apolloClient
         .mutate({
-          mutation: UpdateAllPrivacySettingsDocument,
+          mutation: AlterAllPrivacySettingsDocument,
           variables: { scope: newScope },
         })
         .then(() => {

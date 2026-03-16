@@ -1,4 +1,4 @@
-import { NotificationEnum } from "@/graphql/graphql-types";
+import { NotificationKind } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { prependZero } from "@/utils/time-utils";
 import { Link } from "react-router-dom";
@@ -15,7 +15,7 @@ function NotificationCard({ notification }: NotificationCardProps) {
     );
 
     switch (notification?.notificationType) {
-      case NotificationEnum.NewFollower:
+      case NotificationKind.NewFollower:
         return (
           <Link
             key={notification.id}
@@ -41,7 +41,7 @@ function NotificationCard({ notification }: NotificationCardProps) {
 
   if (notification?.__typename === "EventNotificationType") {
     switch (notification?.notificationType) {
-      case NotificationEnum.EventFinished:
+      case NotificationKind.EventFinished:
         return (
           <Link
             key={notification.id}

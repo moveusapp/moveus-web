@@ -1,17 +1,17 @@
-mutation UpdateLocation($latitude: Float!, $longitude: Float!) {
-  updateProfileLocation(latitude: $latitude, longitude: $longitude) {
+mutation AlterLocation($latitude: Float!, $longitude: Float!) {
+  alterProfileLocation(latitude: $latitude, longitude: $longitude) {
     success
   }
 }
 
-mutation UpdateProfileBasicInfo(
+mutation AlterProfileBasicInfo(
   $firstName: String,
   $lastName: String,
   $bio: String,
   $dateOfBirth: Date,
   $gender: Gender
 ) {
-  updateBasicInfo (
+  alterBasicInfo (
     firstName: $firstName,
     lastName: $lastName,
     bio: $bio,
@@ -24,11 +24,11 @@ mutation UpdateProfileBasicInfo(
   }
 }
 
-mutation UpdateProfileSurveyInfo(
+mutation AlterProfileSurveyInfo(
   $frequencyOfPhysicalActivity: FrequencyOfPhycicalActivity
   $socialInteractionImportance: SocialInteractionImportance
   $preferredPartySize: PreferredPartySize
-  $formedRelationshipTypes: [FormedRelationshipsType]
+  $formedRelationshipKinds: [FormedRelationshipsKind]
   $physicalActivitySatisfaction: PhysicalActivitySatisfaction
   $preferredPartnerCharacteristics: [PreferredPartnerCharacteristics]
   $matchedParticipationLikelihood: MatchedParticipationLikelihood
@@ -36,11 +36,11 @@ mutation UpdateProfileSurveyInfo(
   $mainInterest: MainInterest
   $preferredTimeOfTheDay: [TimeOfTheDay]
 ) {
-  updateSurveyInfo(
+  alterSurveyInfo(
     frequencyOfPhysicalActivity: $frequencyOfPhysicalActivity
     socialInteractionImportance: $socialInteractionImportance
     preferredPartySize: $preferredPartySize
-    formedRelationshipTypes: $formedRelationshipTypes
+    formedRelationshipKinds: $formedRelationshipKinds
     physicalActivitySatisfaction: $physicalActivitySatisfaction
     preferredPartnerCharacteristics: $preferredPartnerCharacteristics
     matchedParticipationLikelihood: $matchedParticipationLikelihood

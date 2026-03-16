@@ -9,7 +9,7 @@ import Dropdown from "@/components/ui/Dropdown";
 import LocationPicker from "@/components/ui/LocationPicker";
 import MultiChoice from "@/components/ui/MultiChoice";
 import {
-  ActivityType,
+  ActivityKind,
   GenderNoPnts,
   SkillLevel,
   CreateEventDocument,
@@ -31,7 +31,7 @@ function CreateEventPage() {
   const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [activity, setActivity] = useState<ActivityType | null>(null);
+  const [activity, setActivity] = useState<ActivityKind | null>(null);
   const [skillLevel, setSkillLevel] = useState<SkillLevel | null>(null);
   const [location, setLocation] = useState<LocationCoordinates | null>(null);
   const [maxParticipants, setMaxParticipants] = useState("");
@@ -152,7 +152,7 @@ function CreateEventPage() {
             label="Activity"
             value={activity}
             setValue={setActivity}
-            options={enumToOptions(ActivityType) as any}
+            options={enumToOptions(ActivityKind) as any}
             placeholder="Select an activity"
             required
           />

@@ -10,7 +10,7 @@ mutation Login($user: String!, $password: String!) {
 }
 
 mutation SignUp($username: String!, $password: String!, $email: String!) {
-  signup (
+  signUp (
     username: $username,
     email: $email,
     password: $password

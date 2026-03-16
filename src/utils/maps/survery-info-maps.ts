@@ -1,5 +1,5 @@
 import {
-  FormedRelationshipsType,
+  FormedRelationshipsKind,
   FrequencyOfPhycicalActivity,
   GenderNoPnts,
   MainInterest,
@@ -15,7 +15,7 @@ import { enumToOptions } from "../enum-to-options";
 
 export function surveyInfoKeyToTitle(key: keyof SurveyFragment): string {
   switch (key) {
-    case "formedRelationshipTypes":
+    case "formedRelationshipKinds":
       return "What relationships have you formed through physical activities?";
     case "frequencyOfPhysicalActivity":
       return "How often do you participate in physical activities?";
@@ -43,8 +43,8 @@ export function surveyInfoKeyToEnum(
   key: keyof SurveyFragment,
 ): Record<string, string> {
   switch (key) {
-    case "formedRelationshipTypes":
-      return FormedRelationshipsType;
+    case "formedRelationshipKinds":
+      return FormedRelationshipsKind;
     case "frequencyOfPhysicalActivity":
       return FrequencyOfPhycicalActivity;
     case "genderPreference":

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { apolloClient } from "@/appolo/client";
 import { useProfile } from "@/context/profile-context";
-import { UpdateLocationDocument } from "@/graphql/graphql-types";
+import { AlterLocationDocument } from "@/graphql/graphql-types";
 
 function useProfileLocation() {
   const { profile } = useProfile();
@@ -26,7 +26,7 @@ function useProfileLocation() {
         const { longitude, latitude } = postition.coords;
         apolloClient
           .mutate({
-            mutation: UpdateLocationDocument,
+            mutation: AlterLocationDocument,
             variables: { longitude, latitude },
           })
           .catch((error) => {

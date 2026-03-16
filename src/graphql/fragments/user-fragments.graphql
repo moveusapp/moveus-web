@@ -2,7 +2,7 @@ fragment Survey on ProfileType {
   frequencyOfPhysicalActivity
   socialInteractionImportance
   preferredPartySize
-  formedRelationshipTypes
+  formedRelationshipKinds
   physicalActivitySatisfaction
   preferredPartnerCharacteristics
   matchedParticipationLikelihood

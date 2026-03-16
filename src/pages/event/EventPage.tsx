@@ -1,7 +1,7 @@
 import Button from "@/components/ui/Button";
 import UserAvatar from "@/components/user/UserAvatar";
 import {
-  ActivityType,
+  ActivityKind,
   DeleteEventDocument,
   GetEventDocument,
   JoinEventDocument,
@@ -74,7 +74,7 @@ function EventPage() {
     refetch();
   };
 
-  const activity = Object.keys(ActivityType)[data.event?.activity.id!];
+  const activity = Object.keys(ActivityKind)[data.event?.activity.id!];
   const postCount = data.event?.posts?.length ?? 0;
   const commentCount = data.event?.comments?.length ?? 0;
 

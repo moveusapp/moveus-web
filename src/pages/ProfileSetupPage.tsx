@@ -7,8 +7,8 @@ import {
   Gender,
   SurveyFragment,
   BasicInfoFragment,
-  UpdateProfileBasicInfoDocument,
-  UpdateProfileSurveyInfoDocument,
+  AlterProfileBasicInfoDocument,
+  AlterProfileSurveyInfoDocument,
 } from "@/graphql/graphql-types";
 import { pick } from "@/utils/pick";
 import FirstLastName from "@/components/user/FirstLastName";
@@ -52,7 +52,7 @@ function ProfileSetupPage() {
     );
     setSurveyInfo(
       pick(profile, [
-        "formedRelationshipTypes",
+        "formedRelationshipKinds",
         "frequencyOfPhysicalActivity",
         "genderPreference",
         "matchedParticipationLikelihood",
@@ -75,7 +75,7 @@ function ProfileSetupPage() {
         setState(ProfileSetupState.MIDDLE);
         apolloClient
           .mutate({
-            mutation: UpdateProfileBasicInfoDocument,
+            mutation: AlterProfileBasicInfoDocument,
             variables: {
               bio: basicInfo!.bio,
               firstName: basicInfo!.firstName,
@@ -104,7 +104,7 @@ function ProfileSetupPage() {
         setCurrentQuestion(0);
         apolloClient
           .mutate({
-            mutation: UpdateProfileSurveyInfoDocument,
+            mutation: AlterProfileSurveyInfoDocument,
             variables: surveyInfo!,
           })
           .then(() => {

@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useDocumentTitle from "../hooks/use-document-title";
 import { FormEvent, useCallback, useState } from "react";
 import { ContextProfileFragment, LoginDocument } from "@/graphql/graphql-types";

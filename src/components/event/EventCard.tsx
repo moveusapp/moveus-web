@@ -1,6 +1,6 @@
 import Tag from "@/components/misc/Tag";
 import UserAvatar from "@/components/user/UserAvatar";
-import { ActivityType, EventCardFragment } from "@/graphql/graphql-types";
+import { ActivityKind, EventCardFragment } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { formatDate, formatTime } from "@/utils/time-utils";
 import {
@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import EventCapacityBar from "./EventCapacityBar";
 
 function EventCard({ event }: EventCardProps) {
-  const activity = Object.keys(ActivityType)[event.activity.id!];
+  const activity = Object.keys(ActivityKind)[event.activity.id!];
 
   const organizerName = displayName(
     event.organizer?.user.username!,

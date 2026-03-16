@@ -1,5 +1,5 @@
-mutation UpdateAllPrivacySettings($scope: PrivacyScope!) {
-  updateAllPrivacySettings(scope: $scope) {
+mutation AlterAllPrivacySettings($scope: PrivacyScope!) {
+  alterAllPrivacySettings(scope: $scope) {
     success
   }
 }

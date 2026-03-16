@@ -109,7 +109,7 @@ function RegisterPage() {
       });
 
       setProfile(
-        response.data?.signup?.myProfile as ContextProfileFragment
+        response.data?.signUp?.myProfile as ContextProfileFragment
       );
       navigate("/profile-setup");
     } catch (err) {
