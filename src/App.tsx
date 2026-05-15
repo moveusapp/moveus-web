@@ -3,7 +3,7 @@ import { ProtectedRoutes } from "./components/routes/ProtectedRoutes";
 import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import ProfileSetupPage from "./pages/ProfileSetupPage";
+import SurveyPage from "./pages/survey/SurveyPage";
 import { NavRoutes } from "./components/routes/nav/NavRoutes";
 import ProfileRedirect from "./pages/user/ProfileRedirect";
 import SettingsPage from "./pages/settings/SettingsPage";
@@ -33,7 +33,7 @@ function App() {
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/create-event" element={<CreateEventPage />} />
             </Route>
-            <Route path="/profile-setup" element={<ProfileSetupPage />} />
+            <Route path="/survey/:id" element={<SurveyPage />} />
           </Route>
           <Route element={<NavRoutes />}>
             <Route path="/user/:username" element={<UserPage />} />

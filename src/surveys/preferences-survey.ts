@@ -1,0 +1,89 @@
+import {
+  AlterProfileSurveyInfoDocument,
+  AlterProfileSurveyInfoMutationVariables,
+  FormedRelationshipsKind,
+  FrequencyOfPhycicalActivity,
+  GenderNoPnts,
+  MainInterest,
+  MatchedParticipationLikelihood,
+  PhysicalActivitySatisfaction,
+  PreferredPartnerCharacteristics,
+  PreferredPartySize,
+  SocialInteractionImportance,
+  TimeOfTheDay,
+} from "@/graphql/graphql-types";
+import { QuestionKind, Survey } from "./types";
+
+export const preferencesSurvey: Survey<AlterProfileSurveyInfoMutationVariables> = {
+  id: "preferences",
+  mutation: AlterProfileSurveyInfoDocument,
+  onFinishedRoute: "/profile",
+  questions: [
+    {
+      kind: QuestionKind.SingleChoice,
+      title: "What are you mainly looking to get from this app?",
+      field: "mainInterest",
+      enum: MainInterest,
+      required: true,
+    },
+    {
+      kind: QuestionKind.SingleChoice,
+      title: "How often do you participate in physical activities?",
+      field: "frequencyOfPhysicalActivity",
+      enum: FrequencyOfPhycicalActivity,
+      required: true,
+    },
+    {
+      kind: QuestionKind.SingleChoice,
+      title: "How satisfied are you with your activity levels?",
+      field: "physicalActivitySatisfaction",
+      enum: PhysicalActivitySatisfaction,
+      required: true,
+    },
+    {
+      kind: QuestionKind.SingleChoice,
+      title: "How important is socializing for you?",
+      field: "socialInteractionImportance",
+      enum: SocialInteractionImportance,
+      required: true,
+    },
+    {
+      kind: QuestionKind.SingleChoice,
+      title: "What is your ideal group size for participating in physical activities?",
+      field: "preferredPartySize",
+      enum: PreferredPartySize,
+      required: true,
+    },
+    {
+      kind: QuestionKind.MultiChoice,
+      title: "What relationships have you formed through physical activities?",
+      field: "formedRelationshipKinds",
+      enum: FormedRelationshipsKind,
+    },
+    {
+      kind: QuestionKind.MultiChoice,
+      title: "What do you value the most in people you spend time with?",
+      field: "preferredPartnerCharacteristics",
+      enum: PreferredPartnerCharacteristics,
+    },
+    {
+      kind: QuestionKind.SingleChoice,
+      title: "How likely are you to go on an event with someone because of your similar personality?",
+      field: "matchedParticipationLikelihood",
+      enum: MatchedParticipationLikelihood,
+      required: true,
+    },
+    {
+      kind: QuestionKind.MultiChoice,
+      title: "Which genders do you prefer to be around?",
+      field: "genderPreference",
+      enum: GenderNoPnts,
+    },
+    {
+      kind: QuestionKind.MultiChoice,
+      title: "In what times of the day do you prefer to exercise?",
+      field: "preferredTimeOfTheDay",
+      enum: TimeOfTheDay,
+    },
+  ],
+};
