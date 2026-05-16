@@ -93,12 +93,12 @@ function LandingPage() {
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                 <Link
                   to="/register"
-                  className="btn btn-primary btn-lg gap-2 shadow-lg shadow-primary/30 hover:scale-[1.02] transition-transform"
+                  className="btn btn-primary btn-lg gap-2 btn-arrow"
                 >
                   Request invite
                   <HiArrowRight className="w-5 h-5" />
                 </Link>
-                <Link to="/login" className="btn btn-lg btn-ghost">
+                <Link to="/login" className="btn btn-ghost btn-lg">
                   I have an account
                 </Link>
               </div>
@@ -267,7 +267,10 @@ function LandingPage() {
           )}
 
           <div className="text-center mt-8 sm:hidden">
-            <Link to="/search" className="btn btn-primary btn-lg gap-2">
+            <Link
+              to="/search"
+              className="btn btn-primary btn-lg gap-2 btn-arrow"
+            >
               See all events
               <HiArrowRight className="w-5 h-5" />
             </Link>
@@ -305,14 +308,14 @@ function LandingPage() {
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                 <Link
                   to="/register"
-                  className="btn btn-lg bg-base-100 text-primary hover:bg-base-200 border-0 gap-2 shadow-2xl shadow-base-content/30 hover:scale-[1.02] transition-transform"
+                  className="btn btn-lg bg-base-100 text-primary hover:bg-base-200 border-0 gap-2 btn-arrow"
                 >
                   Request invite
                   <HiArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
                   to="/login"
-                  className="btn btn-lg btn-ghost text-white hover:bg-white/15 border border-white/30"
+                  className="btn btn-ghost btn-lg text-white hover:bg-white/15 border border-white/30"
                 >
                   I have an account
                 </Link>

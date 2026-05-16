@@ -114,7 +114,7 @@ function LoginPage() {
         <Button
           loading={loading}
           type="submit"
-          className="mt-6 btn btn-primary btn-lg w-full gap-2 shadow-lg shadow-primary/30 hover:scale-[1.01] transition-transform"
+          className="btn-primary btn-lg w-full gap-2 btn-arrow mt-6"
         >
           Sign in
           <HiArrowRight className="w-5 h-5" />

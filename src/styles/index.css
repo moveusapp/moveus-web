@@ -53,6 +53,13 @@
   @apply rounded-2xl;
 }
 
+.btn-arrow svg {
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-arrow:hover:not(:disabled) svg {
+  transform: translateX(2px);
+}
+
 @utility input {
   @apply rounded-2xl;
 }

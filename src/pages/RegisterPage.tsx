@@ -235,7 +235,7 @@ function RegisterPage() {
           type="submit"
           loading={isLoading}
           disabled={!agreeToTerms}
-          className="mt-5 btn btn-primary btn-lg w-full gap-2 shadow-lg shadow-primary/30 hover:scale-[1.01] transition-transform"
+          className="btn-primary btn-lg w-full gap-2 btn-arrow mt-5"
         >
           Create account
           <HiArrowRight className="w-5 h-5" />

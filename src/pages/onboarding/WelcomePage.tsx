@@ -8,14 +8,19 @@ function WelcomePage() {
   useDocumentTitle("Welcome to MoveUs");
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-primary/10 via-base-100 to-accent/10 flex items-center justify-center px-4 py-12">
+    <div className="relative min-h-screen overflow-hidden bg-base-100 flex items-center justify-center px-4 py-12">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -left-24 w-72 h-72 rounded-full bg-primary/20 blur-3xl"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-accent/20 blur-3xl"
+        className="pointer-events-none absolute inset-0 opacity-[0.5]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, oklch(from var(--color-primary) l c h / 0.18) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+          maskImage:
+            "radial-gradient(ellipse at center, black 40%, transparent 75%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at center, black 40%, transparent 75%)",
+        }}
       />
 
       <div className="relative max-w-md w-full text-center flex flex-col items-center gap-6">
@@ -26,7 +31,7 @@ function WelcomePage() {
           <div className="relative">
             <div
               aria-hidden="true"
-              className="absolute inset-0 rounded-full bg-primary/15 blur-2xl scale-90"
+              className="absolute inset-0 rounded-full bg-primary/10 blur-2xl scale-90"
             />
             <img
               src={duckHappy}
@@ -38,10 +43,28 @@ function WelcomePage() {
         </div>
 
         <h1
-          className="animate-welcome-rise text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-base-content whitespace-nowrap"
+          className="animate-welcome-rise text-4xl sm:text-5xl font-black tracking-tight leading-[1.05] text-base-content"
           style={{ animationDelay: "80ms" }}
         >
-          Welcome to <span className="text-primary">MoveUs</span>
+          Welcome to{" "}
+          <span className="relative inline-block">
+            <span className="text-primary">MoveUs</span>
+            <svg
+              className="absolute -bottom-1.5 left-0 w-full"
+              viewBox="0 0 200 10"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M2 7 Q 50 2, 100 5 T 198 4"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                className="text-accent"
+                fill="none"
+              />
+            </svg>
+          </span>
         </h1>
 
         <p
@@ -59,21 +82,18 @@ function WelcomePage() {
           <button
             type="button"
             onClick={() => navigate("/home")}
-            className="btn btn-ghost btn-lg min-h-16 h-16 sm:min-h-14 sm:h-14 text-lg flex-1"
+            className="btn btn-ghost btn-lg flex-1 h-14 min-h-14"
           >
             Skip for now
           </button>
           <button
             type="button"
             onClick={() => navigate("/survey/basic-info")}
-            className="btn btn-primary btn-lg min-h-16 h-16 sm:min-h-14 sm:h-14 text-lg gap-2 flex-1 group shadow-lg shadow-primary/20"
+            className="btn btn-primary btn-lg flex-1 h-14 min-h-14 gap-2 btn-arrow"
             autoFocus
           >
             Let's go
-            <HiArrowRight
-              className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
+            <HiArrowRight className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
       </div>
