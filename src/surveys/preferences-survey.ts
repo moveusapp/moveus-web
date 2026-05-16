@@ -57,12 +57,14 @@ export const preferencesSurvey: Survey<AlterProfileSurveyInfoMutationVariables> 
     {
       kind: QuestionKind.MultiChoice,
       title: "What relationships have you formed through physical activities?",
+      subtitle: "Select any that apply, or leave blank to skip",
       field: "formedRelationshipKinds",
       enum: FormedRelationshipsKind,
     },
     {
       kind: QuestionKind.MultiChoice,
       title: "What do you value the most in people you spend time with?",
+      subtitle: "Select any that apply, or leave blank to skip",
       field: "preferredPartnerCharacteristics",
       enum: PreferredPartnerCharacteristics,
     },
@@ -76,12 +78,14 @@ export const preferencesSurvey: Survey<AlterProfileSurveyInfoMutationVariables> 
     {
       kind: QuestionKind.MultiChoice,
       title: "Which genders do you prefer to be around?",
+      subtitle: "Select any that apply, or leave blank to skip",
       field: "genderPreference",
       enum: GenderNoPnts,
     },
     {
       kind: QuestionKind.MultiChoice,
       title: "In what times of the day do you prefer to exercise?",
+      subtitle: "Select any that apply, or leave blank to skip",
       field: "preferredTimeOfTheDay",
       enum: TimeOfTheDay,
     },

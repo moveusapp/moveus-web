@@ -22,9 +22,21 @@ function QuestionRenderer({ question, value, onChange }: Props) {
         />
       );
     case QuestionKind.Text:
-      return <TextQuestion value={value ?? ""} onChange={onChange} />;
+      return (
+        <TextQuestion
+          value={value ?? ""}
+          onChange={onChange}
+          placeholder={question.placeholder}
+        />
+      );
     case QuestionKind.TextArea:
-      return <TextAreaQuestion value={value ?? ""} onChange={onChange} />;
+      return (
+        <TextAreaQuestion
+          value={value ?? ""}
+          onChange={onChange}
+          placeholder={question.placeholder}
+        />
+      );
     case QuestionKind.SingleChoice:
       return (
         <SingleChoiceQuestion

@@ -26,6 +26,8 @@ export const basicInfoSurvey: Survey<AlterProfileBasicInfoMutationVariables> = {
     {
       kind: QuestionKind.TextArea,
       title: "Tell us about yourself",
+      subtitle: "Leave blank to skip",
+      placeholder: "Write a bio...",
       field: "bio",
     },
     {

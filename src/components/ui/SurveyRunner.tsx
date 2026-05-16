@@ -86,9 +86,15 @@ function SurveyRunner({ survey }: Props) {
         key={index}
         className="flex-1 flex flex-col justify-center animate-survey-question"
       >
-        <h2 className="text-3xl font-semibold tracking-tight leading-snug mb-6">
+        <h2 className="text-3xl font-semibold tracking-tight leading-snug">
           {question.title}
         </h2>
+        {question.subtitle && (
+          <p className="text-base text-base-content/60 mt-2">
+            {question.subtitle}
+          </p>
+        )}
+        <div className="mb-6" />
         <QuestionRenderer
           question={question}
           value={value}

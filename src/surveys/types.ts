@@ -11,6 +11,7 @@ export enum QuestionKind {
 
 type Base = {
   title: string;
+  subtitle?: string;
   required?: boolean;
 };
 
@@ -23,11 +24,13 @@ export type Question<TVars> =
   | (Base & {
       kind: QuestionKind.Text;
       field: keyof TVars & string;
+      placeholder?: string;
       validate?: (value: string) => boolean;
     })
   | (Base & {
       kind: QuestionKind.TextArea;
       field: keyof TVars & string;
+      placeholder?: string;
       validate?: (value: string) => boolean;
     })
   | (Base & {
