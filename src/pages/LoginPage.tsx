@@ -42,35 +42,16 @@ function LoginPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-black tracking-tight leading-[1.05] mb-1">
-          Welcome{" "}
-          <span className="relative inline-block">
-            <span className="text-primary">back</span>
-            <svg
-              className="absolute -bottom-1 left-0 w-full"
-              viewBox="0 0 200 10"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M2 7 Q 50 2, 100 5 T 198 4"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                className="text-accent"
-                fill="none"
-              />
-            </svg>
-          </span>
-          .
+      <div className="mb-8">
+        <h1 className="text-3xl font-black tracking-tight leading-[1.05] mb-2">
+          Welcome <span className="text-primary">back</span>.
         </h1>
-        <p className="text-sm text-base-content/70">
+        <p className="text-sm text-base-content/60">
           Sign in and pick up where you left off.
         </p>
       </div>
 
-      <form onSubmit={handleLogin} className="space-y-1">
+      <form onSubmit={handleLogin} className="space-y-3">
         <TextInput
           label="Email or username"
           type="text"
@@ -93,7 +74,7 @@ function LoginPage() {
           <p className="text-sm text-error mt-2">{apiError.message}</p>
         )}
 
-        <div className="flex mt-5 items-center justify-between">
+        <div className="flex pt-2 items-center justify-between">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
@@ -114,13 +95,13 @@ function LoginPage() {
         <Button
           loading={loading}
           type="submit"
-          className="btn-primary btn-lg w-full gap-2 btn-arrow mt-6"
+          className="btn-primary btn-lg w-full gap-2 btn-arrow !mt-7"
         >
           Sign in
           <HiArrowRight className="w-5 h-5" />
         </Button>
 
-        <p className="text-center text-sm text-base-content/60 mt-6">
+        <p className="text-center text-sm text-base-content/60 !mt-8">
           New to MoveUs?{" "}
           <Link
             to="/register"

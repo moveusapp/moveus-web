@@ -114,33 +114,14 @@ function RegisterPage() {
     <div>
       <div className="mb-5">
         <h1 className="text-3xl font-black tracking-tight leading-[1.05] mb-1">
-          Join the{" "}
-          <span className="relative inline-block">
-            <span className="text-primary">squad</span>
-            <svg
-              className="absolute -bottom-1 left-0 w-full"
-              viewBox="0 0 200 10"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M2 7 Q 50 2, 100 5 T 198 4"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                className="text-accent"
-                fill="none"
-              />
-            </svg>
-          </span>
-          .
+          Join the <span className="text-primary">squad</span>.
         </h1>
-        <p className="text-sm text-base-content/70">
+        <p className="text-sm text-base-content/60">
           Set up your account and start moving with people nearby.
         </p>
       </div>
 
-      <form onSubmit={handleRegister} className="space-y-1">
+      <form onSubmit={handleRegister} className="space-y-2">
         <TextInput
           label="Email"
           type="email"
@@ -198,7 +179,7 @@ function RegisterPage() {
           <p className="text-sm text-error mt-2">{apiError.message}</p>
         )}
 
-        <div className="mt-4 space-y-2">
+        <div className="pt-2 space-y-2">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
@@ -235,13 +216,13 @@ function RegisterPage() {
           type="submit"
           loading={isLoading}
           disabled={!agreeToTerms}
-          className="btn-primary btn-lg w-full gap-2 btn-arrow mt-5"
+          className="btn-primary btn-lg w-full gap-2 btn-arrow !mt-5"
         >
           Create account
           <HiArrowRight className="w-5 h-5" />
         </Button>
 
-        <p className="text-center text-sm text-base-content/60 mt-4">
+        <p className="text-center text-sm text-base-content/60 !mt-5">
           Already have an account?{" "}
           <Link
             to="/login"

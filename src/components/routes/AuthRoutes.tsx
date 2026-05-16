@@ -11,15 +11,10 @@ export function AuthRoutes() {
   }
 
   return (
-    <div className="h-screen flex bg-base-100">
+    <div className="min-h-screen md:h-screen flex bg-base-100">
       {/* Form column */}
-      <div className="relative flex flex-col w-full md:w-[55%] lg:w-[50%] md:max-w-[560px] h-full overflow-y-auto">
-        <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute bottom-0 -right-20 w-72 h-72 rounded-full bg-accent/10 blur-3xl" />
-        </div>
-
-        <div className="flex items-center justify-between px-6 md:px-10 pt-5">
+      <div className="relative flex flex-col w-full md:w-[55%] lg:w-[50%] md:max-w-[560px] md:h-full md:overflow-y-auto md:border-r md:border-base-200">
+        <div className="flex items-center justify-between px-5 md:px-10 pt-5 pb-1">
           <Link to="/" className="flex items-center">
             <img src={moveusLogo} alt="MoveUs" className="h-8" />
           </Link>
@@ -32,7 +27,7 @@ export function AuthRoutes() {
           </Link>
         </div>
 
-        <div className="flex-1 flex items-center px-6 md:px-10 py-6">
+        <div className="flex-1 flex md:items-center px-5 md:px-10 pt-6 pb-10 md:py-5">
           <div className="w-full max-w-sm mx-auto">
             <Outlet />
           </div>
@@ -42,7 +37,7 @@ export function AuthRoutes() {
       {/* Brand column */}
       <div className="hidden md:flex flex-1 relative overflow-hidden bg-primary items-center justify-center">
         <div
-          className="absolute inset-0 opacity-[0.12]"
+          className="absolute inset-0 opacity-[0.1]"
           aria-hidden="true"
           style={{
             backgroundImage:
@@ -50,12 +45,11 @@ export function AuthRoutes() {
             backgroundSize: "24px 24px",
           }}
         />
-
-        <div className="relative max-w-md text-center px-10 text-primary-content">
-          <h2 className="text-5xl lg:text-6xl font-black mb-4 tracking-tight text-white drop-shadow-sm leading-[1.05]">
-            Your Workout Wingman
+        <div className="relative max-w-md px-10 text-primary-content">
+          <h2 className="text-5xl lg:text-6xl font-black mb-5 tracking-tight text-white leading-[1.05]">
+            Your Workout Wingman.
           </h2>
-          <p className="text-lg text-white/90">
+          <p className="text-lg text-white/85 leading-relaxed">
             Find people who actually show up. Match by psychology, move together.
           </p>
         </div>
