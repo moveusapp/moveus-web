@@ -10,7 +10,7 @@ function Button({ children, loading, disabled, className, onClick, onMouseEnter,
       disabled={disabled || loading}
       className={`btn rounded-2xl ${className} ${loading ? "btn-disabled" : ""}`}
     >
-      <div className="flex flex-row gap-1">
+      <div className="flex flex-row items-center gap-1">
         {loading ? (
           <div className="loading loading-dots loading-xs" />
         ) : (
