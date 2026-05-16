@@ -1,3 +1,4 @@
+import defaultEventThumbnail from "@/assets/default-images/event-default-thumbnail.webp";
 import Tag from "@/components/misc/Tag";
 import UserAvatar from "@/components/user/UserAvatar";
 import { ActivityKind, EventCardFragment } from "@/graphql/graphql-types";
@@ -28,7 +29,7 @@ function EventCard({ event }: EventCardProps) {
       {/* Thumbnail */}
       <div className="relative w-full aspect-video overflow-hidden rounded-xl bg-base-300">
         <img
-          src="https://cdn.pixabay.com/photo/2020/02/01/20/43/youth-4811405_1280.jpg"
+          src={defaultEventThumbnail}
           alt={`${event.title} event thumbnail`}
           loading="lazy"
           className="absolute inset-0 w-full h-full object-cover"

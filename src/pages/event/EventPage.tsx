@@ -1,3 +1,4 @@
+import defaultEventThumbnail from "@/assets/default-images/event-default-thumbnail.webp";
 import Button from "@/components/ui/Button";
 import UserAvatar from "@/components/user/UserAvatar";
 import {
@@ -262,7 +263,7 @@ function EventPage() {
             {/* Thumbnail */}
             <div className="rounded-2xl overflow-hidden bg-base-300">
               <img
-                src="https://cdn.pixabay.com/photo/2020/02/01/20/43/youth-4811405_1280.jpg"
+                src={defaultEventThumbnail}
                 alt={data.event?.title ?? ""}
                 className="w-full aspect-video object-cover"
                 crossOrigin="anonymous"
