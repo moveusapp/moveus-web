@@ -7,6 +7,7 @@ export enum QuestionKind {
   SingleChoice = "SingleChoice",
   MultiChoice = "MultiChoice",
   DateOfBirth = "DateOfBirth",
+  Slider = "Slider",
 }
 
 type Base = {
@@ -49,6 +50,16 @@ export type Question<TVars> =
       kind: QuestionKind.DateOfBirth;
       field: keyof TVars & string;
       validate?: (value: Date) => boolean;
+    })
+  | (Base & {
+      kind: QuestionKind.Slider;
+      field: keyof TVars & string;
+      min: number;
+      max: number;
+      step?: number;
+      minLabel?: string;
+      maxLabel?: string;
+      validate?: (value: number) => boolean;
     });
 
 export type Survey<TVars = Record<string, unknown>> = {

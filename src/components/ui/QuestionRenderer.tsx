@@ -5,6 +5,7 @@ import TextAreaQuestion from "./survey-questions/TextAreaQuestion";
 import SingleChoiceQuestion from "./survey-questions/SingleChoiceQuestion";
 import MultiChoiceQuestion from "./survey-questions/MultiChoiceQuestion";
 import DateOfBirthQuestion from "./survey-questions/DateOfBirthQuestion";
+import SliderQuestion from "./survey-questions/SliderQuestion";
 
 interface Props {
   question: Question<any>;
@@ -55,6 +56,18 @@ function QuestionRenderer({ question, value, onChange }: Props) {
       );
     case QuestionKind.DateOfBirth:
       return <DateOfBirthQuestion value={value ?? null} onChange={onChange} />;
+    case QuestionKind.Slider:
+      return (
+        <SliderQuestion
+          value={value}
+          onChange={onChange}
+          min={question.min}
+          max={question.max}
+          step={question.step}
+          minLabel={question.minLabel}
+          maxLabel={question.maxLabel}
+        />
+      );
   }
 }
 
@@ -73,6 +86,8 @@ export function isAnswered(question: Question<any>, value: any): boolean {
       return Array.isArray(value) && value.length > 0;
     case QuestionKind.DateOfBirth:
       return value instanceof Date;
+    case QuestionKind.Slider:
+      return typeof value === "number" && Number.isFinite(value);
   }
 }
 
