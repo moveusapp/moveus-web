@@ -111,7 +111,7 @@ function RegisterPage() {
       setProfile(
         response.data?.signUp?.myProfile as ContextProfileFragment
       );
-      navigate("/survey/basic-info");
+      navigate("/welcome");
     } catch (err) {
       console.error("Signup error:", err);
     }

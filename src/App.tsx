@@ -15,6 +15,7 @@ import SearchPage from "./pages/search/SearchPage";
 import { AuthRoutes } from "./components/routes/AuthRoutes";
 import CreateEventPage from "./pages/create-event/CreateEventPage";
 import LandingPage from "./pages/start/LandingPage";
+import WelcomePage from "./pages/onboarding/WelcomePage";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
               <Route path="/create-event" element={<CreateEventPage />} />
             </Route>
             <Route path="/survey/:id" element={<SurveyPage />} />
+            <Route path="/welcome" element={<WelcomePage />} />
           </Route>
           <Route element={<NavRoutes />}>
             <Route path="/user/:username" element={<UserPage />} />
