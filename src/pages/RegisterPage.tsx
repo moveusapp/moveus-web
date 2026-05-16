@@ -6,6 +6,7 @@ import {
   SignUpDocument,
 } from "@/graphql/graphql-types";
 import { useProfile } from "@/context/profile-context";
+import { setStoredProfile } from "@/utils/auth-storage";
 import {
   usernameValidator,
   usernameTaken,
@@ -105,12 +106,13 @@ function RegisterPage() {
     // All validations passed, submit form
     try {
       const response = await signup({
-        variables: { username, email, password },
+        variables: { username, email, password, rememberMe: true },
       });
 
-      setProfile(
-        response.data?.signUp?.myProfile as ContextProfileFragment
-      );
+      const profile = response.data?.signUp
+        ?.myProfile as ContextProfileFragment;
+      setStoredProfile(profile);
+      setProfile(profile);
       navigate("/welcome");
     } catch (err) {
       console.error("Signup error:", err);

@@ -1,19 +1,21 @@
-mutation Login($user: String!, $password: String!) {
+mutation Login($user: String!, $password: String!, $rememberMe: Boolean!) {
   login (
     user: $user,
-    password: $password
+    password: $password,
+    rememberMe: $rememberMe
   ) {
-    myProfile { 
+    myProfile {
       ...ContextProfile
     }
   }
 }
 
-mutation SignUp($username: String!, $password: String!, $email: String!) {
+mutation SignUp($username: String!, $password: String!, $email: String!, $rememberMe: Boolean!) {
   signUp (
     username: $username,
     email: $email,
-    password: $password
+    password: $password,
+    rememberMe: $rememberMe
   ) {
     myProfile { 
       ...ContextProfile

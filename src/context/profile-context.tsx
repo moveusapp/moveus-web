@@ -10,6 +10,10 @@ import {
   GetMyProfileDocument,
 } from "@/graphql/graphql-types";
 import { useQuery } from "@apollo/client/react";
+import {
+  getStoredProfile,
+  setStoredProfile,
+} from "@/utils/auth-storage";
 
 type ProfileContextType = {
   profile: ContextProfileFragment | null;
@@ -28,24 +32,14 @@ export const useProfile = () => {
   return context;
 };
 
-const getProfileFromLS = () => {
-  const profile: ContextProfileFragment = JSON.parse(
-    localStorage.getItem("profile") ?? "null",
-  );
-  if (!profile) return null;
-  if (profile.dateOfBirth) profile.dateOfBirth = new Date(profile.dateOfBirth);
-  if (profile.lastLogin) profile.lastLogin = new Date(profile.lastLogin);
-  return profile;
-};
-
 export const UserProvider = ({ children }: PropsWithChildren) => {
   const [profile, setProfile] = useState<ContextProfileFragment | null>(
-    () => getProfileFromLS(),
+    () => getStoredProfile(),
   );
 
   const { data } = useQuery(GetMyProfileDocument, {
-    skip: !localStorage.getItem("profile"),
-    fetchPolicy: "cache-first"
+    skip: !getStoredProfile(),
+    fetchPolicy: "network-only",
   });
 
   useEffect(() => {
@@ -56,7 +50,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (profile) {
-      localStorage.setItem("profile", JSON.stringify(profile));
+      setStoredProfile(profile);
     }
   }, [profile]);
 

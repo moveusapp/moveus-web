@@ -6,9 +6,15 @@ import {
   ApolloLink,
 } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { ErrorLink } from "@apollo/client/link/error";
+import {
+  CombinedGraphQLErrors,
+  ServerError,
+} from "@apollo/client/errors";
 import { createClient } from "graphql-ws";
 import { isSubscriptionOperation } from "@apollo/client/utilities";
 import { DateParsingLink } from "./date-parsing-link";
+import { clearStoredProfile } from "@/utils/auth-storage";
 
 const isDev = import.meta.env.DEV;
 const secure = isDev ? "" : "s";
@@ -31,7 +37,28 @@ const splitLink = ApolloLink.split(
   httpLink,
 );
 
+const handleAuthFailure = () => {
+  clearStoredProfile();
+  void apolloClient.clearStore();
+  if (window.location.pathname !== "/login") {
+    window.location.assign("/login");
+  }
+};
+
+const authErrorLink = new ErrorLink(({ error }) => {
+  if (ServerError.is(error) && error.statusCode === 401) {
+    handleAuthFailure();
+    return;
+  }
+  if (CombinedGraphQLErrors.is(error)) {
+    const isAuth = error.errors.some(
+      (e) => e.extensions?.code === "UNAUTHENTICATED",
+    );
+    if (isAuth) handleAuthFailure();
+  }
+});
+
 export const apolloClient = new ApolloClient({
-  link: ApolloLink.from([DateParsingLink, splitLink]),
-  cache: new InMemoryCache()
+  link: ApolloLink.from([authErrorLink, DateParsingLink, splitLink]),
+  cache: new InMemoryCache(),
 });

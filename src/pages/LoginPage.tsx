@@ -3,6 +3,7 @@ import useDocumentTitle from "../hooks/use-document-title";
 import { FormEvent, useCallback, useState } from "react";
 import { ContextProfileFragment, LoginDocument } from "@/graphql/graphql-types";
 import { useProfile } from "@/context/profile-context";
+import { setStoredProfile } from "@/utils/auth-storage";
 import { useMutation } from "@apollo/client/react";
 import { FaGoogle } from "react-icons/fa";
 import Button from "@/components/ui/Button";
@@ -25,15 +26,18 @@ function LoginPage() {
       e.preventDefault();
       if (!user || !password) return;
       login({
-        variables: { user, password },
+        variables: { user, password, rememberMe },
       })
         .then((response) => {
-          setProfile(response.data?.login?.myProfile as ContextProfileFragment);
+          const profile = response.data?.login
+            ?.myProfile as ContextProfileFragment;
+          setStoredProfile(profile);
+          setProfile(profile);
           navigate("/home");
         })
         .catch((_) => {});
     },
-    [user, password, setProfile, navigate, login],
+    [user, password, rememberMe, setProfile, navigate, login],
   );
 
   const handleGoogleLogin = () => {};
