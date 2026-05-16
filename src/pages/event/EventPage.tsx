@@ -18,6 +18,7 @@ import {
   HiOutlineCalendarDays,
   HiOutlineNewspaper,
   HiOutlineChatBubbleOvalLeft,
+  HiCheckBadge,
 } from "react-icons/hi2";
 import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
@@ -98,11 +99,14 @@ function EventPage() {
               userId={data.event?.organizer?.user.id!}
               className="flex w-7 h-7"
             />
-            <span>
+            <span className="flex items-center gap-1">
               Hosted by{" "}
               <span className="text-foreground font-medium group-hover:text-primary">
                 {organizerName}
               </span>
+              {data.event?.organizer?.user.verified && (
+                <HiCheckBadge size={16} className="text-primary shrink-0" />
+              )}
             </span>
           </Link>
 
