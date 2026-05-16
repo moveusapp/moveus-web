@@ -18,6 +18,7 @@ import {
   HiOutlineCalendarDays,
   HiOutlineNewspaper,
   HiOutlineChatBubbleOvalLeft,
+  HiOutlineChatBubbleLeftRight,
   HiCheckBadge,
 } from "react-icons/hi2";
 import { Link, useParams } from "react-router-dom";
@@ -48,7 +49,7 @@ function EventPage() {
   if (!data) {
     return (
       <div className="mx-auto max-w-5xl px-4 w-full py-6">
-        <div className="flex flex-col items-center justify-center rounded-xl border border-base-300 bg-base-200 py-16">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-base-300 bg-base-200 py-16">
           <p className="text-lg font-medium text-foreground">Event not found</p>
           <p className="mt-1 text-sm text-muted-foreground">
             This event may have been removed.
@@ -129,139 +130,8 @@ function EventPage() {
           </p>
 
           {/* Sticky action bar — mobile only */}
-          <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4 flex items-center gap-3">
-            {data.event?.role === MemberRole.Organizer ? (
-              <div className="flex-1 rounded-2xl bg-primary/10 p-3 text-center text-sm font-medium text-primary">
-                You are hosting this event
-              </div>
-            ) : [
-                MemberRole.Participant,
-                MemberRole.Moderator,
-                MemberRole.Spectator,
-              ].includes(data.event?.role!) ? (
-              <Button
-                onClick={() =>
-                  leaveEvent({ variables: { eventId: parseInt(eventId!) } })
-                }
-                loading={leaveLoading}
-                className="btn btn-error btn-outline flex-1"
-              >
-                Leave Event
-              </Button>
-            ) : (
-              <Button
-                onClick={() =>
-                  !isFull &&
-                  joinEvent({ variables: { eventId: parseInt(eventId!) } })
-                }
-                loading={joinLoading}
-                disabled={!!isFull}
-                className={`btn btn-primary flex-1 ${isFull ? "btn-disabled" : ""}`}
-              >
-                {isFull ? "Event Full" : "Join Event"}
-              </Button>
-            )}
-
-            <button className="btn btn-square rounded-2xl" aria-label="Share event">
-              <HiArrowUpTray className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Tabs */}
-          <div className="bg-base-300 rounded-2xl border border-base-300 p-1 mt-4">
-            <div className="flex flex-row gap-1 justify-between items-center" role="tablist">
-              <button
-                onClick={() => setActiveTab("posts")}
-                role="tab"
-                aria-selected={activeTab === "posts"}
-                className={`hover:bg-base-200 transition-all p-2 rounded-2xl grow ${activeTab === "posts" ? "shadow-md bg-base-200" : ""}`}
-              >
-                <div className="flex flex-row gap-1 justify-center items-center">
-                  <HiOutlineNewspaper
-                    size={16}
-                    className="text-base-content/70"
-                  />
-                  <p className="text-sm font-medium">Posts ({postCount})</p>
-                </div>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("comments")}
-                role="tab"
-                aria-selected={activeTab === "comments"}
-                className={`hover:bg-base-200 transition-all p-2 rounded-2xl grow ${activeTab === "comments" ? "shadow-md bg-base-200" : ""}`}
-              >
-                <div className="flex flex-row gap-1 justify-center items-center">
-                  <HiOutlineChatBubbleOvalLeft
-                    size={16}
-                    className="text-base-content/70"
-                  />
-                  <p className="text-sm font-medium">
-                    Comments ({commentCount})
-                  </p>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* Tab content */}
-          <div className="mt-4 pb-6" role="tabpanel">
-            {activeTab === "posts" ? (
-              <div>
-                {canCreatePost && (
-                  <button
-                    onClick={() => setShowCreatePostModal(true)}
-                    className="btn btn-primary btn-sm gap-1 mb-4"
-                  >
-                    <HiPlus className="w-4 h-4" />
-                    Create Post
-                  </button>
-                )}
-
-                {data.event?.posts && data.event.posts.length > 0 ? (
-                  <div className="flex flex-col gap-4">
-                    {data.event.posts.toReversed().map((post) => (
-                      <PostCard key={post.id} post={post} hideEventLink />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="rounded-xl border border-base-300 bg-base-200 p-8 text-center">
-                    <p className="text-sm text-base-content/60">
-                      No posts yet.{" "}
-                      {canCreatePost && "Be the first to create one!"}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="rounded-xl border border-base-300 bg-base-200 p-5">
-                <CommentSection
-                  entityType="event"
-                  entityId={parseInt(eventId!)}
-                  comments={
-                    (data.event?.comments ?? []).filter(Boolean) as any
-                  }
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right sidebar */}
-        <aside className="w-full lg:w-[340px] xl:w-[380px] lg:flex-shrink-0 order-first lg:order-last">
-          <div className="lg:sticky lg:top-6 lg:self-start flex flex-col gap-4">
-            {/* Thumbnail */}
-            <div className="rounded-2xl overflow-hidden bg-base-300">
-              <img
-                src="https://cdn.pixabay.com/photo/2020/02/01/20/43/youth-4811405_1280.jpg"
-                alt={`${data.event?.title} event thumbnail`}
-                className="w-full aspect-video object-cover"
-                crossOrigin="anonymous"
-              />
-            </div>
-
-            {/* Action buttons — desktop */}
-            <div className="hidden lg:flex items-center gap-3">
+          <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4 flex flex-col gap-2">
+            <div className="flex items-center gap-3">
               {data.event?.role === MemberRole.Organizer ? (
                 <div className="flex-1 rounded-2xl bg-primary/10 p-3 text-center text-sm font-medium text-primary">
                   You are hosting this event
@@ -288,7 +158,7 @@ function EventPage() {
                   }
                   loading={joinLoading}
                   disabled={!!isFull}
-                className={`btn btn-primary flex-1 ${isFull ? "btn-disabled" : ""}`}
+                  className={`btn btn-primary flex-1 ${isFull ? "btn-disabled" : ""}`}
                 >
                   {isFull ? "Event Full" : "Join Event"}
                 </Button>
@@ -297,6 +167,158 @@ function EventPage() {
               <button className="btn btn-square rounded-2xl" aria-label="Share event">
                 <HiArrowUpTray className="h-4 w-4" />
               </button>
+            </div>
+
+            {data.event?.role !== MemberRole.Organizer && (
+              <Link
+                to={`/chat?userId=${data.event?.organizer?.user.id}`}
+                className="btn btn-outline btn-primary w-full"
+              >
+                <HiOutlineChatBubbleLeftRight className="h-4 w-4" />
+                Message Organizer
+              </Link>
+            )}
+          </div>
+
+          {/* Tabs */}
+          <div className="bg-base-300 rounded-2xl p-1 mt-4">
+            <div className="flex flex-row gap-1 items-center" role="tablist">
+              <button
+                onClick={() => setActiveTab("posts")}
+                role="tab"
+                aria-selected={activeTab === "posts"}
+                className={`flex items-center justify-center gap-1.5 p-2 rounded-xl grow transition-colors duration-150 ${activeTab === "posts" ? "bg-base-100 shadow-sm" : "hover:bg-base-200"}`}
+              >
+                <HiOutlineNewspaper size={16} className="text-base-content/70" />
+                <p className="text-sm font-medium">Posts ({postCount})</p>
+              </button>
+
+              <button
+                onClick={() => setActiveTab("comments")}
+                role="tab"
+                aria-selected={activeTab === "comments"}
+                className={`flex items-center justify-center gap-1.5 p-2 rounded-xl grow transition-colors duration-150 ${activeTab === "comments" ? "bg-base-100 shadow-sm" : "hover:bg-base-200"}`}
+              >
+                <HiOutlineChatBubbleOvalLeft size={16} className="text-base-content/70" />
+                <p className="text-sm font-medium">Comments ({commentCount})</p>
+              </button>
+            </div>
+          </div>
+
+          {/* Tab content */}
+          <div className="mt-4 pb-6" role="tabpanel">
+            {activeTab === "posts" ? (
+              <div>
+                {canCreatePost && (
+                  <button
+                    onClick={() => setShowCreatePostModal(true)}
+                    className="group mb-4 flex w-full items-center gap-3 rounded-2xl border border-base-300 bg-base-200 px-4 py-3 text-left transition-colors hover:bg-base-300"
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-content transition-transform duration-200 group-hover:scale-105">
+                      <HiPlus className="h-5 w-5" />
+                    </span>
+                    <span className="text-sm text-base-content/60 transition-colors group-hover:text-base-content">
+                      Share an update...
+                    </span>
+                  </button>
+                )}
+
+                {data.event?.posts && data.event.posts.length > 0 ? (
+                  <div className="flex flex-col gap-4">
+                    {data.event.posts.toReversed().map((post) => (
+                      <PostCard key={post.id} post={post} hideEventLink />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center gap-1 rounded-2xl border border-base-300 bg-base-200 px-6 py-10 text-center">
+                    <p className="text-sm font-medium text-foreground">
+                      It's quiet here...
+                    </p>
+                    <p className="text-sm text-base-content/60">
+                      {canCreatePost
+                        ? "Share the first update with your group."
+                        : "Posts from the organizer will show up here."}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-base-300 bg-base-200 p-5">
+                <CommentSection
+                  entityType="event"
+                  entityId={parseInt(eventId!)}
+                  comments={
+                    (data.event?.comments ?? []).filter(Boolean) as any
+                  }
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right sidebar */}
+        <aside className="w-full lg:w-[340px] xl:w-[380px] lg:flex-shrink-0 order-first lg:order-last">
+          <div className="lg:sticky lg:top-6 lg:self-start flex flex-col gap-4">
+            {/* Thumbnail */}
+            <div className="rounded-2xl overflow-hidden bg-base-300">
+              <img
+                src="https://cdn.pixabay.com/photo/2020/02/01/20/43/youth-4811405_1280.jpg"
+                alt={data.event?.title ?? ""}
+                className="w-full aspect-video object-cover"
+                crossOrigin="anonymous"
+                loading="lazy"
+              />
+            </div>
+
+            {/* Action buttons — desktop */}
+            <div className="hidden lg:flex flex-col gap-2">
+              <div className="flex items-center gap-3">
+                {data.event?.role === MemberRole.Organizer ? (
+                  <div className="flex-1 rounded-2xl bg-primary/10 p-3 text-center text-sm font-medium text-primary">
+                    You are hosting this event
+                  </div>
+                ) : [
+                    MemberRole.Participant,
+                    MemberRole.Moderator,
+                    MemberRole.Spectator,
+                  ].includes(data.event?.role!) ? (
+                  <Button
+                    onClick={() =>
+                      leaveEvent({ variables: { eventId: parseInt(eventId!) } })
+                    }
+                    loading={leaveLoading}
+                    className="btn btn-error btn-outline flex-1"
+                  >
+                    Leave Event
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() =>
+                      !isFull &&
+                      joinEvent({ variables: { eventId: parseInt(eventId!) } })
+                    }
+                    loading={joinLoading}
+                    disabled={!!isFull}
+                    className={`btn btn-primary flex-1 ${isFull ? "btn-disabled" : ""}`}
+                  >
+                    {isFull ? "Event Full" : "Join Event"}
+                  </Button>
+                )}
+
+                <button className="btn btn-square rounded-2xl" aria-label="Share event">
+                  <HiArrowUpTray className="h-4 w-4" />
+                </button>
+              </div>
+
+              {data.event?.role !== MemberRole.Organizer && (
+                <Link
+                  to={`/chat?userId=${data.event?.organizer?.user.id}`}
+                  className="btn btn-outline btn-primary w-full"
+                >
+                  <HiOutlineChatBubbleLeftRight className="h-4 w-4" />
+                  Message Organizer
+                </Link>
+              )}
             </div>
 
             {/* Date & Time card */}
@@ -326,7 +348,7 @@ function EventPage() {
                   : ""}
                 )
               </p>
-              <div className="avatar-group -space-x-4">
+              <div className="avatar-group -space-x-4 mt-3">
                 {data.event?.members.slice(0, 5).map((member) => (
                   <UserAvatar
                     key={member.user.id}
@@ -335,9 +357,11 @@ function EventPage() {
                   />
                 ))}
                 {data.event?.members.length! > 5 && (
-                  <div className="avatar placeholder">
-                    <div className="bg-neutral text-neutral-content w-8 rounded-full">
-                      <span className="text-xs">+{data.event?.members.length! - 5}</span>
+                  <div className="avatar avatar-placeholder">
+                    <div className="bg-neutral text-neutral-content w-10 rounded-full">
+                      <span className="text-xs font-medium">
+                        +{data.event?.members.length! - 5}
+                      </span>
                     </div>
                   </div>
                 )}
