@@ -10,6 +10,7 @@ import DateOfBirth from "@/components/ui/DateOfBirth";
 import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
 import { enumToOptions } from "@/utils/enum-to-options";
 import { uploadProfilePicture } from "@/utils/upload";
+import { formatError } from "@/utils/format-error";
 import {
   AlterProfileBasicInfoDocument,
   ContextProfileFragment,
@@ -138,7 +139,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
   if (!isOpen) return null;
 
   const previewSrc = imagePreview ?? avatarSrc;
-  const errorMessage = uploadError ?? error?.message;
+  const errorMessage = uploadError ?? (error ? formatError(error) : null);
 
   return (
     <dialog open className="modal modal-open">

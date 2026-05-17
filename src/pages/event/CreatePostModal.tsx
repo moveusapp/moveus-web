@@ -6,6 +6,7 @@ import { CreatePostDocument } from "@/graphql/graphql-types";
 import { putFileToSignedUrl } from "@/utils/upload";
 import { useMutation } from "@apollo/client/react";
 import { HiX } from "react-icons/hi";
+import { formatError } from "@/utils/format-error";
 
 interface CreatePostModalProps {
   eventId: number;
@@ -173,7 +174,7 @@ function CreatePostModal({
               className="alert alert-error text-sm text-error bg-error/10 rounded-2xl"
             >
               <HiX />
-              <p>{error.message}</p>
+              <p>{formatError(error)}</p>
             </div>
           )}
 

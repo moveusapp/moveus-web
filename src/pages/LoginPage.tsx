@@ -8,6 +8,7 @@ import { useMutation } from "@apollo/client/react";
 import { HiArrowRight } from "react-icons/hi2";
 import Button from "@/components/ui/Button";
 import TextInput from "@/components/ui/TextInput";
+import { formatError } from "@/utils/format-error";
 
 function LoginPage() {
   useDocumentTitle("Login");
@@ -71,7 +72,7 @@ function LoginPage() {
         />
 
         {apiError && (
-          <p className="text-sm text-error mt-2">{apiError.message}</p>
+          <p className="text-sm text-error mt-2">{formatError(apiError)}</p>
         )}
 
         <div className="flex pt-2 items-center justify-between">

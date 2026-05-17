@@ -17,6 +17,7 @@ import { useMutation } from "@apollo/client/react";
 import { HiArrowRight } from "react-icons/hi2";
 import Button from "@/components/ui/Button";
 import TextInput from "@/components/ui/TextInput";
+import { formatError } from "@/utils/format-error";
 
 function RegisterPage() {
   useDocumentTitle("Register");
@@ -176,7 +177,7 @@ function RegisterPage() {
         />
 
         {apiError && (
-          <p className="text-sm text-error mt-2">{apiError.message}</p>
+          <p className="text-sm text-error mt-2">{formatError(apiError)}</p>
         )}
 
         <div className="pt-2 space-y-2">
