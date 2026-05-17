@@ -5,6 +5,7 @@ import { HiArrowLeft, HiArrowRight, HiCheck } from "react-icons/hi";
 import { QuestionKind, Question, Survey } from "@/surveys/types";
 import { uploadProfilePicture } from "@/utils/upload";
 import QuestionRenderer, { isValid } from "./QuestionRenderer";
+import FormError from "./FormError";
 
 interface Props {
   survey: Survey<any>;
@@ -124,11 +125,8 @@ function SurveyRunner({ survey }: Props) {
           onChange={setValue}
         />
         {uploadError && isLast && (
-          <div
-            role="alert"
-            className="alert alert-error rounded-2xl text-sm mt-4"
-          >
-            <span>{uploadError}</span>
+          <div className="mt-4">
+            <FormError message={uploadError} />
           </div>
         )}
       </div>

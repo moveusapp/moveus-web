@@ -5,8 +5,8 @@ import Button from "@/components/ui/Button";
 import { CreatePostDocument } from "@/graphql/graphql-types";
 import { putFileToSignedUrl } from "@/utils/upload";
 import { useMutation } from "@apollo/client/react";
-import { HiX } from "react-icons/hi";
 import { formatError } from "@/utils/format-error";
+import FormError from "@/components/ui/FormError";
 
 interface CreatePostModalProps {
   eventId: number;
@@ -21,12 +21,18 @@ function CreatePostModal({
   onClose,
   onSuccess,
 }: CreatePostModalProps) {
-  const [createPost, { loading, error }] = useMutation(CreatePostDocument);
+  const [createPost, { loading: creating, error }] =
+    useMutation(CreatePostDocument);
 
   const [content, setContent] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const imageRef = useRef<HTMLInputElement>(null);
+
+  const loading = creating || uploading;
+  const errorMessage = uploadError ?? (error ? formatError(error) : null);
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -62,6 +68,8 @@ function CreatePostModal({
       return;
     }
 
+    setUploadError(null);
+
     try {
       const result = await createPost({
         variables: {
@@ -71,10 +79,21 @@ function CreatePostModal({
       });
 
       if (selectedImage && result.data?.createPost?.post?.imageUploadUrl) {
-        await putFileToSignedUrl(
-          result.data.createPost.post.imageUploadUrl,
-          selectedImage,
-        );
+        setUploading(true);
+        try {
+          await putFileToSignedUrl(
+            result.data.createPost.post.imageUploadUrl,
+            selectedImage,
+          );
+        } catch (err) {
+          console.error("Error uploading image:", err);
+          setUploadError(
+            "Your post was created, but the image failed to upload.",
+          );
+          return;
+        } finally {
+          setUploading(false);
+        }
       }
 
       setContent("");
@@ -94,6 +113,7 @@ function CreatePostModal({
     setContent("");
     setSelectedImage(null);
     setImagePreview(null);
+    setUploadError(null);
     if (imageRef.current) {
       imageRef.current.value = "";
     }
@@ -168,15 +188,7 @@ function CreatePostModal({
             )}
           </div>
 
-          {error && (
-            <div
-              role="alert"
-              className="alert alert-error text-sm text-error bg-error/10 rounded-2xl"
-            >
-              <HiX />
-              <p>{formatError(error)}</p>
-            </div>
-          )}
+          {errorMessage && <FormError message={errorMessage} />}
 
           <div className="flex gap-3 justify-end pt-4">
             <button

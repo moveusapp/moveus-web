@@ -1,12 +1,12 @@
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { HiXMark, HiCamera } from "react-icons/hi2";
-import { HiX } from "react-icons/hi";
 import { useMutation, useApolloClient } from "@apollo/client/react";
 import TextInput from "@/components/ui/TextInput";
 import TextArea from "@/components/ui/TextArea";
 import Dropdown from "@/components/ui/Dropdown";
 import Button from "@/components/ui/Button";
 import DateOfBirth from "@/components/ui/DateOfBirth";
+import FormError from "@/components/ui/FormError";
 import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
 import { enumToOptions } from "@/utils/enum-to-options";
 import { uploadProfilePicture } from "@/utils/upload";
@@ -237,12 +237,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
             placeholder="Select gender"
           />
 
-          {errorMessage && (
-            <div role="alert" className="alert alert-error rounded-2xl text-sm">
-              <HiX className="w-4 h-4 shrink-0" />
-              <span>{errorMessage}</span>
-            </div>
-          )}
+          {errorMessage && <FormError message={errorMessage} />}
 
           <div className="flex gap-2 justify-end pt-2">
             <Button
