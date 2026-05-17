@@ -8,6 +8,7 @@ export enum QuestionKind {
   MultiChoice = "MultiChoice",
   DateOfBirth = "DateOfBirth",
   Slider = "Slider",
+  ProfilePicture = "ProfilePicture",
 }
 
 type Base = {
@@ -60,6 +61,10 @@ export type Question<TVars> =
       minLabel?: string;
       maxLabel?: string;
       validate?: (value: number) => boolean;
+    })
+  | (Base & {
+      kind: QuestionKind.ProfilePicture;
+      validate?: (value: File) => boolean;
     });
 
 export type Survey<TVars = Record<string, unknown>> = {

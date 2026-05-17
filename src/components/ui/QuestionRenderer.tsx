@@ -6,6 +6,7 @@ import SingleChoiceQuestion from "./survey-questions/SingleChoiceQuestion";
 import MultiChoiceQuestion from "./survey-questions/MultiChoiceQuestion";
 import DateOfBirthQuestion from "./survey-questions/DateOfBirthQuestion";
 import SliderQuestion from "./survey-questions/SliderQuestion";
+import ProfilePictureQuestion from "./survey-questions/ProfilePictureQuestion";
 
 interface Props {
   question: Question<any>;
@@ -68,6 +69,10 @@ function QuestionRenderer({ question, value, onChange }: Props) {
           maxLabel={question.maxLabel}
         />
       );
+    case QuestionKind.ProfilePicture:
+      return (
+        <ProfilePictureQuestion value={value ?? null} onChange={onChange} />
+      );
   }
 }
 
@@ -88,6 +93,8 @@ export function isAnswered(question: Question<any>, value: any): boolean {
       return value instanceof Date;
     case QuestionKind.Slider:
       return typeof value === "number" && Number.isFinite(value);
+    case QuestionKind.ProfilePicture:
+      return value instanceof File;
   }
 }
 

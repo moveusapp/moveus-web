@@ -17,6 +17,11 @@ export const basicInfoSurvey: Survey<AlterProfileBasicInfoMutationVariables> = {
       required: true,
     },
     {
+      kind: QuestionKind.ProfilePicture,
+      title: "Add a profile picture",
+      subtitle: "Optional - you can always add one later.",
+    },
+    {
       kind: QuestionKind.SingleChoice,
       title: "What is your gender?",
       field: "gender",

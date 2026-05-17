@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@apollo/client/react";
+import { useMutation, useApolloClient } from "@apollo/client/react";
 import { HiArrowLeft, HiArrowRight, HiCheck } from "react-icons/hi";
-import { QuestionKind, Survey } from "@/surveys/types";
+import { QuestionKind, Question, Survey } from "@/surveys/types";
+import { GetProfilePictureUploadUrlDocument } from "@/graphql/graphql-types";
 import QuestionRenderer, { isValid } from "./QuestionRenderer";
 
 interface Props {
@@ -16,6 +17,8 @@ function buildVariables(survey: Survey<any>, answers: Record<string, any>) {
       const v = answers[q.kind] ?? {};
       vars[q.field[0]] = v.firstName ?? null;
       vars[q.field[1]] = v.lastName ?? null;
+    } else if (q.kind === QuestionKind.ProfilePicture) {
+      continue;
     } else {
       let value = answers[q.field];
       if (value instanceof Date) {
@@ -27,17 +30,23 @@ function buildVariables(survey: Survey<any>, answers: Record<string, any>) {
   return vars;
 }
 
-function answerKey(q: { kind: QuestionKind; field: string | readonly string[] }) {
-  return q.kind === QuestionKind.FullName
-    ? QuestionKind.FullName
-    : (q.field as string);
+function answerKey(q: Question<any>) {
+  if (q.kind === QuestionKind.FullName) return QuestionKind.FullName;
+  if (q.kind === QuestionKind.ProfilePicture) return QuestionKind.ProfilePicture;
+  return q.field as string;
 }
 
 function SurveyRunner({ survey }: Props) {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
-  const [runMutation, { loading }] = useMutation(survey.mutation);
+  const apollo = useApolloClient();
+  const [runMutation, { loading: mutationLoading }] = useMutation(
+    survey.mutation,
+  );
+  const loading = mutationLoading || uploading;
 
   const total = survey.questions.length;
   const question = survey.questions[index];
@@ -55,7 +64,36 @@ function SurveyRunner({ survey }: Props) {
       setIndex((i) => i + 1);
       return;
     }
+    setUploadError(null);
     try {
+      const picture = answers[QuestionKind.ProfilePicture] as File | undefined;
+      if (picture instanceof File) {
+        setUploading(true);
+        try {
+          const { data: urlData } = await apollo.query({
+            query: GetProfilePictureUploadUrlDocument,
+            fetchPolicy: "network-only",
+          });
+          const uploadUrl = urlData?.profilePictureUrl;
+          if (!uploadUrl) {
+            setUploadError("Could not get upload URL for profile picture.");
+            return;
+          }
+          const buffer = await picture.arrayBuffer();
+          const blob = new Blob([new Uint8Array(buffer)], { type: picture.type });
+          const res = await fetch(uploadUrl, {
+            method: "PUT",
+            body: blob,
+            headers: { "cache-control": "must-revalidate" },
+          });
+          if (!res.ok) {
+            setUploadError("Profile picture upload failed.");
+            return;
+          }
+        } finally {
+          setUploading(false);
+        }
+      }
       await runMutation({ variables: buildVariables(survey, answers) });
       navigate(survey.onFinishedRoute);
     } catch (err) {
@@ -100,6 +138,14 @@ function SurveyRunner({ survey }: Props) {
           value={value}
           onChange={setValue}
         />
+        {uploadError && isLast && (
+          <div
+            role="alert"
+            className="alert alert-error rounded-2xl text-sm mt-4"
+          >
+            <span>{uploadError}</span>
+          </div>
+        )}
       </div>
 
       <div className="flex items-center justify-between mt-10">

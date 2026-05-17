@@ -26,7 +26,6 @@ function UserPage() {
     variables: { username: username! },
   });
   const { profile } = useProfile();
-  
 
   if (loading) {
     return <UserPageSkeleton />;
