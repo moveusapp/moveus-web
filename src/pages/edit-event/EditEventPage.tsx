@@ -1,14 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
+import { HiOutlineTrash } from "react-icons/hi2";
 import {
   AlterEventDocument,
+  DeleteEventDocument,
   MemberRole,
 } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import EventForm, { type EventFormValues } from "@/components/event/EventForm";
 import { useEvent } from "@/hooks/use-event";
 import EditEventPageSkeleton from "./EditEventPageSkeleton";
+import Button from "@/components/ui/Button";
+import { formatError } from "@/utils/format-error";
 
 const pageWrap = "w-full mx-auto max-w-3xl p-4";
 
@@ -31,6 +35,12 @@ function EditEventPage() {
 
   const [alterEvent, { loading: saving, error: apiError }] =
     useMutation(AlterEventDocument);
+
+  const [deleteEvent, { loading: deleting, error: deleteError }] = useMutation(
+    DeleteEventDocument,
+  );
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
     if (event && event.role !== MemberRole.Organizer) {
@@ -87,6 +97,23 @@ function EditEventPage() {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const result = await deleteEvent({
+        variables: { eventId: id },
+        update: (cache) => {
+          cache.evict({ id: cache.identify({ __typename: "EventType", id }) });
+          cache.gc();
+        },
+      });
+      if (result.data?.deleteEvent?.success) {
+        navigate("/home", { replace: true });
+      }
+    } catch (err) {
+      console.error("Error deleting event:", err);
+    }
+  };
+
   return (
     <div className={pageWrap}>
       <div className="mb-4">
@@ -103,6 +130,54 @@ function EditEventPage() {
         cancelHref={`/event/${id}`}
         onSubmit={handleSubmit}
       />
+
+      <div className="mt-10 pt-6 border-t border-base-300 flex justify-end">
+        <button
+          type="button"
+          onClick={() => setConfirmOpen(true)}
+          className="btn btn-outline btn-error rounded-2xl"
+        >
+          <HiOutlineTrash className="h-4 w-4" />
+          Delete event
+        </button>
+      </div>
+
+      <dialog className={`modal ${confirmOpen ? "modal-open" : ""}`}>
+        <div className="modal-box rounded-2xl">
+          <h3 className="font-bold text-lg">Delete this event?</h3>
+          <p className="py-3 text-sm text-base-content/70">
+            <span className="font-medium text-foreground">{event.title}</span>{" "}
+            will be removed for everyone. This can't be undone.
+          </p>
+
+          {deleteError && (
+            <p className="text-sm text-error mb-2">{formatError(deleteError)}</p>
+          )}
+
+          <div className="modal-action">
+            <Button
+              onClick={() => setConfirmOpen(false)}
+              disabled={deleting}
+              className="btn-ghost"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDelete}
+              loading={deleting}
+              className="btn-error"
+            >
+              Delete event
+            </Button>
+          </div>
+        </div>
+        <button
+          type="button"
+          className="modal-backdrop"
+          aria-label="Close"
+          onClick={() => !deleting && setConfirmOpen(false)}
+        />
+      </dialog>
     </div>
   );
 }
