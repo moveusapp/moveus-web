@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { HiArrowRight, HiCheck, HiPlus } from "react-icons/hi";
-import { HiOutlineExclamationTriangle } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import Button from "@/components/ui/Button";
 import { formatError } from "@/utils/format-error";
@@ -8,6 +7,7 @@ import TextInput from "@/components/ui/TextInput";
 import TextArea from "@/components/ui/TextArea";
 import Dropdown from "@/components/ui/Dropdown";
 import MultiChoice from "@/components/ui/MultiChoice";
+import FormError from "@/components/ui/FormError";
 import {
   ActivityKind,
   GenderNoPnts,
@@ -282,26 +282,17 @@ function EventForm({
       </div>
 
       {error && (
-        <div
+        <FormError
           ref={errorRef}
-          role="alert"
-          aria-live="polite"
-          className="flex items-start gap-3 rounded-2xl border border-error/30 bg-error/10 p-4 text-sm text-error"
-        >
-          <HiOutlineExclamationTriangle className="mt-0.5 h-5 w-5 shrink-0" />
-          {userError ? (
-            <p>{error}</p>
-          ) : (
-            <div className="space-y-0.5">
-              <p className="font-medium">
-                {isCreate
-                  ? "Couldn't create your event"
-                  : "Couldn't save your changes"}
-              </p>
-              <p className="text-error/80">{error}</p>
-            </div>
-          )}
-        </div>
+          message={error}
+          title={
+            userError
+              ? undefined
+              : isCreate
+                ? "Couldn't create your event"
+                : "Couldn't save your changes"
+          }
+        />
       )}
 
       <div className="flex flex-row gap-2">
