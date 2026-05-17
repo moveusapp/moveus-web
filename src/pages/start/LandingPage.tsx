@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client/react";
 import { HiArrowRight, HiChevronRight, HiLockClosed } from "react-icons/hi2";
 import { LuFlower2, LuFootprints, LuMountain } from "react-icons/lu";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
+import "./landing.css";
 import EventCard from "@/components/event/EventCard";
 import { GetAnonymousUserEventsDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
@@ -52,10 +53,10 @@ function SurveyCard() {
   const q = SURVEY_QUESTIONS[qIdx];
 
   return (
-    <div className="how-card w-full max-w-[26rem]">
-      <div className="how-card-eyebrow">Profile</div>
+    <div className="lp-how-card w-full max-w-[26rem]">
+      <div className="lp-how-card-eyebrow">Profile</div>
       <div
-        className="survey-body"
+        className="lp-survey-body"
         style={{
           opacity: fade ? 0 : 1,
           transform: fade ? "translateY(6px)" : "translateY(0)",
@@ -63,14 +64,14 @@ function SurveyCard() {
             "opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       >
-        <h4 className="survey-question">{q.question}</h4>
+        <h4 className="lp-survey-question">{q.question}</h4>
         <div className="flex flex-col gap-2">
           {q.options.map((opt, i) => (
             <div
               key={opt}
-              className={`survey-option ${i === q.selected ? "survey-option--on" : ""}`}
+              className={`lp-survey-option ${i === q.selected ? "lp-survey-option--on" : ""}`}
             >
-              <span className="survey-radio" aria-hidden="true" />
+              <span className="lp-survey-radio" aria-hidden="true" />
               <span>{opt}</span>
             </div>
           ))}
@@ -213,7 +214,7 @@ function LandingPage() {
       {/* HERO — verbs cycle behind the logo */}
       <section
         ref={heroRef}
-        className="hero-stage relative overflow-hidden bg-base-100"
+        className="lp-hero-stage relative overflow-hidden bg-base-100"
       >
         {/* ambient glows */}
         <div className="absolute inset-0 -z-10 pointer-events-none">
@@ -223,16 +224,16 @@ function LandingPage() {
 
         <div className="mx-auto max-w-[1400px] px-4 sm:px-10 lg:px-16 pt-8 pb-14 sm:pt-10 lg:pt-8 lg:pb-12 flex flex-col items-center">
           {/* Kicker */}
-          <div className="hero-kicker flex items-center justify-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-base-content/55 mb-8 sm:mb-10 lg:mb-6 px-2 text-center">
+          <div className="lp-hero-kicker flex items-center justify-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-base-content/55 mb-8 sm:mb-10 lg:mb-6 px-2 text-center">
             <span className="inline-block w-6 sm:w-8 h-px bg-base-content/30" />
             <span>Your workout wingman · Invite-only beta</span>
             <span className="inline-block w-6 sm:w-8 h-px bg-base-content/30" />
           </div>
 
           {/* Stage: verb field + logo overlay */}
-          <div className="hero-verb-stage relative w-full max-w-[1200px] min-h-[420px] sm:min-h-[480px] lg:min-h-[460px] flex items-center justify-center">
+          <div className="lp-hero-verb-stage relative w-full max-w-[1200px] min-h-[420px] sm:min-h-[480px] lg:min-h-[460px] flex items-center justify-center">
             {/* Verb field — masked so verbs fade to nothing before reaching the logo */}
-            <div className="hero-verb-mask absolute inset-0 pointer-events-none">
+            <div className="lp-hero-verb-mask absolute inset-0 pointer-events-none">
               <VerbSlot offset={0}  size="lg" color="primary" rotate={-2} positionClass="top-[1%] left-[0%]" />
               <VerbSlot offset={3}  size="md" color="accent"  rotate={2}  positionClass="top-[6%] right-[1%]" />
               <VerbSlot offset={6}  size="sm" color="primary" rotate={-1} positionClass="top-[46%] left-[0%]" />
@@ -244,14 +245,14 @@ function LandingPage() {
             {/* Logo overlay */}
             <div
               ref={logoTiltRef}
-              className="hero-logo-tilt relative z-10"
+              className="lp-hero-logo-tilt relative z-10"
               style={{
                 width: "min(60vmin, 28rem)",
                 aspectRatio: "277.28/198.49",
               }}
             >
               <div
-                className="hero-logo-shadow absolute inset-0 -z-10 pointer-events-none"
+                className="lp-hero-logo-shadow absolute inset-0 -z-10 pointer-events-none"
                 aria-hidden="true"
               />
               {/* Soft plate behind logo so verbs don't read through it */}
@@ -263,8 +264,8 @@ function LandingPage() {
                 }}
                 aria-hidden="true"
               />
-              <div className="hero-logo-breathe w-full h-full">
-                <div className="hero-logo-enter w-full h-full">
+              <div className="lp-hero-logo-breathe w-full h-full">
+                <div className="lp-hero-logo-enter w-full h-full">
                   <h1 className="w-full h-full m-0">
                     <img
                       src={moveusLogo}
@@ -279,11 +280,11 @@ function LandingPage() {
           </div>
 
           {/* Tagline + CTAs */}
-          <p className="hero-tagline mt-6 sm:mt-4 lg:mt-2 text-base sm:text-xl text-base-content/65 leading-relaxed max-w-2xl text-center px-2">
+          <p className="lp-hero-tagline mt-6 sm:mt-4 lg:mt-2 text-base sm:text-xl text-base-content/65 leading-relaxed max-w-2xl text-center px-2">
             Find people who actually show up. MoveUs uses your psychological profile to match you with workout partners and local sports events that click with how you move.
           </p>
 
-          <div className="hero-ctas mt-6 sm:mt-8 lg:mt-6 flex flex-col sm:flex-row gap-3 w-full sm:w-auto px-2 sm:px-0">
+          <div className="lp-hero-ctas mt-6 sm:mt-8 lg:mt-6 flex flex-col sm:flex-row gap-3 w-full sm:w-auto px-2 sm:px-0">
             <Link
               to="/register"
               className="btn btn-primary btn-lg gap-2 btn-arrow w-full sm:w-auto"
@@ -299,7 +300,7 @@ function LandingPage() {
       </section>
 
       {/* HOW IT WORKS — three steps, alternating text/widget rows */}
-      <section className="how-section relative py-16 lg:py-24 bg-base-200 border-t border-base-300 overflow-hidden">
+      <section className="lp-how-section relative py-16 lg:py-24 bg-base-200 border-t border-base-300 overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 relative">
           {/* Header */}
           <div className="text-center mb-14 lg:mb-20 max-w-2xl mx-auto">
@@ -314,7 +315,7 @@ function LandingPage() {
                   aria-hidden="true"
                 >
                   <path
-                    className="how-squiggle text-accent"
+                    className="lp-lp-how-squiggle text-accent"
                     d="M2 7 Q 40 1, 80 7 T 160 7 T 198 7"
                     stroke="currentColor"
                     strokeWidth="3.5"
@@ -333,12 +334,12 @@ function LandingPage() {
           <div className="space-y-14 lg:space-y-20">
             {/* Row 1 — Survey (text left, widget right) */}
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              <div className="lg:col-span-5 lg:col-start-1 how-step-text">
+              <div className="lg:col-span-5 lg:col-start-1 lp-how-step-text">
                 <div className="flex items-baseline gap-4">
-                  <span className="how-station-num">01</span>
-                  <h3 className="how-station-title">Build your profile.</h3>
+                  <span className="lp-how-step-num">01</span>
+                  <h3 className="lp-how-step-title">Build your profile.</h3>
                 </div>
-                <p className="how-station-body mt-3">
+                <p className="lp-how-step-body mt-3">
                   A short survey about how you actually train: when, who with, how hard, how often. The app uses it to recommend events and partners that fit.
                 </p>
               </div>
@@ -350,9 +351,9 @@ function LandingPage() {
             {/* Row 2 — Near you (widget left, text right on desktop; stacked on mobile) */}
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               <div className="order-2 lg:order-1 lg:col-span-6 lg:col-start-1 flex lg:justify-start">
-                <div className="how-card w-full max-w-[26rem]">
-                  <div className="how-card-eyebrow">Near you</div>
-                  <ul className="near-list">
+                <div className="lp-how-card w-full max-w-[26rem]">
+                  <div className="lp-how-card-eyebrow">Near you</div>
+                  <ul className="lp-near-list">
                     {[
                       { Icon: LuFootprints, title: "Outdoor run", meta: "Tomorrow morning" },
                       { Icon: LuFlower2, title: "Yoga session", meta: "Tonight" },
@@ -360,28 +361,28 @@ function LandingPage() {
                     ].map((e, i) => (
                       <li
                         key={e.title}
-                        className="near-row"
+                        className="lp-near-row"
                         style={{ ["--i" as string]: i }}
                       >
-                        <span className="near-icon" aria-hidden="true">
+                        <span className="lp-near-icon" aria-hidden="true">
                           <e.Icon className="w-5 h-5" />
                         </span>
                         <div className="flex-1 min-w-0">
-                          <div className="near-title">{e.title}</div>
-                          <div className="near-meta">{e.meta}</div>
+                          <div className="lp-near-title">{e.title}</div>
+                          <div className="lp-near-meta">{e.meta}</div>
                         </div>
-                        <HiChevronRight className="near-chevron w-4 h-4" aria-hidden="true" />
+                        <HiChevronRight className="lp-lp-near-chevron w-4 h-4" aria-hidden="true" />
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
-              <div className="order-1 lg:order-2 lg:col-span-5 lg:col-start-8 how-step-text">
+              <div className="order-1 lg:order-2 lg:col-span-5 lg:col-start-8 lp-how-step-text">
                 <div className="flex items-baseline gap-4">
-                  <span className="how-station-num">02</span>
-                  <h3 className="how-station-title">Find events and people nearby.</h3>
+                  <span className="lp-how-step-num">02</span>
+                  <h3 className="lp-how-step-title">Find events and people nearby.</h3>
                 </div>
-                <p className="how-station-body mt-3">
+                <p className="lp-how-step-body mt-3">
                   Sessions and people are matched to your profile. Browse what's nearby, see who's going, or host your own.
                 </p>
               </div>
@@ -389,26 +390,26 @@ function LandingPage() {
 
             {/* Row 3 — Plan it together (text left, widget right) */}
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              <div className="lg:col-span-5 lg:col-start-1 how-step-text">
+              <div className="lg:col-span-5 lg:col-start-1 lp-how-step-text">
                 <div className="flex items-baseline gap-4">
-                  <span className="how-station-num">03</span>
-                  <h3 className="how-station-title">Plan it together.</h3>
+                  <span className="lp-how-step-num">03</span>
+                  <h3 className="lp-how-step-title">Plan it together.</h3>
                 </div>
-                <p className="how-station-body mt-3">
+                <p className="lp-how-step-body mt-3">
                   Direct messages keep sessions on track. Things confirmed in chat tend to actually happen.
                 </p>
               </div>
               <div className="lg:col-span-6 lg:col-start-7 flex lg:justify-end">
-                <div className="how-card w-full max-w-[26rem]">
-                  <div className="how-card-eyebrow">Chat</div>
-                  <div className="chat-stream">
-                    <div className="chat-bubble chat-bubble--in">
+                <div className="lp-how-card w-full max-w-[26rem]">
+                  <div className="lp-how-card-eyebrow">Chat</div>
+                  <div className="lp-chat-stream">
+                    <div className="lp-chat-bubble lp-chat-bubble--in">
                       Still on for the run tomorrow?
                     </div>
-                    <div className="chat-bubble chat-bubble--out">
+                    <div className="lp-chat-bubble lp-chat-bubble--out">
                       Yep. 7am at the usual spot?
                     </div>
-                    <div className="chat-bubble chat-bubble--in">
+                    <div className="lp-chat-bubble lp-chat-bubble--in">
                       Perfect. Bringing a friend.
                     </div>
                   </div>
