@@ -6,8 +6,7 @@ import {
   SendChatMessageDocument,
   WsChatMessageType,
 } from "@/graphql/graphql-types";
-import { fileToBase64 } from "@/utils/image-data";
-import { putFileToSignedUrl } from "@/utils/upload";
+import { fileToBase64, putFileToSignedUrl } from "@/utils/upload";
 import { useMutation } from "@apollo/client/react";
 
 function SendMessage({ chatId, addMessage }: SendMessageInterface) {
