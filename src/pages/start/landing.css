@@ -60,12 +60,12 @@
 
 .lp-hero-tagline {
   animation: lp-hero-fadeup 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 900ms;
+  animation-delay: 400ms;
 }
 
 .lp-hero-ctas {
   animation: lp-hero-fadeup 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 1050ms;
+  animation-delay: 600ms;
 }
 
 /* Mask the verb field so any verb that creeps toward the logo fades to
