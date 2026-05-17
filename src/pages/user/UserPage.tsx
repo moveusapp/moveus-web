@@ -15,9 +15,11 @@ import { Link, useParams } from "react-router-dom";
 import EventCard from "../../components/event/EventCard";
 import { useState } from "react";
 import UserPageSkeleton from "./UserPageSkeleton";
+import EditProfileModal from "./EditProfileModal";
 
 function UserPage() {
   const [activeTab, setActiveTab] = useState("attending");
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const { username } = useParams();
   const { data, loading, error } = useQuery(GetUserByUsernameDocument, {
@@ -105,7 +107,7 @@ function UserPage() {
           </div>
 
           {isSelf ? (
-            <Button>Edit Profile</Button>
+            <Button onClick={() => setShowEditModal(true)}>Edit Profile</Button>
           ) : (
             <div className="flex flex-row gap-1">
               {profile && (
@@ -129,7 +131,7 @@ function UserPage() {
         <div className="flex flex-row gap-1 justify-between items-center">
           <button
             onClick={() => setActiveTab("attending")}
-            className={`hover:bg-base-200 transition-all p-2 rounded-2xl grow ${activeTab === "attending" ? "shadow-md bg-base-200" : ""}`}
+            className={`hover:bg-base-200 transition-all p-2 rounded-xl grow ${activeTab === "attending" ? "shadow-md bg-base-200" : ""}`}
           >
             <div className="flex flex-row gap-1 justify-center items-center">
               <HiOutlineCalendar size={16} className="text-base-content/70" />
@@ -141,7 +143,7 @@ function UserPage() {
 
           <button
             onClick={() => setActiveTab("organizing")}
-            className={`hover:bg-base-200 transition-all p-2 rounded-2xl grow ${activeTab === "organizing" ? "shadow-md bg-base-200" : ""}`}
+            className={`hover:bg-base-200 transition-all p-2 rounded-xl grow ${activeTab === "organizing" ? "shadow-md bg-base-200" : ""}`}
           >
             <div className="flex flex-row gap-1 justify-center grow items-center">
               <HiOutlineStar size={16} className="text-base-content/70" />
@@ -174,6 +176,14 @@ function UserPage() {
           </p>
         )}
       </div>
+
+      {isSelf && profile && (
+        <EditProfileModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          profile={profile}
+        />
+      )}
     </div>
   );
 }

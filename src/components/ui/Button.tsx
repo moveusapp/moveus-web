@@ -8,15 +8,18 @@ function Button({ children, loading, disabled, className, onClick, onMouseEnter,
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       disabled={disabled || loading}
-      className={`btn rounded-2xl ${className} ${loading ? "btn-disabled" : ""}`}
+      className={`btn rounded-2xl relative ${className} ${loading ? "btn-disabled" : ""}`}
     >
-      <div className="flex flex-row items-center gap-1">
-        {loading ? (
-          <div className="loading loading-dots loading-xs" />
-        ) : (
-          <>{children}</>
-        )}
-      </div>
+      <span
+        className={`flex flex-row items-center gap-1 ${loading ? "invisible" : ""}`}
+      >
+        {children}
+      </span>
+      {loading && (
+        <span className="absolute inset-0 flex items-center justify-center">
+          <span className="loading loading-dots loading-xs" />
+        </span>
+      )}
     </button>
   );
 }

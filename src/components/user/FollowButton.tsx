@@ -34,7 +34,7 @@ function FollowButton({ isFollowing: initialIsFollowing, userId }: FollowButtonP
         onClick={handleUnfollow}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className={`w-30 ${isHovered ? "btn-error" : ""}`}
+        className={`${isHovered ? "btn-error" : ""}`}
       >
         {isHovered ? "Unfollow" : "Following"}
       </Button>
