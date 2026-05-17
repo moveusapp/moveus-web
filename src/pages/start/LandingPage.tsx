@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
-import { HiArrowRight, HiLockClosed } from "react-icons/hi2";
+import { HiArrowRight, HiChevronRight, HiLockClosed } from "react-icons/hi2";
+import { LuFlower2, LuFootprints, LuMountain } from "react-icons/lu";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
 import EventCard from "@/components/event/EventCard";
 import { GetAnonymousUserEventsDocument } from "@/graphql/graphql-types";
@@ -13,6 +14,71 @@ const VERBS = [
   "JUMP.", "SWIM.", "SPRINT.", "PRESS.", "PADDLE.", "SPIN.",
   "REACH.", "FLOW.", "PUSH.", "BREATHE.",
 ];
+
+const SURVEY_QUESTIONS = [
+  {
+    question: "How do you like to train?",
+    options: ["Solo", "Small group", "Bigger crew", "Doesn't matter"],
+    selected: 1,
+  },
+  {
+    question: "When are you most alive?",
+    options: ["Before sunrise", "Mid-morning", "After work", "Late night"],
+    selected: 0,
+  },
+  {
+    question: "How structured are you?",
+    options: ["Strict schedule", "Loosely planned", "Spontaneous", "Whatever sticks"],
+    selected: 2,
+  },
+];
+
+function SurveyCard() {
+  const [qIdx, setQIdx] = useState(0);
+  const [fade, setFade] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => {
+      setFade(true);
+      window.setTimeout(() => {
+        setQIdx((i) => (i + 1) % SURVEY_QUESTIONS.length);
+        setFade(false);
+      }, 280);
+    }, 4500);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const q = SURVEY_QUESTIONS[qIdx];
+
+  return (
+    <div className="how-card w-full max-w-[26rem]">
+      <div className="how-card-eyebrow">Profile</div>
+      <div
+        className="survey-body"
+        style={{
+          opacity: fade ? 0 : 1,
+          transform: fade ? "translateY(6px)" : "translateY(0)",
+          transition:
+            "opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      >
+        <h4 className="survey-question">{q.question}</h4>
+        <div className="flex flex-col gap-2">
+          {q.options.map((opt, i) => (
+            <div
+              key={opt}
+              className={`survey-option ${i === q.selected ? "survey-option--on" : ""}`}
+            >
+              <span className="survey-radio" aria-hidden="true" />
+              <span>{opt}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 type VerbSize = "sm" | "md" | "lg";
 
@@ -232,45 +298,124 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* HOW IT WORKS — matched by psychology */}
-      <section className="py-20 lg:py-24 bg-base-200 border-t border-base-300">
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16">
-          <div className="text-center mb-12 lg:mb-16 max-w-2xl mx-auto">
+      {/* HOW IT WORKS — three steps, alternating text/widget rows */}
+      <section className="how-section relative py-16 lg:py-24 bg-base-200 border-t border-base-300 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 relative">
+          {/* Header */}
+          <div className="text-center mb-14 lg:mb-20 max-w-2xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-black mb-3 tracking-tight leading-[1.05]">
-              Matched by <span className="text-primary">psychology</span>, not by guessing.
+              How{" "}
+              <span className="relative inline-block text-primary">
+                MoveUs
+                <svg
+                  className="absolute left-0 right-0 -bottom-2 w-full h-3 pointer-events-none overflow-visible"
+                  viewBox="0 0 200 12"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    className="how-squiggle text-accent"
+                    d="M2 7 Q 40 1, 80 7 T 160 7 T 198 7"
+                    stroke="currentColor"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </svg>
+              </span>{" "}
+              works.
             </h2>
             <p className="text-lg text-base-content/60">
-              From "I should work out more" to "see you tomorrow at 7" in three steps.
+              A profile that gets you. A crew you'll actually meet. Plans that happen.
             </p>
           </div>
 
-          <ol className="grid sm:grid-cols-3 gap-10 lg:gap-12">
-            {[
-              {
-                step: "01",
-                title: "Build your profile",
-                body: "A short psychological assessment captures your motivation, energy, and social preferences.",
-              },
-              {
-                step: "02",
-                title: "Meet compatible movers",
-                body: "Get introduced to people nearby whose profile complements yours. Fewer flaky plans, more good sessions.",
-              },
-              {
-                step: "03",
-                title: "Build the habit",
-                body: "Join events around you, keep streaks going, turn workouts into something you look forward to.",
-              },
-            ].map((s) => (
-              <li key={s.step} className="flex flex-col items-center text-center">
-                <span className="text-5xl font-black text-primary/25 leading-none mb-3 tracking-tight tabular-nums">
-                  {s.step}
-                </span>
-                <h3 className="text-xl font-bold mb-2 tracking-tight">{s.title}</h3>
-                <p className="text-base text-base-content/60 leading-relaxed max-w-xs">{s.body}</p>
-              </li>
-            ))}
-          </ol>
+          <div className="space-y-14 lg:space-y-20">
+            {/* Row 1 — Survey (text left, widget right) */}
+            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              <div className="lg:col-span-5 lg:col-start-1 how-step-text">
+                <div className="flex items-baseline gap-4">
+                  <span className="how-station-num">01</span>
+                  <h3 className="how-station-title">Build your profile.</h3>
+                </div>
+                <p className="how-station-body mt-3">
+                  A short survey about how you actually train: when, who with, how hard, how often. The app uses it to recommend events and partners that fit.
+                </p>
+              </div>
+              <div className="lg:col-span-6 lg:col-start-7 flex lg:justify-end">
+                <SurveyCard />
+              </div>
+            </div>
+
+            {/* Row 2 — Near you (widget left, text right on desktop; stacked on mobile) */}
+            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              <div className="order-2 lg:order-1 lg:col-span-6 lg:col-start-1 flex lg:justify-start">
+                <div className="how-card w-full max-w-[26rem]">
+                  <div className="how-card-eyebrow">Near you</div>
+                  <ul className="near-list">
+                    {[
+                      { Icon: LuFootprints, title: "Outdoor run", meta: "Tomorrow morning" },
+                      { Icon: LuFlower2, title: "Yoga session", meta: "Tonight" },
+                      { Icon: LuMountain, title: "Climbing meetup", meta: "Saturday" },
+                    ].map((e, i) => (
+                      <li
+                        key={e.title}
+                        className="near-row"
+                        style={{ ["--i" as string]: i }}
+                      >
+                        <span className="near-icon" aria-hidden="true">
+                          <e.Icon className="w-5 h-5" />
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className="near-title">{e.title}</div>
+                          <div className="near-meta">{e.meta}</div>
+                        </div>
+                        <HiChevronRight className="near-chevron w-4 h-4" aria-hidden="true" />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="order-1 lg:order-2 lg:col-span-5 lg:col-start-8 how-step-text">
+                <div className="flex items-baseline gap-4">
+                  <span className="how-station-num">02</span>
+                  <h3 className="how-station-title">Find events and people nearby.</h3>
+                </div>
+                <p className="how-station-body mt-3">
+                  Sessions and people are matched to your profile. Browse what's nearby, see who's going, or host your own.
+                </p>
+              </div>
+            </div>
+
+            {/* Row 3 — Plan it together (text left, widget right) */}
+            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              <div className="lg:col-span-5 lg:col-start-1 how-step-text">
+                <div className="flex items-baseline gap-4">
+                  <span className="how-station-num">03</span>
+                  <h3 className="how-station-title">Plan it together.</h3>
+                </div>
+                <p className="how-station-body mt-3">
+                  Direct messages keep sessions on track. Things confirmed in chat tend to actually happen.
+                </p>
+              </div>
+              <div className="lg:col-span-6 lg:col-start-7 flex lg:justify-end">
+                <div className="how-card w-full max-w-[26rem]">
+                  <div className="how-card-eyebrow">Chat</div>
+                  <div className="chat-stream">
+                    <div className="chat-bubble chat-bubble--in">
+                      Still on for the run tomorrow?
+                    </div>
+                    <div className="chat-bubble chat-bubble--out">
+                      Yep. 7am at the usual spot?
+                    </div>
+                    <div className="chat-bubble chat-bubble--in">
+                      Perfect. Bringing a friend.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
