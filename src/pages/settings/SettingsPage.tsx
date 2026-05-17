@@ -123,7 +123,7 @@ function SettingsPage() {
                   onClick={() =>
                     (document.getElementById("logoutModal") as any).close()
                   }
-                  className={`btn w-22 ${logoutLoading ? "btn-disabled" : ""}`}
+                  className={`btn btn-ghost w-22 ${logoutLoading ? "btn-disabled" : ""}`}
                 >
                   Cancel
                 </Button>
