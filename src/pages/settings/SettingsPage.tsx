@@ -45,10 +45,11 @@ function SettingsPage() {
       .then(() => {
         setProfile(null);
         clearStoredProfile();
+        apolloClient.clearStore();
         navigate("/login");
       })
       .catch((_) => {});
-  }, [logout, navigate]);
+  }, [logout, navigate, setProfile]);
 
   useEffect(() => {
     setScope(profile!.privacySettings[0].scope as PrivacyScope);
