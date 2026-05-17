@@ -4,14 +4,14 @@ import UserAvatar from "@/components/user/UserAvatar";
 import {
   ActivityKind,
   DeleteEventDocument,
-  GetEventDocument,
   JoinEventDocument,
   LeaveEventDocument,
   MemberRole,
 } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { formatDate, formatTime } from "@/utils/time-utils";
-import { useMutation, useQuery } from "@apollo/client/react";
+import { useMutation } from "@apollo/client/react";
+import { useEvent } from "@/hooks/use-event";
 import {
   HiArrowUpTray,
   HiPlus,
@@ -21,6 +21,7 @@ import {
   HiOutlineChatBubbleOvalLeft,
   HiOutlineChatBubbleLeftRight,
   HiCheckBadge,
+  HiOutlinePencilSquare,
 } from "react-icons/hi2";
 import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
@@ -31,8 +32,9 @@ import CreatePostModal from "@/pages/event/CreatePostModal";
 
 function EventPage() {
   const { eventId } = useParams();
-  const { data, loading, refetch } = useQuery(GetEventDocument, {
-    variables: { eventId: parseInt(eventId!) },
+  const { id, event, refetch, fallback } = useEvent({
+    eventIdParam: eventId,
+    loadingFallback: <EventPageSkeleton />,
   });
 
   const [activeTab, setActiveTab] = useState<"posts" | "comments">("posts");
@@ -43,43 +45,29 @@ function EventPage() {
     useMutation(LeaveEventDocument);
   const [deleteEvent] = useMutation(DeleteEventDocument);
 
-  if (loading) {
-    return <EventPageSkeleton />;
-  }
-
-  if (!data) {
-    return (
-      <div className="mx-auto max-w-5xl px-4 w-full py-6">
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-base-300 bg-base-200 py-16">
-          <p className="text-lg font-medium text-foreground">Event not found</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            This event may have been removed.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  if (fallback) return fallback;
+  if (!event) return null;
 
   const isFull =
-    data.event?.maxParticipants &&
-    data.event?.members.length! >= data.event?.maxParticipants!;
+    event.maxParticipants &&
+    event.members.length! >= event.maxParticipants!;
   const organizerName = displayName(
-    data.event?.organizer?.user.username!,
-    data.event?.organizer?.user.firstName!,
-    data.event?.organizer?.user.lastName!,
+    event.organizer?.user.username!,
+    event.organizer?.user.firstName!,
+    event.organizer?.user.lastName!,
   );
 
   const canCreatePost = [MemberRole.Organizer, MemberRole.Moderator].includes(
-    data.event?.role!,
+    event.role!,
   );
 
   const handlePostCreated = () => {
     refetch();
   };
 
-  const activity = Object.keys(ActivityKind)[data.event?.activity.id!];
-  const postCount = data.event?.posts?.length ?? 0;
-  const commentCount = data.event?.comments?.length ?? 0;
+  const activity = Object.keys(ActivityKind)[event.activity.id!];
+  const postCount = event.posts?.length ?? 0;
+  const commentCount = event.comments?.length ?? 0;
 
   return (
     <div className="w-full mx-auto max-w-5xl px-4 py-6">
@@ -89,16 +77,16 @@ function EventPage() {
           {/* Activity + Title */}
           <p className="text-xs font-semibold uppercase tracking-wide text-primary">{activity}</p>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground text-balance mt-1">
-            {data.event?.title}
+            {event.title}
           </h1>
 
           {/* Organizer */}
           <Link
-            to={`/user/${data.event?.organizer?.user.username}`}
+            to={`/user/${event.organizer?.user.username}`}
             className="flex items-center gap-2 group text-sm text-muted-foreground hover:text-foreground transition-colors mt-2"
           >
             <UserAvatar
-              userId={data.event?.organizer?.user.id!}
+              userId={event.organizer?.user.id!}
               className="flex w-7 h-7"
             />
             <span className="flex items-center gap-1">
@@ -106,7 +94,7 @@ function EventPage() {
               <span className="text-foreground font-medium group-hover:text-primary">
                 {organizerName}
               </span>
-              {data.event?.organizer?.user.verified && (
+              {event.organizer?.user.verified && (
                 <HiCheckBadge size={16} className="text-primary shrink-0" />
               )}
             </span>
@@ -116,8 +104,8 @@ function EventPage() {
           <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-muted-foreground mt-3 lg:hidden">
             <span className="flex items-center gap-1.5">
               <HiOutlineCalendarDays className="h-4 w-4 text-primary" />
-              {formatDate(data.event?.startTime)} •{" "}
-              {formatTime(data.event?.startTime)}
+              {formatDate(event.startTime)} •{" "}
+              {formatTime(event.startTime)}
             </span>
             <span className="flex items-center gap-1.5">
               <HiOutlineMapPin className="h-4 w-4 text-primary" />
@@ -127,24 +115,28 @@ function EventPage() {
 
           {/* Description */}
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            {data.event?.description}
+            {event.description}
           </p>
 
           {/* Sticky action bar — mobile only */}
           <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4 flex flex-col gap-2">
             <div className="flex items-center gap-3">
-              {data.event?.role === MemberRole.Organizer ? (
-                <div className="flex-1 rounded-2xl bg-primary/10 p-3 text-center text-sm font-medium text-primary">
-                  You are hosting this event
-                </div>
+              {event.role === MemberRole.Organizer ? (
+                <Link
+                  to={`/event/${eventId}/edit`}
+                  className="btn btn-primary flex-1 rounded-2xl"
+                >
+                  <HiOutlinePencilSquare className="h-4 w-4" />
+                  Edit Event
+                </Link>
               ) : [
                   MemberRole.Participant,
                   MemberRole.Moderator,
                   MemberRole.Spectator,
-                ].includes(data.event?.role!) ? (
+                ].includes(event.role!) ? (
                 <Button
                   onClick={() =>
-                    leaveEvent({ variables: { eventId: parseInt(eventId!) } })
+                    leaveEvent({ variables: { eventId: id } })
                   }
                   loading={leaveLoading}
                   className="btn btn-error btn-outline flex-1"
@@ -155,7 +147,7 @@ function EventPage() {
                 <Button
                   onClick={() =>
                     !isFull &&
-                    joinEvent({ variables: { eventId: parseInt(eventId!) } })
+                    joinEvent({ variables: { eventId: id } })
                   }
                   loading={joinLoading}
                   disabled={!!isFull}
@@ -170,9 +162,9 @@ function EventPage() {
               </button>
             </div>
 
-            {data.event?.role !== MemberRole.Organizer && (
+            {event.role !== MemberRole.Organizer && (
               <Link
-                to={`/chat?userId=${data.event?.organizer?.user.id}`}
+                to={`/chat?userId=${event.organizer?.user.id}`}
                 className="btn btn-outline btn-primary w-full"
               >
                 <HiOutlineChatBubbleLeftRight className="h-4 w-4" />
@@ -224,9 +216,9 @@ function EventPage() {
                   </button>
                 )}
 
-                {data.event?.posts && data.event.posts.length > 0 ? (
+                {event.posts && event.posts.length > 0 ? (
                   <div className="flex flex-col gap-4">
-                    {data.event.posts.toReversed().map((post) => (
+                    {event.posts.toReversed().map((post) => (
                       <PostCard key={post.id} post={post} hideEventLink />
                     ))}
                   </div>
@@ -247,9 +239,9 @@ function EventPage() {
               <div className="rounded-2xl border border-base-300 bg-base-200 p-5">
                 <CommentSection
                   entityType="event"
-                  entityId={parseInt(eventId!)}
+                  entityId={id}
                   comments={
-                    (data.event?.comments ?? []).filter(Boolean) as any
+                    (event.comments ?? []).filter(Boolean) as any
                   }
                 />
               </div>
@@ -264,7 +256,7 @@ function EventPage() {
             <div className="rounded-2xl overflow-hidden bg-base-300">
               <img
                 src={defaultEventThumbnail}
-                alt={data.event?.title ?? ""}
+                alt={event.title ?? ""}
                 className="w-full aspect-video object-cover"
                 crossOrigin="anonymous"
                 loading="lazy"
@@ -274,18 +266,22 @@ function EventPage() {
             {/* Action buttons — desktop */}
             <div className="hidden lg:flex flex-col gap-2">
               <div className="flex items-center gap-3">
-                {data.event?.role === MemberRole.Organizer ? (
-                  <div className="flex-1 rounded-2xl bg-primary/10 p-3 text-center text-sm font-medium text-primary">
-                    You are hosting this event
-                  </div>
+                {event.role === MemberRole.Organizer ? (
+                  <Link
+                    to={`/event/${eventId}/edit`}
+                    className="btn btn-primary flex-1 rounded-2xl"
+                  >
+                    <HiOutlinePencilSquare className="h-4 w-4" />
+                    Edit Event
+                  </Link>
                 ) : [
                     MemberRole.Participant,
                     MemberRole.Moderator,
                     MemberRole.Spectator,
-                  ].includes(data.event?.role!) ? (
+                  ].includes(event.role!) ? (
                   <Button
                     onClick={() =>
-                      leaveEvent({ variables: { eventId: parseInt(eventId!) } })
+                      leaveEvent({ variables: { eventId: id } })
                     }
                     loading={leaveLoading}
                     className="btn btn-error btn-outline flex-1"
@@ -296,7 +292,7 @@ function EventPage() {
                   <Button
                     onClick={() =>
                       !isFull &&
-                      joinEvent({ variables: { eventId: parseInt(eventId!) } })
+                      joinEvent({ variables: { eventId: id } })
                     }
                     loading={joinLoading}
                     disabled={!!isFull}
@@ -311,9 +307,9 @@ function EventPage() {
                 </button>
               </div>
 
-              {data.event?.role !== MemberRole.Organizer && (
+              {event.role !== MemberRole.Organizer && (
                 <Link
-                  to={`/chat?userId=${data.event?.organizer?.user.id}`}
+                  to={`/chat?userId=${event.organizer?.user.id}`}
                   className="btn btn-outline btn-primary w-full"
                 >
                   <HiOutlineChatBubbleLeftRight className="h-4 w-4" />
@@ -326,7 +322,7 @@ function EventPage() {
             <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
               <HiOutlineCalendarDays className="h-5 w-5 text-primary shrink-0" />
               <p className="text-sm font-medium text-foreground">
-                {formatDate(data.event?.startTime)} • {formatTime(data.event?.startTime)}
+                {formatDate(event.startTime)} • {formatTime(event.startTime)}
               </p>
             </div>
 
@@ -343,25 +339,25 @@ function EventPage() {
             {/* Participants card */}
             <div className="hidden lg:block rounded-2xl border border-base-300 bg-base-200 p-4">
               <p className="text-sm font-medium text-foreground">
-                Participants ({data.event?.members.length}
-                {data.event?.maxParticipants
-                  ? `/${data.event.maxParticipants}`
+                Participants ({event.members.length}
+                {event.maxParticipants
+                  ? `/${event.maxParticipants}`
                   : ""}
                 )
               </p>
               <div className="avatar-group -space-x-4 mt-3">
-                {data.event?.members.slice(0, 5).map((member) => (
+                {event.members.slice(0, 5).map((member) => (
                   <UserAvatar
                     key={member.user.id}
                     userId={member.user.id!}
                     className="w-10 h-10"
                   />
                 ))}
-                {data.event?.members.length! > 5 && (
+                {event.members.length! > 5 && (
                   <div className="avatar avatar-placeholder">
                     <div className="bg-neutral text-neutral-content w-10 rounded-full">
                       <span className="text-xs font-medium">
-                        +{data.event?.members.length! - 5}
+                        +{event.members.length! - 5}
                       </span>
                     </div>
                   </div>
@@ -373,7 +369,7 @@ function EventPage() {
       </div>
 
       <CreatePostModal
-        eventId={parseInt(eventId!)}
+        eventId={id}
         isOpen={showCreatePostModal}
         onClose={() => setShowCreatePostModal(false)}
         onSuccess={handlePostCreated}

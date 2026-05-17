@@ -14,6 +14,7 @@ import NotificationsPage from "./pages/notifications/NotificationsPage";
 import SearchPage from "./pages/search/SearchPage";
 import { AuthRoutes } from "./components/routes/AuthRoutes";
 import CreateEventPage from "./pages/create-event/CreateEventPage";
+import EditEventPage from "./pages/edit-event/EditEventPage";
 import LandingPage from "./pages/start/LandingPage";
 import WelcomePage from "./pages/onboarding/WelcomePage";
 
@@ -33,6 +34,7 @@ function App() {
 
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/create-event" element={<CreateEventPage />} />
+              <Route path="/event/:eventId/edit" element={<EditEventPage />} />
             </Route>
             <Route path="/survey/:id" element={<SurveyPage />} />
             <Route path="/welcome" element={<WelcomePage />} />

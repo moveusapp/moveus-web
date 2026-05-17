@@ -4,8 +4,7 @@ mutation CreateEvent(
   $startTime: DateTime!
   $endTime: DateTime!
   $requirements: String
-  $locationLongitude: Float
-  $locationLatitude: Float
+  $locationName: String
   $activity: ActivityKind!
   $skillLevel: SkillLevel!
   $maxParticipants: Int
@@ -20,8 +19,7 @@ mutation CreateEvent(
     startTime: $startTime
     endTime: $endTime
     requirements: $requirements
-    locationLongitude: $locationLongitude
-    locationLatitude: $locationLatitude
+    locationName: $locationName
     activity: $activity
     skillLevel: $skillLevel
     maxParticipants: $maxParticipants
@@ -49,6 +47,28 @@ mutation JoinEvent($eventId: Int!) {
 
 mutation LeaveEvent($eventId: Int!) {
   leaveEvent(eventId: $eventId) {
+    event {
+      ...Event
+    }
+  }
+}
+
+mutation AlterEvent(
+  $eventId: Int!
+  $title: String
+  $description: String
+  $startTime: DateTime
+  $endTime: DateTime
+  $maxParticipants: Int
+) {
+  alterEvent(
+    eventId: $eventId
+    title: $title
+    description: $description
+    startTime: $startTime
+    endTime: $endTime
+    maxParticipants: $maxParticipants
+  ) {
     event {
       ...Event
     }
