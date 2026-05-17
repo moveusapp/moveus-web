@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
-import { HiArrowRight, HiChevronRight, HiLockClosed } from "react-icons/hi2";
-import { LuFlower2, LuFootprints, LuMountain } from "react-icons/lu";
+import { HiArrowRight, HiLockClosed } from "react-icons/hi2";
+import { LuCheck, LuFlame, LuHeart, LuMapPin } from "react-icons/lu";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
 import "./landing.css";
 import EventCard from "@/components/event/EventCard";
@@ -16,70 +16,119 @@ const VERBS = [
   "REACH.", "FLOW.", "PUSH.", "BREATHE.",
 ];
 
-const SURVEY_QUESTIONS = [
-  {
-    question: "How do you like to train?",
-    options: ["Solo", "Small group", "Bigger crew", "Doesn't matter"],
-    selected: 1,
-  },
-  {
-    question: "When are you most alive?",
-    options: ["Before sunrise", "Mid-morning", "After work", "Late night"],
-    selected: 0,
-  },
-  {
-    question: "How structured are you?",
-    options: ["Strict schedule", "Loosely planned", "Spontaneous", "Whatever sticks"],
-    selected: 2,
-  },
-];
-
-function SurveyCard() {
-  const [qIdx, setQIdx] = useState(0);
-  const [fade, setFade] = useState(false);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = window.setInterval(() => {
-      setFade(true);
-      window.setTimeout(() => {
-        setQIdx((i) => (i + 1) % SURVEY_QUESTIONS.length);
-        setFade(false);
-      }, 280);
-    }, 4500);
-    return () => window.clearInterval(id);
-  }, []);
-
-  const q = SURVEY_QUESTIONS[qIdx];
-
+function MatchedStickers() {
   return (
-    <div className="lp-how-card w-full max-w-[26rem]">
-      <div className="lp-how-card-eyebrow">Profile</div>
-      <div
-        className="lp-survey-body"
-        style={{
-          opacity: fade ? 0 : 1,
-          transform: fade ? "translateY(6px)" : "translateY(0)",
-          transition:
-            "opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-      >
-        <h4 className="lp-survey-question">{q.question}</h4>
-        <div className="flex flex-col gap-2">
-          {q.options.map((opt, i) => (
-            <div
-              key={opt}
-              className={`lp-survey-option ${i === q.selected ? "lp-survey-option--on" : ""}`}
-            >
-              <span className="lp-survey-radio" aria-hidden="true" />
-              <span>{opt}</span>
-            </div>
-          ))}
+    <div className="lp-stk-cluster">
+      <div className="lp-stk lp-stk--survey" style={{ top: "4%", left: "6%", transform: "rotate(-5deg)" }}>
+        <div className="lp-stk-eyebrow">Profile</div>
+        <div className="lp-stk-q">How do you train?</div>
+        <div className="lp-stk-row lp-stk-row--on">
+          <span className="lp-stk-radio" aria-hidden="true" />
+          Small group
         </div>
+        <div className="lp-stk-row">
+          <span className="lp-stk-radio" aria-hidden="true" />
+          Bigger crew
+        </div>
+      </div>
+      <div className="lp-stk lp-stk--chip lp-stk--chip-blue" style={{ top: "18%", right: "4%", transform: "rotate(7deg)" }}>
+        <LuMapPin className="w-3.5 h-3.5" />
+        Maksimir · 0.8km
+      </div>
+      <div className="lp-stk lp-stk--chip lp-stk--chip-orange" style={{ bottom: "6%", left: "30%", transform: "rotate(-3deg)" }}>
+        <span className="lp-stk-dot" aria-hidden="true" />
+        3 events match
       </div>
     </div>
   );
 }
+
+function MakeItRealStickers() {
+  return (
+    <div className="lp-stk-cluster">
+      <div className="lp-stk lp-stk--event" style={{ top: "2%", left: "8%", transform: "rotate(-4deg)" }}>
+        <div className="lp-stk-event-date">
+          <span className="lp-stk-event-day">FRI</span>
+          <span className="lp-stk-event-num">14</span>
+        </div>
+        <div>
+          <div className="lp-stk-event-title">Sunset trail run</div>
+          <div className="lp-stk-event-meta">19:30 · Rijeka, Mlaka Park</div>
+        </div>
+      </div>
+      <div className="lp-stk lp-stk--bubble lp-stk--bubble-in" style={{ top: "44%", right: "10%", transform: "rotate(4deg)" }}>
+        Still on for tomorrow?
+      </div>
+      <div className="lp-stk lp-stk--bubble lp-stk--bubble-out" style={{ top: "62%", right: "28%", transform: "rotate(-3deg)" }}>
+        Yep, bringing a friend
+      </div>
+      <div className="lp-stk lp-stk--chip lp-stk--chip-green" style={{ bottom: "4%", left: "12%", transform: "rotate(6deg)" }}>
+        <LuCheck className="w-3.5 h-3.5" />
+        Locked in
+      </div>
+    </div>
+  );
+}
+
+function StayInItStickers() {
+  return (
+    <div className="lp-stk-cluster">
+      <div className="lp-stk lp-stk--post" style={{ top: "4%", left: "10%", transform: "rotate(-4deg)" }}>
+        <div className="lp-stk-post-head">
+          <div className="lp-stk-post-avatar" aria-hidden="true">M</div>
+          <div className="leading-tight">
+            <div className="lp-stk-post-name">Maya</div>
+            <div className="lp-stk-post-time">after the run</div>
+          </div>
+        </div>
+        <p className="lp-stk-post-body">Sub-50. Legs are jello. Worth it.</p>
+        <div className="lp-stk-post-meta">
+          <span className="lp-stk-post-stat">
+            <LuHeart className="w-3.5 h-3.5" /> 24
+          </span>
+        </div>
+      </div>
+      <div className="lp-stk lp-stk--chip lp-stk--chip-flame" style={{ top: "22%", right: "6%", transform: "rotate(8deg)" }}>
+        <LuFlame className="w-4 h-4" />
+        <span><strong>12</strong> day streak</span>
+      </div>
+      <div className="lp-stk lp-stk--chip lp-stk--chip-cream" style={{ bottom: "6%", left: "42%", transform: "rotate(-5deg)" }}>
+        <span className="lp-stk-xp">+ 240 XP</span>
+        this week
+      </div>
+    </div>
+  );
+}
+
+const STRIPS = [
+  {
+    num: "01",
+    tag: "Profile + Algorithm",
+    headline: "Matched to people who actually show up.",
+    body: "A short survey shapes who you train with. The app reads it and picks events and crews nearby that click.",
+    cls: "lp-strip--1",
+    stickers: <MatchedStickers />,
+    reverse: false,
+  },
+  {
+    num: "02",
+    tag: "Host + Chat",
+    headline: "Host or join. Lock it in the chat.",
+    body: "Spin up an event in three taps, then confirm in the thread. Plans that survive past 'sometime.'",
+    cls: "lp-strip--2",
+    stickers: <MakeItRealStickers />,
+    reverse: true,
+  },
+  {
+    num: "03",
+    tag: "Posts + Streaks",
+    headline: "Show up enough and the app shows it back.",
+    body: "Share the after, build a streak, watch the weeks add up. Small rewards for sticking with it.",
+    cls: "lp-strip--3",
+    stickers: <StayInItStickers />,
+    reverse: false,
+  },
+] as const;
 
 type VerbSize = "sm" | "md" | "lg";
 
@@ -299,12 +348,11 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* HOW IT WORKS — three steps, alternating text/widget rows */}
-      <section className="lp-how-section relative py-16 lg:py-24 bg-base-200 border-t border-base-300 overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 relative">
-          {/* Header */}
-          <div className="text-center mb-14 lg:mb-20 max-w-2xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-black mb-3 tracking-tight leading-[1.05]">
+      {/* FEATURE SHOWCASE — storybook chapter strips */}
+      <section className="lp-story relative py-24 lg:py-32 bg-base-200 border-y border-base-300 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16">
+          <div className="text-center mb-16 lg:mb-20 max-w-2xl mx-auto">
+            <h2 className="lp-story-h2">
               How{" "}
               <span className="relative inline-block text-primary">
                 MoveUs
@@ -315,7 +363,7 @@ function LandingPage() {
                   aria-hidden="true"
                 >
                   <path
-                    className="lp-lp-how-squiggle text-accent"
+                    className="lp-how-squiggle text-accent"
                     d="M2 7 Q 40 1, 80 7 T 160 7 T 198 7"
                     stroke="currentColor"
                     strokeWidth="3.5"
@@ -323,99 +371,45 @@ function LandingPage() {
                     fill="none"
                   />
                 </svg>
-              </span>{" "}
-              works.
+              </span>
+              {" "}works.
             </h2>
-            <p className="text-lg text-base-content/60">
-              A profile that gets you. A crew you'll actually meet. Plans that happen.
+            <p className="lp-story-lede">
+              Find your people, lock the plan, keep showing up.
             </p>
           </div>
 
-          <div className="space-y-14 lg:space-y-20">
-            {/* Row 1 — Survey (text left, widget right) */}
-            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              <div className="lg:col-span-5 lg:col-start-1 lp-how-step-text">
-                <div className="flex items-baseline gap-4">
-                  <span className="lp-how-step-num">01</span>
-                  <h3 className="lp-how-step-title">Build your profile.</h3>
-                </div>
-                <p className="lp-how-step-body mt-3">
-                  A short survey about how you actually train: when, who with, how hard, how often. The app uses it to recommend events and partners that fit.
-                </p>
-              </div>
-              <div className="lg:col-span-6 lg:col-start-7 flex lg:justify-end">
-                <SurveyCard />
-              </div>
-            </div>
-
-            {/* Row 2 — Near you (widget left, text right on desktop; stacked on mobile) */}
-            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              <div className="order-2 lg:order-1 lg:col-span-6 lg:col-start-1 flex lg:justify-start">
-                <div className="lp-how-card w-full max-w-[26rem]">
-                  <div className="lp-how-card-eyebrow">Near you</div>
-                  <ul className="lp-near-list">
-                    {[
-                      { Icon: LuFootprints, title: "Outdoor run", meta: "Tomorrow morning" },
-                      { Icon: LuFlower2, title: "Yoga session", meta: "Tonight" },
-                      { Icon: LuMountain, title: "Climbing meetup", meta: "Saturday" },
-                    ].map((e, i) => (
-                      <li
-                        key={e.title}
-                        className="lp-near-row"
-                        style={{ ["--i" as string]: i }}
-                      >
-                        <span className="lp-near-icon" aria-hidden="true">
-                          <e.Icon className="w-5 h-5" />
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <div className="lp-near-title">{e.title}</div>
-                          <div className="lp-near-meta">{e.meta}</div>
-                        </div>
-                        <HiChevronRight className="lp-lp-near-chevron w-4 h-4" aria-hidden="true" />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              <div className="order-1 lg:order-2 lg:col-span-5 lg:col-start-8 lp-how-step-text">
-                <div className="flex items-baseline gap-4">
-                  <span className="lp-how-step-num">02</span>
-                  <h3 className="lp-how-step-title">Find events and people nearby.</h3>
-                </div>
-                <p className="lp-how-step-body mt-3">
-                  Sessions and people are matched to your profile. Browse what's nearby, see who's going, or host your own.
-                </p>
-              </div>
-            </div>
-
-            {/* Row 3 — Plan it together (text left, widget right) */}
-            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              <div className="lg:col-span-5 lg:col-start-1 lp-how-step-text">
-                <div className="flex items-baseline gap-4">
-                  <span className="lp-how-step-num">03</span>
-                  <h3 className="lp-how-step-title">Plan it together.</h3>
-                </div>
-                <p className="lp-how-step-body mt-3">
-                  Direct messages keep sessions on track. Things confirmed in chat tend to actually happen.
-                </p>
-              </div>
-              <div className="lg:col-span-6 lg:col-start-7 flex lg:justify-end">
-                <div className="lp-how-card w-full max-w-[26rem]">
-                  <div className="lp-how-card-eyebrow">Chat</div>
-                  <div className="lp-chat-stream">
-                    <div className="lp-chat-bubble lp-chat-bubble--in">
-                      Still on for the run tomorrow?
+          <div className="lp-story-list">
+            {STRIPS.map((s, i) => (
+              <div key={s.num} className="lp-story-frame">
+                <article className={`lp-strip ${s.cls} ${s.reverse ? "lp-strip--reverse" : ""}`}>
+                  <div className="lp-strip-text">
+                    <div className="lp-strip-eyebrow">
+                      <span className="lp-strip-num">{s.num}</span>
+                      <span className="lp-strip-slash" aria-hidden="true">/</span>
+                      <span>{s.tag}</span>
                     </div>
-                    <div className="lp-chat-bubble lp-chat-bubble--out">
-                      Yep. 7am at the usual spot?
-                    </div>
-                    <div className="lp-chat-bubble lp-chat-bubble--in">
-                      Perfect. Bringing a friend.
-                    </div>
+                    <h3 className="lp-strip-headline">{s.headline}</h3>
+                    <p className="lp-strip-body">{s.body}</p>
                   </div>
-                </div>
+                  <div className="lp-strip-visual">{s.stickers}</div>
+                </article>
+                {i < STRIPS.length - 1 && (
+                  <div className="lp-story-connector" aria-hidden="true">
+                    <svg viewBox="0 0 96 28" className="w-24 h-7">
+                      <path
+                        d="M3 14 Q 16 3, 30 14 T 58 14 T 86 14"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        fill="none"
+                      />
+                      <circle cx="90" cy="14" r="2.5" fill="currentColor" />
+                    </svg>
+                  </div>
+                )}
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
