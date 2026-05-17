@@ -1,5 +1,4 @@
 import defaultEventThumbnail from "@/assets/default-images/event-default-thumbnail.webp";
-import Tag from "@/components/misc/Tag";
 import UserAvatar from "@/components/user/UserAvatar";
 import { ActivityKind, EventCardFragment } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
@@ -34,7 +33,9 @@ function EventCard({ event }: EventCardProps) {
           loading="lazy"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <Tag className="bg-primary absolute top-2.5 left-2.5">{activity}</Tag>
+        <span className="badge badge-primary absolute top-2.5 left-2.5">
+          {activity}
+        </span>
       </div>
 
       {/* Title */}

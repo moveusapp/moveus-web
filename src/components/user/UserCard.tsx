@@ -2,7 +2,6 @@ import { UserCardFragment } from "@/graphql/graphql-types";
 import { Link } from "react-router-dom";
 import UserAvatar from "@/components/user/UserAvatar";
 import { displayName } from "@/utils/display-name";
-import Tag from "@/components/misc/Tag";
 import { HiCheckBadge } from "react-icons/hi2";
 
 function UserCard({ user, tags, isSelf }: UserCardProps) {
@@ -29,9 +28,12 @@ function UserCard({ user, tags, isSelf }: UserCardProps) {
             </div>
             <div className="flex flex-row gap-1">
               {tags?.map((tag) => (
-                <Tag key={`tag-${tag.text}`} className={tag.className}>
+                <span
+                  key={`tag-${tag.text}`}
+                  className={`badge ${tag.className ?? ""}`}
+                >
                   {tag.text}
-                </Tag>
+                </span>
               ))}
             </div>
           </div>
