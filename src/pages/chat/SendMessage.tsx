@@ -7,6 +7,7 @@ import {
   WsChatMessageType,
 } from "@/graphql/graphql-types";
 import { fileToBase64 } from "@/utils/image-data";
+import { putFileToSignedUrl } from "@/utils/upload";
 import { useMutation } from "@apollo/client/react";
 
 function SendMessage({ chatId, addMessage }: SendMessageInterface) {
@@ -73,17 +74,7 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
 
             if (id && url) {
               attachmentId = id;
-              const buffer = await imageToSend.arrayBuffer();
-              const blob = new Blob([new Uint8Array(buffer)], {
-                type: imageToSend.type,
-              });
-              await fetch(url, {
-                method: "PUT",
-                body: blob,
-                headers: {
-                  "cache-control": "must-revalidate",
-                },
-              });
+              await putFileToSignedUrl(url, imageToSend);
             }
           });
       }

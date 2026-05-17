@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useApolloClient } from "@apollo/client/react";
 import { HiArrowLeft, HiArrowRight, HiCheck } from "react-icons/hi";
 import { QuestionKind, Question, Survey } from "@/surveys/types";
-import { GetProfilePictureUploadUrlDocument } from "@/graphql/graphql-types";
+import { uploadProfilePicture } from "@/utils/upload";
 import QuestionRenderer, { isValid } from "./QuestionRenderer";
 
 interface Props {
@@ -70,26 +70,11 @@ function SurveyRunner({ survey }: Props) {
       if (picture instanceof File) {
         setUploading(true);
         try {
-          const { data: urlData } = await apollo.query({
-            query: GetProfilePictureUploadUrlDocument,
-            fetchPolicy: "network-only",
-          });
-          const uploadUrl = urlData?.profilePictureUrl;
-          if (!uploadUrl) {
-            setUploadError("Could not get upload URL for profile picture.");
-            return;
-          }
-          const buffer = await picture.arrayBuffer();
-          const blob = new Blob([new Uint8Array(buffer)], { type: picture.type });
-          const res = await fetch(uploadUrl, {
-            method: "PUT",
-            body: blob,
-            headers: { "cache-control": "must-revalidate" },
-          });
-          if (!res.ok) {
-            setUploadError("Profile picture upload failed.");
-            return;
-          }
+          await uploadProfilePicture(apollo, picture);
+        } catch (err) {
+          console.error(err);
+          setUploadError("Profile picture upload failed.");
+          return;
         } finally {
           setUploading(false);
         }

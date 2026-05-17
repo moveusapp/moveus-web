@@ -9,11 +9,11 @@ import Button from "@/components/ui/Button";
 import DateOfBirth from "@/components/ui/DateOfBirth";
 import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
 import { enumToOptions } from "@/utils/enum-to-options";
+import { uploadProfilePicture } from "@/utils/upload";
 import {
   AlterProfileBasicInfoDocument,
   ContextProfileFragment,
   Gender,
-  GetProfilePictureUploadUrlDocument,
   GetUserByUsernameDocument,
 } from "@/graphql/graphql-types";
 
@@ -104,24 +104,13 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
 
     try {
       if (selectedImage) {
-        const { data: urlData } = await apollo.query({
-          query: GetProfilePictureUploadUrlDocument,
-          fetchPolicy: "network-only",
-        });
-        const uploadUrl = urlData?.profilePictureUrl;
-        if (!uploadUrl) {
-          setUploadError("Could not get upload URL for profile picture.");
+        try {
+          await uploadProfilePicture(apollo, selectedImage);
+        } catch (err) {
+          console.error(err);
+          setUploadError("Could not upload profile picture.");
           return;
         }
-        const buffer = await selectedImage.arrayBuffer();
-        const blob = new Blob([new Uint8Array(buffer)], {
-          type: selectedImage.type,
-        });
-        await fetch(uploadUrl, {
-          method: "PUT",
-          body: blob,
-          headers: { "cache-control": "must-revalidate" },
-        });
       }
 
       await alterBasicInfo({

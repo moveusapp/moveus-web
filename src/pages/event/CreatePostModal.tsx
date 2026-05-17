@@ -3,6 +3,7 @@ import { HiXMark, HiPhoto } from "react-icons/hi2";
 import TextArea from "@/components/ui/TextArea";
 import Button from "@/components/ui/Button";
 import { CreatePostDocument } from "@/graphql/graphql-types";
+import { putFileToSignedUrl } from "@/utils/upload";
 import { useMutation } from "@apollo/client/react";
 import { HiX } from "react-icons/hi";
 
@@ -69,17 +70,10 @@ function CreatePostModal({
       });
 
       if (selectedImage && result.data?.createPost?.post?.imageUploadUrl) {
-        const buffer = await selectedImage.arrayBuffer();
-        const blob = new Blob([new Uint8Array(buffer)], {
-          type: selectedImage.type,
-        });
-        await fetch(result.data.createPost.post.imageUploadUrl, {
-          method: "PUT",
-          body: blob,
-          headers: {
-            "cache-control": "must-revalidate",
-          },
-        });
+        await putFileToSignedUrl(
+          result.data.createPost.post.imageUploadUrl,
+          selectedImage,
+        );
       }
 
       setContent("");
