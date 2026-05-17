@@ -1,15 +1,126 @@
+import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
 import { HiArrowRight, HiLockClosed } from "react-icons/hi2";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
-import duckHappy from "@/assets/duck/duck-happy.svg";
 import EventCard from "@/components/event/EventCard";
 import { GetAnonymousUserEventsDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { useProfile } from "@/context/profile-context";
 
+const VERBS = [
+  "RUN.", "LIFT.", "CLIMB.", "ROW.", "CYCLE.", "STRETCH.",
+  "JUMP.", "SWIM.", "SPRINT.", "PRESS.", "PADDLE.", "SPIN.",
+  "REACH.", "FLOW.", "PUSH.", "BREATHE.",
+];
+
+type VerbSize = "sm" | "md" | "lg";
+
+const VERB_SIZE_CLASS: Record<VerbSize, string> = {
+  sm: "text-[clamp(1.5rem,5vw,3.25rem)]",
+  md: "text-[clamp(2rem,7.5vw,5.5rem)]",
+  lg: "text-[clamp(3rem,10.5vw,8.5rem)]",
+};
+
+function VerbSlot({
+  offset,
+  size,
+  color,
+  rotate,
+  positionClass,
+}: {
+  offset: number;
+  size: VerbSize;
+  color: "primary" | "accent";
+  rotate: number;
+  positionClass: string;
+}) {
+  const [idx, setIdx] = useState(offset % VERBS.length);
+  const [fade, setFade] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const period = 2800 + (offset % 4) * 450;
+    const id = window.setInterval(() => {
+      setFade(true);
+      window.setTimeout(() => {
+        setIdx((i) => (i + 7) % VERBS.length);
+        setFade(false);
+      }, 360);
+    }, period);
+    return () => window.clearInterval(id);
+  }, [offset]);
+
+  const colorClass = color === "primary" ? "text-primary/45" : "text-accent/50";
+  const fadeTransform = fade ? "scale(0.94) translateY(14px)" : "scale(1) translateY(0)";
+
+  return (
+    <span
+      aria-hidden="true"
+      className={`absolute font-black tracking-[-0.04em] leading-none select-none whitespace-nowrap ${colorClass} ${VERB_SIZE_CLASS[size]} ${positionClass}`}
+      style={{
+        transform: `rotate(${rotate}deg) ${fadeTransform}`,
+        opacity: fade ? 0 : 1,
+        filter: fade ? "blur(5px)" : "blur(0px)",
+        transition:
+          "opacity 360ms cubic-bezier(0.16, 1, 0.3, 1), transform 360ms cubic-bezier(0.16, 1, 0.3, 1), filter 360ms cubic-bezier(0.16, 1, 0.3, 1)",
+        willChange: "transform, opacity, filter",
+      }}
+    >
+      {VERBS[idx]}
+    </span>
+  );
+}
+
 function LandingPage() {
   const { profile } = useProfile();
+  const heroRef = useRef<HTMLElement>(null);
+  const logoTiltRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    const tilt = logoTiltRef.current;
+    if (!hero || !tilt) return;
+    if (!window.matchMedia("(hover: hover)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = 0;
+    let tx = 0,
+      ty = 0,
+      cx = 0,
+      cy = 0;
+
+    const onMove = (e: PointerEvent) => {
+      const rect = hero.getBoundingClientRect();
+      tx = (e.clientX - rect.left) / rect.width - 0.5;
+      ty = (e.clientY - rect.top) / rect.height - 0.5;
+    };
+    const onLeave = () => {
+      tx = 0;
+      ty = 0;
+    };
+    const loop = () => {
+      cx += (tx - cx) * 0.08;
+      cy += (ty - cy) * 0.08;
+      tilt.style.setProperty("--tx", `${cx * 9}deg`);
+      tilt.style.setProperty("--ty", `${cy * -9}deg`);
+      tilt.style.setProperty("--shx", `${cx * -22}px`);
+      tilt.style.setProperty("--shy", `${cy * -22 + 30}px`);
+      // Normalized cursor offset for activity tiles to read with their own depth multiplier.
+      hero.style.setProperty("--cx", `${cx}`);
+      hero.style.setProperty("--cy", `${cy}`);
+      raf = requestAnimationFrame(loop);
+    };
+
+    hero.addEventListener("pointermove", onMove);
+    hero.addEventListener("pointerleave", onLeave);
+    raf = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(raf);
+      hero.removeEventListener("pointermove", onMove);
+      hero.removeEventListener("pointerleave", onLeave);
+    };
+  }, []);
 
   if (profile) {
     return <Navigate to="/home" replace />;
@@ -33,73 +144,90 @@ function LandingPage() {
         </div>
       </div>
 
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-20 -left-20 w-[28rem] h-[28rem] rounded-full bg-primary/10 blur-3xl" />
+      {/* HERO — verbs cycle behind the logo */}
+      <section
+        ref={heroRef}
+        className="hero-stage relative overflow-hidden bg-base-100"
+      >
+        {/* ambient glows */}
+        <div className="absolute inset-0 -z-10 pointer-events-none">
+          <div className="absolute -top-32 -left-32 w-[34rem] h-[34rem] rounded-full bg-primary/15 blur-3xl" />
+          <div className="absolute top-1/3 -right-40 w-[30rem] h-[30rem] rounded-full bg-accent/10 blur-3xl" />
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 pt-6 pb-14 lg:pt-10 lg:pb-20">
-          <div className="flex items-center mb-8 lg:mb-12">
-            <Link to="/" className="flex items-center">
-              <img src={moveusLogo} alt="MoveUs" className="h-10" />
-            </Link>
+        <div className="mx-auto max-w-[1400px] px-4 sm:px-10 lg:px-16 pt-8 pb-14 sm:pt-10 lg:pt-8 lg:pb-12 flex flex-col items-center">
+          {/* Kicker */}
+          <div className="hero-kicker flex items-center justify-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-base-content/55 mb-8 sm:mb-10 lg:mb-6 px-2 text-center">
+            <span className="inline-block w-6 sm:w-8 h-px bg-base-content/30" />
+            <span>Your workout wingman · Invite-only beta</span>
+            <span className="inline-block w-6 sm:w-8 h-px bg-base-content/30" />
           </div>
 
-          <div className="grid lg:grid-cols-[1.1fr_1fr] items-center gap-10 lg:gap-12">
-            <div className="text-center lg:text-left animate-welcome-rise">
-              <h1 className="text-[2.75rem] sm:text-5xl md:text-6xl font-black mb-5 leading-[1.02] tracking-tight">
-                Your Workout
-                <br />
-                <span className="relative inline-block">
-                  <span className="text-primary">Wingman</span>
-                  <svg
-                    className="absolute -bottom-2 left-0 w-full"
-                    viewBox="0 0 300 12"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M2 8 Q 75 2, 150 6 T 298 5"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                      className="text-accent"
-                      fill="none"
+          {/* Stage: verb field + logo overlay */}
+          <div className="hero-verb-stage relative w-full max-w-[1200px] min-h-[420px] sm:min-h-[480px] lg:min-h-[460px] flex items-center justify-center">
+            {/* Verb field — masked so verbs fade to nothing before reaching the logo */}
+            <div className="hero-verb-mask absolute inset-0 pointer-events-none">
+              <VerbSlot offset={0}  size="lg" color="primary" rotate={-2} positionClass="top-[1%] left-[0%]" />
+              <VerbSlot offset={3}  size="md" color="accent"  rotate={2}  positionClass="top-[6%] right-[1%]" />
+              <VerbSlot offset={6}  size="sm" color="primary" rotate={-1} positionClass="top-[46%] left-[0%]" />
+              <VerbSlot offset={9}  size="sm" color="primary" rotate={1}  positionClass="top-[50%] right-[0%]" />
+              <VerbSlot offset={12} size="md" color="accent"  rotate={-2} positionClass="bottom-[8%] left-[1%]" />
+              <VerbSlot offset={1}  size="lg" color="primary" rotate={2}  positionClass="bottom-[1%] right-[1%]" />
+            </div>
+
+            {/* Logo overlay */}
+            <div
+              ref={logoTiltRef}
+              className="hero-logo-tilt relative z-10"
+              style={{
+                width: "min(60vmin, 28rem)",
+                aspectRatio: "277.28/198.49",
+              }}
+            >
+              <div
+                className="hero-logo-shadow absolute inset-0 -z-10 pointer-events-none"
+                aria-hidden="true"
+              />
+              {/* Soft plate behind logo so verbs don't read through it */}
+              <div
+                className="absolute -inset-x-12 -inset-y-8 -z-10 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(65% 60% at 50% 50%, oklch(0.99 0.005 232) 0%, oklch(0.99 0.005 232 / 0.96) 45%, oklch(0.99 0.005 232 / 0) 78%)",
+                }}
+                aria-hidden="true"
+              />
+              <div className="hero-logo-breathe w-full h-full">
+                <div className="hero-logo-enter w-full h-full">
+                  <h1 className="w-full h-full m-0">
+                    <img
+                      src={moveusLogo}
+                      alt="MoveUs"
+                      className="w-full h-full select-none"
+                      draggable={false}
                     />
-                  </svg>
-                </span>
-              </h1>
-
-              <p className="text-base sm:text-lg text-base-content/65 leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
-                Find people who actually show up. MoveUs uses your psychological profile to match you with workout partners and local sports events that click with how you move.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <Link
-                  to="/register"
-                  className="btn btn-primary btn-lg gap-2 btn-arrow"
-                >
-                  Request invite
-                  <HiArrowRight className="w-5 h-5" />
-                </Link>
-                <Link to="/login" className="btn btn-ghost btn-lg">
-                  I have an account
-                </Link>
+                  </h1>
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* mascot column */}
-            <div className="relative flex justify-center lg:justify-end">
-              <div className="relative w-60 sm:w-72 lg:w-[380px] aspect-[351/526] animate-welcome-float">
-                <div className="absolute inset-x-4 bottom-2 h-6 bg-base-content/10 blur-2xl rounded-full" />
-                <img
-                  src={duckHappy}
-                  alt="MoveUs duck mascot, ready to move"
-                  className="relative w-full h-full drop-shadow-2xl"
-                />
-              </div>
-            </div>
+          {/* Tagline + CTAs */}
+          <p className="hero-tagline mt-6 sm:mt-4 lg:mt-2 text-base sm:text-xl text-base-content/65 leading-relaxed max-w-2xl text-center px-2">
+            Find people who actually show up. MoveUs uses your psychological profile to match you with workout partners and local sports events that click with how you move.
+          </p>
+
+          <div className="hero-ctas mt-6 sm:mt-8 lg:mt-6 flex flex-col sm:flex-row gap-3 w-full sm:w-auto px-2 sm:px-0">
+            <Link
+              to="/register"
+              className="btn btn-primary btn-lg gap-2 btn-arrow w-full sm:w-auto"
+            >
+              Request invite
+              <HiArrowRight className="w-5 h-5" />
+            </Link>
+            <Link to="/login" className="btn btn-ghost btn-lg w-full sm:w-auto">
+              I have an account
+            </Link>
           </div>
         </div>
       </section>
