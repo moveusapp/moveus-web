@@ -75,10 +75,10 @@ function StayInItStickers() {
     <div className="lp-stk-cluster">
       <div className="lp-stk lp-stk--post" style={{ top: "4%", left: "10%", transform: "rotate(-4deg)" }}>
         <div className="lp-stk-post-head">
-          <div className="lp-stk-post-avatar" aria-hidden="true">M</div>
+          <div className="lp-stk-post-avatar" aria-hidden="true">T</div>
           <div className="leading-tight">
-            <div className="lp-stk-post-name">Maya</div>
-            <div className="lp-stk-post-time">after the run</div>
+            <div className="lp-stk-post-name">Tatjana</div>
+            <div className="lp-stk-post-time">1 week ago</div>
           </div>
         </div>
         <p className="lp-stk-post-body">Sub-50. Legs are jello. Worth it.</p>
