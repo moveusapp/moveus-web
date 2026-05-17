@@ -16,6 +16,7 @@ import EventCard from "../../components/event/EventCard";
 import { useState } from "react";
 import UserPageSkeleton from "./UserPageSkeleton";
 import EditProfileModal from "./EditProfileModal";
+import useDocumentTitle from "@/hooks/use-document-title";
 
 function UserPage() {
   const [activeTab, setActiveTab] = useState("attending");
@@ -26,6 +27,8 @@ function UserPage() {
     variables: { username: username! },
   });
   const { profile } = useProfile();
+
+  useDocumentTitle(username);
 
   if (loading) {
     return <UserPageSkeleton />;
