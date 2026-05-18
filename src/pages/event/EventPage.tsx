@@ -22,6 +22,7 @@ import {
   HiOutlineChatBubbleLeftRight,
   HiCheckBadge,
   HiOutlinePencilSquare,
+  HiOutlineArrowTopRightOnSquare,
 } from "react-icons/hi2";
 import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
@@ -69,6 +70,14 @@ function EventPage() {
   const postCount = event.posts?.length ?? 0;
   const commentCount = event.comments?.length ?? 0;
 
+  const locationName = event.location?.name;
+  const mapsUrl =
+    event.location?.latitude != null && event.location?.longitude != null
+      ? `https://www.google.com/maps/search/?api=1&query=${event.location.latitude},${event.location.longitude}`
+      : locationName
+        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationName)}`
+        : null;
+
   return (
     <div className="w-full mx-auto max-w-5xl px-4 py-6">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -107,10 +116,24 @@ function EventPage() {
               {formatDate(event.startTime)} •{" "}
               {formatTime(event.startTime)}
             </span>
-            <span className="flex items-center gap-1.5">
-              <HiOutlineMapPin className="h-4 w-4 text-primary" />
-              Rijeka, Zabica 41000
-            </span>
+            {mapsUrl ? (
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 hover:text-primary transition-colors"
+              >
+                <HiOutlineMapPin className="h-4 w-4 text-primary" />
+                <span className="underline-offset-2 hover:underline">
+                  {locationName || "Location TBD"}
+                </span>
+              </a>
+            ) : (
+              <span className="flex items-center gap-1.5">
+                <HiOutlineMapPin className="h-4 w-4 text-primary" />
+                Location TBD
+              </span>
+            )}
           </div>
 
           {/* Description */}
@@ -329,11 +352,20 @@ function EventPage() {
             {/* Location card */}
             <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
               <HiOutlineMapPin className="h-5 w-5 text-primary shrink-0" />
-              <div>
-                <p className="text-sm font-medium text-foreground">
-                  Rijeka, Zabica 41000
-                </p>
-              </div>
+              <p className="text-sm font-medium text-foreground flex-1 min-w-0 truncate">
+                {locationName || "Location TBD"}
+              </p>
+              {mapsUrl && (
+                <a
+                  href={mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open in Google Maps"
+                  className="shrink-0 rounded-full p-1.5 -m-1.5 text-base-content/40 hover:text-primary hover:bg-base-300 transition-colors"
+                >
+                  <HiOutlineArrowTopRightOnSquare className="h-4 w-4" />
+                </a>
+              )}
             </div>
 
             {/* Participants card */}

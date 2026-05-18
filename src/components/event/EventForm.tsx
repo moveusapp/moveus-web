@@ -6,6 +6,9 @@ import { formatError } from "@/utils/format-error";
 import TextInput from "@/components/ui/TextInput";
 import TextArea from "@/components/ui/TextArea";
 import Dropdown from "@/components/ui/Dropdown";
+import LocationAutocomplete, {
+  type LocationData,
+} from "@/components/ui/LocationAutocomplete";
 import MultiChoice from "@/components/ui/MultiChoice";
 import FormError from "@/components/ui/FormError";
 import {
@@ -24,7 +27,7 @@ export type EventFormValues = {
   endTime: string;
   activity: ActivityKind | null;
   skillLevel: SkillLevel | null;
-  location: string;
+  location: LocationData | null;
   maxParticipants: string;
   minAge: string;
   maxAge: string;
@@ -39,7 +42,7 @@ function validate(values: EventFormValues, isCreate: boolean): string | null {
   if (isCreate) {
     if (!values.activity) return "Pick an activity.";
     if (!values.skillLevel) return "Pick a skill level.";
-    if (!values.location.trim()) return "Add a location.";
+    if (!values.location?.name.trim()) return "Add a location.";
   }
   return null;
 }
@@ -53,7 +56,7 @@ const EMPTY: EventFormValues = {
   endTime: "",
   activity: null,
   skillLevel: null,
-  location: "",
+  location: null,
   maxParticipants: "",
   minAge: "",
   maxAge: "",
@@ -195,11 +198,11 @@ function EventForm({
               required
             />
 
-            <TextInput
+            <LocationAutocomplete
               label="Location"
-              placeholder="e.g., Rijeka, Zabica 41000"
+              placeholder="e.g., Žabica, Rijeka, Croatia"
               value={values.location}
-              onChange={(e) => set("location", e.target.value)}
+              onChange={(v) => set("location", v)}
               required
             />
           </>

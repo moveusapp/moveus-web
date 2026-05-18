@@ -27,7 +27,14 @@ function CreateEventPage() {
           endTime: endDateTime,
           activity: values.activity!,
           skillLevel: values.skillLevel!,
-          locationName: values.location,
+          locationName: values.location?.name ?? "",
+          locationAddressLine1: values.location?.addressLine1 ?? null,
+          locationAddressLine2: values.location?.addressLine2 ?? null,
+          locationCountryCode: values.location?.countryCode ?? null,
+          locationRegion: values.location?.region ?? null,
+          locationZipCode: values.location?.zipCode ?? null,
+          locationLatitude: values.location?.latitude ?? null,
+          locationLongitude: values.location?.longitude ?? null,
           maxParticipants: values.maxParticipants
             ? parseInt(values.maxParticipants)
             : null,

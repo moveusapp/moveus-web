@@ -18,6 +18,7 @@ fragment Event on EventType {
   startTime
   endTime
   location {
+    name
     longitude
     latitude
   }

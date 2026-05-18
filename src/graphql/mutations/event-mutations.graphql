@@ -5,6 +5,13 @@ mutation CreateEvent(
   $endTime: DateTime!
   $requirements: String
   $locationName: String
+  $locationAddressLine1: String
+  $locationAddressLine2: String
+  $locationCountryCode: CountryCode
+  $locationRegion: String
+  $locationZipCode: Int
+  $locationLatitude: Float
+  $locationLongitude: Float
   $activity: ActivityKind!
   $skillLevel: SkillLevel!
   $maxParticipants: Int
@@ -20,6 +27,13 @@ mutation CreateEvent(
     endTime: $endTime
     requirements: $requirements
     locationName: $locationName
+    locationAddressLine1: $locationAddressLine1
+    locationAddressLine2: $locationAddressLine2
+    locationCountryCode: $locationCountryCode
+    locationRegion: $locationRegion
+    locationZipCode: $locationZipCode
+    locationLatitude: $locationLatitude
+    locationLongitude: $locationLongitude
     activity: $activity
     skillLevel: $skillLevel
     maxParticipants: $maxParticipants
