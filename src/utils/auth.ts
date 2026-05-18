@@ -1,6 +1,7 @@
 import { ContextProfileFragment } from "@/graphql/graphql-types";
 
 const PROFILE_KEY = "profile";
+const SESSION_EXPIRED = "moveus:session-expired";
 
 export const getStoredProfile = (): ContextProfileFragment | null => {
   const raw = localStorage.getItem(PROFILE_KEY);
@@ -18,4 +19,13 @@ export const setStoredProfile = (profile: ContextProfileFragment) => {
 
 export const clearStoredProfile = () => {
   localStorage.removeItem(PROFILE_KEY);
+};
+
+export const emitSessionExpired = () => {
+  window.dispatchEvent(new Event(SESSION_EXPIRED));
+};
+
+export const onSessionExpired = (handler: () => void) => {
+  window.addEventListener(SESSION_EXPIRED, handler);
+  return () => window.removeEventListener(SESSION_EXPIRED, handler);
 };

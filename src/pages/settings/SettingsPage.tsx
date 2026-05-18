@@ -11,7 +11,7 @@ import { apolloClient } from "@/appolo/client";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
 import Button from "@/components/ui/Button";
-import { clearStoredProfile } from "@/utils/auth-storage";
+import { clearStoredProfile } from "@/utils/auth";
 
 const privacyScopeOptions = [
   {

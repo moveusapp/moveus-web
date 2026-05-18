@@ -6,7 +6,7 @@ import {
   SignUpDocument,
 } from "@/graphql/graphql-types";
 import { useProfile } from "@/context/profile-context";
-import { setStoredProfile } from "@/utils/auth-storage";
+import { setStoredProfile } from "@/utils/auth";
 import {
   usernameValidator,
   usernameTaken,

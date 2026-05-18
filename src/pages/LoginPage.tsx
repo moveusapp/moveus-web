@@ -3,7 +3,7 @@ import useDocumentTitle from "../hooks/use-document-title";
 import { FormEvent, useCallback, useState } from "react";
 import { ContextProfileFragment, LoginDocument } from "@/graphql/graphql-types";
 import { useProfile } from "@/context/profile-context";
-import { setStoredProfile } from "@/utils/auth-storage";
+import { setStoredProfile } from "@/utils/auth";
 import { useMutation } from "@apollo/client/react";
 import { HiArrowRight } from "react-icons/hi2";
 import Button from "@/components/ui/Button";

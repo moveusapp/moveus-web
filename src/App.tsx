@@ -13,6 +13,7 @@ import ChatPage from "./pages/chat/ChatPage";
 import NotificationsPage from "./pages/notifications/NotificationsPage";
 import SearchPage from "./pages/search/SearchPage";
 import { AuthRoutes } from "./components/routes/AuthRoutes";
+import { SessionExpiredRedirect } from "./components/routes/SessionExpiredRedirect";
 import CreateEventPage from "./pages/create-event/CreateEventPage";
 import EditEventPage from "./pages/edit-event/EditEventPage";
 import LandingPage from "./pages/start/LandingPage";
@@ -22,6 +23,7 @@ function App() {
   return (
     <main>
       <Router>
+        <SessionExpiredRedirect />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route element={<ProtectedRoutes />}>
