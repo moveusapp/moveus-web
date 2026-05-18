@@ -114,7 +114,7 @@ const STRIPS = [
     num: "02",
     tag: "Host + Chat",
     headline: "Host or join. Lock it in the chat.",
-    body: "Spin up an event in three taps, then confirm in the thread. Plans that survive past 'sometime.'",
+    body: "Spin up your own events quickly, then confirm in the thread. Plans that survive past 'sometime.'",
     cls: "lp-strip--2",
     stickers: <MakeItRealStickers />,
     reverse: true,
