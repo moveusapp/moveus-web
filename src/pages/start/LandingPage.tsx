@@ -572,15 +572,15 @@ function LandingPage() {
 
       {/* FOOTER */}
       <footer className="bg-base-200 border-t border-base-300">
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-8 flex flex-col sm:flex-row items-center justify-between gap-5 text-sm text-base-content/60">
-          <img src={moveusLogo} alt="MoveUs" className="h-7" />
-          <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-8 flex flex-col items-center gap-5 text-sm text-base-content/60 sm:grid sm:grid-cols-3 sm:gap-4">
+          <img src={moveusLogo} alt="MoveUs" className="h-7 sm:justify-self-start" />
+          <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-self-center">
             <Link to="/about" className="hover:text-primary transition-colors">About</Link>
             <Link to="/contact" className="hover:text-primary transition-colors">Contact</Link>
             <Link to="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
             <Link to="/terms" className="hover:text-primary transition-colors">Terms</Link>
           </nav>
-          <p>MoveUs, j.d.o.o. 2026</p>
+          <p className="sm:justify-self-end">MoveUs, j.d.o.o. 2026</p>
         </div>
       </footer>
     </div>
