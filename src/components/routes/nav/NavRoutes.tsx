@@ -8,7 +8,7 @@ export function NavRoutes() {
       <div className="flex mx-auto">
         <aside
           style={{ overflow: "hidden" }}
-          className="hidden md:flex md:w-[260px] lg:w-[280px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto border-r border-base-300 bg-base-200"
+          className="hidden md:flex md:w-[240px] lg:w-[260px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto border-r border-base-300 bg-base-200"
         >
           <LeftSidebar />
         </aside>
