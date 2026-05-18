@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
-import { HiArrowRight, HiLockClosed } from "react-icons/hi2";
+import { HiArrowLeft, HiArrowRight, HiLockClosed } from "react-icons/hi2";
 import { LuCheck, LuFlame, LuHeart, LuMapPin } from "react-icons/lu";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
 import "./landing.css";
@@ -192,6 +192,35 @@ function LandingPage() {
   const { profile } = useProfile();
   const heroRef = useRef<HTMLElement>(null);
   const logoTiltRef = useRef<HTMLDivElement>(null);
+  const [carouselEl, setCarouselEl] = useState<HTMLUListElement | null>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  const scrollCarousel = (dir: 1 | -1) => {
+    if (!carouselEl) return;
+    const first = carouselEl.querySelector("li") as HTMLElement | null;
+    if (!first) return;
+    const styles = window.getComputedStyle(carouselEl);
+    const gap = parseFloat(styles.columnGap || styles.gap || "0") || 24;
+    carouselEl.scrollBy({ left: dir * (first.offsetWidth + gap), behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (!carouselEl) return;
+    const update = () => {
+      const max = carouselEl.scrollWidth - carouselEl.clientWidth;
+      setCanPrev(carouselEl.scrollLeft > 1);
+      setCanNext(carouselEl.scrollLeft < max - 1);
+    };
+    update();
+    carouselEl.addEventListener("scroll", update, { passive: true });
+    const ro = new ResizeObserver(update);
+    ro.observe(carouselEl);
+    return () => {
+      carouselEl.removeEventListener("scroll", update);
+      ro.disconnect();
+    };
+  }, [carouselEl]);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -414,50 +443,96 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* NEARBY EVENTS */}
-      <section className="py-20 lg:py-24 bg-base-100 border-t border-base-300">
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16">
-          <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-accent mb-2">
-                Happening near you
-              </p>
-              <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-[1.05]">
-                Find your next session.
-              </h2>
-            </div>
-            <Link
-              to="/search"
-              className="btn btn-ghost gap-2 hidden sm:inline-flex"
-            >
-              See all
-              <HiArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+      {/* NEARBY EVENTS — simple carousel */}
+      {(() => {
+        const nearbyEvents = (eventsData?.anonymousUserEvents ?? [])
+          .filter((e): e is NonNullable<typeof e> => Boolean(e))
+          .slice(0, 6);
 
-          {eventsLoading ? (
-            <div className="flex justify-center py-12">
-              <span className="loading loading-spinner loading-lg text-primary"></span>
+        return (
+          <section className="py-20 lg:py-24 bg-base-100 border-t border-base-300 overflow-hidden">
+            <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+              <div className="text-center mb-10 lg:mb-12 max-w-2xl mx-auto">
+                <h2 className="lp-story-h2 sm:whitespace-nowrap">
+                  Happening{" "}
+                  <span className="relative inline-block text-primary">
+                    near you
+                    <svg
+                      className="absolute left-0 right-0 -bottom-2 w-full h-3 pointer-events-none overflow-visible"
+                      viewBox="0 0 200 12"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        className="lp-how-squiggle text-accent"
+                        d="M2 7 Q 40 1, 80 7 T 160 7 T 198 7"
+                        stroke="currentColor"
+                        strokeWidth="3.5"
+                        strokeLinecap="round"
+                        fill="none"
+                      />
+                    </svg>
+                  </span>
+                  .
+                </h2>
+                <p className="lp-story-lede">
+                  Real plans. Pick one, join, show up.
+                </p>
+              </div>
             </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {eventsData?.anonymousUserEvents?.slice(0, 6).map((event) => (
-                <EventCard key={event!.id} event={event!} />
-              ))}
-            </div>
-          )}
 
-          <div className="text-center mt-8 sm:hidden">
-            <Link
-              to="/search"
-              className="btn btn-primary btn-lg gap-2 btn-arrow"
-            >
-              See all events
-              <HiArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
+            {eventsLoading ? (
+              <div className="flex justify-center py-12">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+              </div>
+            ) : nearbyEvents.length > 0 ? (
+              <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+                <div className="lp-carousel" aria-label="Events near you">
+                  <button
+                    type="button"
+                    onClick={() => scrollCarousel(-1)}
+                    className="lp-carousel-arrow lp-carousel-arrow--prev"
+                    aria-label="Previous events"
+                    disabled={!canPrev}
+                  >
+                    <HiArrowLeft className="w-5 h-5" />
+                  </button>
+                  <div className="lp-carousel-viewport">
+                    <ul ref={setCarouselEl} className="lp-carousel-track">
+                      {nearbyEvents.map((event) => (
+                        <li key={event.id} className="lp-carousel-card">
+                          <EventCard event={event} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => scrollCarousel(1)}
+                    className="lp-carousel-arrow lp-carousel-arrow--next"
+                    aria-label="Next events"
+                    disabled={!canNext}
+                  >
+                    <HiArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
+            <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+              <div className="text-center mt-8 lg:mt-10">
+                <Link
+                  to="/search"
+                  className="btn btn-primary btn-lg gap-2 btn-arrow"
+                >
+                  See all events
+                  <HiArrowRight className="w-5 h-5" />
+                </Link>
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* FINAL CTA */}
       <section className="relative overflow-hidden bg-primary py-24 lg:py-28">
