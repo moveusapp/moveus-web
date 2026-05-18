@@ -6,6 +6,7 @@ import { LuCheck, LuFlame, LuHeart, LuMapPin } from "react-icons/lu";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
 import "./landing.css";
 import EventCard from "@/components/event/EventCard";
+import EventCardSkeleton from "@/components/event/EventCardSkeleton";
 import { GetAnonymousUserEventsDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { useProfile } from "@/context/profile-context";
@@ -482,8 +483,20 @@ function LandingPage() {
             </div>
 
             {eventsLoading ? (
-              <div className="flex justify-center py-12">
-                <span className="loading loading-spinner loading-lg text-primary"></span>
+              <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+                <div className="lp-carousel" aria-hidden="true">
+                  <div className="lp-carousel-arrow invisible" />
+                  <div className="lp-carousel-viewport">
+                    <ul className="lp-carousel-track">
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <li key={i} className="lp-carousel-card">
+                          <EventCardSkeleton />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="lp-carousel-arrow invisible" />
+                </div>
               </div>
             ) : nearbyEvents.length > 0 ? (
               <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
