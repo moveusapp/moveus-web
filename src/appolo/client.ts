@@ -14,7 +14,7 @@ import {
 import { createClient } from "graphql-ws";
 import { isSubscriptionOperation } from "@apollo/client/utilities";
 import { DateParsingLink } from "./date-parsing-link";
-import { emitSessionExpired } from "@/utils/auth";
+import { clearStoredProfile } from "@/utils/auth";
 
 const isDev = import.meta.env.DEV;
 const secure = isDev ? "" : "s";
@@ -39,16 +39,24 @@ const splitLink = ApolloLink.split(
 
 const UNAUTHORIZED_CODE = 100;
 
+const redirectToLogin = () => {
+  clearStoredProfile();
+  void apolloClient.clearStore();
+  if (window.location.pathname !== "/login") {
+    window.location.assign("/login");
+  }
+};
+
 const authErrorLink = new ErrorLink(({ error }) => {
   if (ServerError.is(error) && error.statusCode === 401) {
-    emitSessionExpired();
+    redirectToLogin();
     return;
   }
   if (CombinedGraphQLErrors.is(error)) {
     const isAuth = error.errors.some(
       (e) => e.error_code === UNAUTHORIZED_CODE,
     );
-    if (isAuth) emitSessionExpired();
+    if (isAuth) redirectToLogin();
   }
 });
 
