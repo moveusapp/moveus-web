@@ -1,8 +1,15 @@
 import { Outlet } from "react-router-dom";
 import LeftSidebar from "./LeftSidebar";
 import MobileNav from "./MobileNav";
+import { useProfile } from "@/context/profile-context";
 
 export function NavRoutes() {
+  const { profile } = useProfile();
+
+  if (profile === null) {
+    return <Outlet />
+  }
+
   return (
     <div className="min-h-screen bg-base-100">
       <div className="flex mx-auto">

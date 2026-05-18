@@ -39,8 +39,10 @@ function App() {
             <Route path="/survey/:id" element={<SurveyPage />} />
             <Route path="/welcome" element={<WelcomePage />} />
           </Route>
-          <Route path="/user/:username" element={<UserPage />} />
-          <Route path="/event/:eventId" element={<EventPage />} />
+          <Route element={<NavRoutes />}>
+            <Route path="/user/:username" element={<UserPage />} />
+            <Route path="/event/:eventId" element={<EventPage />} />
+          </Route>
           <Route element={<AuthRoutes />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
