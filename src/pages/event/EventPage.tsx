@@ -4,10 +4,12 @@ import UserAvatar from "@/components/user/UserAvatar";
 import {
   ActivityKind,
   DeleteEventDocument,
+  EventPhase,
   JoinEventDocument,
   LeaveEventDocument,
   MemberRole,
 } from "@/graphql/graphql-types";
+import EventPhaseBadge from "@/components/event/EventPhaseBadge";
 import { displayName } from "@/utils/display-name";
 import { formatDate, formatTime } from "@/utils/time-utils";
 import { useMutation } from "@apollo/client/react";
@@ -70,6 +72,20 @@ function EventPage() {
   const postCount = event.posts?.length ?? 0;
   const commentCount = event.comments?.length ?? 0;
 
+  const isCancelled = event.phase === EventPhase.Cancelled;
+  const isFinished = event.phase === EventPhase.Finished;
+  const isLocked = event.phase !== EventPhase.Scheduled;
+  const lockedLabel = isCancelled
+    ? "Event cancelled"
+    : isFinished
+      ? "Event ended"
+      : "Event in progress";
+  const titleClass = isCancelled
+    ? "text-base-content/60 line-through decoration-error/50 decoration-2"
+    : isFinished
+      ? "text-base-content/80"
+      : "text-foreground";
+
   const locationName = event.location?.name;
   const mapsUrl =
     event.location?.latitude != null && event.location?.longitude != null
@@ -83,9 +99,12 @@ function EventPage() {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Left column */}
         <div className="flex-1 min-w-0 flex flex-col">
-          {/* Activity + Title */}
-          <p className="text-xs font-semibold uppercase tracking-wide text-primary">{activity}</p>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground text-balance mt-1">
+          {/* Activity + phase eyebrow */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="text-xs font-semibold uppercase tracking-wide text-primary">{activity}</p>
+            <EventPhaseBadge phase={event.phase} />
+          </div>
+          <h1 className={`text-xl sm:text-2xl lg:text-3xl font-bold text-balance mt-1 ${titleClass}`}>
             {event.title}
           </h1>
 
@@ -144,7 +163,15 @@ function EventPage() {
           {/* Sticky action bar — mobile only */}
           <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4 flex flex-col gap-2">
             <div className="flex items-center gap-3">
-              {event.role === MemberRole.Organizer ? (
+              {isLocked ? (
+                <button
+                  type="button"
+                  disabled
+                  className="btn btn-disabled flex-1 rounded-2xl"
+                >
+                  {lockedLabel}
+                </button>
+              ) : event.role === MemberRole.Organizer ? (
                 <Link
                   to={`/event/${eventId}/edit`}
                   className="btn btn-primary flex-1 rounded-2xl"
@@ -180,7 +207,12 @@ function EventPage() {
                 </Button>
               )}
 
-              <button className="btn btn-square rounded-2xl" aria-label="Share event">
+              <button
+                type="button"
+                disabled={isLocked}
+                className={`btn btn-square rounded-2xl ${isLocked ? "btn-disabled" : ""}`}
+                aria-label="Share event"
+              >
                 <HiArrowUpTray className="h-4 w-4" />
               </button>
             </div>
@@ -276,11 +308,17 @@ function EventPage() {
         <aside className="w-full lg:w-[340px] xl:w-[380px] lg:flex-shrink-0 order-first lg:order-last">
           <div className="lg:sticky lg:top-6 lg:self-start flex flex-col gap-4">
             {/* Thumbnail */}
-            <div className="rounded-2xl overflow-hidden bg-base-300">
+            <div className="relative rounded-2xl overflow-hidden bg-base-300">
               <img
                 src={defaultEventThumbnail}
                 alt={event.title ?? ""}
-                className="w-full aspect-video object-cover"
+                className={`w-full aspect-video object-cover transition-[filter] duration-300 ${
+                  isCancelled
+                    ? "grayscale brightness-75"
+                    : isFinished
+                      ? "grayscale-[60%] brightness-90"
+                      : ""
+                }`}
                 crossOrigin="anonymous"
                 loading="lazy"
               />
@@ -289,7 +327,15 @@ function EventPage() {
             {/* Action buttons — desktop */}
             <div className="hidden lg:flex flex-col gap-2">
               <div className="flex items-center gap-3">
-                {event.role === MemberRole.Organizer ? (
+                {isLocked ? (
+                  <button
+                    type="button"
+                    disabled
+                    className="btn btn-disabled flex-1 rounded-2xl"
+                  >
+                    {lockedLabel}
+                  </button>
+                ) : event.role === MemberRole.Organizer ? (
                   <Link
                     to={`/event/${eventId}/edit`}
                     className="btn btn-primary flex-1 rounded-2xl"
@@ -325,7 +371,12 @@ function EventPage() {
                   </Button>
                 )}
 
-                <button className="btn btn-square rounded-2xl" aria-label="Share event">
+                <button
+                  type="button"
+                  disabled={isLocked}
+                  className={`btn btn-square rounded-2xl ${isLocked ? "btn-disabled" : ""}`}
+                  aria-label="Share event"
+                >
                   <HiArrowUpTray className="h-4 w-4" />
                 </button>
               </div>

@@ -1,6 +1,10 @@
 import defaultEventThumbnail from "@/assets/default-images/event-default-thumbnail.webp";
 import UserAvatar from "@/components/user/UserAvatar";
-import { ActivityKind, EventCardFragment } from "@/graphql/graphql-types";
+import {
+  ActivityKind,
+  EventCardFragment,
+  EventPhase,
+} from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { formatDate, formatTime } from "@/utils/time-utils";
 import {
@@ -10,6 +14,7 @@ import {
 } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import EventCapacityBar from "./EventCapacityBar";
+import EventPhaseBadge from "./EventPhaseBadge";
 
 function EventCard({ event }: EventCardProps) {
   const activity = Object.keys(ActivityKind)[event.activity.id!];
@@ -19,6 +24,23 @@ function EventCard({ event }: EventCardProps) {
     event.organizer?.user.firstName!,
     event.organizer?.user.lastName!,
   );
+
+  const isScheduled = event.phase === EventPhase.Scheduled;
+  const isCancelled = event.phase === EventPhase.Cancelled;
+  const isFinished = event.phase === EventPhase.Finished;
+  const isInactive = isCancelled || isFinished;
+
+  const thumbnailFilter = isCancelled
+    ? "grayscale brightness-75"
+    : isFinished
+      ? "grayscale-[60%] brightness-90"
+      : "";
+
+  const titleClass = isCancelled
+    ? "text-base-content/50 line-through decoration-error/60 decoration-2"
+    : isFinished
+      ? "text-base-content/60 group-hover:text-base-content/80"
+      : "text-base-content group-hover:text-primary";
 
   return (
     <Link
@@ -31,20 +53,33 @@ function EventCard({ event }: EventCardProps) {
           src={defaultEventThumbnail}
           alt={`${event.title} event thumbnail`}
           loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover"
+          className={`absolute inset-0 w-full h-full object-cover transition-[filter] duration-300 ${thumbnailFilter}`}
         />
-        <span className="badge badge-primary absolute top-2.5 left-2.5">
+        <span
+          className={`badge badge-sm absolute top-2.5 left-2.5 ${
+            isInactive ? "badge-neutral" : "badge-primary"
+          }`}
+        >
           {activity}
         </span>
+        {!isScheduled && (
+          <span className="absolute top-2.5 right-2.5">
+            <EventPhaseBadge phase={event.phase} />
+          </span>
+        )}
       </div>
 
       {/* Title */}
-      <h2 className="px-0.5 font-semibold text-lg text-base-content line-clamp-1 group-hover:text-primary duration-200">
+      <h2 className={`px-0.5 font-semibold text-lg line-clamp-1 transition-colors duration-200 ${titleClass}`}>
         {event.title}
       </h2>
 
       {/* When & where */}
-      <div className="px-0.5 flex flex-col gap-1 text-sm text-base-content/60">
+      <div
+        className={`px-0.5 flex flex-col gap-1 text-sm ${
+          isInactive ? "text-base-content/45" : "text-base-content/60"
+        }`}
+      >
         <div className="flex items-center gap-2">
           <HiOutlineCalendarDays size={16} className="shrink-0" />
           <span>{formatDate(event.startTime)} · {formatTime(event.startTime)}</span>
@@ -67,10 +102,12 @@ function EventCard({ event }: EventCardProps) {
             )}
           </div>
         </div>
-        <EventCapacityBar
-          maxParticipants={event.maxParticipants!}
-          participantCount={event.participantCount!}
-        />
+        {isScheduled && (
+          <EventCapacityBar
+            maxParticipants={event.maxParticipants!}
+            participantCount={event.participantCount!}
+          />
+        )}
       </div>
     </Link>
   );
