@@ -392,7 +392,7 @@ function LandingPage() {
                   aria-hidden="true"
                 >
                   <path
-                    className="lp-how-squiggle text-accent"
+                    className="text-accent"
                     d="M2 7 Q 40 1, 80 7 T 160 7 T 198 7"
                     stroke="currentColor"
                     strokeWidth="3.5"
@@ -464,7 +464,7 @@ function LandingPage() {
                       aria-hidden="true"
                     >
                       <path
-                        className="lp-how-squiggle text-accent"
+                        className="text-accent"
                         d="M2 7 Q 40 1, 80 7 T 160 7 T 198 7"
                         stroke="currentColor"
                         strokeWidth="3.5"

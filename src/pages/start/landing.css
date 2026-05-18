@@ -99,17 +99,6 @@
 
 /* --- Feature showcase (storybook chapter strips) --- */
 
-@keyframes lp-how-squiggle-draw {
-  from { stroke-dashoffset: 220; }
-  to   { stroke-dashoffset: 0; }
-}
-
-.lp-how-squiggle {
-  stroke-dasharray: 220;
-  stroke-dashoffset: 220;
-  animation: lp-how-squiggle-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) both;
-}
-
 .lp-story-kicker {
   font-size: 0.78rem;
   font-weight: 700;
@@ -594,6 +583,7 @@
 /* Card sizing: 1 with peek on small, 2 on md, 3 on lg */
 .lp-carousel-card {
   flex: 0 0 82%;
+  min-width: 0;
   scroll-snap-align: start;
 }
 @media (min-width: 640px) {
@@ -605,6 +595,10 @@
   .lp-carousel-card {
     flex-basis: calc((100% - 2 * var(--carousel-gap)) / 3);
   }
+}
+.lp-carousel-card > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* Arrow buttons flanking the viewport */
@@ -670,13 +664,11 @@
   .lp-hero-tagline,
   .lp-hero-ctas,
   .lp-hero-scroll-lift,
-  .lp-how-squiggle,
   .lp-strip,
   .lp-stk {
     animation: none !important;
     transition: none !important;
   }
-  .lp-how-squiggle { stroke-dashoffset: 0 !important; }
   .lp-strip,
   .lp-stk { opacity: 1 !important; }
 }
