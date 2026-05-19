@@ -43,29 +43,6 @@ function HomePage() {
           ))
         ) : (
           <>
-            {!hasJoinedEvents() ? (
-              <div className="flex flex-col w-full gap-2">
-                <div className="flex flex-col items-center bg-base-200 rounded-2xl border border-base-300 p-4 gap-1">
-                  <FaSadTear size={45} />
-                  <p className="text-base-content/70">
-                    You haven't joined any events!
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <>
-                {data?.ongoingJoinedEvents?.map((event) => (
-                  <EventCard key={`event-ongoing-${event?.id}`} event={event!} />
-                ))}
-                {data?.futureJoinedEvents?.map((event) => (
-                  <EventCard key={`event-future-${event?.id}`} event={event!} />
-                ))}
-              </>
-            )}
-
-            <div className="border-t border-base-300 my-4" />
-            <p className="text-md text-base-content/70">You might like...</p>
-            
             {data?.myRecommendedEvents?.map((event) => (
               <EventCard key={`event-recommended-${event?.id}`} event={event!} />
             ))}

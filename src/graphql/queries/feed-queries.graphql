@@ -1,10 +1,4 @@
 query GetHomeEvents {
-  futureJoinedEvents {
-    ...EventCard
-  }
-  ongoingJoinedEvents {
-    ...EventCard
-  }
   myRecommendedEvents {
     ...EventCard
   }
