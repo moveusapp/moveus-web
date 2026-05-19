@@ -18,6 +18,19 @@ import UserPageSkeleton from "./UserPageSkeleton";
 import EditProfileModal from "./EditProfileModal";
 import useDocumentTitle from "@/hooks/use-document-title";
 
+type EventLike = { startTime?: unknown } | null | undefined;
+
+function sortByStartTimeDesc<T extends EventLike>(
+  events: ReadonlyArray<T> | null | undefined,
+): T[] {
+  if (!events) return [];
+  return [...events].sort((a, b) => {
+    const aTime = a?.startTime ? new Date(a.startTime as string).getTime() : 0;
+    const bTime = b?.startTime ? new Date(b.startTime as string).getTime() : 0;
+    return bTime - aTime;
+  });
+}
+
 function UserPage() {
   const [activeTab, setActiveTab] = useState("attending");
   const [showEditModal, setShowEditModal] = useState(false);
@@ -160,7 +173,7 @@ function UserPage() {
       <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
         {activeTab === "attending" ? (
           hasAttendingEvents() ? (
-            data?.user?.attendingEvents?.map((event) => (
+            sortByStartTimeDesc(data?.user?.attendingEvents).map((event) => (
               <EventCard key={event?.id} event={event!} />
             ))
           ) : (
@@ -169,7 +182,7 @@ function UserPage() {
             </p>
           )
         ) : hasOrganizingEvents() ? (
-          data?.user?.organizingEvents?.map((event) => (
+          sortByStartTimeDesc(data?.user?.organizingEvents).map((event) => (
             <EventCard key={event?.id} event={event!} />
           ))
         ) : (
