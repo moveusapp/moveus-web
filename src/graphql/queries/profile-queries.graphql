@@ -21,5 +21,11 @@ query GetNotifications {
         lastName
       }
     }
+    ... on EventNotificationType {
+      event {
+        id
+        title
+      }
+    }
   }
 }

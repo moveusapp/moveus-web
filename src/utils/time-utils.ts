@@ -8,33 +8,35 @@ export function getAge(dob: Date): number {
 }
 
 export function timeAgo(inputDate: Date | string): string {
-  const date = new Date(inputDate);
+  const date = inputDate instanceof Date ? inputDate : new Date(inputDate);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
 
-  const seconds = Math.floor(diffMs / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-  const weeks = Math.floor(days / 7);
-  const months = Math.floor(days / 30);
-  const years = Math.floor(days / 365);
+  if (diffMs < 60_000) return "just now";
 
-  if (seconds < 60) {
-    return `${seconds} second${seconds !== 1 ? "s" : ""} ago`;
-  } else if (minutes < 60) {
-    return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
-  } else if (hours < 24) {
-    return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
-  } else if (days < 7) {
-    return `${days} day${days !== 1 ? "s" : ""} ago`;
-  } else if (weeks < 5) {
-    return `${weeks} week${weeks !== 1 ? "s" : ""} ago`;
-  } else if (months < 12) {
-    return `${months} month${months !== 1 ? "s" : ""} ago`;
-  } else {
-    return `${years} year${years !== 1 ? "s" : ""} ago`;
-  }
+  const minutes = Math.floor(diffMs / 60_000);
+  if (minutes < 60) return plural(minutes, "minute");
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return plural(hours, "hour");
+
+  const days = Math.floor(hours / 24);
+  if (days < 7) return plural(days, "day");
+
+  if (days < 30) return plural(Math.floor(days / 7), "week");
+
+  let months =
+    (now.getFullYear() - date.getFullYear()) * 12 +
+    (now.getMonth() - date.getMonth());
+  if (now.getDate() < date.getDate()) months -= 1;
+
+  if (months < 12) return plural(months, "month");
+
+  return plural(Math.floor(months / 12), "year");
+}
+
+function plural(value: number, unit: string): string {
+  return `${value} ${unit}${value === 1 ? "" : "s"} ago`;
 }
 
 export function prependZero(number: number): string {
@@ -43,10 +45,12 @@ export function prependZero(number: number): string {
 }
 
 export function formatDate(date: Date, locale: string = 'en-US'): string {
+  const sameYear = date.getFullYear() === new Date().getFullYear();
   return new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
+    ...(sameYear ? {} : { year: 'numeric' }),
   }).format(date);
 }
 

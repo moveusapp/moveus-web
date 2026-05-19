@@ -1,11 +1,42 @@
 import { NotificationKind } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
-import { prependZero } from "@/utils/time-utils";
+import { timeAgo } from "@/utils/time-utils";
 import { Link } from "react-router-dom";
+import { HiBolt, HiFlag, HiXMark } from "react-icons/hi2";
+import type { IconType } from "react-icons";
 import UserAvatar from "../user/UserAvatar";
 
+const cardChassis =
+  "block bg-base-200 rounded-2xl border border-base-300 p-4 " +
+  "transition-colors duration-150 ease-out " +
+  "hover:border-primary/30 hover:bg-base-200/60 " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary/40";
+
+type Tone = "accent" | "primary" | "warning";
+
+const tileFillClasses: Record<Tone, string> = {
+  accent: "bg-accent",
+  primary: "bg-primary",
+  warning: "bg-warning",
+};
+
+function EventIconTile({ Icon, tone }: { Icon: IconType; tone: Tone }) {
+  return (
+    <div
+      className={
+        "w-11 h-11 shrink-0 rounded-2xl flex items-center justify-center " +
+        "-rotate-6 " +
+        tileFillClasses[tone]
+      }
+      aria-hidden="true"
+    >
+      <Icon className="w-5 h-5 text-white rotate-6" />
+    </div>
+  );
+}
+
 function NotificationCard({ notification }: NotificationCardProps) {
-  const time = `${notification.time!.toDateString().slice(4, 10).trim()}, ${prependZero(notification.time!.getHours())}:${prependZero(notification.time!.getMinutes())}`;
+  const time = notification.time ? timeAgo(notification.time) : "";
 
   if (notification?.__typename === "UserNotificationType") {
     const name = displayName(
@@ -19,17 +50,16 @@ function NotificationCard({ notification }: NotificationCardProps) {
         return (
           <Link
             key={notification.id}
-            className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
+            className={cardChassis}
             to={`/user/${notification.user?.username}`}
           >
-            <div className="flex flex-row gap-2">
-              <UserAvatar
-                userId={notification.user?.id}
-                className="w-12"
-              />
-              <div className="flex flex-col justify-between">
-                <p><b>{name}</b> started following you.</p>
-                <p className="text-base-content/70 text-sm">{time}</p>
+            <div className="flex flex-row items-center gap-3">
+              <UserAvatar userId={notification.user?.id} className="w-11 shrink-0" />
+              <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 grow min-w-0">
+                <p className="text-[15px] leading-snug truncate text-base-content/80">
+                  <b className="font-bold text-base-content">{name}</b> is now following you.
+                </p>
+                <span className="text-xs text-base-content/60 shrink-0 mt-0.5 sm:mt-0">{time}</span>
               </div>
             </div>
           </Link>
@@ -40,26 +70,38 @@ function NotificationCard({ notification }: NotificationCardProps) {
   }
 
   if (notification?.__typename === "EventNotificationType") {
+    const title = notification.event?.title;
+    const eventId = notification.event?.id;
+
+    const renderEventCard = (
+      icon: IconType,
+      tone: Tone,
+      status: string,
+    ) => (
+      <Link key={notification.id} className={cardChassis} to={`/event/${eventId}`}>
+        <div className="flex flex-row items-center gap-3">
+          <EventIconTile Icon={icon} tone={tone} />
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 grow min-w-0">
+            <p className="text-[15px] leading-snug truncate text-base-content/80">
+              <b className="font-bold text-base-content">{title}</b> {status}
+            </p>
+            <span className="text-xs text-base-content/60 shrink-0 mt-0.5 sm:mt-0">{time}</span>
+          </div>
+        </div>
+      </Link>
+    );
+
     switch (notification?.notificationType) {
+      case NotificationKind.EventStarted:
+        return renderEventCard(HiBolt, "accent", "starting now.");
       case NotificationKind.EventFinished:
-        return (
-          <Link
-            key={notification.id}
-            className="bg-base-200 rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
-            to={`/event/${notification.event?.id}`}
-          >
-            <div className="flex flex-row gap-2">
-              <div className="flex flex-col justify-between">
-                <p><b>{notification.event?.title}</b> has finished.</p>
-                <p className="text-base-content/70 text-sm">{time}</p>
-              </div>
-            </div>
-          </Link>
-        );
-      default:
-        return <></>;
-    }
+        return renderEventCard(HiFlag, "primary", "wrapped up.");
+    case NotificationKind.EventCancelled:
+      return renderEventCard(HiXMark, "warning", "was cancelled.");
+    default:
+      return <></>;
   }
+}
 
   return <></>;
 }
