@@ -2,7 +2,7 @@ import Button from "@/components/ui/Button";
 import FollowButton from "@/components/user/FollowButton";
 import UserAvatar from "@/components/user/UserAvatar";
 import { useProfile } from "@/context/profile-context";
-import { GetUserByUsernameDocument } from "@/graphql/graphql-types";
+import { EventPhase, GetUserByUsernameDocument } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { useQuery } from "@apollo/client/react";
 import {
@@ -18,16 +18,26 @@ import UserPageSkeleton from "./UserPageSkeleton";
 import EditProfileModal from "./EditProfileModal";
 import useDocumentTitle from "@/hooks/use-document-title";
 
-type EventLike = { startTime?: unknown } | null | undefined;
+type EventLike = { startTime?: unknown; phase?: EventPhase } | null | undefined;
+
+const PHASE_ORDER: Record<EventPhase, number> = {
+  [EventPhase.InProgress]: 0,
+  [EventPhase.Scheduled]: 1,
+  [EventPhase.Finished]: 2,
+  [EventPhase.Cancelled]: 3,
+};
 
 function sortByStartTimeDesc<T extends EventLike>(
   events: ReadonlyArray<T> | null | undefined,
 ): T[] {
   if (!events) return [];
   return [...events].sort((a, b) => {
+    const aPhase = a?.phase ? PHASE_ORDER[a.phase] : Number.MAX_SAFE_INTEGER;
+    const bPhase = b?.phase ? PHASE_ORDER[b.phase] : Number.MAX_SAFE_INTEGER;
+    if (aPhase !== bPhase) return aPhase - bPhase;
     const aTime = a?.startTime ? new Date(a.startTime as string).getTime() : 0;
     const bTime = b?.startTime ? new Date(b.startTime as string).getTime() : 0;
-    return bTime - aTime;
+    return aTime - bTime;
   });
 }
 
