@@ -3,6 +3,7 @@ import GlobalSearchWidget from "@/components/widgets/GlobalSearchWidget";
 import UserProgressWidget from "@/components/widgets/UserProgressWidget";
 import UserActivityWidget from "@/components/widgets/UserActivityWidget";
 import MainFooter from "@/components/misc/MainFooter";
+import PageHeader, { HeaderAvatar } from "@/components/layout/PageHeader";
 import { SearchItemsDocument } from "@/graphql/graphql-types";
 import { useLazyQuery } from "@apollo/client/react";
 import { useEffect, useState } from "react";
@@ -59,11 +60,14 @@ function SearchPage() {
   return (
     <div className="flex flex-row">
       <div className="flex flex-col mx-auto grow">
-        <header className="sticky top-0 z-20 bg-base-100/80 backdrop-blur-lg border-b border-base-300">
-          <div className="m-4 mb-0">
-            <GlobalSearchWidget />
+        <PageHeader>
+          <div className="flex items-center gap-3">
+            <HeaderAvatar />
+            <div className="grow min-w-0">
+              <GlobalSearchWidget />
+            </div>
           </div>
-          <div className="flex px-4 pt-2 gap-1 justify-between overflow-x-auto scrollbar-none">
+          <div className="flex pt-3 gap-1 justify-between overflow-x-auto scrollbar-none">
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -79,7 +83,7 @@ function SearchPage() {
               </button>
             ))}
           </div>
-        </header>
+        </PageHeader>
         <div className="flex flex-col items-center gap-2 w-full mx-auto p-4 max-w-[700px]">
           {searchLoading ? (
             <div className="loading loading-dots text-primary" />

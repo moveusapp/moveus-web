@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
 import Button from "@/components/ui/Button";
 import { clearStoredProfile } from "@/utils/auth";
+import PageHeader from "@/components/layout/PageHeader";
 
 const privacyScopeOptions = [
   {
@@ -88,29 +89,33 @@ function SettingsPage() {
   );
 
   return (
-    <div className="h-full flex flex-col m-4 gap-2">
-      <h1 className="font-medium text-xl">Settings</h1>
-      
-      <div className="flex flex-row justify-between bg-base-200 rounded-2xl border border-base-300 p-4">
-        <div>
-          <p className="text-md font-medium">Privacy</p>
-          <p className="text-sm text-base-content/70">Who can see your profile info.</p>
-        </div>
-        <Dropdown
-          options={privacyScopeOptions}
-          value={scope}
-          setValue={handleSetScope}
-        />
-      </div>
+    <div className="h-full flex flex-col">
+      <PageHeader title="Settings" />
 
-      <button
-        className="btn btn-error btn-outline mt-auto"
-        onClick={() =>
-          (document.getElementById("logoutModal") as any).showModal()
-        }
-      >
-        Logout
-      </button>
+      <div className="flex flex-col grow gap-2 m-4">
+        <div className="flex flex-row justify-between bg-base-200 rounded-2xl border border-base-300 p-4">
+          <div>
+            <p className="text-md font-medium">Privacy</p>
+            <p className="text-sm text-base-content/70">
+              Who can see your profile info.
+            </p>
+          </div>
+          <Dropdown
+            options={privacyScopeOptions}
+            value={scope}
+            setValue={handleSetScope}
+          />
+        </div>
+
+        <button
+          className="btn btn-error btn-outline mt-auto"
+          onClick={() =>
+            (document.getElementById("logoutModal") as any).showModal()
+          }
+        >
+          Logout
+        </button>
+      </div>
 
       <dialog id="logoutModal" className="modal">
         <div className="modal-box">

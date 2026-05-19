@@ -2,10 +2,8 @@ import {
   HiOutlineHome,
   HiOutlineBell,
   HiOutlineCalendarDays,
-  HiOutlineUserCircle,
 } from "react-icons/hi2";
 import { HiOutlineChat, HiOutlineSearch } from "react-icons/hi";
-import { useProfile } from "@/context/profile-context";
 import { Link, useLocation } from "react-router-dom";
 
 const items = [
@@ -36,27 +34,12 @@ const items = [
     icon: HiOutlineChat,
     badge: "",
   },
-  {
-    label: "Profile",
-    to: "/profile",
-    icon: HiOutlineUserCircle,
-  },
 ];
 
 function MobileNav() {
   const location = useLocation();
-  const { profile } = useProfile();
 
-  const isNavItemActive = (to: string) => {
-    if (location.pathname === to) {
-      return true;
-    }
-    if (to === "/profile" && location.pathname === `/user/${profile?.username}`) {
-      return true;
-    }
-
-    return false;
-  };
+  const isNavItemActive = (to: string) => location.pathname === to;
 
   return (
     <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-base-200 border-t border-base-300 safe-area-pb">

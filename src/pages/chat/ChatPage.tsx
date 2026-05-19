@@ -7,6 +7,7 @@ import ChatCardSkeleton from "@/components/chat/ChatCardSkeleton";
 import ChatView from "@/pages/chat/ChatView";
 import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
+import PageHeader from "@/components/layout/PageHeader";
 
 function ChatPage() {
   useDocumentTitle("Chats");
@@ -162,10 +163,8 @@ function ChatPage() {
           selectedChatId ? "hidden lg:flex" : "flex"
         } flex-col w-full lg:w-[300px] xl:w-[340px] lg:flex-shrink-0 lg:border-l border-base-300 overflow-y-auto h-full`}
       >
-        <div className="p-4 pb-2">
-          <h2 className="text-2xl font-bold leading-tight">Messages</h2>
-        </div>
-        <div className="flex flex-col px-1 pb-4">
+        <PageHeader title="Messages" />
+        <div className="flex flex-col px-1 pt-2 pb-4">
           {!hasReceivedData ? (
             [...Array(8)].map((_, i) => (
               <ChatCardSkeleton key={`skeleton-${i}`} />

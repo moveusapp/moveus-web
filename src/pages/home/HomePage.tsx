@@ -10,6 +10,7 @@ import strings from "@/translations/strings";
 import { useProfile } from "@/context/profile-context";
 import { FaSadTear } from "react-icons/fa";
 import EventCardSkeleton from "@/components/event/EventCardSkeleton";
+import PageHeader from "@/components/layout/PageHeader";
 
 function HomePage() {
   useDocumentTitle("Home");
@@ -33,21 +34,26 @@ function HomePage() {
 
   return (
     <div className="flex flex-row">
-      <div className="flex flex-col w-full mx-auto gap-3 p-4 max-w-[700px]">
-        <h1 className="font-medium text-left text-2xl">
-          {strings.formatString(strings.hello, { name: profileName })}
-        </h1>
-        {loading ? (
-          [...Array(12)].map((_, index) => (
-            <EventCardSkeleton key={`event-skeleton-${index}`} />
-          ))
-        ) : (
-          <>
-            {data?.myRecommendedEvents?.map((event) => (
-              <EventCard key={`event-recommended-${event?.id}`} event={event!} />
-            ))}
-          </>
-        )}
+      <div className="flex flex-col grow min-w-0">
+        <PageHeader
+          title={strings.formatString(strings.hello, { name: profileName })}
+        />
+        <div className="flex flex-col w-full mx-auto gap-3 p-4 max-w-[700px]">
+          {loading ? (
+            [...Array(12)].map((_, index) => (
+              <EventCardSkeleton key={`event-skeleton-${index}`} />
+            ))
+          ) : (
+            <>
+              {data?.myRecommendedEvents?.map((event) => (
+                <EventCard
+                  key={`event-recommended-${event?.id}`}
+                  event={event!}
+                />
+              ))}
+            </>
+          )}
+        </div>
       </div>
 
       <aside className="hidden lg:block lg:w-[280px] xl:w-[330px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto">

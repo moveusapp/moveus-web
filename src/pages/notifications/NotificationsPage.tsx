@@ -3,6 +3,7 @@ import useDocumentTitle from "@/hooks/use-document-title";
 import { useQuery } from "@apollo/client/react";
 import NotificationCard from "@/components/notification/NotificationCard";
 import NotificationCardSkeleton from "@/components/notification/NotificationCardSkeleton";
+import PageHeader from "@/components/layout/PageHeader";
 import GlobalSearchWidget from "@/components/widgets/GlobalSearchWidget";
 import UserProgressWidget from "@/components/widgets/UserProgressWidget";
 import UserActivityWidget from "@/components/widgets/UserActivityWidget";
@@ -19,11 +20,7 @@ function NotificationsPage() {
   return (
     <div className="flex flex-row h-full">
       <div className="flex flex-col mx-auto grow h-full overflow-y-auto min-w-0">
-        <header className="sticky top-0 z-20 px-4 sm:px-6 pt-4 sm:pt-5 pb-3 bg-base-100/85 backdrop-blur-md border-b border-base-content/8">
-          <div className="flex items-center min-h-9">
-            <h1 className="text-2xl font-bold leading-tight">Notifications</h1>
-          </div>
-        </header>
+        <PageHeader title="Notifications" />
         <div className="flex flex-col px-4 sm:px-6 pt-3 pb-6 gap-2">
           {loading ? (
             [...Array(10)].map((_, index) => (

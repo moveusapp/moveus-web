@@ -10,6 +10,7 @@ import {
 } from "react-icons/hi2";
 import CalendarPageSkeleton from "./CalendarPageSkeleton";
 import MonthGrid from "./MonthGrid";
+import PageHeader from "@/components/layout/PageHeader";
 
 const navButtonClass =
   "inline-flex items-center justify-center w-9 h-9 rounded-full text-base-content/70 hover:bg-base-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-colors";
@@ -102,43 +103,17 @@ function CalendarPage() {
 
   return (
     <div className="h-full overflow-y-auto">
-      <header className="sticky top-0 z-20 flex items-center justify-between gap-3 flex-wrap px-4 sm:px-6 pt-4 sm:pt-5 pb-3 bg-base-100/85 backdrop-blur-md border-b border-base-content/8">
-        <h1 className="text-2xl font-bold leading-tight">Calendar</h1>
-
-        <div className="flex items-center gap-2 ml-auto">
-          <div className="flex items-center gap-0.5">
-            <button
-              type="button"
-              onClick={handlePrevMonth}
-              aria-label="Previous month"
-              className={navButtonClass}
-            >
-              <HiOutlineChevronLeft size={20} />
-            </button>
-            <span
-              className="text-base sm:text-lg font-semibold text-center tabular-nums shrink-0"
-              style={{ width: "12rem" }}
-            >
-              {monthLabel}
-            </span>
-            <button
-              type="button"
-              onClick={handleNextMonth}
-              aria-label="Next month"
-              className={navButtonClass}
-            >
-              <HiOutlineChevronRight size={20} />
-            </button>
-          </div>
-          <button
-            type="button"
-            onClick={handleToday}
-            className="inline-flex items-center px-3 h-8 rounded-full text-sm font-medium text-base-content/80 bg-base-200 hover:bg-base-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-colors"
-          >
-            Today
-          </button>
-        </div>
-      </header>
+      <PageHeader
+        title="Calendar"
+        actions={
+          <MonthNavActions
+            monthLabel={monthLabel}
+            onPrev={handlePrevMonth}
+            onNext={handleNextMonth}
+            onToday={handleToday}
+          />
+        }
+      />
 
       <div className="px-4 sm:px-6 pt-3 pb-2">
         <MonthGrid
@@ -182,6 +157,56 @@ function CalendarPage() {
         )}
       </section>
     </div>
+  );
+}
+
+type MonthNavActionsProps = {
+  monthLabel: string;
+  onPrev: () => void;
+  onNext: () => void;
+  onToday: () => void;
+};
+
+function MonthNavActions({
+  monthLabel,
+  onPrev,
+  onNext,
+  onToday,
+}: MonthNavActionsProps) {
+  return (
+    <>
+      <div className="flex items-center gap-0.5">
+        <button
+          type="button"
+          onClick={onPrev}
+          aria-label="Previous month"
+          className={navButtonClass}
+        >
+          <HiOutlineChevronLeft size={20} />
+        </button>
+        <span
+          className="text-base sm:text-lg font-semibold text-center tabular-nums shrink-0"
+          style={{ width: "12rem" }}
+        >
+          {monthLabel}
+        </span>
+        <button
+          type="button"
+          onClick={onNext}
+          aria-label="Next month"
+          className={navButtonClass}
+        >
+          <HiOutlineChevronRight size={20} />
+        </button>
+      </div>
+      <button
+        type="button"
+        onClick={onToday}
+        className="inline-flex items-center px-3 h-8 rounded-full text-sm font-medium text-base-content/80 bg-base-200 hover:bg-base-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-colors"
+      >
+        Today
+      </button>
+    </>
   );
 }
 
