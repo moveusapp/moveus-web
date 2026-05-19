@@ -94,3 +94,11 @@ mutation DeleteEvent($eventId: Int!) {
     success
   }
 }
+
+mutation CancelEvent($eventId: Int!) {
+  cancelEvent(eventId: $eventId) {
+    event {
+      ...Event
+    }
+  }
+}

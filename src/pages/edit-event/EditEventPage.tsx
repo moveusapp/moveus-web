@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
-import { HiOutlineTrash } from "react-icons/hi2";
+import { HiOutlineNoSymbol, HiOutlineTrash } from "react-icons/hi2";
 import {
   AlterEventDocument,
+  CancelEventDocument,
   DeleteEventDocument,
+  EventPhase,
   MemberRole,
 } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
@@ -40,7 +42,12 @@ function EditEventPage() {
     DeleteEventDocument,
   );
 
+  const [cancelEvent, { loading: cancelling, error: cancelError }] = useMutation(
+    CancelEventDocument,
+  );
+
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
 
   useEffect(() => {
     if (event && event.role !== MemberRole.Organizer) {
@@ -97,6 +104,17 @@ function EditEventPage() {
     }
   };
 
+  const handleCancel = async () => {
+    try {
+      const result = await cancelEvent({ variables: { eventId: id } });
+      if (result.data?.cancelEvent?.event?.id) {
+        navigate(`/event/${id}`);
+      }
+    } catch (err) {
+      console.error("Error cancelling event:", err);
+    }
+  };
+
   const handleDelete = async () => {
     try {
       const result = await deleteEvent({
@@ -131,7 +149,17 @@ function EditEventPage() {
         onSubmit={handleSubmit}
       />
 
-      <div className="mt-10 pt-6 border-t border-base-300 flex justify-end">
+      <div className="mt-10 pt-6 border-t border-base-300 flex justify-end gap-2">
+        {event.phase !== EventPhase.Cancelled && event.phase !== EventPhase.Finished && (
+          <button
+            type="button"
+            onClick={() => setCancelOpen(true)}
+            className="btn btn-outline btn-warning rounded-2xl"
+          >
+            <HiOutlineNoSymbol className="h-4 w-4" />
+            Cancel event
+          </button>
+        )}
         <button
           type="button"
           onClick={() => setConfirmOpen(true)}
@@ -176,6 +204,44 @@ function EditEventPage() {
           className="modal-backdrop"
           aria-label="Close"
           onClick={() => !deleting && setConfirmOpen(false)}
+        />
+      </dialog>
+
+      <dialog className={`modal ${cancelOpen ? "modal-open" : ""}`}>
+        <div className="modal-box rounded-2xl">
+          <h3 className="font-bold text-lg">Cancel this event?</h3>
+          <p className="py-3 text-sm text-base-content/70">
+            Participants will be notified.{" "}
+            <span className="font-medium text-foreground">{event.title}</span>{" "}
+            stays in your history as cancelled. This can't be undone.
+          </p>
+
+          {cancelError && (
+            <p className="text-sm text-error mb-2">{formatError(cancelError)}</p>
+          )}
+
+          <div className="modal-action">
+            <Button
+              onClick={() => setCancelOpen(false)}
+              disabled={cancelling}
+              className="btn-ghost"
+            >
+              Keep event
+            </Button>
+            <Button
+              onClick={handleCancel}
+              loading={cancelling}
+              className="btn-warning"
+            >
+              Cancel event
+            </Button>
+          </div>
+        </div>
+        <button
+          type="button"
+          className="modal-backdrop"
+          aria-label="Close"
+          onClick={() => !cancelling && setCancelOpen(false)}
         />
       </dialog>
     </div>
