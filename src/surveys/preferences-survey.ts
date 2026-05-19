@@ -17,7 +17,7 @@ import { QuestionKind, Survey } from "./types";
 export const preferencesSurvey: Survey<AlterProfileSurveyInfoMutationVariables> = {
   id: "preferences",
   mutation: AlterProfileSurveyInfoDocument,
-  onFinishedRoute: "/profile",
+  onFinishedRoute: "/home",
   questions: [
     {
       kind: QuestionKind.SingleChoice,
