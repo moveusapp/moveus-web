@@ -1,6 +1,7 @@
 import {
   HiOutlineHome,
   HiOutlineBell,
+  HiOutlineCalendarDays,
   HiOutlineUserCircle,
 } from "react-icons/hi2";
 import { HiOutlineChat, HiOutlineSearch } from "react-icons/hi";
@@ -17,6 +18,11 @@ const items = [
     label: "Search",
     to: "/search",
     icon: HiOutlineSearch,
+  },
+  {
+    label: "Calendar",
+    to: "/calendar",
+    icon: HiOutlineCalendarDays,
   },
   {
     label: "Notifications",
@@ -62,7 +68,7 @@ function MobileNav() {
             <Link
               key={item.label}
               to={item.to}
-              className="flex flex-col items-center gap-0.5 py-1 px-3 relative"
+              className="flex flex-col items-center gap-0.5 py-1 px-2 relative min-w-0 flex-1"
               aria-label={item.label}
             >
               {isActive && (
@@ -81,7 +87,7 @@ function MobileNav() {
                 )}
               </span>
               <span
-                className={`text-[10px] font-medium ${
+                className={`text-[10px] font-medium w-full text-center truncate ${
                   isActive ? "text-primary" : "text-base-content/50"
                 }`}
               >

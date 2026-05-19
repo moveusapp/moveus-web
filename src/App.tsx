@@ -17,6 +17,7 @@ import CreateEventPage from "./pages/create-event/CreateEventPage";
 import EditEventPage from "./pages/edit-event/EditEventPage";
 import LandingPage from "./pages/start/LandingPage";
 import WelcomePage from "./pages/onboarding/WelcomePage";
+import CalendarPage from "./pages/calendar/CalendarPage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Route path="/search" element={<SearchPage />} />
               <Route path="/profile" element={<ProfileRedirect />} />
               <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/calendar" element={<CalendarPage />} />
 
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/create-event" element={<CreateEventPage />} />

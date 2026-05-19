@@ -44,17 +44,19 @@ export function prependZero(number: number): string {
   return number + "";
 }
 
-export function formatDate(date: Date, locale: string = 'en-US'): string {
-  const sameYear = date.getFullYear() === new Date().getFullYear();
+export function formatDate(date: Date | string, locale: string = 'en-US'): string {
+  const d = date instanceof Date ? date : new Date(date);
+  const sameYear = d.getFullYear() === new Date().getFullYear();
   return new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
     ...(sameYear ? {} : { year: 'numeric' }),
-  }).format(date);
+  }).format(d);
 }
 
-export function formatTime(date: Date): string {
-  return `${prependZero(date.getHours())}:${prependZero(date.getMinutes())}`;
+export function formatTime(date: Date | string): string {
+  const d = date instanceof Date ? date : new Date(date);
+  return `${prependZero(d.getHours())}:${prependZero(d.getMinutes())}`;
 }
 

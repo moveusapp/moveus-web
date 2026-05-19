@@ -7,7 +7,7 @@ import type { IconType } from "react-icons";
 import UserAvatar from "../user/UserAvatar";
 
 const cardChassis =
-  "block bg-base-200 rounded-2xl border border-base-300 p-4 " +
+  "block bg-base-200 rounded-2xl border border-base-300 p-3 sm:p-4 " +
   "transition-colors duration-150 ease-out " +
   "hover:border-primary/30 hover:bg-base-200/60 " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary/40";
@@ -56,10 +56,10 @@ function NotificationCard({ notification }: NotificationCardProps) {
             <div className="flex flex-row items-center gap-3">
               <UserAvatar userId={notification.user?.id} className="w-11 shrink-0" />
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 grow min-w-0">
-                <p className="text-[15px] leading-snug truncate text-base-content/80">
+                <p className="text-[14px] sm:text-[15px] leading-snug text-base-content/80 line-clamp-2 sm:truncate break-words">
                   <b className="font-bold text-base-content">{name}</b> is now following you.
                 </p>
-                <span className="text-xs text-base-content/60 shrink-0 mt-0.5 sm:mt-0">{time}</span>
+                <span className="text-xs text-base-content/60 shrink-0 mt-1 sm:mt-0">{time}</span>
               </div>
             </div>
           </Link>
@@ -82,10 +82,10 @@ function NotificationCard({ notification }: NotificationCardProps) {
         <div className="flex flex-row items-center gap-3">
           <EventIconTile Icon={icon} tone={tone} />
           <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 grow min-w-0">
-            <p className="text-[15px] leading-snug truncate text-base-content/80">
+            <p className="text-[14px] sm:text-[15px] leading-snug text-base-content/80 line-clamp-2 sm:truncate break-words">
               <b className="font-bold text-base-content">{title}</b> {status}
             </p>
-            <span className="text-xs text-base-content/60 shrink-0 mt-0.5 sm:mt-0">{time}</span>
+            <span className="text-xs text-base-content/60 shrink-0 mt-1 sm:mt-0">{time}</span>
           </div>
         </div>
       </Link>

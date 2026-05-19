@@ -1,6 +1,7 @@
 import {
   HiOutlineHome,
   HiOutlineBell,
+  HiOutlineCalendarDays,
   HiOutlineCog6Tooth,
   HiPlus,
 } from "react-icons/hi2";
@@ -21,6 +22,11 @@ const navItems = [
     label: "Search",
     to: "/search",
     icon: HiOutlineSearch,
+  },
+  {
+    label: "Calendar",
+    to: "/calendar",
+    icon: HiOutlineCalendarDays,
   },
   {
     label: "Notifications",

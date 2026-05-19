@@ -163,7 +163,7 @@ function ChatPage() {
         } flex-col w-full lg:w-[300px] xl:w-[340px] lg:flex-shrink-0 lg:border-l border-base-300 overflow-y-auto h-full`}
       >
         <div className="p-4 pb-2">
-          <h2 className="font-semibold text-lg">Messages</h2>
+          <h2 className="text-2xl font-bold leading-tight">Messages</h2>
         </div>
         <div className="flex flex-col px-1 pb-4">
           {!hasReceivedData ? (
