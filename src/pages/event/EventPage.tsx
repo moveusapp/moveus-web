@@ -1,4 +1,5 @@
 import defaultEventThumbnail from "@/assets/default-images/event-default-thumbnail.webp";
+import { setDocumentTitle } from "@/hooks/use-document-title";
 import Button from "@/components/ui/Button";
 import UserAvatar from "@/components/user/UserAvatar";
 import {
@@ -71,7 +72,9 @@ function EventPage() {
   }, [event, searchParams]);
 
   if (fallback) return fallback;
-  if (!event) return null;
+  if (!event) {
+    return null;
+  }
 
   const isFull =
     event.maxParticipants &&
@@ -130,6 +133,8 @@ function EventPage() {
       : locationName
         ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationName)}`
         : null;
+
+  setDocumentTitle(event.title);
 
   return (
     <div className="w-full mx-auto max-w-5xl px-4 py-6">
