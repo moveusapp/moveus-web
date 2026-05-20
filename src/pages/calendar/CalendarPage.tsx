@@ -61,6 +61,7 @@ function CalendarPage() {
   const firstInterestingDay = (month: Date): Date => {
     const year = month.getFullYear();
     const m = month.getMonth();
+    if (year === today.getFullYear() && m === today.getMonth()) return today;
     const daysInMonth = new Date(year, m + 1, 0).getDate();
     for (let d = 1; d <= daysInMonth; d++) {
       const candidate = new Date(year, m, d);
