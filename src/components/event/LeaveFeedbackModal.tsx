@@ -75,7 +75,7 @@ function LeaveFeedbackModal({
           <HiXMark className="h-5 w-5" />
         </button>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           {/* Rating — the focal ritual */}
           <div className="text-center">
             <h3 className="text-xl font-bold text-foreground">How was it?</h3>
@@ -102,7 +102,7 @@ function LeaveFeedbackModal({
               rows={4}
               disabled={loading}
             />
-            <div className="mt-1.5 flex h-4 justify-end" aria-hidden="true">
+            <div className="flex justify-end" aria-hidden="true">
               {comment.length > 0 && (
                 <span
                   className={`text-xs tabular-nums ${
