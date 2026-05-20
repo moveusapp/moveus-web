@@ -46,7 +46,7 @@ function EventPage() {
     loadingFallback: <EventPageSkeleton />,
   });
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [activeTab, setActiveTab] = useState<"posts" | "comments">("posts");
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
@@ -61,6 +61,7 @@ function EventPage() {
   // Deep link from notifications / home reminder: /event/:id?feedback
   useEffect(() => {
     if (!event || !searchParams.has("feedback")) return;
+    setSearchParams("");
     const attended = [
       MemberRole.Participant,
       MemberRole.Moderator,
