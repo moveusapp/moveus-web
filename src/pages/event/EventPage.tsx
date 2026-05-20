@@ -36,6 +36,7 @@ import CommentSection from "@/components/comment/CommentSection";
 import CreatePostModal from "@/pages/event/CreatePostModal";
 import LeaveFeedbackModal from "@/components/event/LeaveFeedbackModal";
 import ViewFeedbackModal from "@/pages/event/ViewFeedbackModal";
+import EventScore from "@/pages/event/EventScore";
 
 function EventPage() {
   const { eventId } = useParams();
@@ -119,6 +120,9 @@ function EventPage() {
   // Organizers review the feedback their finished event collected.
   const canViewFeedback = isFinished && event.role === MemberRole.Organizer;
 
+  // A finished event shows its final score to everyone, next to the action.
+  const showScore = isFinished && event.score != null && event.score >= 1;
+
   const locationName = event.location?.name;
   const mapsUrl =
     event.location?.latitude != null && event.location?.longitude != null
@@ -192,6 +196,13 @@ function EventPage() {
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             {event.description}
           </p>
+
+          {/* Final score — mobile, just above the action */}
+          {showScore && (
+            <div className="lg:hidden mt-4">
+              <EventScore score={event.score!} />
+            </div>
+          )}
 
           {/* Sticky action bar — mobile only */}
           <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4 flex flex-col gap-2">
@@ -374,6 +385,13 @@ function EventPage() {
                 loading="lazy"
               />
             </div>
+
+            {/* Final score — desktop, just above the action */}
+            {showScore && (
+              <div className="hidden lg:block">
+                <EventScore score={event.score!} />
+              </div>
+            )}
 
             {/* Action buttons — desktop */}
             <div className="hidden lg:flex flex-col gap-2">

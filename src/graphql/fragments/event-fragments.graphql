@@ -48,6 +48,7 @@ fragment Event on EventType {
   }
   phase
   role
+  score
 }
 
 fragment EventCard on EventType {
