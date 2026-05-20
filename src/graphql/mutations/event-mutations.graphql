@@ -102,3 +102,19 @@ mutation CancelEvent($eventId: Int!) {
     }
   }
 }
+
+mutation RateEvent(
+  $eventId: Int!
+  $comment: String
+  $score: EventRating!
+) {
+  rateEvent(
+    eventId: $eventId
+    comment: $comment
+    score: $score
+  ) {
+    event {
+      ...Event
+    }
+  }
+}

@@ -15,6 +15,7 @@ import SearchPage from "./pages/search/SearchPage";
 import { AuthRoutes } from "./components/routes/AuthRoutes";
 import CreateEventPage from "./pages/create-event/CreateEventPage";
 import EditEventPage from "./pages/edit-event/EditEventPage";
+import EventFeedbackPage from "./pages/event-feedback/EventFeedbackPage";
 import LandingPage from "./pages/start/LandingPage";
 import WelcomePage from "./pages/onboarding/WelcomePage";
 import CalendarPage from "./pages/calendar/CalendarPage";
@@ -37,6 +38,10 @@ function App() {
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/create-event" element={<CreateEventPage />} />
               <Route path="/event/:eventId/edit" element={<EditEventPage />} />
+              <Route
+                path="/event/:eventId/feedback"
+                element={<EventFeedbackPage />}
+              />
             </Route>
             <Route path="/survey/:id" element={<SurveyPage />} />
             <Route path="/welcome" element={<WelcomePage />} />

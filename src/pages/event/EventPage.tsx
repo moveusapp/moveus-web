@@ -25,6 +25,7 @@ import {
   HiCheckBadge,
   HiOutlinePencilSquare,
   HiOutlineArrowTopRightOnSquare,
+  HiOutlineStar,
 } from "react-icons/hi2";
 import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
@@ -85,6 +86,15 @@ function EventPage() {
     : isFinished
       ? "text-base-content/80"
       : "text-foreground";
+
+  // Attendees of a finished event can leave feedback.
+  const canRate =
+    isFinished &&
+    [
+      MemberRole.Participant,
+      MemberRole.Moderator,
+      MemberRole.Spectator,
+    ].includes(event.role!);
 
   const locationName = event.location?.name;
   const mapsUrl =
@@ -163,7 +173,15 @@ function EventPage() {
           {/* Sticky action bar — mobile only */}
           <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4 flex flex-col gap-2">
             <div className="flex items-center gap-3">
-              {isLocked ? (
+              {canRate ? (
+                <Link
+                  to={`/event/${eventId}/feedback`}
+                  className="btn btn-primary flex-1 rounded-2xl"
+                >
+                  <HiOutlineStar className="h-4 w-4" />
+                  Leave Feedback
+                </Link>
+              ) : isLocked ? (
                 <button
                   type="button"
                   disabled
@@ -327,7 +345,15 @@ function EventPage() {
             {/* Action buttons — desktop */}
             <div className="hidden lg:flex flex-col gap-2">
               <div className="flex items-center gap-3">
-                {isLocked ? (
+                {canRate ? (
+                  <Link
+                    to={`/event/${eventId}/feedback`}
+                    className="btn btn-primary flex-1 rounded-2xl"
+                  >
+                    <HiOutlineStar className="h-4 w-4" />
+                    Leave Feedback
+                  </Link>
+                ) : isLocked ? (
                   <button
                     type="button"
                     disabled

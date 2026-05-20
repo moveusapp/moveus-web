@@ -77,8 +77,9 @@ function NotificationCard({ notification }: NotificationCardProps) {
       icon: IconType,
       tone: Tone,
       status: string,
+      to: string = `/event/${eventId}`,
     ) => (
-      <Link key={notification.id} className={cardChassis} to={`/event/${eventId}`}>
+      <Link key={notification.id} className={cardChassis} to={to}>
         <div className="flex flex-row items-center gap-3">
           <EventIconTile Icon={icon} tone={tone} />
           <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 grow min-w-0">
@@ -95,7 +96,12 @@ function NotificationCard({ notification }: NotificationCardProps) {
       case NotificationKind.EventStarted:
         return renderEventCard(HiBolt, "accent", "starting now.");
       case NotificationKind.EventFinished:
-        return renderEventCard(HiFlag, "primary", "wrapped up.");
+        return renderEventCard(
+          HiFlag,
+          "primary",
+          "wrapped up.",
+          `/event/${eventId}/feedback`,
+        );
     case NotificationKind.EventCancelled:
       return renderEventCard(HiXMark, "warning", "was cancelled.");
     default:
