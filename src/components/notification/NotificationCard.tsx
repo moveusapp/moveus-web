@@ -99,8 +99,8 @@ function NotificationCard({ notification }: NotificationCardProps) {
         return renderEventCard(
           HiFlag,
           "primary",
-          "wrapped up.",
-          `/event/${eventId}/feedback`,
+          "wrapped up. Tap to leave feedback.",
+          `/event/${eventId}?feedback`,
         );
     case NotificationKind.EventCancelled:
       return renderEventCard(HiXMark, "warning", "was cancelled.");

@@ -9,3 +9,14 @@ query GetAnonymousUserEvents {
     ...EventCard
   }
 }
+
+query GetUnratedEvents {
+  unratedEvents {
+    id
+    title
+    endTime
+    activity {
+      id
+    }
+  }
+}

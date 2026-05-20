@@ -26,13 +26,16 @@ import {
   HiOutlinePencilSquare,
   HiOutlineArrowTopRightOnSquare,
   HiOutlineStar,
+  HiOutlineChartBar,
 } from "react-icons/hi2";
-import { Link, useParams } from "react-router-dom";
-import { useState } from "react";
+import { Link, useParams, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import EventPageSkeleton from "./EventPageSkeleton";
 import PostCard from "@/components/post/PostCard";
 import CommentSection from "@/components/comment/CommentSection";
 import CreatePostModal from "@/pages/event/CreatePostModal";
+import LeaveFeedbackModal from "@/components/event/LeaveFeedbackModal";
+import ViewFeedbackModal from "@/pages/event/ViewFeedbackModal";
 
 function EventPage() {
   const { eventId } = useParams();
@@ -41,13 +44,30 @@ function EventPage() {
     loadingFallback: <EventPageSkeleton />,
   });
 
+  const [searchParams] = useSearchParams();
+
   const [activeTab, setActiveTab] = useState<"posts" | "comments">("posts");
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+  const [showLeaveFeedback, setShowLeaveFeedback] = useState(false);
+  const [showViewFeedback, setShowViewFeedback] = useState(false);
 
   const [joinEvent, { loading: joinLoading }] = useMutation(JoinEventDocument);
   const [leaveEvent, { loading: leaveLoading }] =
     useMutation(LeaveEventDocument);
   const [deleteEvent] = useMutation(DeleteEventDocument);
+
+  // Deep link from notifications / home reminder: /event/:id?feedback
+  useEffect(() => {
+    if (!event || !searchParams.has("feedback")) return;
+    const attended = [
+      MemberRole.Participant,
+      MemberRole.Moderator,
+      MemberRole.Spectator,
+    ].includes(event.role!);
+    if (event.phase === EventPhase.Finished && attended) {
+      setShowLeaveFeedback(true);
+    }
+  }, [event, searchParams]);
 
   if (fallback) return fallback;
   if (!event) return null;
@@ -95,6 +115,9 @@ function EventPage() {
       MemberRole.Moderator,
       MemberRole.Spectator,
     ].includes(event.role!);
+
+  // Organizers review the feedback their finished event collected.
+  const canViewFeedback = isFinished && event.role === MemberRole.Organizer;
 
   const locationName = event.location?.name;
   const mapsUrl =
@@ -174,13 +197,23 @@ function EventPage() {
           <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4 flex flex-col gap-2">
             <div className="flex items-center gap-3">
               {canRate ? (
-                <Link
-                  to={`/event/${eventId}/feedback`}
+                <button
+                  type="button"
+                  onClick={() => setShowLeaveFeedback(true)}
                   className="btn btn-primary flex-1 rounded-2xl"
                 >
                   <HiOutlineStar className="h-4 w-4" />
                   Leave Feedback
-                </Link>
+                </button>
+              ) : canViewFeedback ? (
+                <button
+                  type="button"
+                  onClick={() => setShowViewFeedback(true)}
+                  className="btn btn-primary flex-1 rounded-2xl"
+                >
+                  <HiOutlineChartBar className="h-4 w-4" />
+                  View Feedback
+                </button>
               ) : isLocked ? (
                 <button
                   type="button"
@@ -346,13 +379,23 @@ function EventPage() {
             <div className="hidden lg:flex flex-col gap-2">
               <div className="flex items-center gap-3">
                 {canRate ? (
-                  <Link
-                    to={`/event/${eventId}/feedback`}
+                  <button
+                    type="button"
+                    onClick={() => setShowLeaveFeedback(true)}
                     className="btn btn-primary flex-1 rounded-2xl"
                   >
                     <HiOutlineStar className="h-4 w-4" />
                     Leave Feedback
-                  </Link>
+                  </button>
+                ) : canViewFeedback ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowViewFeedback(true)}
+                    className="btn btn-primary flex-1 rounded-2xl"
+                  >
+                    <HiOutlineChartBar className="h-4 w-4" />
+                    View Feedback
+                  </button>
                 ) : isLocked ? (
                   <button
                     type="button"
@@ -482,6 +525,20 @@ function EventPage() {
         isOpen={showCreatePostModal}
         onClose={() => setShowCreatePostModal(false)}
         onSuccess={handlePostCreated}
+      />
+
+      <LeaveFeedbackModal
+        isOpen={showLeaveFeedback}
+        onClose={() => setShowLeaveFeedback(false)}
+        eventId={id}
+        eventTitle={event.title}
+        onSubmitted={refetch}
+      />
+
+      <ViewFeedbackModal
+        isOpen={showViewFeedback}
+        onClose={() => setShowViewFeedback(false)}
+        event={event}
       />
     </div>
   );

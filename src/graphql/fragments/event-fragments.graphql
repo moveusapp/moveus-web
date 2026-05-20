@@ -3,6 +3,8 @@ fragment EventMember on EventMemberType {
   user {
     ...UserCard
   }
+  score
+  comment
 }
 
 fragment EventOrganizer on EventMemberType {

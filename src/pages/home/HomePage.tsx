@@ -11,6 +11,7 @@ import { useProfile } from "@/context/profile-context";
 import { FaSadTear } from "react-icons/fa";
 import EventCardSkeleton from "@/components/event/EventCardSkeleton";
 import PageHeader from "@/components/layout/PageHeader";
+import FeedbackReminder from "@/pages/home/FeedbackReminder";
 
 function HomePage() {
   useDocumentTitle("Home");
@@ -21,17 +22,6 @@ function HomePage() {
     ? profile?.username!
     : profile.firstName!;
 
-  const hasJoinedEvents = () => {
-    return (
-      !loading &&
-      data &&
-      data!.futureJoinedEvents &&
-      data!.ongoingJoinedEvents &&
-      (data!.futureJoinedEvents.length > 0 ||
-        data!.ongoingJoinedEvents?.length > 0)
-    );
-  };
-
   return (
     <div className="flex flex-row">
       <div className="flex flex-col grow min-w-0">
@@ -39,6 +29,7 @@ function HomePage() {
           title={strings.formatString(strings.hello, { name: profileName })}
         />
         <div className="flex flex-col w-full mx-auto gap-3 p-4 max-w-[700px]">
+          <FeedbackReminder />
           {loading ? (
             [...Array(12)].map((_, index) => (
               <EventCardSkeleton key={`event-skeleton-${index}`} />

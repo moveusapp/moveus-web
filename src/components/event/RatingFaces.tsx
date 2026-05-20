@@ -11,6 +11,11 @@ export const RATING_OPTIONS: RatingOption[] = [
   { rating: EventRating.Great, label: "Amazing" },
 ];
 
+/** Index of a rating within `RATING_OPTIONS` (0-4), or -1 if unknown. */
+export function ratingIndex(rating: EventRating | string | null | undefined) {
+  return RATING_OPTIONS.findIndex((o) => o.rating === rating);
+}
+
 const MOUTHS = [
   "M7.8 16.2 Q12 11.6 16.2 16.2", // deep frown
   "M8.2 15.4 Q12 13.6 15.8 15.4", // slight frown
@@ -18,7 +23,7 @@ const MOUTHS = [
   "M7.9 13.9 Q12 17.2 16.1 13.9", // smile
 ];
 
-function FaceSvg({ index }: { index: number }) {
+export function FaceSvg({ index }: { index: number }) {
   const isGrin = index === 4;
 
   return (
@@ -104,3 +109,45 @@ function RatingFaces({ value, onChange, disabled }: RatingFacesProps) {
 }
 
 export default RatingFaces;
+
+const BADGE_SIZES = {
+  sm: "h-9 w-9",
+  md: "h-11 w-11",
+} as const;
+
+type RatingBadgeProps = {
+  /** A stored `EventRating` value, or its numeric index (0-4). */
+  score: EventRating | string | number | null | undefined;
+  size?: keyof typeof BADGE_SIZES;
+  className?: string;
+};
+
+/** Read-only single-face tile — mirrors a selected `RatingFaces` cell. */
+export function RatingBadge({ score, size = "sm", className }: RatingBadgeProps) {
+  const index =
+    typeof score === "number"
+      ? Math.max(0, Math.min(4, Math.round(score)))
+      : ratingIndex(score);
+  const option = RATING_OPTIONS[index];
+
+  if (!option) {
+    return (
+      <span
+        className={`flex ${BADGE_SIZES[size]} shrink-0 items-center justify-center rounded-2xl border border-base-300 bg-base-200 text-xs font-medium text-base-content/40 ${className ?? ""}`}
+        title="Not rated"
+      >
+        —
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className={`flex ${BADGE_SIZES[size]} shrink-0 items-center justify-center rounded-2xl border border-primary bg-primary text-primary-content shadow-sm ${className ?? ""}`}
+      title={option.label}
+      aria-label={option.label}
+    >
+      <FaceSvg index={index} />
+    </span>
+  );
+}
