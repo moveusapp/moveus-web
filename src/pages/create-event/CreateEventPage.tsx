@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client/react";
 import { CreateEventDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import EventForm, { type EventFormValues } from "@/components/event/EventForm";
+import PageHeader from "@/components/layout/PageHeader";
 
 function CreateEventPage() {
   useDocumentTitle("Create Event");
@@ -54,16 +55,18 @@ function CreateEventPage() {
   };
 
   return (
-    <div className="w-full mx-auto max-w-3xl p-4">
-      <h1 className="font-medium text-xl mb-4">Create Event</h1>
+    <div className="min-h-full shrink-0 flex flex-col">
+      <PageHeader title="Create Event" />
 
-      <EventForm
-        mode="create"
-        submitLabel="Create Event"
-        loading={loading}
-        apiError={apiError}
-        onSubmit={handleSubmit}
-      />
+      <div className="w-full mx-auto max-w-3xl p-4">
+        <EventForm
+          mode="create"
+          submitLabel="Create Event"
+          loading={loading}
+          apiError={apiError}
+          onSubmit={handleSubmit}
+        />
+      </div>
     </div>
   );
 }

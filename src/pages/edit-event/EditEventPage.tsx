@@ -15,6 +15,7 @@ import { useEvent } from "@/hooks/use-event";
 import EditEventPageSkeleton from "./EditEventPageSkeleton";
 import Button from "@/components/ui/Button";
 import { formatError } from "@/utils/format-error";
+import PageHeader from "@/components/layout/PageHeader";
 
 const pageWrap = "w-full mx-auto max-w-3xl p-4";
 
@@ -133,117 +134,129 @@ function EditEventPage() {
   };
 
   return (
-    <div className={pageWrap}>
-      <div className="mb-4">
-        <h1 className="font-medium text-xl">Edit Event</h1>
-        <p className="text-sm text-base-content/60 truncate">{event.title}</p>
-      </div>
+    <div className="min-h-full shrink-0 flex flex-col">
+      <PageHeader title="Edit Event">
+        <p className="pb-3 text-sm text-base-content/60 truncate">
+          {event.title}
+        </p>
+      </PageHeader>
 
-      <EventForm
-        mode="edit"
-        initialValues={initialValues}
-        submitLabel="Save Changes"
-        loading={saving}
-        apiError={apiError}
-        cancelHref={`/event/${id}`}
-        onSubmit={handleSubmit}
-      />
+      <div className={pageWrap}>
+        <EventForm
+          mode="edit"
+          initialValues={initialValues}
+          submitLabel="Save Changes"
+          loading={saving}
+          apiError={apiError}
+          cancelHref={`/event/${id}`}
+          onSubmit={handleSubmit}
+        />
 
-      <div className="mt-10 pt-6 border-t border-base-300 flex justify-end gap-2">
-        {event.phase !== EventPhase.Cancelled && event.phase !== EventPhase.Finished && (
+        <div className="mt-10 pt-6 border-t border-base-300 flex justify-end gap-2">
+          {event.phase !== EventPhase.Cancelled &&
+            event.phase !== EventPhase.Finished && (
+              <button
+                type="button"
+                onClick={() => setCancelOpen(true)}
+                className="btn btn-outline btn-warning rounded-2xl"
+              >
+                <HiOutlineNoSymbol className="h-4 w-4" />
+                Cancel event
+              </button>
+            )}
           <button
             type="button"
-            onClick={() => setCancelOpen(true)}
-            className="btn btn-outline btn-warning rounded-2xl"
+            onClick={() => setConfirmOpen(true)}
+            className="btn btn-outline btn-error rounded-2xl"
           >
-            <HiOutlineNoSymbol className="h-4 w-4" />
-            Cancel event
+            <HiOutlineTrash className="h-4 w-4" />
+            Delete event
           </button>
-        )}
-        <button
-          type="button"
-          onClick={() => setConfirmOpen(true)}
-          className="btn btn-outline btn-error rounded-2xl"
-        >
-          <HiOutlineTrash className="h-4 w-4" />
-          Delete event
-        </button>
+        </div>
+
+        <dialog className={`modal ${confirmOpen ? "modal-open" : ""}`}>
+          <div className="modal-box rounded-2xl">
+            <h3 className="font-bold text-lg">Delete this event?</h3>
+            <p className="py-3 text-sm text-base-content/70">
+              <span className="font-medium text-foreground">
+                {event.title}
+              </span>{" "}
+              will be removed for everyone. This can't be undone.
+            </p>
+
+            {deleteError && (
+              <p className="text-sm text-error mb-2">
+                {formatError(deleteError)}
+              </p>
+            )}
+
+            <div className="modal-action">
+              <Button
+                onClick={() => setConfirmOpen(false)}
+                disabled={deleting}
+                className="btn-ghost"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleDelete}
+                loading={deleting}
+                className="btn-error"
+              >
+                Delete event
+              </Button>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="modal-backdrop"
+            aria-label="Close"
+            onClick={() => !deleting && setConfirmOpen(false)}
+          />
+        </dialog>
+
+        <dialog className={`modal ${cancelOpen ? "modal-open" : ""}`}>
+          <div className="modal-box rounded-2xl">
+            <h3 className="font-bold text-lg">Cancel this event?</h3>
+            <p className="py-3 text-sm text-base-content/70">
+              Participants will be notified.{" "}
+              <span className="font-medium text-foreground">
+                {event.title}
+              </span>{" "}
+              stays in your history as cancelled. This can't be undone.
+            </p>
+
+            {cancelError && (
+              <p className="text-sm text-error mb-2">
+                {formatError(cancelError)}
+              </p>
+            )}
+
+            <div className="modal-action">
+              <Button
+                onClick={() => setCancelOpen(false)}
+                disabled={cancelling}
+                className="btn-ghost"
+              >
+                Keep event
+              </Button>
+              <Button
+                onClick={handleCancel}
+                loading={cancelling}
+                className="btn-warning"
+              >
+                Cancel event
+              </Button>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="modal-backdrop"
+            aria-label="Close"
+            onClick={() => !cancelling && setCancelOpen(false)}
+          />
+        </dialog>
       </div>
-
-      <dialog className={`modal ${confirmOpen ? "modal-open" : ""}`}>
-        <div className="modal-box rounded-2xl">
-          <h3 className="font-bold text-lg">Delete this event?</h3>
-          <p className="py-3 text-sm text-base-content/70">
-            <span className="font-medium text-foreground">{event.title}</span>{" "}
-            will be removed for everyone. This can't be undone.
-          </p>
-
-          {deleteError && (
-            <p className="text-sm text-error mb-2">{formatError(deleteError)}</p>
-          )}
-
-          <div className="modal-action">
-            <Button
-              onClick={() => setConfirmOpen(false)}
-              disabled={deleting}
-              className="btn-ghost"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleDelete}
-              loading={deleting}
-              className="btn-error"
-            >
-              Delete event
-            </Button>
-          </div>
-        </div>
-        <button
-          type="button"
-          className="modal-backdrop"
-          aria-label="Close"
-          onClick={() => !deleting && setConfirmOpen(false)}
-        />
-      </dialog>
-
-      <dialog className={`modal ${cancelOpen ? "modal-open" : ""}`}>
-        <div className="modal-box rounded-2xl">
-          <h3 className="font-bold text-lg">Cancel this event?</h3>
-          <p className="py-3 text-sm text-base-content/70">
-            Participants will be notified.{" "}
-            <span className="font-medium text-foreground">{event.title}</span>{" "}
-            stays in your history as cancelled. This can't be undone.
-          </p>
-
-          {cancelError && (
-            <p className="text-sm text-error mb-2">{formatError(cancelError)}</p>
-          )}
-
-          <div className="modal-action">
-            <Button
-              onClick={() => setCancelOpen(false)}
-              disabled={cancelling}
-              className="btn-ghost"
-            >
-              Keep event
-            </Button>
-            <Button
-              onClick={handleCancel}
-              loading={cancelling}
-              className="btn-warning"
-            >
-              Cancel event
-            </Button>
-          </div>
-        </div>
-        <button
-          type="button"
-          className="modal-backdrop"
-          aria-label="Close"
-          onClick={() => !cancelling && setCancelOpen(false)}
-        />
-      </dialog>
     </div>
   );
 }
