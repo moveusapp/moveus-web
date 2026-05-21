@@ -61,7 +61,7 @@ function EventPage() {
   // Deep link from notifications / home reminder: /event/:id?feedback
   useEffect(() => {
     if (!event || !searchParams.has("feedback")) return;
-    setSearchParams("");
+    setSearchParams("", { replace: true });
     const attended = [
       MemberRole.Participant,
       MemberRole.Moderator,
