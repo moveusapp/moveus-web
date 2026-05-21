@@ -154,7 +154,7 @@ function SettingsPage() {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full overflow-y-auto flex flex-col">
       <PageHeader title="Settings" />
 
       <div className="flex flex-col grow gap-2 m-4">
