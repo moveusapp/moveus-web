@@ -90,13 +90,13 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
       onMouseLeave={resume}
       onFocus={pause}
       onBlur={resume}
-      className={`alert ${alert} alert-soft pointer-events-auto grid w-[min(92vw,26rem)] grid-cols-[auto_1fr_auto] items-start gap-3 rounded-2xl border-0 p-4 shadow-lg ${
+      className={`alert ${alert} alert-soft pointer-events-auto grid w-[min(92vw,26rem)] grid-cols-[auto_1fr_auto] items-start gap-3 rounded-2xl border border-current/15 p-4 shadow-lg ${
         leaving
-          ? "animate-toast-out sm:animate-toast-out-x"
-          : "animate-toast-in sm:animate-toast-in-x"
+          ? "animate-toast-out md:animate-toast-out-x"
+          : "animate-toast-in md:animate-toast-in-x"
       }`}
     >
-      <Icon className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+      <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
       <div className="min-w-0 space-y-0.5">
         {toast.title && (
           <p className="text-sm font-semibold leading-snug">{toast.title}</p>
@@ -107,7 +107,7 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
         type="button"
         onClick={beginExit}
         aria-label="Dismiss notification"
-        className="btn btn-ghost btn-xs btn-circle -mt-0.5 -mr-0.5 shrink-0"
+        className="btn btn-ghost btn-xs btn-circle -mt-0.5 -mr-0.5 shrink-0 opacity-70 transition-opacity hover:opacity-100"
       >
         <HiXMark className="h-4 w-4" />
       </button>
@@ -125,7 +125,7 @@ function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
     <div
       role="region"
       aria-label="Notifications"
-      className="pointer-events-none fixed inset-x-0 top-0 z-[1000] flex flex-col items-center gap-2 p-4 sm:inset-x-auto sm:top-auto sm:right-0 sm:bottom-0 sm:items-end sm:p-6"
+      className="pointer-events-none fixed inset-x-0 top-0 z-[1000] flex flex-col items-center gap-2 p-4 md:inset-x-auto md:top-auto md:right-0 md:bottom-0 md:items-end md:p-6"
     >
       {/* Newest first: topmost on mobile, closest to view on desktop. */}
       {[...toasts].reverse().map((toast) => (
