@@ -12,6 +12,7 @@ import { FaSadTear } from "react-icons/fa";
 import EventCardSkeleton from "@/components/event/EventCardSkeleton";
 import PageHeader from "@/components/layout/PageHeader";
 import FeedbackReminder from "@/pages/home/FeedbackReminder";
+import CreatePostComposer from "@/pages/home/CreatePostComposer";
 
 function HomePage() {
   useDocumentTitle("Home");
@@ -29,6 +30,7 @@ function HomePage() {
           title={strings.formatString(strings.hello, { name: profileName })}
         />
         <div className="flex flex-col w-full mx-auto gap-3 p-4 max-w-[700px]">
+          <CreatePostComposer />
           <FeedbackReminder />
           {loading ? (
             [...Array(12)].map((_, index) => (

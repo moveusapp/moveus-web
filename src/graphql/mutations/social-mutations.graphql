@@ -15,9 +15,10 @@ mutation UnfollowUser($userId: Int!) {
   }
 }
 
-mutation CreatePost($eventId: Int!, $content: String!) {
-  createPost(eventId: $eventId, content: $content) {
+mutation CreatePost($content: String!, $eventId: Int) {
+  createPost(content: $content, eventId: $eventId) {
     post {
+      id
       imageUploadUrl
     }
   }

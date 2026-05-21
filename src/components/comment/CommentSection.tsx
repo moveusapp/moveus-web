@@ -13,13 +13,13 @@ function CommentSection({ comments, entityType, entityId }: CommentSectionProps)
   const [replyingTo, setReplyingTo] = useState<CommentFragment | null>(null);
 
   const [commentOnPost, { loading: postLoading }] = useMutation(CommentOnPostDocument, {
-    refetchQueries: ["GetEvent", "GetFeed"],
+    refetchQueries: ["GetEvent", "GetFeed", "GetPost"],
   });
   const [commentOnEvent, { loading: eventLoading }] = useMutation(CommentOnEventDocument, {
     refetchQueries: ["GetEvent"],
   });
   const [replyOnComment, { loading: replyLoading }] = useMutation(ReplyOnCommentDocument, {
-    refetchQueries: ["GetEvent", "GetFeed"],
+    refetchQueries: ["GetEvent", "GetFeed", "GetPost"],
   });
 
   const loading = postLoading || eventLoading || replyLoading;

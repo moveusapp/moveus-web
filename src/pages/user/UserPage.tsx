@@ -100,16 +100,6 @@ function UserPage() {
   if (locationName) facts.push(locationName);
   if (age != null) facts.push(`${age} years old`);
   if (genderLabel) facts.push(genderLabel);
-  if (user.email)
-    facts.push(
-      <a
-        key="email"
-        href={`mailto:${user.email}`}
-        className="hover:text-primary hover:underline"
-      >
-        {user.email}
-      </a>,
-    );
 
   const showFollowers =
     user.followerCount != null || user.followingCount != null;

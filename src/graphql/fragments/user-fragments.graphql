@@ -22,7 +22,6 @@ fragment BasicInfo on ProfileType {
 fragment ContextProfile on ProfileType{
   id
   username
-  email
   lastLogin
   maxTravelDistance
   isCapeable
@@ -56,7 +55,6 @@ fragment User on UserType {
   likes
   dislikes
   dateOfBirth
-  email
   location {
     city
     region

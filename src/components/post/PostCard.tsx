@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { useCallback, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { KeyboardEvent, MouseEvent, useCallback, useState } from "react";
 import {
   PostCardFragment,
   LikePostDocument,
@@ -9,13 +9,13 @@ import { useMutation } from "@apollo/client/react";
 import { timeAgo } from "@/utils/time-utils";
 import UserAvatar from "../user/UserAvatar";
 import { displayName } from "@/utils/display-name";
-import { HiCheckBadge, HiXMark } from "react-icons/hi2";
+import { HiCheckBadge } from "react-icons/hi2";
 import { HiOutlineHeart, HiHeart, HiOutlineChatBubbleLeft } from "react-icons/hi2";
-import CommentSection from "@/components/comment/CommentSection";
+import ImageLightbox from "@/components/ui/ImageLightbox";
 
-function PostCard({ post, hideEventLink }: PostCardProps) {
+function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
+  const navigate = useNavigate();
   const [showImageModal, setShowImageModal] = useState(false);
-  const [showComments, setShowComments] = useState(false);
   const [liked, setLiked] = useState(post.isLiked ?? false);
   const [likeCount, setLikeCount] = useState(post.likes ?? 0);
 
@@ -52,9 +52,45 @@ function PostCard({ post, hideEventLink }: PostCardProps) {
     }
   }, [liked, post.id, likePost, unlikePost]);
 
+  const navigable = clickable && post.id != null;
+
+  const openPost = useCallback(
+    (e: MouseEvent | KeyboardEvent) => {
+      // Let nested links, buttons and form controls handle their own clicks.
+      if ((e.target as HTMLElement).closest("a, button, input, textarea, label")) {
+        return;
+      }
+      navigate(`/post/${post.id}`);
+    },
+    [navigate, post.id],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        if ((e.target as HTMLElement).closest("a, button, input, textarea, label")) {
+          return;
+        }
+        e.preventDefault();
+        navigate(`/post/${post.id}`);
+      }
+    },
+    [navigate, post.id],
+  );
+
   return (
     <>
-      <article className="bg-base-200 w-full rounded-2xl border border-base-300 overflow-hidden hover:border-primary/20 transition-all">
+      <article
+        role={navigable ? "link" : undefined}
+        tabIndex={navigable ? 0 : undefined}
+        onClick={navigable ? openPost : undefined}
+        onKeyDown={navigable ? handleKeyDown : undefined}
+        className={`bg-base-200 w-full rounded-2xl border border-base-300 overflow-hidden transition-all hover:border-primary/20 ${
+          navigable
+            ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+            : ""
+        }`}
+      >
         <div className="p-5 space-y-4">
           <div className="flex items-start justify-between gap-3">
             <Link
@@ -116,11 +152,12 @@ function PostCard({ post, hideEventLink }: PostCardProps) {
             </Link>
           )}
 
-          {/* Action bar */}
+          {/* Action bar — comments live on the post page */}
           <div className="flex items-center gap-4 pt-3 border-t border-base-300">
             <button
               onClick={handleLike}
               aria-label={liked ? "Unlike" : "Like"}
+              aria-pressed={liked}
               className="flex items-center gap-1.5 text-sm text-base-content/60 hover:text-error transition-colors"
             >
               {liked ? (
@@ -130,51 +167,20 @@ function PostCard({ post, hideEventLink }: PostCardProps) {
               )}
               {likeCount > 0 && <span>{likeCount}</span>}
             </button>
-            <button
-              onClick={() => setShowComments(!showComments)}
-              aria-label={showComments ? "Hide comments" : "Show comments"}
-              className="flex items-center gap-1.5 text-sm text-base-content/60 hover:text-primary transition-colors"
-            >
+            <span className="flex items-center gap-1.5 text-sm text-base-content/60">
               <HiOutlineChatBubbleLeft className="w-5 h-5" />
               {commentCount > 0 && <span>{commentCount}</span>}
-            </button>
+            </span>
           </div>
-
-          {/* Comments section */}
-          {showComments && (
-            <div className="pt-2 border-t border-base-300">
-              <CommentSection
-                entityType="post"
-                entityId={post.id!}
-                comments={(post.comments ?? []).filter(Boolean) as any}
-              />
-            </div>
-          )}
         </div>
       </article>
 
-      {/* Image Modal */}
-      {showImageModal && imageUrl && (
-        <dialog open className="modal modal-open">
-          <div className="modal-box max-w-4xl p-0 bg-transparent shadow-none flex items-center justify-center">
-            <button
-              onClick={() => setShowImageModal(false)}
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10 bg-base-100/80 hover:bg-base-100"
-              aria-label="Close"
-            >
-              <HiXMark className="w-5 h-5" />
-            </button>
-            <img
-              src={imageUrl}
-              alt="Post image"
-              className="w-full h-auto max-h-[95vh] object-contain"
-            />
-          </div>
-          <form method="dialog" className="modal-backdrop">
-            <button onClick={() => setShowImageModal(false)}>close</button>
-          </form>
-        </dialog>
-      )}
+      <ImageLightbox
+        open={showImageModal}
+        src={imageUrl}
+        alt="Post image"
+        onClose={() => setShowImageModal(false)}
+      />
     </>
   );
 }
@@ -182,6 +188,7 @@ function PostCard({ post, hideEventLink }: PostCardProps) {
 interface PostCardProps {
   post: PostCardFragment;
   hideEventLink?: boolean;
+  clickable?: boolean;
 }
 
 export default PostCard;

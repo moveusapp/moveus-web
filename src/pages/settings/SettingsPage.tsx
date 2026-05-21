@@ -12,7 +12,6 @@ import {
 import {
   HiOutlineArrowRightOnRectangle,
   HiOutlineCake,
-  HiOutlineEnvelope,
   HiOutlineMapPin,
   HiOutlineMoon,
   HiOutlineRectangleStack,
@@ -50,12 +49,6 @@ const privacySettingConfig: {
     label: "Gender",
     description: "Your gender shown on your profile.",
     icon: <HiOutlineUserCircle />,
-  },
-  {
-    setting: PrivacySetting.Email,
-    label: "Email",
-    description: "Your email address.",
-    icon: <HiOutlineEnvelope />,
   },
   {
     setting: PrivacySetting.Followers,

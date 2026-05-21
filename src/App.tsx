@@ -18,6 +18,7 @@ import EditEventPage from "./pages/edit-event/EditEventPage";
 import LandingPage from "./pages/start/LandingPage";
 import WelcomePage from "./pages/onboarding/WelcomePage";
 import CalendarPage from "./pages/calendar/CalendarPage";
+import PostPage from "./pages/post/PostPage";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route element={<NavRoutes />}>
             <Route path="/user/:username" element={<UserPage />} />
             <Route path="/event/:eventId" element={<EventPage />} />
+            <Route path="/post/:postId" element={<PostPage />} />
           </Route>
           <Route element={<AuthRoutes />}>
             <Route path="/login" element={<LoginPage />} />

@@ -34,7 +34,7 @@ import { useEffect, useState } from "react";
 import EventPageSkeleton from "./EventPageSkeleton";
 import PostCard from "@/components/post/PostCard";
 import CommentSection from "@/components/comment/CommentSection";
-import CreatePostModal from "@/pages/event/CreatePostModal";
+import CreatePostModal from "@/components/post/CreatePostModal";
 import LeaveFeedbackModal from "@/components/event/LeaveFeedbackModal";
 import ViewFeedbackModal from "@/pages/event/ViewFeedbackModal";
 import EventScore from "@/pages/event/EventScore";

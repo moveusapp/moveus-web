@@ -16,6 +16,12 @@ query GetMyFollowing {
   }
 }
 
+query GetPost($id: Int!) {
+  post(id: $id) {
+    ...PostCard
+  }
+}
+
 query GetFeed {
   joinedEvents {
     posts {
