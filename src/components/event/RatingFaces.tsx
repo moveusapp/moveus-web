@@ -190,7 +190,7 @@ export function RatingBadge({ score, size = "sm", className }: RatingBadgeProps)
 
   return (
     <span
-      className={`flex ${BADGE_SIZES[size]} ${RATING_OPTIONS[index].surface} border shrink-0 items-center justify-center rounded-2xl ${className ?? ""}`}
+      className={`flex ${BADGE_SIZES[size]} ${option.surface} ${option.ink} border shrink-0 items-center justify-center rounded-2xl ${className ?? ""}`}
       title={option.label}
       aria-label={option.label}
     >
