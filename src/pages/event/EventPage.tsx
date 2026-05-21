@@ -13,6 +13,8 @@ import {
 import EventPhaseBadge from "@/components/event/EventPhaseBadge";
 import { displayName } from "@/utils/display-name";
 import { formatDate, formatTime } from "@/utils/time-utils";
+import { formatError } from "@/utils/format-error";
+import { useToast } from "@/context/toast-context";
 import { useMutation } from "@apollo/client/react";
 import { useEvent } from "@/hooks/use-event";
 import {
@@ -58,6 +60,8 @@ function EventPage() {
     useMutation(LeaveEventDocument);
   const [deleteEvent] = useMutation(DeleteEventDocument);
 
+  const toast = useToast();
+
   // Deep link from notifications / home reminder: /event/:id?feedback
   useEffect(() => {
     if (!event || !searchParams.has("feedback")) return;
@@ -92,6 +96,34 @@ function EventPage() {
 
   const handlePostCreated = () => {
     refetch();
+  };
+
+  const handleJoin = async () => {
+    if (isFull) return;
+    try {
+      await joinEvent({ variables: { eventId: id } });
+      toast.success("You're in! See you there.");
+    } catch (err) {
+      toast.error(formatError(err));
+    }
+  };
+
+  const handleLeave = async () => {
+    try {
+      await leaveEvent({ variables: { eventId: id } });
+      toast.info("You left this event.");
+    } catch (err) {
+      toast.error(formatError(err));
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied to clipboard.");
+    } catch {
+      toast.error("Couldn't copy the link. Try again.");
+    }
   };
 
   const activity = Object.keys(ActivityKind)[event.activity.id!];
@@ -253,9 +285,7 @@ function EventPage() {
                   MemberRole.Spectator,
                 ].includes(event.role!) ? (
                 <Button
-                  onClick={() =>
-                    leaveEvent({ variables: { eventId: id } })
-                  }
+                  onClick={handleLeave}
                   loading={leaveLoading}
                   className="btn btn-error btn-outline flex-1"
                 >
@@ -263,10 +293,7 @@ function EventPage() {
                 </Button>
               ) : (
                 <Button
-                  onClick={() =>
-                    !isFull &&
-                    joinEvent({ variables: { eventId: id } })
-                  }
+                  onClick={handleJoin}
                   loading={joinLoading}
                   disabled={!!isFull}
                   className={`btn btn-primary flex-1 ${isFull ? "btn-disabled" : ""}`}
@@ -277,6 +304,7 @@ function EventPage() {
 
               <button
                 type="button"
+                onClick={handleShare}
                 disabled={isLocked}
                 className={`btn btn-square rounded-2xl ${isLocked ? "btn-disabled" : ""}`}
                 aria-label="Share event"
@@ -442,9 +470,7 @@ function EventPage() {
                     MemberRole.Spectator,
                   ].includes(event.role!) ? (
                   <Button
-                    onClick={() =>
-                      leaveEvent({ variables: { eventId: id } })
-                    }
+                    onClick={handleLeave}
                     loading={leaveLoading}
                     className="btn btn-error btn-outline flex-1"
                   >
@@ -452,10 +478,7 @@ function EventPage() {
                   </Button>
                 ) : (
                   <Button
-                    onClick={() =>
-                      !isFull &&
-                      joinEvent({ variables: { eventId: id } })
-                    }
+                    onClick={handleJoin}
                     loading={joinLoading}
                     disabled={!!isFull}
                     className={`btn btn-primary flex-1 ${isFull ? "btn-disabled" : ""}`}
@@ -466,6 +489,7 @@ function EventPage() {
 
                 <button
                   type="button"
+                  onClick={handleShare}
                   disabled={isLocked}
                   className={`btn btn-square rounded-2xl ${isLocked ? "btn-disabled" : ""}`}
                   aria-label="Share event"

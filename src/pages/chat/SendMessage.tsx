@@ -8,8 +8,11 @@ import {
 } from "@/graphql/graphql-types";
 import { fileToBase64, putFileToSignedUrl } from "@/utils/upload";
 import { useMutation } from "@apollo/client/react";
+import { formatError } from "@/utils/format-error";
+import { useToast } from "@/context/toast-context";
 
 function SendMessage({ chatId, addMessage }: SendMessageInterface) {
+  const toast = useToast();
   const [text, setText] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -83,7 +86,10 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
           attachmentId,
           message: text,
         },
-      }).catch((error) => console.error(error));
+      }).catch((error) => {
+        console.error(error);
+        toast.error(formatError(error), "Message not sent");
+      });
     },
     [
       text,
@@ -93,6 +99,7 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
       chatId,
       sendMessage,
       addMessage,
+      toast,
     ],
   );
 

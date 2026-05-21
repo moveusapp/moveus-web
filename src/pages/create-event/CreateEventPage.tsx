@@ -4,11 +4,13 @@ import { CreateEventDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import EventForm, { type EventFormValues } from "@/components/event/EventForm";
 import PageHeader from "@/components/layout/PageHeader";
+import { useToast } from "@/context/toast-context";
 
 function CreateEventPage() {
   useDocumentTitle("Create Event");
 
   const navigate = useNavigate();
+  const toast = useToast();
   const [createEvent, { loading, error: apiError }] =
     useMutation(CreateEventDocument);
 
@@ -47,6 +49,7 @@ function CreateEventPage() {
       });
 
       if (result.data?.createEvent?.event?.id) {
+        toast.success("Event created.");
         navigate(`/event/${result.data.createEvent.event.id}`);
       }
     } catch (err) {

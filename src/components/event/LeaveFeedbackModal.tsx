@@ -7,6 +7,7 @@ import TextArea from "@/components/ui/TextArea";
 import FormError from "@/components/ui/FormError";
 import RatingFaces from "@/components/event/RatingFaces";
 import { formatError } from "@/utils/format-error";
+import { useToast } from "@/context/toast-context";
 
 const MAX_COMMENT = 500;
 const COMMENT_WARN_AT = MAX_COMMENT - 50;
@@ -29,6 +30,7 @@ function LeaveFeedbackModal({
   initialScore = null,
   onSubmitted,
 }: LeaveFeedbackModalProps) {
+  const toast = useToast();
   const [score, setScore] = useState<EventRating | null>(initialScore);
   const [comment, setComment] = useState("");
 
@@ -56,6 +58,7 @@ function LeaveFeedbackModal({
       });
       if (result.data?.rateEvent?.event?.id) {
         onClose();
+        toast.success("Thanks for the feedback!");
         onSubmitted?.();
       }
     } catch (err) {

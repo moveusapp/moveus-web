@@ -11,6 +11,7 @@ import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
 import { enumToOptions } from "@/utils/enum-to-options";
 import { uploadProfilePicture } from "@/utils/upload";
 import { formatError } from "@/utils/format-error";
+import { useToast } from "@/context/toast-context";
 import {
   AlterProfileBasicInfoDocument,
   ContextProfileFragment,
@@ -48,6 +49,7 @@ function formatDateForApi(date: Date): string {
 
 function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
   const apollo = useApolloClient();
+  const toast = useToast();
   const [alterBasicInfo, { loading, error }] = useMutation(
     AlterProfileBasicInfoDocument,
   );
@@ -131,6 +133,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
       });
 
       onClose();
+      toast.success("Profile updated.");
     } catch (err) {
       console.error("Error updating profile:", err);
     }

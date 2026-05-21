@@ -16,6 +16,7 @@ import EditEventPageSkeleton from "./EditEventPageSkeleton";
 import Button from "@/components/ui/Button";
 import { formatError } from "@/utils/format-error";
 import PageHeader from "@/components/layout/PageHeader";
+import { useToast } from "@/context/toast-context";
 
 const pageWrap = "w-full mx-auto max-w-3xl p-4";
 
@@ -30,6 +31,7 @@ function EditEventPage() {
 
   const { eventId } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const { id, event, fallback } = useEvent({
     eventIdParam: eventId,
@@ -98,6 +100,7 @@ function EditEventPage() {
       });
 
       if (result.data?.alterEvent?.event?.id) {
+        toast.success("Changes saved.");
         navigate(`/event/${id}`);
       }
     } catch (err) {
@@ -109,6 +112,7 @@ function EditEventPage() {
     try {
       const result = await cancelEvent({ variables: { eventId: id } });
       if (result.data?.cancelEvent?.event?.id) {
+        toast.success("Event cancelled.");
         navigate(`/event/${id}`);
       }
     } catch (err) {
@@ -126,6 +130,7 @@ function EditEventPage() {
         },
       });
       if (result.data?.deleteEvent?.success) {
+        toast.success("Event deleted.");
         navigate("/home", { replace: true });
       }
     } catch (err) {

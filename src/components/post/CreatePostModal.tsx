@@ -8,6 +8,7 @@ import { useMutation } from "@apollo/client/react";
 import { formatError } from "@/utils/format-error";
 import FormError from "@/components/ui/FormError";
 import { useProfile } from "@/context/profile-context";
+import { useToast } from "@/context/toast-context";
 import { displayName } from "@/utils/display-name";
 
 interface CreatePostModalProps {
@@ -25,6 +26,7 @@ function CreatePostModal({
   onSuccess,
 }: CreatePostModalProps) {
   const { profile } = useProfile();
+  const toast = useToast();
 
   const [createPost, { loading: creating, error }] =
     useMutation(CreatePostDocument);
@@ -33,11 +35,10 @@ function CreatePostModal({
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
   const imageRef = useRef<HTMLInputElement>(null);
 
   const loading = creating || uploading;
-  const errorMessage = uploadError ?? (error ? formatError(error) : null);
+  const errorMessage = error ? formatError(error) : null;
 
   const authorName = profile
     ? displayName(profile.username, profile.firstName, profile.lastName)
@@ -74,8 +75,6 @@ function CreatePostModal({
       return;
     }
 
-    setUploadError(null);
-
     try {
       const result = await createPost({
         variables: {
@@ -86,16 +85,14 @@ function CreatePostModal({
 
       const post = result.data?.createPost?.post;
 
+      let imageFailed = false;
       if (selectedImage && post?.imageUploadUrl) {
         setUploading(true);
         try {
           await putFileToSignedUrl(post.imageUploadUrl, selectedImage);
         } catch (err) {
           console.error("Error uploading image:", err);
-          setUploadError(
-            "Your post was created, but the image failed to upload.",
-          );
-          return;
+          imageFailed = true;
         } finally {
           setUploading(false);
         }
@@ -106,6 +103,11 @@ function CreatePostModal({
       setImagePreview(null);
 
       onClose();
+      if (imageFailed) {
+        toast.info("Post shared, but the photo didn't upload.");
+      } else {
+        toast.success("Post shared.");
+      }
       if (onSuccess && post?.id != null) {
         onSuccess(post.id);
       }
@@ -118,7 +120,6 @@ function CreatePostModal({
     setContent("");
     setSelectedImage(null);
     setImagePreview(null);
-    setUploadError(null);
     if (imageRef.current) {
       imageRef.current.value = "";
     }

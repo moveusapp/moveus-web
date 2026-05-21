@@ -8,8 +8,11 @@ import {
 } from "@/graphql/graphql-types";
 import CommentCard from "./CommentCard";
 import CommentInput from "./CommentInput";
+import { formatError } from "@/utils/format-error";
+import { useToast } from "@/context/toast-context";
 
 function CommentSection({ comments, entityType, entityId }: CommentSectionProps) {
+  const toast = useToast();
   const [replyingTo, setReplyingTo] = useState<CommentFragment | null>(null);
 
   const [commentOnPost, { loading: postLoading }] = useMutation(CommentOnPostDocument, {
@@ -26,20 +29,22 @@ function CommentSection({ comments, entityType, entityId }: CommentSectionProps)
 
   const handleSubmit = useCallback(
     (text: string) => {
+      const onError = (err: unknown) => toast.error(formatError(err));
+
       if (replyingTo) {
         replyOnComment({ variables: { commentId: replyingTo.id!, text } })
           .then(() => setReplyingTo(null))
-          .catch(() => {});
+          .catch(onError);
         return;
       }
 
       if (entityType === "post") {
-        commentOnPost({ variables: { postId: entityId, text } }).catch(() => {});
+        commentOnPost({ variables: { postId: entityId, text } }).catch(onError);
       } else {
-        commentOnEvent({ variables: { eventId: entityId, text } }).catch(() => {});
+        commentOnEvent({ variables: { eventId: entityId, text } }).catch(onError);
       }
     },
-    [replyingTo, entityType, entityId, commentOnPost, commentOnEvent, replyOnComment],
+    [replyingTo, entityType, entityId, commentOnPost, commentOnEvent, replyOnComment, toast],
   );
 
   const handleReply = useCallback((comment: CommentFragment) => {
