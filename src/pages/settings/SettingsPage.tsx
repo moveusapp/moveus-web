@@ -10,6 +10,7 @@ import {
   PrivacySetting,
 } from "@/graphql/graphql-types";
 import {
+  HiOutlineArrowRightOnRectangle,
   HiOutlineCake,
   HiOutlineEnvelope,
   HiOutlineMapPin,
@@ -209,14 +210,23 @@ function SettingsPage() {
           ))}
         </div>
 
-        <button
-          className="btn btn-error btn-outline mt-auto"
-          onClick={() =>
-            (document.getElementById("logoutModal") as any).showModal()
-          }
-        >
-          Logout
-        </button>
+        <div className="mt-3 mb-1">
+          <p className="text-md font-medium">Account</p>
+        </div>
+
+        <div className="bg-base-200 rounded-2xl border border-base-300 overflow-hidden">
+          <SettingsOption
+            icon={<HiOutlineArrowRightOnRectangle />}
+            title="Log out"
+            description="You'll need to sign in again next time."
+            control={{
+              kind: "action",
+              tone: "danger",
+              onClick: () =>
+                (document.getElementById("logoutModal") as any).showModal(),
+            }}
+          />
+        </div>
       </div>
 
       <dialog id="logoutModal" className="modal">

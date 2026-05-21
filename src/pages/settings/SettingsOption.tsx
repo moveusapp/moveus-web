@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { HiChevronRight } from "react-icons/hi2";
 
 type ToggleControl = {
   kind: "toggle";
@@ -15,8 +16,14 @@ type DropdownControl = {
   disabled?: boolean;
 };
 
+type ActionControl = {
+  kind: "action";
+  onClick: () => void;
+  tone?: "default" | "danger";
+};
+
 /** Control variants a settings option can render. Add new kinds here. */
-export type SettingsControl = ToggleControl | DropdownControl;
+export type SettingsControl = ToggleControl | DropdownControl | ActionControl;
 
 interface SettingsOptionProps {
   icon: ReactNode;
@@ -29,7 +36,7 @@ interface SettingsOptionProps {
   control: SettingsControl;
 }
 
-function renderControl(control: SettingsControl, ariaLabel: string) {
+function renderInput(control: SettingsControl, ariaLabel: string) {
   if (control.kind === "toggle") {
     return (
       <input
@@ -44,26 +51,36 @@ function renderControl(control: SettingsControl, ariaLabel: string) {
     );
   }
 
+  if (control.kind === "dropdown") {
+    return (
+      <select
+        aria-label={ariaLabel}
+        className="select rounded-2xl bg-base-100 w-32 shrink-0"
+        value={control.value}
+        disabled={control.disabled}
+        onChange={(e) => control.onChange(e.target.value)}
+      >
+        {control.options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    );
+  }
+
   return (
-    <select
-      aria-label={ariaLabel}
-      className="select rounded-2xl bg-base-100 w-32 shrink-0"
-      value={control.value}
-      disabled={control.disabled}
-      onChange={(e) => control.onChange(e.target.value)}
-    >
-      {control.options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <HiChevronRight
+      aria-hidden
+      className="shrink-0 text-base-content/30 transition-transform group-hover:translate-x-0.5"
+    />
   );
 }
 
 /**
  * One row in a settings list: an icon, a title, a description, and a control.
- * Presentational only; the owning page holds the state and handlers.
+ * The control is a toggle, a dropdown, or an action (the whole row becomes a
+ * button). Presentational only; the owning page holds the state and handlers.
  */
 function SettingsOption({
   icon,
@@ -73,24 +90,53 @@ function SettingsOption({
   controlLabel,
   control,
 }: SettingsOptionProps) {
-  return (
-    <div className="flex flex-row items-center justify-between gap-3 p-4">
-      <div className="flex flex-row items-center gap-3.5 min-w-0">
-        <span aria-hidden className="shrink-0 text-xl text-base-content/40">
+  const danger = control.kind === "action" && control.tone === "danger";
+
+  const body = (
+    <>
+      <span className="flex items-center gap-3.5 min-w-0">
+        <span
+          aria-hidden
+          className={`shrink-0 text-xl ${danger ? "text-error" : "text-base-content/40"}`}
+        >
           {icon}
         </span>
-        <div className="min-w-0">
-          <p className="text-sm font-medium">{title}</p>
-          <p
-            className={`text-xs ${error ? "text-error" : "text-base-content/70"}`}
+        <span className="min-w-0">
+          <span
+            className={`block text-sm font-medium ${danger ? "text-error" : ""}`}
+          >
+            {title}
+          </span>
+          <span
+            className={`block text-xs ${error ? "text-error" : "text-base-content/70"}`}
           >
             {error ?? description}
-          </p>
-        </div>
-      </div>
+          </span>
+        </span>
+      </span>
 
-      {renderControl(control, controlLabel ?? title)}
-    </div>
+      {renderInput(control, controlLabel ?? title)}
+    </>
+  );
+
+  if (control.kind === "action") {
+    return (
+      <button
+        type="button"
+        onClick={control.onClick}
+        className={`group flex w-full items-center justify-between gap-3 p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset ${
+          danger
+            ? "hover:bg-error/10 focus-visible:ring-error/50"
+            : "hover:bg-base-300/50 focus-visible:ring-primary/50"
+        }`}
+      >
+        {body}
+      </button>
+    );
+  }
+
+  return (
+    <div className="flex items-center justify-between gap-3 p-4">{body}</div>
   );
 }
 
