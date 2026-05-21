@@ -56,6 +56,12 @@ fragment User on UserType {
   likes
   dislikes
   dateOfBirth
+  email
+  location {
+    city
+    region
+    name
+  }
   followerCount
   followingCount
   verified

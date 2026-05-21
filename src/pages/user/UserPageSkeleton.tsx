@@ -19,6 +19,7 @@ function UserPageSkeleton() {
             <div className="flex flex-col gap-1 mt-1">
               <div className="skeleton h-4 w-100"/>
               <div className="skeleton h-4 w-100"/>
+              <div className="skeleton h-4 w-75"/>
               <div className="skeleton h-4 w-50"/>
             </div>
           </div>

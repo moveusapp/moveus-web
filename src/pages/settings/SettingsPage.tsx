@@ -1,31 +1,68 @@
 import { useProfile } from "@/context/profile-context";
 import useDocumentTitle from "@/hooks/use-document-title";
-import { useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback } from "react";
 import {
   PrivacyScope,
-  AlterAllPrivacySettingsDocument,
+  PrivacySetting,
   LogOutDocument,
 } from "@/graphql/graphql-types";
-import Dropdown from "@/components/ui/Dropdown";
+import {
+  HiOutlineMapPin,
+  HiOutlineCake,
+  HiOutlineUserCircle,
+  HiOutlineEnvelope,
+  HiOutlineUserGroup,
+  HiOutlineRectangleStack,
+} from "react-icons/hi2";
 import { apolloClient } from "@/appolo/client";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
 import Button from "@/components/ui/Button";
 import { clearStoredProfile } from "@/utils/auth";
 import PageHeader from "@/components/layout/PageHeader";
+import PrivacySettingRow from "./PrivacySettingRow";
 
-const privacyScopeOptions = [
+const privacySettingConfig: {
+  setting: PrivacySetting;
+  label: string;
+  description: string;
+  icon: ReactNode;
+}[] = [
   {
-    value: PrivacyScope.Noone,
-    label: "Only you",
+    setting: PrivacySetting.Location,
+    label: "Location",
+    description: "Your location and travel distance.",
+    icon: <HiOutlineMapPin />,
   },
   {
-    value: PrivacyScope.Followers,
-    label: "Only followers",
+    setting: PrivacySetting.Age,
+    label: "Age",
+    description: "Your age shown on your profile.",
+    icon: <HiOutlineCake />,
   },
   {
-    value: PrivacyScope.Everyone,
-    label: "Everyone",
+    setting: PrivacySetting.Gender,
+    label: "Gender",
+    description: "Your gender shown on your profile.",
+    icon: <HiOutlineUserCircle />,
+  },
+  {
+    setting: PrivacySetting.Email,
+    label: "Email",
+    description: "Your email address.",
+    icon: <HiOutlineEnvelope />,
+  },
+  {
+    setting: PrivacySetting.Followers,
+    label: "Followers",
+    description: "Your followers and following lists.",
+    icon: <HiOutlineUserGroup />,
+  },
+  {
+    setting: PrivacySetting.Posts,
+    label: "Posts",
+    description: "Posts you have shared.",
+    icon: <HiOutlineRectangleStack />,
   },
 ];
 
@@ -33,10 +70,6 @@ function SettingsPage() {
   useDocumentTitle("Settings");
 
   const { profile, setProfile } = useProfile();
-
-  const [scope, setScope] = useState<PrivacyScope>(
-    profile!.privacySettings[0].scope as PrivacyScope,
-  );
 
   const [logout, { loading: logoutLoading }] = useMutation(LogOutDocument);
   const navigate = useNavigate();
@@ -52,59 +85,33 @@ function SettingsPage() {
       .catch((_) => {});
   }, [logout, navigate, setProfile]);
 
-  useEffect(() => {
-    setScope(profile!.privacySettings[0].scope as PrivacyScope);
-  }, [profile, setScope]);
-
-  const handleSetScope = useCallback(
-    (newScope: PrivacyScope) => {
-      if (scope === newScope) return;
-      apolloClient
-        .mutate({
-          mutation: AlterAllPrivacySettingsDocument,
-          variables: { scope: newScope },
-        })
-        .then(() => {
-          setProfile((p: any) => {
-            const newPrivacySettings = p?.privacySettings.map(
-              (setting: any) => {
-                return {
-                  ...setting,
-                  scope: newScope,
-                };
-              },
-            );
-            return {
-              ...p,
-              privacySettings: newPrivacySettings!,
-            } as any;
-          });
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-      setScope(newScope);
-    },
-    [scope, setScope, setProfile],
-  );
+  const scopeFor = (setting: PrivacySetting): PrivacyScope =>
+    profile?.privacySettings.find((p) => p.setting === setting)?.scope ??
+    PrivacyScope.Everyone;
 
   return (
     <div className="h-full flex flex-col">
       <PageHeader title="Settings" />
 
       <div className="flex flex-col grow gap-2 m-4">
-        <div className="flex flex-row justify-between bg-base-200 rounded-2xl border border-base-300 p-4">
-          <div>
-            <p className="text-md font-medium">Privacy</p>
-            <p className="text-sm text-base-content/70">
-              Who can see your profile info.
-            </p>
-          </div>
-          <Dropdown
-            options={privacyScopeOptions}
-            value={scope}
-            setValue={handleSetScope}
-          />
+        <div className="mb-1">
+          <p className="text-md font-medium">Privacy</p>
+          <p className="text-sm text-base-content/70">
+            Choose who can see each part of your profile.
+          </p>
+        </div>
+
+        <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
+          {privacySettingConfig.map((config) => (
+            <PrivacySettingRow
+              key={config.setting}
+              setting={config.setting}
+              scope={scopeFor(config.setting)}
+              label={config.label}
+              description={config.description}
+              icon={config.icon}
+            />
+          ))}
         </div>
 
         <button

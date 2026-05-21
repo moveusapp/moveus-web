@@ -2,8 +2,13 @@ import Button from "@/components/ui/Button";
 import FollowButton from "@/components/user/FollowButton";
 import UserAvatar from "@/components/user/UserAvatar";
 import { useProfile } from "@/context/profile-context";
-import { EventPhase, GetUserByUsernameDocument } from "@/graphql/graphql-types";
+import {
+  EventPhase,
+  Gender,
+  GetUserByUsernameDocument,
+} from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
+import { getAge } from "@/utils/time-utils";
 import { useQuery } from "@apollo/client/react";
 import {
   HiOutlineChat,
@@ -13,7 +18,7 @@ import {
 import { HiCheckBadge } from "react-icons/hi2";
 import { Link, useParams } from "react-router-dom";
 import EventCard from "../../components/event/EventCard";
-import { useState } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import UserPageSkeleton from "./UserPageSkeleton";
 import EditProfileModal from "./EditProfileModal";
 import useDocumentTitle from "@/hooks/use-document-title";
@@ -40,6 +45,12 @@ function sortByStartTimeDesc<T extends EventLike>(
     return aTime - bTime;
   });
 }
+
+const GENDER_LABELS: Partial<Record<Gender, string>> = {
+  [Gender.Female]: "Female",
+  [Gender.Male]: "Male",
+  [Gender.NonBinary]: "Non-binary",
+};
 
 function UserPage() {
   const [activeTab, setActiveTab] = useState("attending");
@@ -77,11 +88,31 @@ function UserPage() {
     data.user.organizingEvents.length > 0;
 
   const isSelf = profile?.id === data?.user?.id;
-  const name = displayName(
-    data!.user!.username!,
-    data!.user!.firstName,
-    data!.user!.lastName,
-  );
+  const user = data!.user!;
+  const name = displayName(user.username!, user.firstName, user.lastName);
+
+  const locationName = user.location?.city ?? user.location?.name ?? null;
+  const age =
+    user.dateOfBirth != null ? getAge(new Date(user.dateOfBirth)) : null;
+  const genderLabel = user.gender ? GENDER_LABELS[user.gender] : undefined;
+
+  const facts: ReactNode[] = [];
+  if (locationName) facts.push(locationName);
+  if (age != null) facts.push(`${age} years old`);
+  if (genderLabel) facts.push(genderLabel);
+  if (user.email)
+    facts.push(
+      <a
+        key="email"
+        href={`mailto:${user.email}`}
+        className="hover:text-primary hover:underline"
+      >
+        {user.email}
+      </a>,
+    );
+
+  const showFollowers =
+    user.followerCount != null || user.followingCount != null;
 
   const isBioEmpty = () => {
     if (!data || loading) {
@@ -120,15 +151,44 @@ function UserPage() {
               {isBioEmpty() ? (
                 <p className="italic">No written bio.</p>
               ) : (
-                <p>{data?.user?.bio}</p>
+                <p>{user.bio}</p>
               )}
             </div>
 
-            <p className="text-sm text-base-content/70 mt-1">
-              <span className="font-semibold text-base-content">{data?.user?.followerCount ?? 0}</span> Followers
-              {" · "}
-              <span className="font-semibold text-base-content">{data?.user?.followingCount ?? 0}</span> Following
-            </p>
+            {facts.length > 0 && (
+              <p className="text-sm text-base-content/70 mt-1">
+                {facts.map((fact, i) => (
+                  <Fragment key={i}>
+                    {i > 0 && " · "}
+                    {fact}
+                  </Fragment>
+                ))}
+              </p>
+            )}
+
+            {showFollowers && (
+              <p className="text-sm text-base-content/70 mt-1">
+                {user.followerCount != null && (
+                  <>
+                    <span className="font-semibold text-base-content">
+                      {user.followerCount}
+                    </span>{" "}
+                    Followers
+                  </>
+                )}
+                {user.followerCount != null &&
+                  user.followingCount != null &&
+                  " · "}
+                {user.followingCount != null && (
+                  <>
+                    <span className="font-semibold text-base-content">
+                      {user.followingCount}
+                    </span>{" "}
+                    Following
+                  </>
+                )}
+              </p>
+            )}
           </div>
 
           {isSelf ? (

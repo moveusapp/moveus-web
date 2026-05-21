@@ -3,3 +3,18 @@ mutation AlterAllPrivacySettings($scope: PrivacyScope!) {
     success
   }
 }
+
+mutation AlterPrivacySetting(
+  $setting: PrivacySetting!
+	$scope: PrivacyScope!
+) {
+	alterPrivacySetting(
+    setting: $setting
+    scope: $scope
+  ) {
+    privacySetting {
+      setting
+      scope
+    }
+  }
+}
