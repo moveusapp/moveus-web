@@ -336,11 +336,7 @@ function LandingPage() {
               />
               {/* Soft plate behind logo so verbs don't read through it */}
               <div
-                className="absolute -inset-x-12 -inset-y-8 -z-10 pointer-events-none"
-                style={{
-                  background:
-                    "radial-gradient(65% 60% at 50% 50%, oklch(0.99 0.005 232) 0%, oklch(0.99 0.005 232 / 0.96) 45%, oklch(0.99 0.005 232 / 0) 78%)",
-                }}
+                className="lp-hero-logo-plate absolute -inset-x-12 -inset-y-8 -z-10 pointer-events-none"
                 aria-hidden="true"
               />
               <div className="lp-hero-logo-breathe w-full h-full">
@@ -547,8 +543,8 @@ function LandingPage() {
         );
       })()}
 
-      {/* FINAL CTA */}
-      <section className="relative overflow-hidden bg-primary py-24 lg:py-28">
+      {/* FINAL CTA — fixed brand blue so it reads the same in both themes */}
+      <section className="relative overflow-hidden bg-[#028ED1] py-24 lg:py-28">
         <div
           className="absolute inset-0 opacity-[0.1]"
           aria-hidden="true"
@@ -558,7 +554,7 @@ function LandingPage() {
             backgroundSize: "24px 24px",
           }}
         />
-        <div className="relative mx-auto px-6 sm:px-10 lg:px-16 text-center text-primary-content">
+        <div className="relative mx-auto px-6 sm:px-10 lg:px-16 text-center text-white">
           <h2 className="text-[clamp(1.625rem,7vw,4.5rem)] font-black mb-5 tracking-tight leading-[1.05] text-white whitespace-nowrap">
             The duck is waiting.
           </h2>

@@ -1,3 +1,86 @@
+/* --- Theme tokens ---
+   The landing page mixes brand-tinted "paper" surfaces (stickers, pillow
+   strips) with the daisyUI theme. Those surfaces are remapped per theme
+   here so the page reads correctly in dark mode. Saturated brand chips and
+   accents are left as fixed colors on purpose: they work on either ground. */
+
+:root {
+  --lp-heading: oklch(0.22 0.02 232);
+  --lp-lede: oklch(0.5 0.02 232);
+
+  --lp-paper: oklch(0.99 0.005 232);
+  --lp-paper-edge: oklch(0.93 0.01 232);
+  --lp-ink: oklch(0.25 0.02 232);
+  --lp-ink-soft: oklch(0.5 0.02 232);
+  --lp-radio-edge: oklch(0.78 0.02 232);
+  --lp-accent: oklch(0.55 0.18 232);
+
+  /* Hero logo plate: masks the cycling verbs, so it must match bg-base-100. */
+  --lp-plate: oklch(0.99 0.005 232);
+
+  --lp-strip-cool-bg: oklch(0.92 0.03 232);
+  --lp-strip-cool-edge: oklch(0.84 0.05 232);
+  --lp-strip-warm-bg: oklch(0.93 0.03 60);
+  --lp-strip-warm-edge: oklch(0.86 0.05 55);
+  --lp-strip-heading: oklch(0.22 0.04 232);
+  --lp-strip-body: oklch(0.42 0.03 232);
+  --lp-strip-eyebrow-bg: oklch(0.99 0.005 232 / 0.92);
+  --lp-strip-eyebrow-ink: oklch(0.3 0.08 232);
+  --lp-strip-eyebrow-ink-warm: oklch(0.35 0.12 45);
+  --lp-strip-num: oklch(0.55 0.18 232);
+  --lp-strip-num-warm: oklch(0.62 0.2 45);
+
+  --lp-row-on-bg: oklch(0.62 0.18 232 / 0.1);
+  --lp-row-on-ink: oklch(0.4 0.14 232);
+
+  --lp-chip-cream-bg: oklch(0.99 0.02 70);
+  --lp-chip-cream-ink: oklch(0.35 0.05 50);
+  --lp-chip-cream-edge: oklch(0.86 0.06 70);
+  --lp-bubble-in-bg: oklch(0.93 0.012 232);
+
+  --lp-arrow-bg: oklch(0.99 0.005 232);
+  --lp-arrow-ink: oklch(0.3 0.08 232);
+  --lp-arrow-edge: oklch(0.88 0.02 232);
+}
+
+[data-theme="dark"] {
+  --lp-heading: oklch(0.95 0.01 245);
+  --lp-lede: oklch(0.72 0.02 245);
+
+  --lp-paper: oklch(0.27 0.02 245);
+  --lp-paper-edge: oklch(0.36 0.022 245);
+  --lp-ink: oklch(0.93 0.012 245);
+  --lp-ink-soft: oklch(0.72 0.015 245);
+  --lp-radio-edge: oklch(0.5 0.02 245);
+  --lp-accent: oklch(0.72 0.15 245);
+
+  --lp-plate: oklch(0.22 0.02 245);
+
+  --lp-strip-cool-bg: oklch(0.3 0.045 250);
+  --lp-strip-cool-edge: oklch(0.42 0.055 250);
+  --lp-strip-warm-bg: oklch(0.31 0.05 55);
+  --lp-strip-warm-edge: oklch(0.43 0.06 55);
+  --lp-strip-heading: oklch(0.95 0.015 245);
+  --lp-strip-body: oklch(0.78 0.02 245);
+  --lp-strip-eyebrow-bg: oklch(0.2 0.02 245 / 0.92);
+  --lp-strip-eyebrow-ink: oklch(0.82 0.06 245);
+  --lp-strip-eyebrow-ink-warm: oklch(0.82 0.08 60);
+  --lp-strip-num: oklch(0.72 0.15 245);
+  --lp-strip-num-warm: oklch(0.78 0.16 55);
+
+  --lp-row-on-bg: oklch(0.72 0.15 245 / 0.16);
+  --lp-row-on-ink: oklch(0.82 0.12 245);
+
+  --lp-chip-cream-bg: oklch(0.3 0.03 70);
+  --lp-chip-cream-ink: oklch(0.88 0.04 70);
+  --lp-chip-cream-edge: oklch(0.4 0.04 70);
+  --lp-bubble-in-bg: oklch(0.34 0.02 245);
+
+  --lp-arrow-bg: oklch(0.27 0.02 245);
+  --lp-arrow-ink: oklch(0.85 0.04 245);
+  --lp-arrow-edge: oklch(0.38 0.022 245);
+}
+
 /* --- Hero --- */
 
 @keyframes lp-hero-fadeup {
@@ -51,6 +134,17 @@
   transform: translate3d(var(--shx, 0px), var(--shy, 30px), 0) scale(0.92);
   transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
+}
+
+/* Soft plate behind the logo so the cycling verbs don't read through the
+   mark. Matches the page background in both themes. */
+.lp-hero-logo-plate {
+  background: radial-gradient(
+    65% 60% at 50% 50%,
+    var(--lp-plate) 0%,
+    color-mix(in oklch, var(--lp-plate) 96%, transparent) 45%,
+    transparent 78%
+  );
 }
 
 .lp-hero-kicker {
@@ -113,14 +207,14 @@
   font-weight: 900;
   letter-spacing: -0.03em;
   line-height: 1.05;
-  color: oklch(0.22 0.02 232);
+  color: var(--lp-heading);
   margin: 0;
 }
 
 .lp-story-lede {
   margin-top: 1rem;
   font-size: clamp(1rem, 1.3vw, 1.15rem);
-  color: oklch(0.5 0.02 232);
+  color: var(--lp-lede);
 }
 
 .lp-story-list {
@@ -176,14 +270,14 @@
 
 .lp-strip--1,
 .lp-strip--3 {
-  background: oklch(0.92 0.03 232);
-  color: oklch(0.2 0.05 232);
-  border: 1px solid oklch(0.84 0.05 232);
+  background: var(--lp-strip-cool-bg);
+  color: var(--lp-strip-body);
+  border: 1px solid var(--lp-strip-cool-edge);
 }
 .lp-strip--2 {
-  background: oklch(0.93 0.03 60);
-  color: oklch(0.22 0.06 40);
-  border: 1px solid oklch(0.86 0.05 55);
+  background: var(--lp-strip-warm-bg);
+  color: var(--lp-strip-body);
+  border: 1px solid var(--lp-strip-warm-edge);
 }
 
 .lp-strip-text {
@@ -202,21 +296,21 @@
   letter-spacing: 0.16em;
   padding: 0.4rem 0.85rem;
   border-radius: 9999px;
-  background: oklch(0.99 0.005 232 / 0.92);
-  color: oklch(0.3 0.08 232);
+  background: var(--lp-strip-eyebrow-bg);
+  color: var(--lp-strip-eyebrow-ink);
   margin-bottom: 1.25rem;
   box-shadow: 0 1px 2px oklch(0.3 0.1 232 / 0.08);
 }
 .lp-strip--2 .lp-strip-eyebrow {
-  color: oklch(0.35 0.12 45);
+  color: var(--lp-strip-eyebrow-ink-warm);
 }
 .lp-strip-num {
   font-weight: 900;
   font-variant-numeric: tabular-nums;
-  color: oklch(0.55 0.18 232);
+  color: var(--lp-strip-num);
 }
-.lp-strip--2 .lp-strip-num { color: oklch(0.62 0.2 45); }
-.lp-strip--3 .lp-strip-num { color: oklch(0.55 0.18 232); }
+.lp-strip--2 .lp-strip-num { color: var(--lp-strip-num-warm); }
+.lp-strip--3 .lp-strip-num { color: var(--lp-strip-num); }
 .lp-strip-slash { opacity: 0.45; }
 
 .lp-strip-headline {
@@ -226,14 +320,14 @@
   line-height: 1.1;
   margin: 0 0 0.9rem;
   max-width: 18ch;
-  color: oklch(0.22 0.04 232);
+  color: var(--lp-strip-heading);
 }
 
 .lp-strip-body {
   font-size: clamp(1rem, 1.2vw, 1.1rem);
   line-height: 1.55;
   max-width: 34ch;
-  color: oklch(0.42 0.03 232);
+  color: var(--lp-strip-body);
   margin: 0;
 }
 
@@ -259,7 +353,7 @@
 
 .lp-stk {
   position: absolute;
-  background: oklch(0.99 0.005 232);
+  background: var(--lp-paper);
   border-radius: 1rem;
   padding: 0.7rem 0.85rem;
   box-shadow:
@@ -267,7 +361,7 @@
     0 14px 30px -14px oklch(0.5 0.1 232 / 0.22);
   transform-origin: center;
   transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid oklch(0.93 0.01 232);
+  border: 1px solid var(--lp-paper-edge);
 }
 
 .lp-stk:hover {
@@ -285,13 +379,13 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: oklch(0.55 0.18 232);
+  color: var(--lp-accent);
   margin-bottom: 0.4rem;
 }
 .lp-stk-q {
   font-size: 0.82rem;
   font-weight: 700;
-  color: oklch(0.25 0.02 232);
+  color: var(--lp-ink);
   margin-bottom: 0.55rem;
   line-height: 1.25;
 }
@@ -302,31 +396,31 @@
   padding: 0.35rem 0.5rem;
   border-radius: 0.55rem;
   font-size: 0.74rem;
-  color: oklch(0.45 0.02 232);
+  color: var(--lp-ink-soft);
   margin-bottom: 0.3rem;
 }
 .lp-stk-row--on {
-  background: oklch(0.62 0.18 232 / 0.1);
-  color: oklch(0.4 0.14 232);
+  background: var(--lp-row-on-bg);
+  color: var(--lp-row-on-ink);
   font-weight: 700;
 }
 .lp-stk-radio {
   width: 0.7rem;
   height: 0.7rem;
   border-radius: 9999px;
-  border: 1.5px solid oklch(0.78 0.02 232);
+  border: 1.5px solid var(--lp-radio-edge);
   position: relative;
   flex-shrink: 0;
 }
 .lp-stk-row--on .lp-stk-radio {
-  border-color: oklch(0.55 0.18 232);
+  border-color: var(--lp-accent);
 }
 .lp-stk-row--on .lp-stk-radio::after {
   content: "";
   position: absolute;
   inset: 2px;
   border-radius: 9999px;
-  background: oklch(0.55 0.18 232);
+  background: var(--lp-accent);
 }
 
 /* Chips */
@@ -368,9 +462,9 @@
   margin-right: 0.1rem;
 }
 .lp-stk--chip-cream {
-  background: oklch(0.99 0.02 70);
-  color: oklch(0.35 0.05 50);
-  border: 1px solid oklch(0.86 0.06 70);
+  background: var(--lp-chip-cream-bg);
+  color: var(--lp-chip-cream-ink);
+  border: 1px solid var(--lp-chip-cream-edge);
   font-weight: 600;
 }
 .lp-stk-xp {
@@ -419,12 +513,12 @@
 .lp-stk-event-title {
   font-size: 0.82rem;
   font-weight: 800;
-  color: oklch(0.25 0.02 232);
+  color: var(--lp-ink);
   line-height: 1.15;
 }
 .lp-stk-event-meta {
   font-size: 0.7rem;
-  color: oklch(0.5 0.02 232);
+  color: var(--lp-ink-soft);
   margin-top: 0.15rem;
 }
 
@@ -437,8 +531,8 @@
   border: none;
 }
 .lp-stk--bubble-in {
-  background: oklch(0.93 0.012 232);
-  color: oklch(0.25 0.02 232);
+  background: var(--lp-bubble-in-bg);
+  color: var(--lp-ink);
   border-bottom-left-radius: 0.35rem;
 }
 .lp-stk--bubble-out {
@@ -473,18 +567,18 @@
 .lp-stk-post-name {
   font-size: 0.78rem;
   font-weight: 800;
-  color: oklch(0.25 0.02 232);
+  color: var(--lp-ink);
   line-height: 1;
 }
 .lp-stk-post-time {
   font-size: 0.65rem;
-  color: oklch(0.5 0.02 232);
+  color: var(--lp-ink-soft);
   margin-top: 0.15rem;
 }
 .lp-stk-post-body {
   font-size: 0.78rem;
   line-height: 1.35;
-  color: oklch(0.3 0.02 232);
+  color: var(--lp-ink);
   margin: 0.25rem 0 0.5rem;
 }
 .lp-stk-post-meta {
@@ -610,9 +704,9 @@
   width: 3rem;
   height: 3rem;
   border-radius: 9999px;
-  background: oklch(0.99 0.005 232);
-  color: oklch(0.3 0.08 232);
-  border: 1px solid oklch(0.88 0.02 232);
+  background: var(--lp-arrow-bg);
+  color: var(--lp-arrow-ink);
+  border: 1px solid var(--lp-arrow-edge);
   box-shadow: 0 1px 2px oklch(0.3 0.1 232 / 0.06), 0 14px 28px -16px oklch(0.3 0.14 232 / 0.34);
   cursor: pointer;
   transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),

@@ -1,18 +1,22 @@
 import { useProfile } from "@/context/profile-context";
 import useDocumentTitle from "@/hooks/use-document-title";
-import { ReactNode, useCallback } from "react";
+import useTheme from "@/hooks/use-theme";
+import { ReactNode, useCallback, useState } from "react";
 import {
+  AlterPrivacySettingDocument,
+  ContextProfileFragment,
+  LogOutDocument,
   PrivacyScope,
   PrivacySetting,
-  LogOutDocument,
 } from "@/graphql/graphql-types";
 import {
-  HiOutlineMapPin,
   HiOutlineCake,
-  HiOutlineUserCircle,
   HiOutlineEnvelope,
-  HiOutlineUserGroup,
+  HiOutlineMapPin,
+  HiOutlineMoon,
   HiOutlineRectangleStack,
+  HiOutlineUserCircle,
+  HiOutlineUserGroup,
 } from "react-icons/hi2";
 import { apolloClient } from "@/appolo/client";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +24,7 @@ import { useMutation } from "@apollo/client/react";
 import Button from "@/components/ui/Button";
 import { clearStoredProfile } from "@/utils/auth";
 import PageHeader from "@/components/layout/PageHeader";
-import PrivacySettingRow from "./PrivacySettingRow";
+import SettingsOption from "./SettingsOption";
 
 const privacySettingConfig: {
   setting: PrivacySetting;
@@ -66,13 +70,41 @@ const privacySettingConfig: {
   },
 ];
 
+const scopeOptions: { value: PrivacyScope; label: string }[] = [
+  { value: PrivacyScope.Everyone, label: "Everyone" },
+  { value: PrivacyScope.Followers, label: "Followers" },
+  { value: PrivacyScope.Mutuals, label: "Mutuals" },
+  { value: PrivacyScope.Noone, label: "Only you" },
+];
+
+type PrivacySettings = ContextProfileFragment["privacySettings"];
+
+function withScope(
+  list: PrivacySettings,
+  setting: PrivacySetting,
+  scope: PrivacyScope,
+): PrivacySettings {
+  if (list.some((p) => p.setting === setting)) {
+    return list.map((p) => (p.setting === setting ? { ...p, scope } : p));
+  }
+  return [...list, { __typename: "PrivacySettingType", setting, scope }];
+}
+
 function SettingsPage() {
   useDocumentTitle("Settings");
 
   const { profile, setProfile } = useProfile();
+  const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
 
   const [logout, { loading: logoutLoading }] = useMutation(LogOutDocument);
-  const navigate = useNavigate();
+  const [alterPrivacySetting] = useMutation(AlterPrivacySettingDocument);
+  const [pendingSetting, setPendingSetting] = useState<PrivacySetting | null>(
+    null,
+  );
+  const [erroredSetting, setErroredSetting] = useState<PrivacySetting | null>(
+    null,
+  );
 
   const onLogout = useCallback(() => {
     logout()
@@ -89,12 +121,64 @@ function SettingsPage() {
     profile?.privacySettings.find((p) => p.setting === setting)?.scope ??
     PrivacyScope.Everyone;
 
+  const handlePrivacyChange = (setting: PrivacySetting, value: string) => {
+    const newScope = value as PrivacyScope;
+    const previousScope = scopeFor(setting);
+    if (newScope === previousScope) return;
+
+    setErroredSetting(null);
+    setPendingSetting(setting);
+    setProfile((p) =>
+      p
+        ? { ...p, privacySettings: withScope(p.privacySettings, setting, newScope) }
+        : p,
+    );
+
+    alterPrivacySetting({ variables: { setting, scope: newScope } })
+      .catch(() => {
+        setErroredSetting(setting);
+        setProfile((p) =>
+          p
+            ? {
+                ...p,
+                privacySettings: withScope(
+                  p.privacySettings,
+                  setting,
+                  previousScope,
+                ),
+              }
+            : p,
+        );
+      })
+      .finally(() => setPendingSetting(null));
+  };
+
   return (
     <div className="h-full flex flex-col">
       <PageHeader title="Settings" />
 
       <div className="flex flex-col grow gap-2 m-4">
         <div className="mb-1">
+          <p className="text-md font-medium">Appearance</p>
+          <p className="text-sm text-base-content/70">
+            Customize how MoveUs looks on this device.
+          </p>
+        </div>
+
+        <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
+          <SettingsOption
+            icon={<HiOutlineMoon />}
+            title="Dark mode"
+            description="Easier on the eyes in low light."
+            control={{
+              kind: "toggle",
+              checked: theme === "dark",
+              onChange: () => toggleTheme(),
+            }}
+          />
+        </div>
+
+        <div className="mt-3 mb-1">
           <p className="text-md font-medium">Privacy</p>
           <p className="text-sm text-base-content/70">
             Choose who can see each part of your profile.
@@ -103,13 +187,24 @@ function SettingsPage() {
 
         <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
           {privacySettingConfig.map((config) => (
-            <PrivacySettingRow
+            <SettingsOption
               key={config.setting}
-              setting={config.setting}
-              scope={scopeFor(config.setting)}
-              label={config.label}
-              description={config.description}
               icon={config.icon}
+              title={config.label}
+              description={config.description}
+              error={
+                erroredSetting === config.setting
+                  ? "Couldn't save that, try again."
+                  : undefined
+              }
+              controlLabel={`Who can see your ${config.label.toLowerCase()}`}
+              control={{
+                kind: "dropdown",
+                value: scopeFor(config.setting),
+                options: scopeOptions,
+                disabled: pendingSetting === config.setting,
+                onChange: (value) => handlePrivacyChange(config.setting, value),
+              }}
             />
           ))}
         </div>

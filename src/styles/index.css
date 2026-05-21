@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
-  themes: light --default;
+  themes: light --default, dark;
 }
 
 @plugin "daisyui/theme" {
@@ -24,16 +24,23 @@
 @plugin "daisyui/theme" {
   name: "dark";
   default: false;
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+  color-scheme: dark;
+  --color-primary: oklch(0.68 0.14 243);
+  --color-primary-content: oklch(0.20 0.02 245);
+  --color-secondary: oklch(0.30 0.04 245);
+  --color-secondary-content: oklch(0.93 0.02 245);
+  --color-accent: oklch(0.72 0.15 52);
+  --color-accent-content: oklch(0.20 0.03 50);
+  --color-neutral: oklch(0.40 0.02 245);
+  --color-neutral-content: oklch(0.93 0.01 245);
+  --color-base-100: oklch(0.22 0.02 245);
+  --color-base-200: oklch(0.26 0.022 245);
+  --color-base-300: oklch(0.32 0.025 245);
+  --color-base-content: oklch(0.94 0.01 245);
+  --color-info: oklch(0.65 0.14 250);
+  --color-success: oklch(0.68 0.14 243);
+  --color-warning: oklch(0.78 0.14 75);
+  --color-error: oklch(0.66 0.18 25);
 }
 
 * {
@@ -82,12 +89,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--color-base-300);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2563eb;
+  background: var(--color-primary);
 }
 
 @layer base {

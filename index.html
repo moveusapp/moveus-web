@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#60CCF2" />
     <meta name="description" content="MoveUs web prototype." />
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("moveus-theme");
+          var theme = stored === "light" || stored === "dark" ? stored : "light";
+          document.documentElement.setAttribute("data-theme", theme);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute("content", theme === "dark" ? "#1c2430" : "#60CCF2");
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
