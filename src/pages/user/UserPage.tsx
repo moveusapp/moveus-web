@@ -15,6 +15,9 @@ import {
   HiOutlineStar,
   HiOutlineCalendar,
   HiOutlineNewspaper,
+  HiOutlineLocationMarker,
+  HiOutlineCake,
+  HiOutlineUser,
 } from "react-icons/hi";
 import { HiCheckBadge } from "react-icons/hi2";
 import { IconType } from "react-icons";
@@ -23,7 +26,7 @@ import EventCard from "../../components/event/EventCard";
 import PostCard from "@/components/post/PostCard";
 import TabButtons from "@/components/ui/TabButtons";
 import EmptyState from "@/components/ui/EmptyState";
-import { Fragment, ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import UserPageSkeleton from "./UserPageSkeleton";
 import EditProfileModal from "./EditProfileModal";
 import useDocumentTitle from "@/hooks/use-document-title";
@@ -113,10 +116,12 @@ function UserPage() {
     user.dateOfBirth != null ? getAge(new Date(user.dateOfBirth)) : null;
   const genderLabel = user.gender ? GENDER_LABELS[user.gender] : undefined;
 
-  const facts: ReactNode[] = [];
-  if (locationName) facts.push(locationName);
-  if (age != null) facts.push(`${age} years old`);
-  if (genderLabel) facts.push(genderLabel);
+  const facts: { icon: IconType; label: string }[] = [];
+  if (locationName)
+    facts.push({ icon: HiOutlineLocationMarker, label: locationName });
+  if (age != null)
+    facts.push({ icon: HiOutlineCake, label: `${age} years old` });
+  if (genderLabel) facts.push({ icon: HiOutlineUser, label: genderLabel });
 
   const showFollowers =
     user.followerCount != null || user.followingCount != null;
@@ -165,88 +170,95 @@ function UserPage() {
 
   return (
     <div className="flex flex-col m-4 gap-2">
-      <div className="bg-base-200 rounded-2xl border border-base-300 p-4">
-        <div className="flex flex-row gap-3">
+      <div className="bg-base-200 rounded-2xl border border-base-300 p-5">
+        <div className="flex flex-row items-center gap-4">
           <UserAvatar
-            userId={loading ? -1 : data?.user?.id!}
-            className="flex-shrink-0 w-18 h-18"
+            userId={user.id!}
+            className="flex-shrink-0 w-20 h-20"
           />
 
-          <div className="flex flex-col grow justify-start mt-2 gap-1">
-            <div className="flex flex-row gap-1 items-center">
-              <h1 className="font-medium text-2xl">{name}</h1>
-              {data?.user?.verified && (
-                <HiCheckBadge size={24} className="text-primary" />
+          <div className="flex flex-col grow min-w-0 gap-0.5">
+            <div className="flex flex-row gap-1.5 items-center">
+              <h1 className="font-bold text-2xl truncate">{name}</h1>
+              {user.verified && (
+                <HiCheckBadge size={22} className="text-primary shrink-0" />
               )}
             </div>
 
-            <p className="text-sm text-base-content/70">
-              @{data?.user?.username}
+            <p className="text-sm text-base-content/60 truncate">
+              @{user.username}
             </p>
-
-            <div className="text-sm text-base-content/90 mt-1">
-              {isBioEmpty() ? (
-                <p className="italic">No written bio.</p>
-              ) : (
-                <p>{user.bio}</p>
-              )}
-            </div>
-
-            {facts.length > 0 && (
-              <p className="text-sm text-base-content/70 mt-1">
-                {facts.map((fact, i) => (
-                  <Fragment key={i}>
-                    {i > 0 && " · "}
-                    {fact}
-                  </Fragment>
-                ))}
-              </p>
-            )}
-
-            {showFollowers && (
-              <p className="text-sm text-base-content/70 mt-1">
-                {user.followerCount != null && (
-                  <>
-                    <span className="font-semibold text-base-content">
-                      {user.followerCount}
-                    </span>{" "}
-                    Followers
-                  </>
-                )}
-                {user.followerCount != null &&
-                  user.followingCount != null &&
-                  " · "}
-                {user.followingCount != null && (
-                  <>
-                    <span className="font-semibold text-base-content">
-                      {user.followingCount}
-                    </span>{" "}
-                    Following
-                  </>
-                )}
-              </p>
-            )}
           </div>
 
           {isSelf ? (
-            <Button onClick={() => setShowEditModal(true)}>Edit Profile</Button>
+            <Button
+              className="flex-shrink-0 self-start"
+              onClick={() => setShowEditModal(true)}
+            >
+              Edit Profile
+            </Button>
           ) : (
-            <div className="flex flex-row gap-1">
-              {profile && (
-                <>
-                  <Link to={`/chat?userId=${data?.user!.id}`} className="btn">
-                    <HiOutlineChat size={18} />
-                  </Link>
+            profile && (
+              <div className="flex flex-row gap-2 flex-shrink-0 self-start">
+                <Link
+                  to={`/chat?userId=${user.id}`}
+                  className="btn btn-square rounded-2xl"
+                  aria-label={`Message ${name}`}
+                >
+                  <HiOutlineChat size={18} />
+                </Link>
 
-                  <FollowButton
-                    userId={data?.user?.id!}
-                    isFollowing={data?.user?.isFollowing ?? false}
-                  />
-                </>
-              )}
-            </div>
+                <FollowButton
+                  userId={user.id!}
+                  isFollowing={user.isFollowing ?? false}
+                />
+              </div>
+            )
           )}
         </div>
+
+        <p className="mt-4 max-w-prose text-sm leading-relaxed text-base-content/90">
+          {isBioEmpty() ? (
+            <span className="italic text-base-content/50">No written bio.</span>
+          ) : (
+            user.bio
+          )}
+        </p>
+
+        {facts.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
+            {facts.map(({ icon: Icon, label }) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-1.5 text-sm text-base-content/70"
+              >
+                <Icon className="h-4 w-4 text-primary" />
+                {label}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {showFollowers && (
+          <div className="mt-4 pt-4 border-t border-base-300 flex flex-row items-center gap-5 text-sm">
+            {user.followerCount != null && (
+              <span>
+                <span className="font-bold text-base-content">
+                  {user.followerCount}
+                </span>{" "}
+                <span className="text-base-content/60">Followers</span>
+              </span>
+            )}
+            {user.followingCount != null && (
+              <span>
+                <span className="font-bold text-base-content">
+                  {user.followingCount}
+                </span>{" "}
+                <span className="text-base-content/60">Following</span>
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="border-b border-base-300">
