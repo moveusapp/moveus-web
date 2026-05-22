@@ -33,14 +33,6 @@ function EventPageSkeleton() {
             <div className="skeleton w-12 h-12 rounded-2xl" />
           </div>
 
-          {/* Tab bar */}
-          <div className="bg-base-300 rounded-2xl border border-base-300 p-1 mt-4">
-            <div className="flex flex-row gap-1">
-              <div className="skeleton rounded-2xl h-10 grow" />
-              <div className="skeleton rounded-2xl h-10 grow" />
-            </div>
-          </div>
-
           {/* Post skeletons */}
           <div className="mt-4 flex flex-col gap-4 pb-6">
             {[...Array(2)].map((_, i) => (
