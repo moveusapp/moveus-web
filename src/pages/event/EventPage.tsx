@@ -552,21 +552,21 @@ function EventPage() {
               )}
             </div>
 
-            {/* Participants card — opens the full roster */}
-            <button
-              type="button"
-              onClick={() => setShowParticipants(true)}
-              className="hidden lg:block w-full text-left rounded-2xl border border-base-300 bg-base-200 p-4 transition-colors hover:border-primary/30 hover:bg-base-300/40"
-            >
+            {/* Participants card */}
+            <div className="hidden lg:block rounded-2xl border border-base-300 bg-base-200 p-4">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-sm font-medium text-foreground">
                   Participants ({event.members.length}
                   {event.maxParticipants ? `/${event.maxParticipants}` : ""})
                 </p>
-                <span className="flex items-center gap-0.5 text-xs font-semibold text-primary">
+                <button
+                  type="button"
+                  onClick={() => setShowParticipants(true)}
+                  className="-mr-1 flex items-center gap-0.5 rounded-lg px-1.5 py-0.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
+                >
                   See all
                   <HiChevronRight className="h-4 w-4" />
-                </span>
+                </button>
               </div>
               {event.members.length > 0 && (
                 <div className="avatar-group -space-x-4 mt-3">
@@ -588,7 +588,7 @@ function EventPage() {
                   )}
                 </div>
               )}
-            </button>
+            </div>
           </div>
         </aside>
       </div>
