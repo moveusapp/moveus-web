@@ -30,6 +30,7 @@ import {
   HiOutlineArrowTopRightOnSquare,
   HiOutlineStar,
   HiOutlineChartBar,
+  HiChevronRight,
 } from "react-icons/hi2";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -40,6 +41,7 @@ import CommentSection from "@/components/comment/CommentSection";
 import CreatePostModal from "@/components/post/CreatePostModal";
 import LeaveFeedbackModal from "@/components/event/LeaveFeedbackModal";
 import ViewFeedbackModal from "@/pages/event/ViewFeedbackModal";
+import ParticipantsModal from "@/pages/event/ParticipantsModal";
 import EventScore from "@/pages/event/EventScore";
 
 function EventPage() {
@@ -55,6 +57,7 @@ function EventPage() {
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const [showLeaveFeedback, setShowLeaveFeedback] = useState(false);
   const [showViewFeedback, setShowViewFeedback] = useState(false);
+  const [showParticipants, setShowParticipants] = useState(false);
 
   const [joinEvent, { loading: joinLoading }] = useMutation(JoinEventDocument);
   const [leaveEvent, { loading: leaveLoading }] =
@@ -549,34 +552,43 @@ function EventPage() {
               )}
             </div>
 
-            {/* Participants card */}
-            <div className="hidden lg:block rounded-2xl border border-base-300 bg-base-200 p-4">
-              <p className="text-sm font-medium text-foreground">
-                Participants ({event.members.length}
-                {event.maxParticipants
-                  ? `/${event.maxParticipants}`
-                  : ""}
-                )
-              </p>
-              <div className="avatar-group -space-x-4 mt-3">
-                {event.members.slice(0, 5).map((member) => (
-                  <UserAvatar
-                    key={member.user.id}
-                    userId={member.user.id!}
-                    className="w-10 h-10"
-                  />
-                ))}
-                {event.members.length! > 5 && (
-                  <div className="avatar avatar-placeholder">
-                    <div className="bg-neutral text-neutral-content w-10 rounded-full">
-                      <span className="text-xs font-medium">
-                        +{event.members.length! - 5}
-                      </span>
-                    </div>
-                  </div>
-                )}
+            {/* Participants card — opens the full roster */}
+            <button
+              type="button"
+              onClick={() => setShowParticipants(true)}
+              className="hidden lg:block w-full text-left rounded-2xl border border-base-300 bg-base-200 p-4 transition-colors hover:border-primary/30 hover:bg-base-300/40"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-medium text-foreground">
+                  Participants ({event.members.length}
+                  {event.maxParticipants ? `/${event.maxParticipants}` : ""})
+                </p>
+                <span className="flex items-center gap-0.5 text-xs font-semibold text-primary">
+                  See all
+                  <HiChevronRight className="h-4 w-4" />
+                </span>
               </div>
-            </div>
+              {event.members.length > 0 && (
+                <div className="avatar-group -space-x-4 mt-3">
+                  {event.members.slice(0, 5).map((member) => (
+                    <UserAvatar
+                      key={member.user.id}
+                      userId={member.user.id!}
+                      className="w-10 h-10"
+                    />
+                  ))}
+                  {event.members.length! > 5 && (
+                    <div className="avatar avatar-placeholder">
+                      <div className="bg-neutral text-neutral-content w-10 rounded-full">
+                        <span className="text-xs font-medium">
+                          +{event.members.length! - 5}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </button>
           </div>
         </aside>
       </div>
@@ -599,6 +611,12 @@ function EventPage() {
       <ViewFeedbackModal
         isOpen={showViewFeedback}
         onClose={() => setShowViewFeedback(false)}
+        event={event}
+      />
+
+      <ParticipantsModal
+        isOpen={showParticipants}
+        onClose={() => setShowParticipants(false)}
         event={event}
       />
     </div>
