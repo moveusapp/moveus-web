@@ -35,6 +35,7 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import EventPageSkeleton from "./EventPageSkeleton";
 import PostCard from "@/components/post/PostCard";
+import TabButtons from "@/components/ui/TabButtons";
 import CommentSection from "@/components/comment/CommentSection";
 import CreatePostModal from "@/components/post/CreatePostModal";
 import LeaveFeedbackModal from "@/components/event/LeaveFeedbackModal";
@@ -325,32 +326,44 @@ function EventPage() {
           </div>
 
           {/* Tabs */}
-          <div className="bg-base-300 rounded-2xl p-1 mt-4">
-            <div className="flex flex-row gap-1 items-center" role="tablist">
-              <button
-                onClick={() => setActiveTab("posts")}
-                role="tab"
-                aria-selected={activeTab === "posts"}
-                className={`flex items-center justify-center gap-1.5 p-2 rounded-xl grow transition-colors duration-150 ${activeTab === "posts" ? "bg-base-100 shadow-sm" : "hover:bg-base-200"}`}
-              >
-                <HiOutlineNewspaper size={16} className="text-base-content/70" />
-                <p className="text-sm font-medium">Posts ({postCount})</p>
-              </button>
-
-              <button
-                onClick={() => setActiveTab("comments")}
-                role="tab"
-                aria-selected={activeTab === "comments"}
-                className={`flex items-center justify-center gap-1.5 p-2 rounded-xl grow transition-colors duration-150 ${activeTab === "comments" ? "bg-base-100 shadow-sm" : "hover:bg-base-200"}`}
-              >
-                <HiOutlineChatBubbleOvalLeft size={16} className="text-base-content/70" />
-                <p className="text-sm font-medium">Comments ({commentCount})</p>
-              </button>
-            </div>
+          <div className="border-b border-base-300 mt-4">
+            <TabButtons
+              tabs={[
+                {
+                  value: "posts",
+                  label: (
+                    <span className="inline-flex items-center gap-1.5">
+                      <HiOutlineNewspaper size={16} className="opacity-70" />
+                      <span>Posts</span>
+                      <span className="text-xs opacity-50 tabular-nums">
+                        {postCount}
+                      </span>
+                    </span>
+                  ),
+                },
+                {
+                  value: "comments",
+                  label: (
+                    <span className="inline-flex items-center gap-1.5">
+                      <HiOutlineChatBubbleOvalLeft
+                        size={16}
+                        className="opacity-70"
+                      />
+                      <span>Comments</span>
+                      <span className="text-xs opacity-50 tabular-nums">
+                        {commentCount}
+                      </span>
+                    </span>
+                  ),
+                },
+              ]}
+              activeTab={activeTab}
+              onChange={setActiveTab}
+            />
           </div>
 
           {/* Tab content */}
-          <div className="mt-4 pb-6" role="tabpanel">
+          <div className="mt-4 pb-6">
             {activeTab === "posts" ? (
               <div>
                 {canCreatePost && (
