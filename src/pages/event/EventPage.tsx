@@ -30,6 +30,7 @@ import {
   HiOutlineArrowTopRightOnSquare,
   HiOutlineStar,
   HiOutlineChartBar,
+  HiOutlineUsers,
   HiChevronRight,
 } from "react-icons/hi2";
 import { Link, useParams, useSearchParams } from "react-router-dom";
@@ -554,22 +555,33 @@ function EventPage() {
 
             {/* Participants card */}
             <div className="hidden lg:block rounded-2xl border border-base-300 bg-base-200 p-4">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-sm font-medium text-foreground">
-                  Participants ({event.members.length}
-                  {event.maxParticipants ? `/${event.maxParticipants}` : ""})
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setShowParticipants(true)}
-                  className="-mr-1 flex items-center gap-0.5 rounded-lg px-1.5 py-0.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
-                >
-                  See all
-                  <HiChevronRight className="h-4 w-4" />
-                </button>
+              <div className="flex items-center justify-between gap-1">
+                <div className="flex min-w-0 items-center gap-2">
+                  <HiOutlineUsers className="h-5 w-5 shrink-0 text-primary" />
+                  <p className="text-sm font-medium text-foreground">
+                    Participants
+                  </p>
+                  <span className="text-xs tabular-nums text-base-content/50">
+                    {event.members.length}
+                    {event.maxParticipants
+                      ? `/${event.maxParticipants}`
+                      : ""}
+                  </span>
+                </div>
+                {event.members.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowParticipants(true)}
+                    className="-mr-2 flex shrink-0 items-center gap-0.5 rounded-lg px-2 py-1 text-xs font-semibold text-primary outline-none transition-colors hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary/40"
+                  >
+                    See all
+                    <HiChevronRight className="h-4 w-4" />
+                  </button>
+                )}
               </div>
-              {event.members.length > 0 && (
-                <div className="avatar-group -space-x-4 mt-3">
+
+              {event.members.length > 0 ? (
+                <div className="avatar-group -space-x-4 mt-3 [&_.avatar]:border-base-200!">
                   {event.members.slice(0, 5).map((member) => (
                     <UserAvatar
                       key={member.user.id}
@@ -577,16 +589,20 @@ function EventPage() {
                       className="w-10 h-10"
                     />
                   ))}
-                  {event.members.length! > 5 && (
+                  {event.members.length > 5 && (
                     <div className="avatar avatar-placeholder">
                       <div className="bg-neutral text-neutral-content w-10 rounded-full">
                         <span className="text-xs font-medium">
-                          +{event.members.length! - 5}
+                          +{event.members.length - 5}
                         </span>
                       </div>
                     </div>
                   )}
                 </div>
+              ) : (
+                <p className="mt-3 text-sm text-base-content/50">
+                  No one's joined yet.
+                </p>
               )}
             </div>
           </div>
