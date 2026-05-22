@@ -43,6 +43,7 @@ import CreatePostModal from "@/components/post/CreatePostModal";
 import LeaveFeedbackModal from "@/components/event/LeaveFeedbackModal";
 import ViewFeedbackModal from "@/pages/event/ViewFeedbackModal";
 import ParticipantsModal from "@/pages/event/ParticipantsModal";
+import ParticipantsList from "@/pages/event/ParticipantsList"
 import EventScore from "@/pages/event/EventScore";
 
 function EventPage() {
@@ -54,7 +55,13 @@ function EventPage() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeTab, setActiveTab] = useState<"posts" | "comments">("posts");
+  const [desktopActiveTab, setDesktopActiveTab] = useState<
+    "posts" | "comments"
+  >("posts");
+
+  const [mobileActiveTab, setMobileActiveTab] = useState<
+    "posts" | "comments" | "participants"
+  >("posts");
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const [showLeaveFeedback, setShowLeaveFeedback] = useState(false);
   const [showViewFeedback, setShowViewFeedback] = useState(false);
@@ -134,6 +141,7 @@ function EventPage() {
   const activity = Object.keys(ActivityKind)[event.activity.id!];
   const postCount = event.posts?.length ?? 0;
   const commentCount = event.comments?.length ?? 0;
+  const participantCount = event.members?.length ?? 0;
 
   const isCancelled = event.phase === EventPhase.Cancelled;
   const isFinished = event.phase === EventPhase.Finished;
@@ -171,6 +179,62 @@ function EventPage() {
       : locationName
         ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationName)}`
         : null;
+
+  const tabContent = (tab) => {
+    switch (tab) {
+      case "posts":
+        return (
+          <div>
+            {canCreatePost && (
+              <button
+                onClick={() => setShowCreatePostModal(true)}
+                className="group mb-4 flex w-full items-center gap-3 rounded-2xl border border-base-300 bg-base-200 px-4 py-3 text-left transition-colors hover:bg-base-300"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-content transition-transform duration-200 group-hover:scale-105">
+                  <HiPlus className="h-5 w-5" />
+                </span>
+                <span className="text-sm text-base-content/60 transition-colors group-hover:text-base-content">
+                  Share an update...
+                </span>
+              </button>
+            )}
+
+            {event.posts && event.posts.length > 0 ? (
+              <div className="flex flex-col gap-4">
+                {event.posts.toReversed().map((post) => (
+                  <PostCard key={post.id} post={post} hideEventLink />
+                ))}
+              </div>
+            ) : (
+                <div className="flex flex-col items-center gap-1 rounded-2xl border border-base-300 bg-base-200 px-6 py-10 text-center">
+                  <p className="text-sm font-medium text-foreground">
+                    It's quiet here...
+                  </p>
+                  <p className="text-sm text-base-content/60">
+                    {canCreatePost
+                      ? "Share the first update with your group."
+                      : "Posts from the organizer will show up here."}
+                  </p>
+                </div>
+              )}
+          </div>
+        );
+      case "comments":
+        return (
+          <div className="rounded-2xl border border-base-300 bg-base-200 p-5">
+            <CommentSection
+              entityType="event"
+              entityId={id}
+              comments={(event.comments ?? []).filter(Boolean) as any}
+            />
+          </div>
+        )
+      case "participants":
+        return <ParticipantsList event={event} />
+    }
+
+    return <></>
+  }
 
   setDocumentTitle(event.title);
 
@@ -329,8 +393,8 @@ function EventPage() {
             )}
           </div>
 
-          {/* Tabs */}
-          <div className="border-b border-base-300 mt-4">
+          {/* Tabs desktop */}
+          <div className="hidden lg:block border-b border-base-300 mt-4">
             <TabButtons
               tabs={[
                 {
@@ -361,59 +425,76 @@ function EventPage() {
                   ),
                 },
               ]}
-              activeTab={activeTab}
-              onChange={setActiveTab}
+              activeTab={desktopActiveTab}
+              onChange={(tab) =>
+                setDesktopActiveTab(tab as "posts" | "comments")
+              }
             />
           </div>
 
-          {/* Tab content */}
-          <div className="mt-4 pb-6">
-            {activeTab === "posts" ? (
-              <div>
-                {canCreatePost && (
-                  <button
-                    onClick={() => setShowCreatePostModal(true)}
-                    className="group mb-4 flex w-full items-center gap-3 rounded-2xl border border-base-300 bg-base-200 px-4 py-3 text-left transition-colors hover:bg-base-300"
-                  >
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-content transition-transform duration-200 group-hover:scale-105">
-                      <HiPlus className="h-5 w-5" />
+          <div className="lg:hidden border-b border-base-300 mt-4">
+            <TabButtons
+              tabs={[
+                {
+                  value: "posts",
+                  label: (
+                    <span className="inline-flex items-center gap-1.5">
+                      <HiOutlineNewspaper size={16} className="opacity-70" />
+                      <span>Posts</span>
+                      <span className="text-xs opacity-50 tabular-nums">
+                        {postCount}
+                      </span>
                     </span>
-                    <span className="text-sm text-base-content/60 transition-colors group-hover:text-base-content">
-                      Share an update...
+                  ),
+                },
+                {
+                  value: "comments",
+                  label: (
+                    <span className="inline-flex items-center gap-1.5">
+                      <HiOutlineChatBubbleOvalLeft
+                        size={16}
+                        className="opacity-70"
+                      />
+                      <span>Comments</span>
+                      <span className="text-xs opacity-50 tabular-nums">
+                        {commentCount}
+                      </span>
                     </span>
-                  </button>
-                )}
+                  ),
+                },
+                {
+                  value: "participants",
+                  label: (
+                    <span className="inline-flex items-center gap-1.5">
+                      <HiOutlineUsers
+                        size={16}
+                        className="opacity-70"
+                      />
+                      <span>Participants</span>
+                      <span className="text-xs opacity-50 tabular-nums">
+                        {participantCount}
+                      </span>
+                    </span>
+                  ),
+                },
+              ]}
+              activeTab={mobileActiveTab}
+              onChange={(tab) =>
+                setMobileActiveTab(
+                  tab as "posts" | "comments" | "participants"
+                )
+              }
+            />
+          </div>
 
-                {event.posts && event.posts.length > 0 ? (
-                  <div className="flex flex-col gap-4">
-                    {event.posts.toReversed().map((post) => (
-                      <PostCard key={post.id} post={post} hideEventLink />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-1 rounded-2xl border border-base-300 bg-base-200 px-6 py-10 text-center">
-                    <p className="text-sm font-medium text-foreground">
-                      It's quiet here...
-                    </p>
-                    <p className="text-sm text-base-content/60">
-                      {canCreatePost
-                        ? "Share the first update with your group."
-                        : "Posts from the organizer will show up here."}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="rounded-2xl border border-base-300 bg-base-200 p-5">
-                <CommentSection
-                  entityType="event"
-                  entityId={id}
-                  comments={
-                    (event.comments ?? []).filter(Boolean) as any
-                  }
-                />
-              </div>
-            )}
+          {/* Desktop tab content */}
+          <div className="hidden lg:block mt-4 pb-6">
+            {tabContent(desktopActiveTab)}
+          </div>
+
+          {/* Mobile tab content */}
+          <div className="lg:hidden mt-4 pb-6">
+            {tabContent(mobileActiveTab)}
           </div>
         </div>
 
