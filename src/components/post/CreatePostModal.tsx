@@ -11,6 +11,8 @@ import { useProfile } from "@/context/profile-context";
 import { useToast } from "@/context/toast-context";
 import { displayName } from "@/utils/display-name";
 
+const MAX_CONTENT_LENGTH = 2048;
+
 interface CreatePostModalProps {
   /** When set, the post is attached to this event. Omit for a standalone post. */
   eventId?: number;
@@ -165,6 +167,8 @@ function CreatePostModal({
                   placeholder="What's on your mind?"
                   rows={4}
                   required
+                  maxLength={MAX_CONTENT_LENGTH}
+                  aria-describedby="post-content-counter"
                   className="mt-1 w-full resize-none bg-transparent p-0 text-base leading-relaxed placeholder:text-base-content/40 focus:outline-none"
                 />
               </div>
@@ -212,23 +216,37 @@ function CreatePostModal({
             </div>
           )}
 
-          <div className="mt-4 flex justify-end gap-3 border-t border-base-300 pt-4">
-            <button
-              type="button"
-              onClick={handleClose}
-              className="btn btn-ghost"
-              disabled={loading}
+          <div className="mt-4 flex items-center justify-between gap-3 border-t border-base-300 pt-4">
+            <span
+              id="post-content-counter"
+              className={`text-xs tabular-nums ${
+                content.length >= MAX_CONTENT_LENGTH
+                  ? "text-error"
+                  : content.length > MAX_CONTENT_LENGTH - 128
+                    ? "text-warning"
+                    : "text-base-content/50"
+              }`}
             >
-              Cancel
-            </button>
-            <Button
-              type="submit"
-              loading={loading}
-              disabled={!content.trim()}
-              className="btn btn-primary w-28"
-            >
-              Post
-            </Button>
+              {content.length} / {MAX_CONTENT_LENGTH}
+            </span>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={handleClose}
+                className="btn btn-ghost"
+                disabled={loading}
+              >
+                Cancel
+              </button>
+              <Button
+                type="submit"
+                loading={loading}
+                disabled={!content.trim() || content.length > MAX_CONTENT_LENGTH}
+                className="btn btn-primary w-28"
+              >
+                Post
+              </Button>
+            </div>
           </div>
         </form>
       </div>
