@@ -12,12 +12,15 @@ import EventCard from "../../components/event/EventCard";
 import UserCard from "@/components/user/UserCard";
 import { useProfile } from "@/context/profile-context";
 import PostCard from "@/components/post/PostCard";
+import TabButtons from "@/components/ui/TabButtons";
+
+const tabs = ["All", "Events", "People", "Posts"] as const;
+type SearchTab = (typeof tabs)[number];
 
 function SearchPage() {
   useDocumentTitle("Explore");
 
-  const tabs = ["All", "Events", "People", "Posts"];
-  const [activeTab, setActiveTab] = useState("All");
+  const [activeTab, setActiveTab] = useState<SearchTab>("All");
 
   const [searchParams] = useSearchParams();
   const { profile } = useProfile();
@@ -67,22 +70,12 @@ function SearchPage() {
               <GlobalSearchWidget />
             </div>
           </div>
-          <div className="flex pt-3 gap-1 justify-between overflow-x-auto scrollbar-none">
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                className={`px-4 py-2.5 text-sm font-medium whitespace-nowrap grow rounded-t-lg border-b-2 transition-all
-                ${
-                  activeTab === tab
-                    ? "border-primary text-primary bg-primary/5"
-                    : "border-transparent text-neutral hover:text-base-content hover:bg-base-200"
-                }`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+          <TabButtons
+            tabs={tabs}
+            activeTab={activeTab}
+            onChange={setActiveTab}
+            className="pt-3"
+          />
         </PageHeader>
         <div className="flex flex-col items-center gap-2 w-full mx-auto p-4 max-w-[700px]">
           {searchLoading ? (

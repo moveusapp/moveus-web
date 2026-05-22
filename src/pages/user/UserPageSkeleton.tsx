@@ -1,4 +1,4 @@
-import EventCardSkeleton from "@/components/event/EventCardSkeleton";
+import PostCardSkeleton from "@/components/post/PostCardSkeleton";
 
 function UserPageSkeleton() {
   return (
@@ -25,9 +25,12 @@ function UserPageSkeleton() {
           </div>
         </div>
       </div>
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
-        <EventCardSkeleton />
-        <EventCardSkeleton />
+      <div className="columns-1 md:columns-2 gap-3">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="mb-3 break-inside-avoid">
+            <PostCardSkeleton />
+          </div>
+        ))}
       </div>
     </div>
   );

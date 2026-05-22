@@ -71,6 +71,9 @@ fragment User on UserType {
   organizingEvents {
     ...EventCard
   }
+  posts {
+    ...PostCard
+  }
 }
 
 fragment UserCard on UserType {
