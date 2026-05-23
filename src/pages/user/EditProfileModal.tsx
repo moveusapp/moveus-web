@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { HiXMark, HiCamera } from "react-icons/hi2";
 import { useMutation, useApolloClient } from "@apollo/client/react";
 import TextInput from "@/components/ui/TextInput";
@@ -67,6 +67,14 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const imageRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (isOpen && !dialog.open) dialog.showModal();
+    if (!isOpen && dialog.open) dialog.close();
+  }, [isOpen]);
 
   const handleImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -140,13 +148,11 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
     }
   };
 
-  if (!isOpen) return null;
-
   const previewSrc = imagePreview ?? avatarSrc;
   const errorMessage = uploadError ?? (error ? formatError(error) : null);
 
   return (
-    <dialog open className="modal modal-open">
+    <dialog ref={dialogRef} className="modal" onClose={handleClose}>
       <div className="modal-box max-w-xl">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-bold">{strings.editProfile.title}</h3>

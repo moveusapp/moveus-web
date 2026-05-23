@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
 import { HiOutlineNoSymbol, HiOutlineTrash } from "react-icons/hi2";
@@ -52,12 +52,28 @@ function EditEventPage() {
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
+  const confirmDialogRef = useRef<HTMLDialogElement>(null);
+  const cancelDialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (event && event.role !== MemberRole.Organizer) {
       navigate(`/event/${id}`, { replace: true });
     }
   }, [event, id, navigate]);
+
+  useEffect(() => {
+    const dialog = confirmDialogRef.current;
+    if (!dialog) return;
+    if (confirmOpen && !dialog.open) dialog.showModal();
+    if (!confirmOpen && dialog.open) dialog.close();
+  }, [confirmOpen]);
+
+  useEffect(() => {
+    const dialog = cancelDialogRef.current;
+    if (!dialog) return;
+    if (cancelOpen && !dialog.open) dialog.showModal();
+    if (!cancelOpen && dialog.open) dialog.close();
+  }, [cancelOpen]);
 
   if (fallback) return fallback;
   if (!event || event.role !== MemberRole.Organizer) return null;
@@ -180,7 +196,11 @@ function EditEventPage() {
           </button>
         </div>
 
-        <dialog className={`modal ${confirmOpen ? "modal-open" : ""}`}>
+        <dialog
+          ref={confirmDialogRef}
+          className="modal"
+          onClose={() => setConfirmOpen(false)}
+        >
           <div className="modal-box rounded-2xl">
             <h3 className="font-bold text-lg">{strings.editEvent.deleteModalTitle}</h3>
             <p className="py-3 text-sm text-base-content/70">
@@ -220,7 +240,11 @@ function EditEventPage() {
           />
         </dialog>
 
-        <dialog className={`modal ${cancelOpen ? "modal-open" : ""}`}>
+        <dialog
+          ref={cancelDialogRef}
+          className="modal"
+          onClose={() => setCancelOpen(false)}
+        >
           <div className="modal-box rounded-2xl">
             <h3 className="font-bold text-lg">{strings.editEvent.cancelModalTitle}</h3>
             <p className="py-3 text-sm text-base-content/70">

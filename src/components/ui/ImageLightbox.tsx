@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { HiXMark } from "react-icons/hi2";
 import strings from "@/translations/strings";
 
@@ -9,10 +10,18 @@ interface ImageLightboxProps {
 }
 
 function ImageLightbox({ open, src, alt = "", onClose }: ImageLightboxProps) {
-  if (!open || !src) return null;
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const shouldOpen = open && !!src;
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (shouldOpen && !dialog.open) dialog.showModal();
+    if (!shouldOpen && dialog.open) dialog.close();
+  }, [shouldOpen]);
 
   return (
-    <dialog open className="modal modal-open">
+    <dialog ref={dialogRef} className="modal" onClose={onClose}>
       <div className="modal-box flex max-w-4xl items-center justify-center bg-transparent p-0 shadow-none">
         <button
           type="button"

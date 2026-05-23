@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { HiXMark, HiOutlineStar } from "react-icons/hi2";
 import { EventFragment } from "@/graphql/graphql-types";
@@ -13,12 +14,19 @@ interface ViewFeedbackModalProps {
 }
 
 function ViewFeedbackModal({ isOpen, onClose, event }: ViewFeedbackModalProps) {
-  if (!isOpen) return null;
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (isOpen && !dialog.open) dialog.showModal();
+    if (!isOpen && dialog.open) dialog.close();
+  }, [isOpen]);
 
   const rated = event.members.filter((m) => ratingIndex(m.score) !== -1);
 
   return (
-    <dialog open className="modal modal-open">
+    <dialog ref={dialogRef} className="modal" onClose={onClose}>
       <div className="modal-box flex max-h-[85vh] max-w-md flex-col p-0">
         <div className="flex items-start justify-between gap-3 px-6 pt-6 pb-4">
           <div>

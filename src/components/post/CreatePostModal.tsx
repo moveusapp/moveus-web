@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useCallback, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { HiXMark, HiPhoto } from "react-icons/hi2";
 import Button from "@/components/ui/Button";
 import UserAvatar from "@/components/user/UserAvatar";
@@ -39,6 +39,14 @@ function CreatePostModal({
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (isOpen && !dialog.open) dialog.showModal();
+    if (!isOpen && dialog.open) dialog.close();
+  }, [isOpen]);
 
   const loading = creating || uploading;
   const errorMessage = error ? formatError(error) : null;
@@ -129,10 +137,8 @@ function CreatePostModal({
     onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <dialog open className="modal modal-open">
+    <dialog ref={dialogRef} className="modal" onClose={handleClose}>
       <div className="modal-box max-w-xl">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-bold">{strings.post.createTitle}</h3>

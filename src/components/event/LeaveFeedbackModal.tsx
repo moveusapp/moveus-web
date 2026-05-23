@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { HiXMark } from "react-icons/hi2";
 import { useMutation } from "@apollo/client/react";
 import { EventRating, RateEventDocument } from "@/graphql/graphql-types";
@@ -32,6 +32,7 @@ function LeaveFeedbackModal({
   onSubmitted,
 }: LeaveFeedbackModalProps) {
   const toast = useToast();
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [score, setScore] = useState<EventRating | null>(initialScore);
   const [comment, setComment] = useState("");
 
@@ -48,7 +49,12 @@ function LeaveFeedbackModal({
     }
   }, [isOpen, initialScore, reset]);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (isOpen && !dialog.open) dialog.showModal();
+    if (!isOpen && dialog.open) dialog.close();
+  }, [isOpen]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -68,7 +74,7 @@ function LeaveFeedbackModal({
   };
 
   return (
-    <dialog open className="modal modal-open" aria-label={strings.formatString(strings.event.feedback.modalAria, { title: eventTitle }) as string}>
+    <dialog ref={dialogRef} className="modal" onClose={onClose} aria-label={strings.formatString(strings.event.feedback.modalAria, { title: eventTitle }) as string}>
       <div className="modal-box max-w-md">
         <button
           type="button"
