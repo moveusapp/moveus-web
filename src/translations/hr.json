@@ -288,6 +288,7 @@
     "postShared": "Objava je podijeljena.",
     "postSharedNoPhoto": "Objava je podijeljena, ali slika se nije učitala.",
     "messageNotSent": "Poruka nije poslana",
+    "imageUploadFailed": "Slika se nije učitala. Pokušaj ponovno.",
     "eventCreated": "Događaj je kreiran.",
     "joinedEvent": "Upadaš! Vidimo se tamo.",
     "leftEvent": "Napustio/la si ovaj događaj.",

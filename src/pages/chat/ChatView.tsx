@@ -31,7 +31,9 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
     variables: { chatId },
   });
 
-  const [messages, setMessages] = useState<WsChatMessageType[]>([]);
+  type LocalMessage = WsChatMessageType & { _clientKey?: number };
+  const [messages, setMessages] = useState<LocalMessage[]>([]);
+  const clientKeyRef = useRef(0);
   const [lastOpens, setLastOpens] = useState<Map<number, Date>>(new Map());
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -91,13 +93,17 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
 
   const addNewMessage = useCallback(
     (message: WsChatMessageType) => {
+      const clientKey = ++clientKeyRef.current;
       setMessages((p) => [
         ...p,
         {
           ...message,
           timeSent: ensureDateObject(message.timeSent),
+          _clientKey: clientKey,
         },
       ]);
+      return () =>
+        setMessages((p) => p.filter((m) => m._clientKey !== clientKey));
     },
     [setMessages],
   );

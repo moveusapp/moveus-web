@@ -53,33 +53,37 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
         && !selectedImage
       ) return;
       const imageToSend = selectedImage;
+      const textToSend = text;
       clearImageInput();
       setText("");
-      addMessage({
+      const removeOptimistic = addMessage({
         id: null,
         attachmentUrl: imageToSend ? await fileToBase64(imageToSend) : null,
-        textContent: text,
+        textContent: textToSend,
         userId: 0,
         timeSent: new Date(),
       });
       let attachmentId: string | null = null;
       if (imageToSend) {
-        await apolloClient
-          .query({
+        try {
+          const result = await apolloClient.query({
             query: GetAttachmentUploadUrlDocument,
-          })
-          .then(async (result) => {
-            if (!result.data || !result.data.newAttachment) {
-              return;
-            }
-
-            const { id, url } = result.data!.newAttachment!;
-
-            if (id && url) {
-              attachmentId = id;
-              await putFileToSignedUrl(url, imageToSend);
-            }
           });
+          const newAttachment = result.data?.newAttachment;
+          if (!newAttachment?.id || !newAttachment?.url) {
+            throw new Error("Missing attachment upload URL");
+          }
+          await putFileToSignedUrl(newAttachment.url, imageToSend);
+          attachmentId = newAttachment.id;
+        } catch (error) {
+          console.error(error);
+          toast.error(formatError(error), strings.toast.imageUploadFailed);
+          removeOptimistic();
+          setSelectedImage(imageToSend);
+          setImagePreview(URL.createObjectURL(imageToSend));
+          setText(textToSend);
+          return;
+        }
       }
       sendMessage({
         variables: {
@@ -162,5 +166,5 @@ export default SendMessage;
 
 interface SendMessageInterface {
   chatId: number;
-  addMessage: (message: WsChatMessageType) => void;
+  addMessage: (message: WsChatMessageType) => () => void;
 }

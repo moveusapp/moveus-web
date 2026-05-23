@@ -288,6 +288,7 @@
     "postShared": "Post shared.",
     "postSharedNoPhoto": "Post shared, but the photo didn't upload.",
     "messageNotSent": "Message not sent",
+    "imageUploadFailed": "Image didn't upload. Try again.",
     "eventCreated": "Event created.",
     "joinedEvent": "You're in! See you there.",
     "leftEvent": "You left this event.",
