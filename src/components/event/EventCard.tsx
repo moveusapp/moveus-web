@@ -48,7 +48,7 @@ function EventCard({ event }: EventCardProps) {
   return (
     <Link
       to={`/event/${event.id}`}
-      className="bg-base-200 w-full rounded-2xl border border-base-300 motion-safe:hover:-translate-y-1 motion-safe:active:translate-y-0 transition-all duration-200 group p-2.5 flex flex-col gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="bg-base-200 w-full rounded-2xl border border-base-300 hover:border-primary/20 transition-all duration-200 group p-2.5 flex flex-col gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
       {/* Thumbnail */}
       <div className="relative w-full aspect-video overflow-hidden rounded-xl bg-base-300">
