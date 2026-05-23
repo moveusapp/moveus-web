@@ -1,6 +1,10 @@
 import { Fragment, useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
-import { HiArrowLeft, HiUserGroup } from "react-icons/hi2";
+import {
+  HiArrowLeft,
+  HiUserGroup,
+  HiOutlineChatBubbleOvalLeftEllipsis,
+} from "react-icons/hi2";
 
 import { useQuery, useSubscription } from "@apollo/client/react";
 import UserAvatar from "@/components/user/UserAvatar";
@@ -281,7 +285,31 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
       ) : (
         <>
           <div className="flex-1 overflow-y-auto px-4 py-2">
-            {messageElements}
+            {messages.length === 0 && chat?.lastMessage == null ? (
+              <div className="h-full flex flex-col items-center justify-center gap-3 text-center px-6 py-10 text-base-content/40">
+                <HiOutlineChatBubbleOvalLeftEllipsis className="text-5xl" />
+                <p className="text-base font-medium text-base-content/60">
+                  {isGroup
+                    ? strings.chat.emptyChatHeadingGroup
+                    : strings.formatString(
+                        strings.chat.emptyChatHeading1on1,
+                        {
+                          name:
+                            members[0]?.user.firstName ||
+                            members[0]?.user.username ||
+                            "",
+                        },
+                      )}
+                </p>
+                <p className="text-sm text-base-content/40 max-w-xs leading-snug">
+                  {isGroup
+                    ? strings.chat.emptyChatSubtitleGroup
+                    : strings.chat.emptyChatSubtitle1on1}
+                </p>
+              </div>
+            ) : (
+              messageElements
+            )}
             <div ref={messagesEndRef} />
           </div>
           <div className="flex-shrink-0 p-3">

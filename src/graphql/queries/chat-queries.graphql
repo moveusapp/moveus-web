@@ -17,6 +17,9 @@ query GetChat($chatId: Int!) {
     id
     kind
     groupName
+    lastMessage {
+      id
+    }
     members {
       user {
         id
