@@ -18,3 +18,10 @@ mutation AlterPrivacySetting(
     }
   }
 }
+
+mutation DeleteAccount {
+  deleteAccount {
+    success
+  }
+}
+

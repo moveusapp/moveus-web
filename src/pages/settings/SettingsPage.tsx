@@ -1,11 +1,10 @@
 import { useProfile } from "@/context/profile-context";
 import useDocumentTitle from "@/hooks/use-document-title";
 import useTheme from "@/hooks/use-theme";
-import { ReactNode, useCallback, useState } from "react";
+import { ReactNode, useState } from "react";
 import {
   AlterPrivacySettingDocument,
   ContextProfileFragment,
-  LogOutDocument,
   PrivacyScope,
   PrivacySetting,
 } from "@/graphql/graphql-types";
@@ -15,17 +14,16 @@ import {
   HiOutlineMapPin,
   HiOutlineMoon,
   HiOutlineRectangleStack,
+  HiOutlineTrash,
   HiOutlineUserCircle,
   HiOutlineUserGroup,
   HiLanguage,
 } from "react-icons/hi2";
-import { apolloClient } from "@/appolo/client";
-import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
-import Button from "@/components/ui/Button";
-import { clearStoredProfile } from "@/utils/auth";
 import PageHeader from "@/components/layout/PageHeader";
 import SettingsOption from "./SettingsOption";
+import LogoutModal from "./LogoutModal";
+import DeleteAccountModal from "./DeleteAccountModal";
 import strings from "@/translations/strings";
 import { Locale } from "@/translations/strings";
 import { enumToOptions } from "@/utils/enum-to-options";
@@ -50,10 +48,10 @@ function SettingsPage() {
   const { profile, setProfile } = useProfile();
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage } = useLanguage();
-  const navigate = useNavigate();
 
-  const [logout, { loading: logoutLoading }] = useMutation(LogOutDocument);
   const [alterPrivacySetting] = useMutation(AlterPrivacySettingDocument);
+  const [logoutOpen, setLogoutOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [pendingSetting, setPendingSetting] = useState<PrivacySetting | null>(
     null,
   );
@@ -100,17 +98,6 @@ function SettingsPage() {
     { value: PrivacyScope.Mutuals, label: strings.settings.scopeMutuals },
     { value: PrivacyScope.Noone, label: strings.settings.scopeOnlyYou },
   ];
-
-  const onLogout = useCallback(() => {
-    logout()
-      .then(() => {
-        setProfile(null);
-        clearStoredProfile();
-        apolloClient.clearStore();
-        navigate("/login");
-      })
-      .catch((_) => {});
-  }, [logout, navigate, setProfile]);
 
   const scopeFor = (setting: PrivacySetting): PrivacyScope =>
     profile?.privacySettings.find((p) => p.setting === setting)?.scope ??
@@ -223,7 +210,7 @@ function SettingsPage() {
           <p className="text-md font-medium">{strings.settings.account}</p>
         </div>
 
-        <div className="bg-base-200 rounded-2xl border border-base-300 overflow-hidden">
+        <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
           <SettingsOption
             icon={<HiOutlineArrowRightOnRectangle />}
             title={strings.settings.logOut}
@@ -231,40 +218,28 @@ function SettingsPage() {
             control={{
               kind: "action",
               tone: "danger",
-              onClick: () =>
-                (document.getElementById("logoutModal") as any).showModal(),
+              onClick: () => setLogoutOpen(true),
+            }}
+          />
+          <SettingsOption
+            icon={<HiOutlineTrash />}
+            title={strings.settings.deleteAccount}
+            description={strings.settings.deleteAccountDesc}
+            control={{
+              kind: "action",
+              tone: "danger",
+              onClick: () => setDeleteOpen(true),
             }}
           />
         </div>
       </div>
 
-      <dialog id="logoutModal" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">{strings.settings.logoutModalTitle}</h3>
-          <p className="py-4">{strings.settings.logoutModalBody}</p>
-          <div className="modal-action">
-            <div className="flex flex-row gap-2">
-              <form method="dialog">
-                <Button
-                  onClick={() =>
-                    (document.getElementById("logoutModal") as any).close()
-                  }
-                  className={`btn btn-ghost ${logoutLoading ? "btn-disabled" : ""}`}
-                >
-                  {strings.common.cancel}
-                </Button>
-              </form>
-              <Button
-                onClick={onLogout}
-                loading={logoutLoading}
-                className="btn btn-primary"
-              >
-                {strings.settings.logoutConfirm}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </dialog>
+      <LogoutModal open={logoutOpen} onClose={() => setLogoutOpen(false)} />
+      <DeleteAccountModal
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        username={profile?.username ?? ""}
+      />
     </div>
   );
 }

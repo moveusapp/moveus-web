@@ -1,4 +1,4 @@
-import { Link, Navigate, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi2";
 import { useProfile } from "@/context/profile-context";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
@@ -6,9 +6,11 @@ import strings from "@/translations/strings";
 
 export function AuthRoutes() {
   const { profile } = useProfile();
+  const location = useLocation();
 
   if (profile) {
-    return <Navigate to="/home" replace />;
+    const target = location.pathname === "/register" ? "/welcome" : "/home";
+    return <Navigate to={target} replace />;
   }
 
   return (

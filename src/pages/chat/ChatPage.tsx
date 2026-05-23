@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useLazyQuery, useSubscription } from "@apollo/client/react";
-import { ChatKind, GetUserChatDocument, MyChatsDocument, WsMyChatUpdateType } from "@/graphql/graphql-types";
+import { useMutation, useSubscription } from "@apollo/client/react";
+import { ChatKind, CreateDirectChatDocument, MyChatsDocument, WsMyChatUpdateType } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import ChatCard, { ChatSummary, ChatSummaryMember } from "@/components/chat/ChatCard";
 import ChatCardSkeleton from "@/components/chat/ChatCardSkeleton";
@@ -18,7 +18,7 @@ function ChatPage() {
   const [chatsMap, setChatsMap] = useState<Map<number, ChatSummary>>(new Map());
   const [hasReceivedData, setHasReceivedData] = useState(false);
 
-  const [getUserChat] = useLazyQuery(GetUserChatDocument);
+  const [createDirectChat] = useMutation(CreateDirectChatDocument);
 
   const processEvent = useCallback(
     (event: WsMyChatUpdateType) => {
@@ -120,12 +120,17 @@ function ChatPage() {
     const userId = searchParams.get("userId");
     if (!userId) return;
 
-    getUserChat({ variables: { userId: Number(userId) } }).then(({ data }) => {
-      if (data?.userChat?.id) {
-        setSelectedChatId(data.userChat.id);
-      }
-      setSearchParams({}, { replace: true });
-    });
+    createDirectChat({ variables: { userId: Number(userId) } })
+      .then(({ data }) => {
+        const chatId = data?.createDirectChat?.chat?.id;
+        if (chatId) setSelectedChatId(chatId);
+      })
+      .catch((error) => {
+        console.error("createDirectChat failed:", error);
+      })
+      .finally(() => {
+        setSearchParams({}, { replace: true });
+      });
   }, []);
 
   const chats = useMemo(() => {

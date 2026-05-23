@@ -1,3 +1,24 @@
+mutation CreateDirectChat($userId: Int!) {
+  createDirectChat(userId: $userId) {
+    chat {
+      id
+      kind
+      groupName
+      lastMessage {
+        id
+      }
+      members {
+        user {
+          id
+          username
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+}
+
 mutation SendChatMessage (
   $chatId: Int!,
   $message: String,
