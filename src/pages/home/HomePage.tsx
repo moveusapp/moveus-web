@@ -15,7 +15,7 @@ import FeedbackReminder from "@/pages/home/FeedbackReminder";
 import CreatePostComposer from "@/pages/home/CreatePostComposer";
 
 function HomePage() {
-  useDocumentTitle("Home");
+  useDocumentTitle(strings.home.documentTitle);
 
   const { data, loading } = useQuery(GetHomeEventsDocument);
   const { profile } = useProfile();
@@ -27,7 +27,7 @@ function HomePage() {
     <div className="flex flex-row">
       <div className="flex flex-col grow min-w-0">
         <PageHeader
-          title={strings.formatString(strings.hello, { name: profileName })}
+          title={strings.formatString(strings.home.greeting, { name: profileName }) as string}
         />
         <div className="flex flex-col w-full mx-auto gap-3 p-4 max-w-[700px]">
           <FeedbackReminder />

@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { EventFragment, MemberRole } from "@/graphql/graphql-types";
 import { HiCheckBadge } from "react-icons/hi2";
+import { HiOutlineUsers } from "react-icons/hi";
 import UserAvatar from "@/components/user/UserAvatar";
 import { displayName } from "@/utils/display-name";
+import strings from "@/translations/strings";
 
 const ROLE_ORDER: Record<string, number> = {
   [MemberRole.Organizer]: 0,
@@ -14,11 +16,11 @@ const ROLE_ORDER: Record<string, number> = {
 function roleBadge(role: string | null | undefined) {
   switch (role) {
     case MemberRole.Organizer:
-      return <span className="badge badge-sm badge-primary shrink-0">Host</span>;
+      return <span className="badge badge-sm badge-primary shrink-0">{strings.event.page.roleHost}</span>;
     case MemberRole.Moderator:
-      return <span className="badge badge-sm shrink-0">Moderator</span>;
+      return <span className="badge badge-sm shrink-0">{strings.event.page.roleModerator}</span>;
     case MemberRole.Spectator:
-      return <span className="badge badge-sm shrink-0">Spectator</span>;
+      return <span className="badge badge-sm shrink-0">{strings.event.page.roleSpectator}</span>;
     default:
       return null;
   }
@@ -38,9 +40,9 @@ function ParticipantsList({ event }: ParticipantsListProps) {
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-base-200 text-base-content/40">
           <HiOutlineUsers className="h-6 w-6" />
         </span>
-        <p className="text-sm font-medium text-foreground">No one yet</p>
+        <p className="text-sm font-medium text-foreground">{strings.event.page.noOneYet}</p>
         <p className="text-sm text-base-content/60">
-          Be the first to join and get this event moving.
+          {strings.event.page.beFirstToJoin}
         </p>
       </div>
     );

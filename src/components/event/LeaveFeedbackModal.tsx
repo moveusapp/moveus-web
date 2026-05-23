@@ -8,6 +8,7 @@ import FormError from "@/components/ui/FormError";
 import RatingFaces from "@/components/event/RatingFaces";
 import { formatError } from "@/utils/format-error";
 import { useToast } from "@/context/toast-context";
+import strings from "@/translations/strings";
 
 const MAX_COMMENT = 500;
 const COMMENT_WARN_AT = MAX_COMMENT - 50;
@@ -58,7 +59,7 @@ function LeaveFeedbackModal({
       });
       if (result.data?.rateEvent?.event?.id) {
         onClose();
-        toast.success("Thanks for the feedback!");
+        toast.success(strings.toast.thanksForFeedback);
         onSubmitted?.();
       }
     } catch (err) {
@@ -67,13 +68,13 @@ function LeaveFeedbackModal({
   };
 
   return (
-    <dialog open className="modal modal-open" aria-label={`Rate ${eventTitle}`}>
+    <dialog open className="modal modal-open" aria-label={strings.formatString(strings.event.feedback.modalAria, { title: eventTitle }) as string}>
       <div className="modal-box max-w-md">
         <button
           type="button"
           onClick={onClose}
           className="btn btn-sm btn-circle btn-ghost absolute right-3 top-3"
-          aria-label="Close"
+          aria-label={strings.common.close}
         >
           <HiXMark className="h-5 w-5" />
         </button>
@@ -81,9 +82,9 @@ function LeaveFeedbackModal({
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           {/* Rating — the focal ritual */}
           <div className="text-center">
-            <h3 className="text-xl font-bold text-foreground">How was it?</h3>
+            <h3 className="text-xl font-bold text-foreground">{strings.event.feedback.howWasIt}</h3>
             <p className="mx-auto mt-1.5 max-w-xs text-sm text-base-content/60">
-              Your rating helps the organizer make the next one even better.
+              {strings.event.feedback.helpsOrganizer}
             </p>
             <div className="mt-5">
               <RatingFaces
@@ -97,8 +98,8 @@ function LeaveFeedbackModal({
           {/* Optional note */}
           <div>
             <TextArea
-              label="Add a comment (optional)"
-              placeholder="What stood out? Anything the organizer should know?"
+              label={strings.event.feedback.addComment}
+              placeholder={strings.event.feedback.commentPlaceholder}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               maxLength={MAX_COMMENT}
@@ -122,7 +123,7 @@ function LeaveFeedbackModal({
 
           {error && (
             <FormError
-              title="Couldn't submit your feedback"
+              title={strings.event.feedback.couldntSubmit}
               message={formatError(error)}
             />
           )}
@@ -134,7 +135,7 @@ function LeaveFeedbackModal({
               disabled={loading}
               className="btn btn-ghost flex-1 rounded-2xl"
             >
-              Cancel
+              {strings.common.cancel}
             </button>
             <Button
               type="submit"
@@ -142,7 +143,7 @@ function LeaveFeedbackModal({
               disabled={!score}
               className={`btn-primary flex-1 ${!score ? "btn-disabled" : ""}`}
             >
-              Submit feedback
+              {strings.event.feedback.submit}
             </Button>
           </div>
         </form>

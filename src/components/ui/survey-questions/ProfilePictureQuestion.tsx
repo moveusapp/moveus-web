@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { HiCamera, HiXMark } from "react-icons/hi2";
+import strings from "@/translations/strings";
 
 interface Props {
   value: File | null;
@@ -35,7 +36,7 @@ function ProfilePictureQuestion({ value, onChange }: Props) {
       <label
         htmlFor="survey-profile-picture"
         className="group relative block cursor-pointer rounded-full focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:ring-offset-base-100"
-        aria-label="Choose a profile picture"
+        aria-label={strings.survey.choosePicture}
       >
         <div className="avatar">
           <div className="relative w-32 h-32 rounded-full ring-1 ring-base-300 overflow-hidden bg-base-200 flex items-center justify-center">
@@ -70,7 +71,7 @@ function ProfilePictureQuestion({ value, onChange }: Props) {
           className="btn btn-sm btn-ghost rounded-full gap-1"
         >
           <HiXMark className="w-4 h-4" />
-          Remove
+          {strings.common.remove}
         </button>
       )}
     </div>

@@ -5,6 +5,7 @@ import {
 } from "@/graphql/graphql-types";
 import { useMutation } from "@apollo/client/react";
 import Button from "../ui/Button";
+import strings from "@/translations/strings";
 
 function FollowButton({ isFollowing: initialIsFollowing, userId }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
@@ -36,14 +37,14 @@ function FollowButton({ isFollowing: initialIsFollowing, userId }: FollowButtonP
         onMouseLeave={() => setIsHovered(false)}
         className={`${isHovered ? "btn-error" : ""}`}
       >
-        {isHovered ? "Unfollow" : "Following"}
+        {isHovered ? strings.user.unfollow : strings.user.following}
       </Button>
     );
   }
 
   return (
     <Button loading={loading} onClick={handleFollow} className="btn-primary w-30">
-      Follow
+      {strings.user.follow}
     </Button>
   );
 }

@@ -11,6 +11,7 @@ import RatingFaces from "@/components/event/RatingFaces";
 import LeaveFeedbackModal from "@/components/event/LeaveFeedbackModal";
 import { timeAgo } from "@/utils/time-utils";
 import duckHappy from "@/assets/duck/duck-happy.svg";
+import strings from "@/translations/strings";
 
 type UnratedEvent = NonNullable<
   NonNullable<GetUnratedEventsQueryResult["unratedEvents"]>[number]
@@ -65,7 +66,7 @@ function FeedbackReminder() {
           />
           <div className="min-w-0 flex-1">
             <h2 className="text-base font-bold leading-snug text-foreground text-balance">
-              How was{" "}
+              {strings.home.feedbackHowWas}{" "}
               <Link
                 to={`/event/${event.id}`}
                 className="text-primary underline-offset-2 hover:underline focus-visible:underline"
@@ -75,14 +76,14 @@ function FeedbackReminder() {
               ?
             </h2>
             <p className="text-sm text-base-content/60">
-              Wrapped up {timeAgo(event.endTime)}, drop a quick rating.
+              {strings.formatString(strings.home.feedbackWrappedUp, { time: timeAgo(event.endTime) })}
             </p>
           </div>
           <button
             type="button"
             onClick={() => setDismissed(true)}
             className="btn btn-xs btn-circle btn-ghost shrink-0 text-base-content/50"
-            aria-label="Dismiss feedback reminder"
+            aria-label={strings.home.dismissFeedbackAria}
           >
             <HiXMark className="h-4 w-4" />
           </button>
@@ -94,7 +95,7 @@ function FeedbackReminder() {
 
         {queue.length > 1 && (
           <p className="mt-2 text-right text-xs font-medium text-base-content/45">
-            {index + 1} of {queue.length}
+            {strings.formatString(strings.home.queueProgress, { index: index + 1, total: queue.length })}
           </p>
         )}
       </section>

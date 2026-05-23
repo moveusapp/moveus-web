@@ -1,16 +1,17 @@
 import { HiFire, HiMapPin, HiTrophy } from "react-icons/hi2";
-
-const quickStats = [
-  { label: "Events This Week", value: "24", icon: HiTrophy },
-  { label: "Active Near You", value: "186", icon: HiMapPin },
-  { label: "Hot Streak", value: "5 days", icon: HiFire },
-];
+import strings from "@/translations/strings";
 
 function UserActivityWidget() {
+  const quickStats = [
+    { label: strings.widgets.eventsThisWeek, value: "24", icon: HiTrophy },
+    { label: strings.widgets.activeNearYou, value: "186", icon: HiMapPin },
+    { label: strings.widgets.hotStreak, value: strings.widgets.hotStreakValue, icon: HiFire },
+  ];
+
   return (
     <div className="bg-base-200 rounded-2xl border border-base-300 p-4">
       <h3 className="text-xs font-bold uppercase tracking-wider text-neutral mb-3">
-        Your Activity
+        {strings.widgets.yourActivity}
       </h3>
       <div className="flex flex-col gap-2.5">
         {quickStats.map((stat) => {

@@ -45,6 +45,7 @@ import ViewFeedbackModal from "@/pages/event/ViewFeedbackModal";
 import ParticipantsModal from "@/pages/event/ParticipantsModal";
 import ParticipantsList from "@/pages/event/ParticipantsList"
 import EventScore from "@/pages/event/EventScore";
+import strings from "@/translations/strings";
 
 function EventPage() {
   const { eventId } = useParams();
@@ -74,7 +75,6 @@ function EventPage() {
 
   const toast = useToast();
 
-  // Deep link from notifications / home reminder: /event/:id?feedback
   useEffect(() => {
     if (!event || !searchParams.has("feedback")) return;
     setSearchParams("", { replace: true });
@@ -114,7 +114,7 @@ function EventPage() {
     if (isFull) return;
     try {
       await joinEvent({ variables: { eventId: id } });
-      toast.success("You're in! See you there.");
+      toast.success(strings.toast.joinedEvent);
     } catch (err) {
       toast.error(formatError(err));
     }
@@ -123,7 +123,7 @@ function EventPage() {
   const handleLeave = async () => {
     try {
       await leaveEvent({ variables: { eventId: id } });
-      toast.info("You left this event.");
+      toast.info(strings.toast.leftEvent);
     } catch (err) {
       toast.error(formatError(err));
     }
@@ -132,13 +132,15 @@ function EventPage() {
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      toast.success("Link copied to clipboard.");
+      toast.success(strings.toast.linkCopied);
     } catch {
-      toast.error("Couldn't copy the link. Try again.");
+      toast.error(strings.toast.couldntCopyLink);
     }
   };
 
-  const activity = Object.keys(ActivityKind)[event.activity.id!];
+  const activityValue = Object.values(ActivityKind)[event.activity.id!];
+  const activityLabels = strings.enums.activityKind as unknown as Record<string, string>;
+  const activity = activityLabels[activityValue] ?? activityValue;
   const postCount = event.posts?.length ?? 0;
   const commentCount = event.comments?.length ?? 0;
   const participantCount = event.members?.length ?? 0;
@@ -147,17 +149,16 @@ function EventPage() {
   const isFinished = event.phase === EventPhase.Finished;
   const isLocked = event.phase !== EventPhase.Scheduled;
   const lockedLabel = isCancelled
-    ? "Event cancelled"
+    ? strings.event.page.eventCancelled
     : isFinished
-      ? "Event ended"
-      : "Event in progress";
+      ? strings.event.page.eventEnded
+      : strings.event.page.eventInProgress;
   const titleClass = isCancelled
     ? "text-base-content/60 line-through decoration-error/50 decoration-2"
     : isFinished
       ? "text-base-content/80"
       : "text-foreground";
 
-  // Attendees of a finished event can leave feedback.
   const canRate =
     isFinished &&
     [
@@ -166,10 +167,8 @@ function EventPage() {
       MemberRole.Spectator,
     ].includes(event.role!);
 
-  // Organizers review the feedback their finished event collected.
   const canViewFeedback = isFinished && event.role === MemberRole.Organizer;
 
-  // A finished event shows its final score to everyone, next to the action.
   const showScore = isFinished && event.score != null && event.score >= 1;
 
   const locationName = event.location?.name;
@@ -194,7 +193,7 @@ function EventPage() {
                   <HiPlus className="h-5 w-5" />
                 </span>
                 <span className="text-sm text-base-content/60 transition-colors group-hover:text-base-content">
-                  Share an update...
+                  {strings.event.page.shareUpdate}
                 </span>
               </button>
             )}
@@ -208,12 +207,12 @@ function EventPage() {
             ) : (
                 <div className="flex flex-col items-center gap-1 rounded-2xl border border-base-300 bg-base-200 px-6 py-10 text-center">
                   <p className="text-sm font-medium text-foreground">
-                    It's quiet here...
+                    {strings.event.page.quietHere}
                   </p>
                   <p className="text-sm text-base-content/60">
                     {canCreatePost
-                      ? "Share the first update with your group."
-                      : "Posts from the organizer will show up here."}
+                      ? strings.event.page.shareFirst
+                      : strings.event.page.postsFromOrganizer}
                   </p>
                 </div>
               )}
@@ -241,9 +240,7 @@ function EventPage() {
   return (
     <div className="w-full mx-auto max-w-5xl px-4 py-6">
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Left column */}
         <div className="flex-1 min-w-0 flex flex-col">
-          {/* Activity + phase eyebrow */}
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-xs font-semibold uppercase tracking-wide text-primary">{activity}</p>
             <EventPhaseBadge phase={event.phase} />
@@ -252,7 +249,6 @@ function EventPage() {
             {event.title}
           </h1>
 
-          {/* Organizer */}
           <Link
             to={`/user/${event.organizer?.user.username}`}
             className="flex items-center gap-2 group text-sm text-muted-foreground hover:text-foreground transition-colors mt-2"
@@ -262,7 +258,7 @@ function EventPage() {
               className="flex w-7 h-7"
             />
             <span className="flex items-center gap-1">
-              Hosted by{" "}
+              {strings.event.page.hostedBy}{" "}
               <span className="text-foreground font-medium group-hover:text-primary">
                 {organizerName}
               </span>
@@ -272,7 +268,6 @@ function EventPage() {
             </span>
           </Link>
 
-          {/* Date/location row — mobile only */}
           <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-muted-foreground mt-3 lg:hidden">
             <span className="flex items-center gap-1.5">
               <HiOutlineCalendarDays className="h-4 w-4 text-primary" />
@@ -288,30 +283,27 @@ function EventPage() {
               >
                 <HiOutlineMapPin className="h-4 w-4 text-primary" />
                 <span className="underline-offset-2 hover:underline">
-                  {locationName || "Location TBD"}
+                  {locationName || strings.event.locationTBD}
                 </span>
               </a>
             ) : (
               <span className="flex items-center gap-1.5">
                 <HiOutlineMapPin className="h-4 w-4 text-primary" />
-                Location TBD
+                {strings.event.locationTBD}
               </span>
             )}
           </div>
 
-          {/* Description */}
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             {event.description}
           </p>
 
-          {/* Final score — mobile, just above the action */}
           {showScore && (
             <div className="lg:hidden mt-4">
               <EventScore score={event.score!} />
             </div>
           )}
 
-          {/* Sticky action bar — mobile only */}
           <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4 flex flex-col gap-2">
             <div className="flex items-center gap-3">
               {canRate ? (
@@ -321,7 +313,7 @@ function EventPage() {
                   className="btn btn-primary flex-1 rounded-2xl"
                 >
                   <HiOutlineStar className="h-4 w-4" />
-                  Leave Feedback
+                  {strings.event.page.leaveFeedback}
                 </button>
               ) : canViewFeedback ? (
                 <button
@@ -330,7 +322,7 @@ function EventPage() {
                   className="btn btn-primary flex-1 rounded-2xl"
                 >
                   <HiOutlineChartBar className="h-4 w-4" />
-                  View Feedback
+                  {strings.event.page.viewFeedback}
                 </button>
               ) : isLocked ? (
                 <button
@@ -346,7 +338,7 @@ function EventPage() {
                   className="btn btn-primary flex-1 rounded-2xl"
                 >
                   <HiOutlinePencilSquare className="h-4 w-4" />
-                  Edit Event
+                  {strings.event.page.editEvent}
                 </Link>
               ) : [
                   MemberRole.Participant,
@@ -358,7 +350,7 @@ function EventPage() {
                   loading={leaveLoading}
                   className="btn btn-error btn-outline flex-1"
                 >
-                  Leave Event
+                  {strings.event.page.leaveEvent}
                 </Button>
               ) : (
                 <Button
@@ -367,7 +359,7 @@ function EventPage() {
                   disabled={!!isFull}
                   className={`btn btn-primary flex-1 ${isFull ? "btn-disabled" : ""}`}
                 >
-                  {isFull ? "Event Full" : "Join Event"}
+                  {isFull ? strings.event.page.eventFull : strings.event.page.joinEvent}
                 </Button>
               )}
 
@@ -376,7 +368,7 @@ function EventPage() {
                 onClick={handleShare}
                 disabled={isLocked}
                 className={`btn btn-square rounded-2xl ${isLocked ? "btn-disabled" : ""}`}
-                aria-label="Share event"
+                aria-label={strings.event.page.shareEventAria}
               >
                 <HiArrowUpTray className="h-4 w-4" />
               </button>
@@ -388,12 +380,11 @@ function EventPage() {
                 className="btn btn-outline btn-primary w-full"
               >
                 <HiOutlineChatBubbleLeftRight className="h-4 w-4" />
-                Message Organizer
+                {strings.event.page.messageOrganizer}
               </Link>
             )}
           </div>
 
-          {/* Tabs desktop */}
           <div className="hidden lg:block border-b border-base-300 mt-4">
             <TabButtons
               tabs={[
@@ -402,7 +393,7 @@ function EventPage() {
                   label: (
                     <span className="inline-flex items-center gap-1.5">
                       <HiOutlineNewspaper size={16} className="opacity-70" />
-                      <span>Posts</span>
+                      <span>{strings.ui.posts}</span>
                       <span className="text-xs opacity-50 tabular-nums">
                         {postCount}
                       </span>
@@ -417,7 +408,7 @@ function EventPage() {
                         size={16}
                         className="opacity-70"
                       />
-                      <span>Comments</span>
+                      <span>{strings.ui.comments}</span>
                       <span className="text-xs opacity-50 tabular-nums">
                         {commentCount}
                       </span>
@@ -440,7 +431,7 @@ function EventPage() {
                   label: (
                     <span className="inline-flex items-center gap-1.5">
                       <HiOutlineNewspaper size={16} className="opacity-70" />
-                      <span>Posts</span>
+                      <span>{strings.ui.posts}</span>
                       <span className="text-xs opacity-50 tabular-nums">
                         {postCount}
                       </span>
@@ -455,7 +446,7 @@ function EventPage() {
                         size={16}
                         className="opacity-70"
                       />
-                      <span>Comments</span>
+                      <span>{strings.ui.comments}</span>
                       <span className="text-xs opacity-50 tabular-nums">
                         {commentCount}
                       </span>
@@ -470,7 +461,7 @@ function EventPage() {
                         size={16}
                         className="opacity-70"
                       />
-                      <span>Participants</span>
+                      <span>{strings.event.page.participants}</span>
                       <span className="text-xs opacity-50 tabular-nums">
                         {participantCount}
                       </span>
@@ -487,21 +478,17 @@ function EventPage() {
             />
           </div>
 
-          {/* Desktop tab content */}
           <div className="hidden lg:block mt-4 pb-6">
             {tabContent(desktopActiveTab)}
           </div>
 
-          {/* Mobile tab content */}
           <div className="lg:hidden mt-4 pb-6">
             {tabContent(mobileActiveTab)}
           </div>
         </div>
 
-        {/* Right sidebar */}
         <aside className="w-full lg:w-[340px] xl:w-[380px] lg:flex-shrink-0 order-first lg:order-last">
           <div className="lg:sticky lg:top-6 lg:self-start flex flex-col gap-4">
-            {/* Thumbnail */}
             <div className="relative rounded-2xl overflow-hidden bg-base-300">
               <img
                 src={defaultEventThumbnail}
@@ -518,14 +505,12 @@ function EventPage() {
               />
             </div>
 
-            {/* Final score — desktop, just above the action */}
             {showScore && (
               <div className="hidden lg:block">
                 <EventScore score={event.score!} />
               </div>
             )}
 
-            {/* Action buttons — desktop */}
             <div className="hidden lg:flex flex-col gap-2">
               <div className="flex items-center gap-3">
                 {canRate ? (
@@ -535,7 +520,7 @@ function EventPage() {
                     className="btn btn-primary flex-1 rounded-2xl"
                   >
                     <HiOutlineStar className="h-4 w-4" />
-                    Leave Feedback
+                    {strings.event.page.leaveFeedback}
                   </button>
                 ) : canViewFeedback ? (
                   <button
@@ -544,7 +529,7 @@ function EventPage() {
                     className="btn btn-primary flex-1 rounded-2xl"
                   >
                     <HiOutlineChartBar className="h-4 w-4" />
-                    View Feedback
+                    {strings.event.page.viewFeedback}
                   </button>
                 ) : isLocked ? (
                   <button
@@ -560,7 +545,7 @@ function EventPage() {
                     className="btn btn-primary flex-1 rounded-2xl"
                   >
                     <HiOutlinePencilSquare className="h-4 w-4" />
-                    Edit Event
+                    {strings.event.page.editEvent}
                   </Link>
                 ) : [
                     MemberRole.Participant,
@@ -572,7 +557,7 @@ function EventPage() {
                     loading={leaveLoading}
                     className="btn btn-error btn-outline flex-1"
                   >
-                    Leave Event
+                    {strings.event.page.leaveEvent}
                   </Button>
                 ) : (
                   <Button
@@ -581,7 +566,7 @@ function EventPage() {
                     disabled={!!isFull}
                     className={`btn btn-primary flex-1 ${isFull ? "btn-disabled" : ""}`}
                   >
-                    {isFull ? "Event Full" : "Join Event"}
+                    {isFull ? strings.event.page.eventFull : strings.event.page.joinEvent}
                   </Button>
                 )}
 
@@ -590,7 +575,7 @@ function EventPage() {
                   onClick={handleShare}
                   disabled={isLocked}
                   className={`btn btn-square rounded-2xl ${isLocked ? "btn-disabled" : ""}`}
-                  aria-label="Share event"
+                  aria-label={strings.event.page.shareEventAria}
                 >
                   <HiArrowUpTray className="h-4 w-4" />
                 </button>
@@ -602,12 +587,11 @@ function EventPage() {
                   className="btn btn-outline btn-primary w-full"
                 >
                   <HiOutlineChatBubbleLeftRight className="h-4 w-4" />
-                  Message Organizer
+                  {strings.event.page.messageOrganizer}
                 </Link>
               )}
             </div>
 
-            {/* Date & Time card */}
             <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
               <HiOutlineCalendarDays className="h-5 w-5 text-primary shrink-0" />
               <p className="text-sm font-medium text-foreground">
@@ -615,18 +599,17 @@ function EventPage() {
               </p>
             </div>
 
-            {/* Location card */}
             <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
               <HiOutlineMapPin className="h-5 w-5 text-primary shrink-0" />
               <p className="text-sm font-medium text-foreground flex-1 min-w-0 truncate">
-                {locationName || "Location TBD"}
+                {locationName || strings.event.locationTBD}
               </p>
               {mapsUrl && (
                 <a
                   href={mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Open in Google Maps"
+                  aria-label={strings.event.page.openInMapsAria}
                   className="shrink-0 rounded-full p-1.5 -m-1.5 text-base-content/40 hover:text-primary hover:bg-base-300 transition-colors"
                 >
                   <HiOutlineArrowTopRightOnSquare className="h-4 w-4" />
@@ -634,13 +617,12 @@ function EventPage() {
               )}
             </div>
 
-            {/* Participants card */}
             <div className="hidden lg:block rounded-2xl border border-base-300 bg-base-200 p-4">
               <div className="flex items-center justify-between gap-1">
                 <div className="flex min-w-0 items-center gap-2">
                   <HiOutlineUsers className="h-5 w-5 shrink-0 text-primary" />
                   <p className="text-sm font-medium text-foreground">
-                    Participants
+                    {strings.event.page.participants}
                   </p>
                   <span className="text-xs tabular-nums text-base-content/50">
                     {event.members.length}
@@ -655,7 +637,7 @@ function EventPage() {
                     onClick={() => setShowParticipants(true)}
                     className="-mr-2 flex shrink-0 items-center gap-0.5 rounded-lg px-2 py-1 text-xs font-semibold text-primary outline-none transition-colors hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary/40"
                   >
-                    See all
+                    {strings.common.seeAll}
                     <HiChevronRight className="h-4 w-4" />
                   </button>
                 )}
@@ -682,7 +664,7 @@ function EventPage() {
                 </div>
               ) : (
                 <p className="mt-3 text-sm text-base-content/50">
-                  No one's joined yet.
+                  {strings.event.page.noOneJoined}
                 </p>
               )}
             </div>

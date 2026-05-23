@@ -7,6 +7,7 @@ import { ApolloProvider } from "@apollo/client/react";
 import { apolloClient } from "./appolo/client";
 import { UserProvider } from "./context/profile-context";
 import { ToastProvider } from "./context/toast-context";
+import { LanguageProvider } from "./context/language-context";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -14,11 +15,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
-      <ToastProvider>
-        <UserProvider>
-          <App />
-        </UserProvider>
-      </ToastProvider>
+      <LanguageProvider>
+        <ToastProvider>
+          <UserProvider>
+            <App />
+          </UserProvider>
+        </ToastProvider>
+      </LanguageProvider>
     </ApolloProvider>
   </React.StrictMode>,
 );

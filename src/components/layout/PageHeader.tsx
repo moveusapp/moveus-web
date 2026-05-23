@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import UserAvatar from "@/components/user/UserAvatar";
 import { useProfile } from "@/context/profile-context";
+import strings from "@/translations/strings";
 
 type PageHeaderProps = {
   title?: ReactNode;
@@ -23,7 +24,7 @@ export function HeaderAvatar() {
   return (
     <Link
       to="/profile"
-      aria-label="Your profile"
+      aria-label={strings.nav.yourProfileAria}
       className={`md:hidden shrink-0 rounded-full ${
         isOnOwnProfile
           ? "ring-2 ring-primary ring-offset-2 ring-offset-base-100"

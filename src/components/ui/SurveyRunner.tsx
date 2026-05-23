@@ -6,6 +6,7 @@ import { QuestionKind, Question, Survey } from "@/surveys/types";
 import { uploadProfilePicture } from "@/utils/upload";
 import QuestionRenderer, { isValid } from "./QuestionRenderer";
 import FormError from "./FormError";
+import strings from "@/translations/strings";
 
 interface Props {
   survey: Survey<any>;
@@ -74,7 +75,7 @@ function SurveyRunner({ survey }: Props) {
           await uploadProfilePicture(apollo, picture);
         } catch (err) {
           console.error(err);
-          setUploadError("Profile picture upload failed.");
+          setUploadError(strings.validation.profilePictureUploadFailed);
           return;
         } finally {
           setUploading(false);
@@ -137,7 +138,7 @@ function SurveyRunner({ survey }: Props) {
           onClick={handleBack}
           disabled={isFirst}
           className="btn btn-ghost btn-circle disabled:opacity-0"
-          aria-label="Previous question"
+          aria-label={strings.survey.previousQuestion}
         >
           <HiArrowLeft className="text-2xl" />
         </button>
@@ -146,7 +147,7 @@ function SurveyRunner({ survey }: Props) {
           onClick={handleNext}
           disabled={!canAdvance}
           className="btn btn-primary btn-circle"
-          aria-label={isLast ? "Finish survey" : "Next question"}
+          aria-label={isLast ? strings.survey.finishSurvey : strings.survey.nextQuestion}
         >
           {loading ? (
             <span className="loading loading-dots loading-sm" />

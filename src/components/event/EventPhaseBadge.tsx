@@ -1,5 +1,6 @@
 import { EventPhase } from "@/graphql/graphql-types";
 import { HiOutlineCheck, HiOutlineXMark } from "react-icons/hi2";
+import strings from "@/translations/strings";
 
 interface EventPhaseBadgeProps {
   phase: EventPhase;
@@ -14,10 +15,10 @@ function EventPhaseBadge({ phase }: EventPhaseBadgeProps) {
     return (
       <span
         className={`${shared} badge-accent`}
-        aria-label="Event is happening now"
+        aria-label={strings.event.phaseLiveAria}
       >
         <LivePulseDot />
-        Live
+        {strings.event.phaseLive}
       </span>
     );
   }
@@ -26,7 +27,7 @@ function EventPhaseBadge({ phase }: EventPhaseBadgeProps) {
     return (
       <span className={`${shared} badge-neutral`}>
         <HiOutlineCheck className="h-3 w-3" aria-hidden />
-        Ended
+        {strings.event.phaseEnded}
       </span>
     );
   }
@@ -34,7 +35,7 @@ function EventPhaseBadge({ phase }: EventPhaseBadgeProps) {
   return (
     <span className={`${shared} badge-error`}>
       <HiOutlineXMark className="h-3 w-3" aria-hidden />
-      Cancelled
+      {strings.event.phaseCancelled}
     </span>
   );
 }

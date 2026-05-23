@@ -2,6 +2,7 @@ import { Link, Navigate, Outlet } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi2";
 import { useProfile } from "@/context/profile-context";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
+import strings from "@/translations/strings";
 
 export function AuthRoutes() {
   const { profile } = useProfile();
@@ -16,14 +17,14 @@ export function AuthRoutes() {
       <div className="relative flex flex-col w-full md:w-[55%] lg:w-[50%] md:max-w-[560px] md:h-full md:overflow-y-auto md:border-r md:border-base-200">
         <div className="flex items-center justify-between px-5 md:px-10 pt-5 pb-1">
           <Link to="/" className="flex items-center">
-            <img src={moveusLogo} alt="MoveUs" className="h-8" />
+            <img src={moveusLogo} alt={strings.common.brand} className="h-8" />
           </Link>
           <Link
             to="/"
             className="btn btn-ghost btn-sm gap-1 text-base-content/70"
           >
             <HiArrowLeft className="w-4 h-4" />
-            Back
+            {strings.auth.back}
           </Link>
         </div>
 
@@ -47,10 +48,10 @@ export function AuthRoutes() {
         />
         <div className="relative max-w-md px-10 text-primary-content">
           <h2 className="text-5xl lg:text-6xl font-black mb-5 tracking-tight text-white leading-[1.05]">
-            Your Workout Wingman.
+            {strings.auth.brandHeadline}
           </h2>
           <p className="text-lg text-white/85 leading-relaxed">
-            Find people who actually show up. Match by psychology, move together.
+            {strings.auth.brandSubhead}
           </p>
         </div>
       </div>

@@ -15,6 +15,7 @@ import {
 import { setDocumentTitle } from "@/hooks/use-document-title";
 import { displayName } from "@/utils/display-name";
 import { prependZero } from "@/utils/time-utils";
+import strings from "@/translations/strings";
 
 const ensureDateObject = (value: any): Date => {
   if (value instanceof Date) return value;
@@ -49,7 +50,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
     if (!chat) return;
     if (isGroup) {
       if (chat.groupName) {
-        setDocumentTitle(chat.groupName + " - Chat");
+        setDocumentTitle(`${chat.groupName}${strings.chat.chatTitleSuffix}`);
       } else {
         const names = members
           .slice(0, 3)
@@ -58,13 +59,12 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
           members.length > 3
             ? `${names.join(", ")} +${members.length - 3}`
             : names.join(", ");
-        setDocumentTitle(label + " - Chat");
+        setDocumentTitle(`${label}${strings.chat.chatTitleSuffix}`);
       }
     } else if (members.length > 0) {
       const m = members[0]!;
       setDocumentTitle(
-        displayName(m.user.username, m.user.firstName, m.user.lastName) +
-          " - Chat",
+        `${displayName(m.user.username, m.user.firstName, m.user.lastName)}${strings.chat.chatTitleSuffix}`,
       );
     }
   }, [chat, members, isGroup]);
@@ -266,7 +266,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
               </h2>
               {isGroup && (
                 <p className="text-xs text-base-content/50">
-                  {members.length} members
+                  {strings.formatString(strings.chat.members, { count: members.length })}
                 </p>
               )}
             </div>

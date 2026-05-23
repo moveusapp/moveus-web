@@ -4,6 +4,7 @@ import { EventFragment } from "@/graphql/graphql-types";
 import UserAvatar from "@/components/user/UserAvatar";
 import { RatingBadge, ratingIndex } from "@/components/event/RatingFaces";
 import { displayName } from "@/utils/display-name";
+import strings from "@/translations/strings";
 
 interface ViewFeedbackModalProps {
   isOpen: boolean;
@@ -21,16 +22,16 @@ function ViewFeedbackModal({ isOpen, onClose, event }: ViewFeedbackModalProps) {
       <div className="modal-box flex max-h-[85vh] max-w-md flex-col p-0">
         <div className="flex items-start justify-between gap-3 px-6 pt-6 pb-4">
           <div>
-            <h3 className="text-xl font-bold text-balance">Event feedback</h3>
+            <h3 className="text-xl font-bold text-balance">{strings.event.page.eventFeedback}</h3>
             <p className="mt-0.5 text-sm text-base-content/60">
-              Only you can see these ratings.
+              {strings.event.page.onlyYouCanSee}
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="btn btn-sm btn-circle btn-ghost shrink-0"
-            aria-label="Close"
+            aria-label={strings.common.close}
           >
             <HiXMark className="h-5 w-5" />
           </button>
@@ -41,9 +42,9 @@ function ViewFeedbackModal({ isOpen, onClose, event }: ViewFeedbackModalProps) {
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-base-200 text-base-content/40">
               <HiOutlineStar className="h-6 w-6" />
             </span>
-            <p className="text-sm font-medium text-foreground">No feedback yet</p>
+            <p className="text-sm font-medium text-foreground">{strings.event.page.noFeedbackYet}</p>
             <p className="text-sm text-base-content/60">
-              Ratings from attendees will show up here once they weigh in.
+              {strings.event.page.feedbackWillShow}
             </p>
           </div>
         ) : (
@@ -75,7 +76,7 @@ function ViewFeedbackModal({ isOpen, onClose, event }: ViewFeedbackModalProps) {
                       </p>
                     ) : (
                       <p className="mt-0.5 text-sm italic text-base-content/40">
-                        No comment left
+                        {strings.event.page.noCommentLeft}
                       </p>
                     )}
                   </div>

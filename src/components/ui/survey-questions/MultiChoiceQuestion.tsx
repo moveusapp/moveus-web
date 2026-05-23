@@ -3,12 +3,13 @@ import { enumToOptions } from "@/utils/enum-to-options";
 
 interface Props {
   enumObj: Record<string, string>;
+  enumNamespace: string;
   value: string[];
   onChange: (value: string[]) => void;
 }
 
-function MultiChoiceQuestion({ enumObj, value, onChange }: Props) {
-  const options = enumToOptions(enumObj);
+function MultiChoiceQuestion({ enumObj, enumNamespace, value, onChange }: Props) {
+  const options = enumToOptions(enumObj, enumNamespace);
 
   const toggle = (v: string) => {
     if (value.includes(v)) {

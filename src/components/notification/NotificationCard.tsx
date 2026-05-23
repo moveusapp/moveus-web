@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { HiBolt, HiFlag, HiXMark } from "react-icons/hi2";
 import type { IconType } from "react-icons";
 import UserAvatar from "../user/UserAvatar";
+import strings from "@/translations/strings";
 
 const cardChassis =
   "block bg-base-200 rounded-2xl border border-base-300 p-3 sm:p-4 " +
@@ -57,7 +58,7 @@ function NotificationCard({ notification }: NotificationCardProps) {
               <UserAvatar userId={notification.user?.id} className="w-11 shrink-0" />
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 grow min-w-0">
                 <p className="text-[14px] sm:text-[15px] leading-snug text-base-content/80 line-clamp-2 break-words">
-                  <b className="font-bold text-base-content">{name}</b> is now following you.
+                  <b className="font-bold text-base-content">{name}</b> {strings.notification.nowFollowing}
                 </p>
                 <span className="text-xs text-base-content/60 shrink-0 mt-1 sm:mt-0">{time}</span>
               </div>
@@ -94,16 +95,16 @@ function NotificationCard({ notification }: NotificationCardProps) {
 
     switch (notification?.notificationType) {
       case NotificationKind.EventStarted:
-        return renderEventCard(HiBolt, "accent", "starting now.");
+        return renderEventCard(HiBolt, "accent", strings.notification.eventStartingNow);
       case NotificationKind.EventFinished:
         return renderEventCard(
           HiFlag,
           "primary",
-          "wrapped up.",
+          strings.notification.eventWrappedUp,
           `/event/${eventId}?feedback`,
         );
     case NotificationKind.EventCancelled:
-      return renderEventCard(HiXMark, "warning", "was cancelled.");
+      return renderEventCard(HiXMark, "warning", strings.notification.eventWasCancelled);
     default:
       return <></>;
   }

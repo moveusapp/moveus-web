@@ -15,9 +15,12 @@ import {
 import { Link } from "react-router-dom";
 import EventCapacityBar from "./EventCapacityBar";
 import EventPhaseBadge from "./EventPhaseBadge";
+import strings from "@/translations/strings";
 
 function EventCard({ event }: EventCardProps) {
-  const activity = Object.keys(ActivityKind)[event.activity.id!];
+  const activityValue = Object.values(ActivityKind)[event.activity.id!];
+  const activityLabels = strings.enums.activityKind as unknown as Record<string, string>;
+  const activity = activityLabels[activityValue] ?? activityValue;
 
   const organizerName = displayName(
     event.organizer?.user.username!,
@@ -51,7 +54,7 @@ function EventCard({ event }: EventCardProps) {
       <div className="relative w-full aspect-video overflow-hidden rounded-xl bg-base-300">
         <img
           src={defaultEventThumbnail}
-          alt={`${event.title} event thumbnail`}
+          alt={strings.formatString(strings.event.thumbnailAlt, { title: event.title ?? "" }) as string}
           loading="lazy"
           className={`absolute inset-0 w-full h-full object-cover transition-[filter] duration-300 ${thumbnailFilter}`}
         />
@@ -86,7 +89,7 @@ function EventCard({ event }: EventCardProps) {
         </div>
         <div className="flex items-center gap-2">
           <HiOutlineMapPin size={16} className="shrink-0" />
-          <span className="truncate">{event.location?.name || "Location TBD"}</span>
+          <span className="truncate">{event.location?.name || strings.event.locationTBD}</span>
         </div>
       </div>
 
@@ -95,7 +98,7 @@ function EventCard({ event }: EventCardProps) {
         <div className="flex items-center gap-2 min-w-0">
           <UserAvatar userId={event.organizer?.user.id!} className="w-6 h-6 shrink-0" />
           <div className="min-w-0 flex items-center gap-1">
-            <span className="text-xs text-muted-foreground">Hosted by</span>
+            <span className="text-xs text-muted-foreground">{strings.event.hostedBy}</span>
             <span className="text-xs font-medium text-foreground truncate">{organizerName}</span>
             {event.organizer?.user.verified && (
               <HiCheckBadge size={16} className="text-primary shrink-0" />

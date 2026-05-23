@@ -1,3 +1,5 @@
+import strings from "@/translations/strings";
+
 interface Props {
   value: number | null | undefined;
   onChange: (value: number) => void;
@@ -40,7 +42,7 @@ function SliderQuestion({
         step={step ?? 1}
         value={displayValue}
         onChange={(e) => onChange(Number(e.target.value))}
-        aria-valuetext={hasValue ? String(displayValue) : "Not selected"}
+        aria-valuetext={hasValue ? String(displayValue) : strings.survey.notSelected}
       />
       {showLabels && (
         <div className="flex justify-between text-sm font-medium text-base-content/60 px-1">

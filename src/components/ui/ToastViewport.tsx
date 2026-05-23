@@ -7,6 +7,7 @@ import {
   HiXMark,
 } from "react-icons/hi2";
 import type { Toast, ToastVariant } from "@/context/toast-context";
+import strings from "@/translations/strings";
 
 const EXIT_MS = 150;
 
@@ -106,7 +107,7 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
       <button
         type="button"
         onClick={beginExit}
-        aria-label="Dismiss notification"
+        aria-label={strings.ui.dismissNotification}
         className="btn btn-ghost btn-xs btn-circle -mt-0.5 -mr-0.5 shrink-0 opacity-70 transition-opacity hover:opacity-100"
       >
         <HiXMark className="h-4 w-4" />
@@ -124,7 +125,7 @@ function ToastViewport({ toasts, onDismiss }: ToastViewportProps) {
   return (
     <div
       role="region"
-      aria-label="Notifications"
+      aria-label={strings.nav.notifications}
       className="pointer-events-none fixed inset-x-0 top-0 z-[1000] flex flex-col items-center gap-2 p-4 md:inset-x-auto md:top-auto md:right-0 md:bottom-0 md:items-end md:p-6"
     >
       {/* Newest first: topmost on mobile, closest to view on desktop. */}

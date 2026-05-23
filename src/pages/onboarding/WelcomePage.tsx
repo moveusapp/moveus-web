@@ -2,10 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { HiArrowRight } from "react-icons/hi2";
 import duckHappy from "@/assets/duck/duck-happy.svg";
 import useDocumentTitle from "@/hooks/use-document-title";
+import strings from "@/translations/strings";
 
 function WelcomePage() {
   const navigate = useNavigate();
-  useDocumentTitle("Welcome to MoveUs");
+  useDocumentTitle(strings.welcome.documentTitle);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-base-100 flex items-center justify-center px-4 py-12">
@@ -46,9 +47,9 @@ function WelcomePage() {
           className="animate-welcome-rise text-4xl sm:text-5xl font-black tracking-tight leading-[1.05] text-base-content"
           style={{ animationDelay: "80ms" }}
         >
-          Welcome to{" "}
+          {strings.welcome.headingPrefix}{" "}
           <span className="relative inline-block">
-            <span className="text-primary">MoveUs</span>
+            <span className="text-primary">{strings.common.brand}</span>
             <svg
               className="absolute -bottom-1.5 left-0 w-full"
               viewBox="0 0 200 10"
@@ -71,8 +72,7 @@ function WelcomePage() {
           className="animate-welcome-rise text-base md:text-lg text-base-content/70 max-w-sm"
           style={{ animationDelay: "160ms" }}
         >
-          Tell us a bit about yourself so we can match you with events and
-          people nearby. It only takes a minute.
+          {strings.welcome.subtitle}
         </p>
 
         <div
@@ -84,7 +84,7 @@ function WelcomePage() {
             onClick={() => navigate("/home")}
             className="btn btn-ghost btn-lg flex-1 h-14 min-h-14"
           >
-            Skip for now
+            {strings.welcome.skipForNow}
           </button>
           <button
             type="button"
@@ -92,7 +92,7 @@ function WelcomePage() {
             className="btn btn-primary btn-lg flex-1 h-14 min-h-14 gap-2 btn-arrow"
             autoFocus
           >
-            Let's go
+            {strings.welcome.letsGo}
             <HiArrowRight className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>

@@ -1,6 +1,7 @@
 import { HiXMark } from "react-icons/hi2";
 import { EventFragment } from "@/graphql/graphql-types";
 import ParticipantsList from "@/pages/event/ParticipantsList"
+import strings from "@/translations/strings";
 
 interface ParticipantsModalProps {
   isOpen: boolean;
@@ -11,24 +12,30 @@ interface ParticipantsModalProps {
 function ParticipantsModal({ isOpen, onClose, event }: ParticipantsModalProps) {
   if (!isOpen) return null;
 
-  const count = event.members?.length;
+  const count = event.members?.length ?? 0;
   const subtitle = event.maxParticipants
-    ? `${count} of ${event.maxParticipants} spots filled`
-    : `${count} ${count === 1 ? "person" : "people"}`;
+    ? (strings.formatString(strings.event.page.spotsFilled, {
+        count,
+        max: event.maxParticipants,
+      }) as string)
+    : (strings.formatString(
+        count === 1 ? strings.event.page.personCount : strings.event.page.peopleCount,
+        { count },
+      ) as string);
 
   return (
     <dialog open className="modal modal-open">
       <div className="modal-box flex max-h-[85vh] max-w-md flex-col p-0">
         <div className="flex items-start justify-between gap-3 px-6 pt-6 pb-4">
           <div>
-            <h3 className="text-xl font-bold text-balance">Participants</h3>
+            <h3 className="text-xl font-bold text-balance">{strings.event.page.participants}</h3>
             <p className="mt-0.5 text-sm text-base-content/60">{subtitle}</p>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="btn btn-sm btn-circle btn-ghost shrink-0"
-            aria-label="Close"
+            aria-label={strings.common.close}
           >
             <HiXMark className="h-5 w-5" />
           </button>

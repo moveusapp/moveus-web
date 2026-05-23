@@ -5,9 +5,10 @@ import useDocumentTitle from "@/hooks/use-document-title";
 import EventForm, { type EventFormValues } from "@/components/event/EventForm";
 import PageHeader from "@/components/layout/PageHeader";
 import { useToast } from "@/context/toast-context";
+import strings from "@/translations/strings";
 
 function CreateEventPage() {
-  useDocumentTitle("Create Event");
+  useDocumentTitle(strings.createEvent.documentTitle);
 
   const navigate = useNavigate();
   const toast = useToast();
@@ -49,7 +50,7 @@ function CreateEventPage() {
       });
 
       if (result.data?.createEvent?.event?.id) {
-        toast.success("Event created.");
+        toast.success(strings.toast.eventCreated);
         navigate(`/event/${result.data.createEvent.event.id}`);
       }
     } catch (err) {
@@ -59,12 +60,12 @@ function CreateEventPage() {
 
   return (
     <div className="min-h-full shrink-0 flex flex-col">
-      <PageHeader title="Create Event" />
+      <PageHeader title={strings.createEvent.title} />
 
       <div className="w-full mx-auto max-w-3xl p-4">
         <EventForm
           mode="create"
-          submitLabel="Create Event"
+          submitLabel={strings.createEvent.submit}
           loading={loading}
           apiError={apiError}
           onSubmit={handleSubmit}

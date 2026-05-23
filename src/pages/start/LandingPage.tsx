@@ -10,79 +10,77 @@ import EventCardSkeleton from "@/components/event/EventCardSkeleton";
 import { GetAnonymousUserEventsDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { useProfile } from "@/context/profile-context";
-
-const VERBS = [
-  "RUN.", "LIFT.", "CLIMB.", "ROW.", "CYCLE.", "STRETCH.",
-  "JUMP.", "SWIM.", "SPRINT.", "PRESS.", "PADDLE.", "SPIN.",
-  "REACH.", "FLOW.", "PUSH.", "BREATHE.",
-];
+import strings from "@/translations/strings";
 
 function MatchedStickers() {
+  const s = strings.landing.matchedSticker;
   return (
     <div className="lp-stk-cluster">
       <div className="lp-stk lp-stk--survey" style={{ top: "4%", left: "6%", transform: "rotate(-5deg)" }}>
-        <div className="lp-stk-eyebrow">Profile</div>
-        <div className="lp-stk-q">How do you train?</div>
+        <div className="lp-stk-eyebrow">{s.eyebrow}</div>
+        <div className="lp-stk-q">{s.question}</div>
         <div className="lp-stk-row lp-stk-row--on">
           <span className="lp-stk-radio" aria-hidden="true" />
-          Small group
+          {s.optionOn}
         </div>
         <div className="lp-stk-row">
           <span className="lp-stk-radio" aria-hidden="true" />
-          Bigger crew
+          {s.optionOff}
         </div>
       </div>
       <div className="lp-stk lp-stk--chip lp-stk--chip-blue" style={{ top: "18%", right: "4%", transform: "rotate(7deg)" }}>
         <LuMapPin className="w-3.5 h-3.5" />
-        Maksimir · 0.8km
+        {s.chipLocation}
       </div>
       <div className="lp-stk lp-stk--chip lp-stk--chip-orange" style={{ bottom: "6%", left: "30%", transform: "rotate(-3deg)" }}>
         <span className="lp-stk-dot" aria-hidden="true" />
-        3 events match
+        {s.chipMatches}
       </div>
     </div>
   );
 }
 
 function MakeItRealStickers() {
+  const s = strings.landing.makeItRealSticker;
   return (
     <div className="lp-stk-cluster">
       <div className="lp-stk lp-stk--event" style={{ top: "2%", left: "8%", transform: "rotate(-4deg)" }}>
         <div className="lp-stk-event-date">
-          <span className="lp-stk-event-day">FRI</span>
-          <span className="lp-stk-event-num">14</span>
+          <span className="lp-stk-event-day">{s.eventDay}</span>
+          <span className="lp-stk-event-num">{s.eventNum}</span>
         </div>
         <div>
-          <div className="lp-stk-event-title">Sunset trail run</div>
-          <div className="lp-stk-event-meta">19:30 · Rijeka, Mlaka Park</div>
+          <div className="lp-stk-event-title">{s.eventTitle}</div>
+          <div className="lp-stk-event-meta">{s.eventMeta}</div>
         </div>
       </div>
       <div className="lp-stk lp-stk--bubble lp-stk--bubble-in" style={{ top: "44%", right: "10%", transform: "rotate(4deg)" }}>
-        Still on for tomorrow?
+        {s.bubbleIn}
       </div>
       <div className="lp-stk lp-stk--bubble lp-stk--bubble-out" style={{ top: "62%", right: "28%", transform: "rotate(-3deg)" }}>
-        Yep, bringing a friend
+        {s.bubbleOut}
       </div>
       <div className="lp-stk lp-stk--chip lp-stk--chip-green" style={{ bottom: "4%", left: "12%", transform: "rotate(6deg)" }}>
         <LuCheck className="w-3.5 h-3.5" />
-        Locked in
+        {s.chipLockedIn}
       </div>
     </div>
   );
 }
 
 function StayInItStickers() {
+  const s = strings.landing.stayInItSticker;
   return (
     <div className="lp-stk-cluster">
       <div className="lp-stk lp-stk--post" style={{ top: "4%", left: "10%", transform: "rotate(-4deg)" }}>
         <div className="lp-stk-post-head">
-          <div className="lp-stk-post-avatar" aria-hidden="true">T</div>
+          <div className="lp-stk-post-avatar" aria-hidden="true">{s.avatar}</div>
           <div className="leading-tight">
-            <div className="lp-stk-post-name">Tatjana</div>
-            <div className="lp-stk-post-time">1 week ago</div>
+            <div className="lp-stk-post-name">{s.name}</div>
+            <div className="lp-stk-post-time">{s.time}</div>
           </div>
         </div>
-        <p className="lp-stk-post-body">Sub-50. Legs are jello. Worth it.</p>
+        <p className="lp-stk-post-body">{s.body}</p>
         <div className="lp-stk-post-meta">
           <span className="lp-stk-post-stat">
             <LuHeart className="w-3.5 h-3.5" /> 24
@@ -91,45 +89,15 @@ function StayInItStickers() {
       </div>
       <div className="lp-stk lp-stk--chip lp-stk--chip-flame" style={{ top: "22%", right: "6%", transform: "rotate(8deg)" }}>
         <LuFlame className="w-4 h-4" />
-        <span><strong>12</strong> day streak</span>
+        <span><strong>{s.streakNum}</strong> {s.streakLabel}</span>
       </div>
       <div className="lp-stk lp-stk--chip lp-stk--chip-cream" style={{ bottom: "6%", left: "42%", transform: "rotate(-5deg)" }}>
-        <span className="lp-stk-xp">+ 240 XP</span>
-        this week
+        <span className="lp-stk-xp">{s.xp}</span>
+        {s.xpLabel}
       </div>
     </div>
   );
 }
-
-const STRIPS = [
-  {
-    num: "01",
-    tag: "Profile + Algorithm",
-    headline: "Matched to people who actually show up.",
-    body: "A short survey shapes who you train with. The app reads it and picks events and crews nearby that click.",
-    cls: "lp-strip--1",
-    stickers: <MatchedStickers />,
-    reverse: false,
-  },
-  {
-    num: "02",
-    tag: "Host + Chat",
-    headline: "Host or join. Lock it in the chat.",
-    body: "Spin up your own events quickly, then confirm in the thread. Plans that survive past 'sometime.'",
-    cls: "lp-strip--2",
-    stickers: <MakeItRealStickers />,
-    reverse: true,
-  },
-  {
-    num: "03",
-    tag: "Posts + Streaks",
-    headline: "Show up enough and the app shows it back.",
-    body: "Share the after, build a streak, watch the weeks add up. Small rewards for sticking with it.",
-    cls: "lp-strip--3",
-    stickers: <StayInItStickers />,
-    reverse: false,
-  },
-] as const;
 
 type VerbSize = "sm" | "md" | "lg";
 
@@ -152,7 +120,8 @@ function VerbSlot({
   rotate: number;
   positionClass: string;
 }) {
-  const [idx, setIdx] = useState(offset % VERBS.length);
+  const verbs = strings.landing.verbs;
+  const [idx, setIdx] = useState(offset % verbs.length);
   const [fade, setFade] = useState(false);
 
   useEffect(() => {
@@ -161,12 +130,12 @@ function VerbSlot({
     const id = window.setInterval(() => {
       setFade(true);
       window.setTimeout(() => {
-        setIdx((i) => (i + 7) % VERBS.length);
+        setIdx((i) => (i + 7) % verbs.length);
         setFade(false);
       }, 360);
     }, period);
     return () => window.clearInterval(id);
-  }, [offset]);
+  }, [offset, verbs.length]);
 
   const colorClass = color === "primary" ? "text-primary/45" : "text-accent/50";
   const fadeTransform = fade ? "scale(0.94) translateY(14px)" : "scale(1) translateY(0)";
@@ -184,7 +153,7 @@ function VerbSlot({
         willChange: "transform, opacity, filter",
       }}
     >
-      {VERBS[idx]}
+      {verbs[idx]}
     </span>
   );
 }
@@ -196,6 +165,36 @@ function LandingPage() {
   const [carouselEl, setCarouselEl] = useState<HTMLUListElement | null>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
+
+  const strips = [
+    {
+      num: "01",
+      tag: strings.landing.strips.one.tag,
+      headline: strings.landing.strips.one.headline,
+      body: strings.landing.strips.one.body,
+      cls: "lp-strip--1",
+      stickers: <MatchedStickers />,
+      reverse: false,
+    },
+    {
+      num: "02",
+      tag: strings.landing.strips.two.tag,
+      headline: strings.landing.strips.two.headline,
+      body: strings.landing.strips.two.body,
+      cls: "lp-strip--2",
+      stickers: <MakeItRealStickers />,
+      reverse: true,
+    },
+    {
+      num: "03",
+      tag: strings.landing.strips.three.tag,
+      headline: strings.landing.strips.three.headline,
+      body: strings.landing.strips.three.body,
+      cls: "lp-strip--3",
+      stickers: <StayInItStickers />,
+      reverse: false,
+    },
+  ];
 
   const scrollCarousel = (dir: 1 | -1) => {
     if (!carouselEl) return;
@@ -252,7 +251,6 @@ function LandingPage() {
       tilt.style.setProperty("--ty", `${cy * -9}deg`);
       tilt.style.setProperty("--shx", `${cx * -22}px`);
       tilt.style.setProperty("--shy", `${cy * -22 + 30}px`);
-      // Normalized cursor offset for activity tiles to read with their own depth multiplier.
       hero.style.setProperty("--cx", `${cx}`);
       hero.style.setProperty("--cy", `${cy}`);
       raf = requestAnimationFrame(loop);
@@ -272,7 +270,7 @@ function LandingPage() {
     return <Navigate to="/home" replace />;
   }
 
-  useDocumentTitle("MoveUs - Your Workout Wingman");
+  useDocumentTitle(strings.landing.documentTitle);
 
   const { data: eventsData, loading: eventsLoading } = useQuery(
     GetAnonymousUserEventsDocument,
@@ -285,7 +283,9 @@ function LandingPage() {
         <div className="mx-auto px-6 py-2 flex items-center justify-center gap-2 text-sm font-medium">
           <HiLockClosed className="w-4 h-4 shrink-0" />
           <span>
-            MoveUs is in <span className="font-bold">closed beta</span>, request an invite to join early.
+            {strings.landing.closedBetaPrefix}{" "}
+            <span className="font-bold">{strings.landing.closedBetaHighlight}</span>
+            {strings.landing.closedBetaSuffix}
           </span>
         </div>
       </div>
@@ -295,23 +295,19 @@ function LandingPage() {
         ref={heroRef}
         className="lp-hero-stage relative overflow-hidden bg-base-100"
       >
-        {/* ambient glows */}
         <div className="absolute inset-0 -z-10 pointer-events-none">
           <div className="absolute -top-32 -left-32 w-[34rem] h-[34rem] rounded-full bg-primary/15 blur-3xl" />
           <div className="absolute top-1/3 -right-40 w-[30rem] h-[30rem] rounded-full bg-accent/10 blur-3xl" />
         </div>
 
         <div className="mx-auto max-w-[1400px] px-4 sm:px-10 lg:px-16 pt-8 pb-14 sm:pt-10 lg:pt-8 lg:pb-12 flex flex-col items-center">
-          {/* Kicker */}
           <div className="lp-hero-kicker flex items-center justify-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-base-content/55 mb-8 sm:mb-10 lg:mb-6 px-2 text-center">
             <span className="inline-block w-6 sm:w-8 h-px bg-base-content/30" />
-            <span>Your workout wingman · Invite-only beta</span>
+            <span>{strings.landing.kicker}</span>
             <span className="inline-block w-6 sm:w-8 h-px bg-base-content/30" />
           </div>
 
-          {/* Stage: verb field + logo overlay */}
           <div className="lp-hero-verb-stage relative w-full max-w-[1200px] min-h-[420px] sm:min-h-[480px] lg:min-h-[460px] flex items-center justify-center">
-            {/* Verb field — masked so verbs fade to nothing before reaching the logo */}
             <div className="lp-hero-verb-mask absolute inset-0 pointer-events-none">
               <VerbSlot offset={0}  size="lg" color="primary" rotate={-2} positionClass="top-[1%] left-[0%]" />
               <VerbSlot offset={3}  size="md" color="accent"  rotate={2}  positionClass="top-[6%] right-[1%]" />
@@ -321,7 +317,6 @@ function LandingPage() {
               <VerbSlot offset={1}  size="lg" color="primary" rotate={2}  positionClass="bottom-[1%] right-[1%]" />
             </div>
 
-            {/* Logo overlay */}
             <div
               ref={logoTiltRef}
               className="lp-hero-logo-tilt relative z-10"
@@ -334,7 +329,6 @@ function LandingPage() {
                 className="lp-hero-logo-shadow absolute inset-0 -z-10 pointer-events-none"
                 aria-hidden="true"
               />
-              {/* Soft plate behind logo so verbs don't read through it */}
               <div
                 className="lp-hero-logo-plate absolute -inset-x-12 -inset-y-8 -z-10 pointer-events-none"
                 aria-hidden="true"
@@ -344,7 +338,7 @@ function LandingPage() {
                   <h1 className="w-full h-full m-0">
                     <img
                       src={moveusLogo}
-                      alt="MoveUs"
+                      alt={strings.common.brand}
                       className="w-full h-full select-none"
                       draggable={false}
                     />
@@ -354,9 +348,8 @@ function LandingPage() {
             </div>
           </div>
 
-          {/* Tagline + CTAs */}
           <p className="lp-hero-tagline mt-6 sm:mt-4 lg:mt-2 text-base sm:text-xl text-base-content/65 leading-relaxed max-w-2xl text-center px-2">
-            Find people who actually show up. MoveUs uses your psychological profile to match you with workout partners and local sports events that click with how you move.
+            {strings.landing.tagline}
           </p>
 
           <div className="lp-hero-ctas mt-6 sm:mt-8 lg:mt-6 flex flex-col sm:flex-row gap-3 w-full sm:w-auto px-2 sm:px-0">
@@ -364,24 +357,24 @@ function LandingPage() {
               to="/register"
               className="btn btn-primary btn-lg gap-2 btn-arrow w-full sm:w-auto"
             >
-              Request invite
+              {strings.landing.requestInvite}
               <HiArrowRight className="w-5 h-5" />
             </Link>
             <Link to="/login" className="btn btn-ghost btn-lg w-full sm:w-auto">
-              I have an account
+              {strings.landing.iHaveAccount}
             </Link>
           </div>
         </div>
       </section>
 
-      {/* FEATURE SHOWCASE — storybook chapter strips */}
+      {/* FEATURE SHOWCASE */}
       <section className="lp-story relative py-24 lg:py-32 bg-base-200 border-y border-base-300 overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16">
           <div className="text-center mb-16 lg:mb-20 max-w-2xl mx-auto">
             <h2 className="lp-story-h2">
-              How{" "}
+              {strings.landing.howItWorksPrefix}{" "}
               <span className="relative inline-block text-primary">
-                MoveUs
+                {strings.common.brand}
                 <svg
                   className="absolute left-0 right-0 -bottom-2 w-full h-3 pointer-events-none overflow-visible"
                   viewBox="0 0 200 12"
@@ -398,15 +391,15 @@ function LandingPage() {
                   />
                 </svg>
               </span>
-              {" "}works.
+              {" "}{strings.landing.howItWorksSuffix}
             </h2>
             <p className="lp-story-lede">
-              Find your people, lock the plan, keep showing up.
+              {strings.landing.howItWorksLede}
             </p>
           </div>
 
           <div className="lp-story-list">
-            {STRIPS.map((s, i) => (
+            {strips.map((s, i) => (
               <div key={s.num} className="lp-story-frame">
                 <article className={`lp-strip ${s.cls} ${s.reverse ? "lp-strip--reverse" : ""}`}>
                   <div className="lp-strip-text">
@@ -420,7 +413,7 @@ function LandingPage() {
                   </div>
                   <div className="lp-strip-visual">{s.stickers}</div>
                 </article>
-                {i < STRIPS.length - 1 && (
+                {i < strips.length - 1 && (
                   <div className="lp-story-connector" aria-hidden="true">
                     <svg viewBox="0 0 96 28" className="w-24 h-7">
                       <path
@@ -440,7 +433,7 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* NEARBY EVENTS — simple carousel */}
+      {/* NEARBY EVENTS */}
       {(() => {
         const nearbyEvents = (eventsData?.anonymousUserEvents ?? [])
           .filter((e): e is NonNullable<typeof e> => Boolean(e))
@@ -451,9 +444,9 @@ function LandingPage() {
             <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
               <div className="text-center mb-10 lg:mb-12 max-w-2xl mx-auto">
                 <h2 className="lp-story-h2 sm:whitespace-nowrap">
-                  Happening{" "}
+                  {strings.landing.happeningPrefix}{" "}
                   <span className="relative inline-block text-primary">
-                    near you
+                    {strings.landing.happeningHighlight}
                     <svg
                       className="absolute left-0 right-0 -bottom-2 w-full h-3 pointer-events-none overflow-visible"
                       viewBox="0 0 200 12"
@@ -473,7 +466,7 @@ function LandingPage() {
                   .
                 </h2>
                 <p className="lp-story-lede">
-                  Real plans. Pick one, join, show up.
+                  {strings.landing.happeningLede}
                 </p>
               </div>
             </div>
@@ -496,12 +489,12 @@ function LandingPage() {
               </div>
             ) : nearbyEvents.length > 0 ? (
               <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
-                <div className="lp-carousel" aria-label="Events near you">
+                <div className="lp-carousel" aria-label={strings.landing.eventsAriaLabel}>
                   <button
                     type="button"
                     onClick={() => scrollCarousel(-1)}
                     className="lp-carousel-arrow lp-carousel-arrow--prev"
-                    aria-label="Previous events"
+                    aria-label={strings.landing.previousEvents}
                     disabled={!canPrev}
                   >
                     <HiArrowLeft className="w-5 h-5" />
@@ -519,7 +512,7 @@ function LandingPage() {
                     type="button"
                     onClick={() => scrollCarousel(1)}
                     className="lp-carousel-arrow lp-carousel-arrow--next"
-                    aria-label="Next events"
+                    aria-label={strings.landing.nextEvents}
                     disabled={!canNext}
                   >
                     <HiArrowRight className="w-5 h-5" />
@@ -534,7 +527,7 @@ function LandingPage() {
                   to="/search"
                   className="btn btn-primary btn-lg gap-2 btn-arrow"
                 >
-                  See all events
+                  {strings.landing.seeAllEvents}
                   <HiArrowRight className="w-5 h-5" />
                 </Link>
               </div>
@@ -543,7 +536,7 @@ function LandingPage() {
         );
       })()}
 
-      {/* FINAL CTA — fixed brand blue so it reads the same in both themes */}
+      {/* FINAL CTA */}
       <section className="relative overflow-hidden bg-[#028ED1] py-24 lg:py-28">
         <div
           className="absolute inset-0 opacity-[0.1]"
@@ -556,24 +549,24 @@ function LandingPage() {
         />
         <div className="relative mx-auto px-6 sm:px-10 lg:px-16 text-center text-white">
           <h2 className="text-[clamp(1.625rem,7vw,4.5rem)] font-black mb-5 tracking-tight leading-[1.05] text-white whitespace-nowrap">
-            The duck is waiting.
+            {strings.landing.finalCtaHeadline}
           </h2>
           <p className="text-lg text-white/85 mb-8 max-w-md mx-auto">
-            Spots are limited while we're in beta. Grab an invite and stop ghosting your gym routine.
+            {strings.landing.finalCtaBody}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               to="/register"
               className="btn btn-lg bg-base-100 text-primary hover:bg-base-200 border-0 gap-2 btn-arrow"
             >
-              Request invite
+              {strings.landing.requestInvite}
               <HiArrowRight className="w-5 h-5" />
             </Link>
             <Link
               to="/login"
               className="btn btn-ghost btn-lg text-white hover:bg-white/15 border border-white/30"
             >
-              I have an account
+              {strings.landing.iHaveAccount}
             </Link>
           </div>
         </div>
@@ -582,14 +575,14 @@ function LandingPage() {
       {/* FOOTER */}
       <footer className="bg-base-200 border-t border-base-300">
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-8 flex flex-col items-center gap-5 text-sm text-base-content/60 sm:grid sm:grid-cols-3 sm:gap-4">
-          <img src={moveusLogo} alt="MoveUs" className="h-7 sm:justify-self-start" />
+          <img src={moveusLogo} alt={strings.common.brand} className="h-7 sm:justify-self-start" />
           <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-self-center">
-            <Link to="/about" className="hover:text-primary transition-colors">About</Link>
-            <Link to="/contact" className="hover:text-primary transition-colors">Contact</Link>
-            <Link to="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
-            <Link to="/terms" className="hover:text-primary transition-colors">Terms</Link>
+            <Link to="/about" className="hover:text-primary transition-colors">{strings.footer.about}</Link>
+            <Link to="/contact" className="hover:text-primary transition-colors">{strings.landing.footerContact}</Link>
+            <Link to="/privacy" className="hover:text-primary transition-colors">{strings.footer.privacy}</Link>
+            <Link to="/terms" className="hover:text-primary transition-colors">{strings.footer.terms}</Link>
           </nav>
-          <p className="sm:justify-self-end">MoveUs, j.d.o.o. 2026</p>
+          <p className="sm:justify-self-end">{strings.footer.copy}</p>
         </div>
       </footer>
     </div>

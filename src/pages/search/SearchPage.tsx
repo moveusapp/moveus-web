@@ -13,14 +13,21 @@ import UserCard from "@/components/user/UserCard";
 import { useProfile } from "@/context/profile-context";
 import PostCard from "@/components/post/PostCard";
 import TabButtons from "@/components/ui/TabButtons";
+import strings from "@/translations/strings";
 
-const tabs = ["All", "Events", "People", "Posts"] as const;
-type SearchTab = (typeof tabs)[number];
+type SearchTab = "all" | "events" | "people" | "posts";
 
 function SearchPage() {
-  useDocumentTitle("Explore");
+  useDocumentTitle(strings.search.documentTitle);
 
-  const [activeTab, setActiveTab] = useState<SearchTab>("All");
+  const tabs: { value: SearchTab; label: string }[] = [
+    { value: "all", label: strings.search.tabAll },
+    { value: "events", label: strings.search.tabEvents },
+    { value: "people", label: strings.search.tabPeople },
+    { value: "posts", label: strings.search.tabPosts },
+  ];
+
+  const [activeTab, setActiveTab] = useState<SearchTab>("all");
 
   const [searchParams] = useSearchParams();
   const { profile } = useProfile();
@@ -51,11 +58,11 @@ function SearchPage() {
   };
 
   const canCreateCard = (type: string) => {
-    if (activeTab === "All") return true;
+    if (activeTab === "all") return true;
 
-    if (type === "EventType" && activeTab == "Events") return true;
-    if (type === "UserType" && activeTab == "People") return true;
-    if (type === "PostType" && activeTab == "Posts") return true;
+    if (type === "EventType" && activeTab === "events") return true;
+    if (type === "UserType" && activeTab === "people") return true;
+    if (type === "PostType" && activeTab === "posts") return true;
 
     return false;
   };
@@ -113,7 +120,9 @@ function SearchPage() {
                 <>
                   <p className="text-sm text-base-content/70">
                     {searchParams.get("q") &&
-                      `No results for query '${searchParams.get("q")}'`}
+                      (strings.formatString(strings.search.noResults, {
+                        query: searchParams.get("q") ?? "",
+                      }) as string)}
                   </p>
                 </>
               )}

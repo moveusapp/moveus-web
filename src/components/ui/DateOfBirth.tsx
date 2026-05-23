@@ -1,25 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import Dropdown from "./Dropdown";
+import strings from "@/translations/strings";
+import { getMonthNames } from "@/utils/month-names";
 
 const dayOptions = Array.from({ length: 31 }, (_, i) => ({
   label: String(i + 1),
   value: i + 1,
 }));
 
-const monthOptions = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-].map((name, i) => ({ label: name, value: i + 1 }));
+const monthOptions = getMonthNames().map((name, i) => ({
+  label: name,
+  value: i + 1,
+}));
 
 const maxYear = new Date().getFullYear() - 18;
 const yearOptions = Array.from({ length: 82 }, (_, i) => ({
@@ -59,11 +51,11 @@ function DateOfBirth({
       date.getMonth() !== month - 1 ||
       date.getDate() !== day
     ) {
-      return "Invalid date.";
+      return strings.validation.invalidDate;
     }
 
     if ((Date.now() - date.getTime()) / msInYear < 18) {
-      return "Must be over 18.";
+      return strings.validation.mustBeOver18;
     }
 
     return "";
@@ -93,19 +85,19 @@ function DateOfBirth({
       <legend className="fieldset-legend">{label}</legend>
       <div className="grid grid-cols-[1fr_1.5fr_1fr] gap-2">
         <Dropdown<number>
-          placeholder="Day"
+          placeholder={strings.common.day}
           options={dayOptions}
           value={day}
           setValue={setDay}
         />
         <Dropdown<number>
-          placeholder="Month"
+          placeholder={strings.common.month}
           options={monthOptions}
           value={month}
           setValue={setMonth}
         />
         <Dropdown<number>
-          placeholder="Year"
+          placeholder={strings.common.year}
           options={yearOptions}
           value={year}
           setValue={setYear}

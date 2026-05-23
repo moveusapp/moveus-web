@@ -17,6 +17,7 @@ import Button from "@/components/ui/Button";
 import { formatError } from "@/utils/format-error";
 import PageHeader from "@/components/layout/PageHeader";
 import { useToast } from "@/context/toast-context";
+import strings from "@/translations/strings";
 
 const pageWrap = "w-full mx-auto max-w-3xl p-4";
 
@@ -27,7 +28,7 @@ const dateString = (d: Date) =>
 const timeString = (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
 
 function EditEventPage() {
-  useDocumentTitle("Edit Event");
+  useDocumentTitle(strings.editEvent.documentTitle);
 
   const { eventId } = useParams();
   const navigate = useNavigate();
@@ -100,7 +101,7 @@ function EditEventPage() {
       });
 
       if (result.data?.alterEvent?.event?.id) {
-        toast.success("Changes saved.");
+        toast.success(strings.toast.changesSaved);
         navigate(`/event/${id}`);
       }
     } catch (err) {
@@ -112,7 +113,7 @@ function EditEventPage() {
     try {
       const result = await cancelEvent({ variables: { eventId: id } });
       if (result.data?.cancelEvent?.event?.id) {
-        toast.success("Event cancelled.");
+        toast.success(strings.toast.eventCancelled);
         navigate(`/event/${id}`);
       }
     } catch (err) {
@@ -130,7 +131,7 @@ function EditEventPage() {
         },
       });
       if (result.data?.deleteEvent?.success) {
-        toast.success("Event deleted.");
+        toast.success(strings.toast.eventDeleted);
         navigate("/home", { replace: true });
       }
     } catch (err) {
@@ -140,7 +141,7 @@ function EditEventPage() {
 
   return (
     <div className="min-h-full shrink-0 flex flex-col">
-      <PageHeader title="Edit Event">
+      <PageHeader title={strings.editEvent.title}>
         <p className="pb-3 text-sm text-base-content/60 truncate">
           {event.title}
         </p>
@@ -150,7 +151,7 @@ function EditEventPage() {
         <EventForm
           mode="edit"
           initialValues={initialValues}
-          submitLabel="Save Changes"
+          submitLabel={strings.editEvent.submit}
           loading={saving}
           apiError={apiError}
           cancelHref={`/event/${id}`}
@@ -166,7 +167,7 @@ function EditEventPage() {
                 className="btn btn-outline btn-warning rounded-2xl"
               >
                 <HiOutlineNoSymbol className="h-4 w-4" />
-                Cancel event
+                {strings.editEvent.cancelEvent}
               </button>
             )}
           <button
@@ -175,18 +176,17 @@ function EditEventPage() {
             className="btn btn-outline btn-error rounded-2xl"
           >
             <HiOutlineTrash className="h-4 w-4" />
-            Delete event
+            {strings.editEvent.deleteEvent}
           </button>
         </div>
 
         <dialog className={`modal ${confirmOpen ? "modal-open" : ""}`}>
           <div className="modal-box rounded-2xl">
-            <h3 className="font-bold text-lg">Delete this event?</h3>
+            <h3 className="font-bold text-lg">{strings.editEvent.deleteModalTitle}</h3>
             <p className="py-3 text-sm text-base-content/70">
-              <span className="font-medium text-foreground">
-                {event.title}
-              </span>{" "}
-              will be removed for everyone. This can't be undone.
+              {strings.formatString(strings.editEvent.deleteModalBody, {
+                title: event.title ?? "",
+              })}
             </p>
 
             {deleteError && (
@@ -201,34 +201,32 @@ function EditEventPage() {
                 disabled={deleting}
                 className="btn-ghost"
               >
-                Cancel
+                {strings.common.cancel}
               </Button>
               <Button
                 onClick={handleDelete}
                 loading={deleting}
                 className="btn-error"
               >
-                Delete event
+                {strings.editEvent.deleteEvent}
               </Button>
             </div>
           </div>
           <button
             type="button"
             className="modal-backdrop"
-            aria-label="Close"
+            aria-label={strings.common.close}
             onClick={() => !deleting && setConfirmOpen(false)}
           />
         </dialog>
 
         <dialog className={`modal ${cancelOpen ? "modal-open" : ""}`}>
           <div className="modal-box rounded-2xl">
-            <h3 className="font-bold text-lg">Cancel this event?</h3>
+            <h3 className="font-bold text-lg">{strings.editEvent.cancelModalTitle}</h3>
             <p className="py-3 text-sm text-base-content/70">
-              Participants will be notified.{" "}
-              <span className="font-medium text-foreground">
-                {event.title}
-              </span>{" "}
-              stays in your history as cancelled. This can't be undone.
+              {strings.formatString(strings.editEvent.cancelModalBody, {
+                title: event.title ?? "",
+              })}
             </p>
 
             {cancelError && (
@@ -243,21 +241,21 @@ function EditEventPage() {
                 disabled={cancelling}
                 className="btn-ghost"
               >
-                Keep event
+                {strings.editEvent.keepEvent}
               </Button>
               <Button
                 onClick={handleCancel}
                 loading={cancelling}
                 className="btn-warning"
               >
-                Cancel event
+                {strings.editEvent.cancelEvent}
               </Button>
             </div>
           </div>
           <button
             type="button"
             className="modal-backdrop"
-            aria-label="Close"
+            aria-label={strings.common.close}
             onClick={() => !cancelling && setCancelOpen(false)}
           />
         </dialog>

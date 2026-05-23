@@ -1,4 +1,5 @@
 import { HiXMark } from "react-icons/hi2";
+import strings from "@/translations/strings";
 
 interface ImageLightboxProps {
   open: boolean;
@@ -16,7 +17,7 @@ function ImageLightbox({ open, src, alt = "", onClose }: ImageLightboxProps) {
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close"
+          aria-label={strings.common.close}
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10 bg-base-100/80 hover:bg-base-100"
         >
           <HiXMark className="h-5 w-5" />

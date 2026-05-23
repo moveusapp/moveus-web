@@ -18,9 +18,10 @@ import { HiArrowRight } from "react-icons/hi2";
 import Button from "@/components/ui/Button";
 import TextInput from "@/components/ui/TextInput";
 import { formatError } from "@/utils/format-error";
+import strings from "@/translations/strings";
 
 function RegisterPage() {
-  useDocumentTitle("Register");
+  useDocumentTitle(strings.auth.registerTitle);
 
   const { setProfile } = useProfile();
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ function RegisterPage() {
     } else {
       const isEmailTaken = await emailTaken(email);
       if (isEmailTaken) {
-        newErrors.email = "This email is already registered";
+        newErrors.email = strings.auth.emailAlreadyRegistered;
       }
     }
 
@@ -70,7 +71,7 @@ function RegisterPage() {
     } else {
       const isUsernameTaken = await usernameTaken(username);
       if (isUsernameTaken) {
-        newErrors.username = "This username is already taken";
+        newErrors.username = strings.auth.usernameAlreadyTaken;
       }
     }
 
@@ -80,9 +81,9 @@ function RegisterPage() {
     }
 
     if (!confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
+      newErrors.confirmPassword = strings.auth.pleaseConfirmPassword;
     } else if (confirmPassword !== password) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = strings.auth.passwordsDoNotMatch;
     }
 
     setErrors(newErrors);
@@ -115,18 +116,19 @@ function RegisterPage() {
     <div>
       <div className="mb-5">
         <h1 className="text-3xl font-black tracking-tight leading-[1.05] mb-1">
-          Join the <span className="text-primary">squad</span>.
+          {strings.auth.joinTheSquad}{" "}
+          <span className="text-primary">{strings.auth.joinTheSquadHighlight}</span>.
         </h1>
         <p className="text-sm text-base-content/60">
-          Set up your account and start moving with people nearby.
+          {strings.auth.registerSubtitle}
         </p>
       </div>
 
       <form onSubmit={handleRegister} className="space-y-2">
         <TextInput
-          label="Email"
+          label={strings.auth.email}
           type="email"
-          placeholder="example@domain.com"
+          placeholder={strings.auth.emailPlaceholder}
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -137,9 +139,9 @@ function RegisterPage() {
         />
 
         <TextInput
-          label="Username"
+          label={strings.auth.username}
           type="text"
-          placeholder="Pick a username"
+          placeholder={strings.auth.usernamePlaceholder}
           value={username}
           onChange={(e) => {
             setUsername(e.target.value.toLowerCase());
@@ -150,9 +152,9 @@ function RegisterPage() {
         />
 
         <TextInput
-          label="Password"
+          label={strings.auth.password}
           type="password"
-          placeholder="Create a password"
+          placeholder={strings.auth.passwordCreatePlaceholder}
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
@@ -163,9 +165,9 @@ function RegisterPage() {
         />
 
         <TextInput
-          label="Confirm password"
+          label={strings.auth.confirmPassword}
           type="password"
-          placeholder="Re-enter your password"
+          placeholder={strings.auth.confirmPasswordPlaceholder}
           value={confirmPassword}
           onChange={(e) => {
             setConfirmPassword(e.target.value);
@@ -188,7 +190,7 @@ function RegisterPage() {
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             />
-            <span className="text-sm text-base-content/70">Remember me</span>
+            <span className="text-sm text-base-content/70">{strings.auth.rememberMe}</span>
           </label>
 
           <label className="flex items-start gap-2 cursor-pointer">
@@ -200,13 +202,13 @@ function RegisterPage() {
               required
             />
             <span className="text-sm text-base-content/70 leading-snug">
-              I agree to the{" "}
+              {strings.auth.agreeToTermsPrefix}{" "}
               <Link to="/terms" className="text-primary hover:underline">
-                Terms of Service
+                {strings.auth.termsOfService}
               </Link>{" "}
-              and{" "}
+              {strings.common.and}{" "}
               <Link to="/privacy" className="text-primary hover:underline">
-                Privacy Policy
+                {strings.auth.privacyPolicy}
               </Link>
               .
             </span>
@@ -219,17 +221,17 @@ function RegisterPage() {
           disabled={!agreeToTerms}
           className="btn-primary btn-lg w-full gap-2 btn-arrow !mt-5"
         >
-          Create account
+          {strings.auth.createAccountAction}
           <HiArrowRight className="w-5 h-5" />
         </Button>
 
         <p className="text-center text-sm text-base-content/60 !mt-5">
-          Already have an account?{" "}
+          {strings.auth.alreadyHaveAccount}{" "}
           <Link
             to="/login"
             className="text-primary font-semibold hover:underline"
           >
-            Sign in
+            {strings.auth.signIn}
           </Link>
         </p>
       </form>

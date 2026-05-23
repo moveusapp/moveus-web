@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { CountryCode } from "@/graphql/graphql-types";
+import strings from "@/translations/strings";
 
 export type LocationData = {
   name: string;
@@ -233,7 +234,7 @@ const LocationAutocomplete = ({
       ) : showUnselectedHint ? (
         <div className="fieldset-helper-text text-warning flex items-center gap-1.5">
           <HiOutlineLightBulb className="w-4 h-4 shrink-0" />
-          Pick a suggestion so participants can find this spot easily.
+          {strings.ui.pickASuggestion}
         </div>
       ) : null}
     </fieldset>

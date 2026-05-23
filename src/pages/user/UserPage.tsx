@@ -30,6 +30,7 @@ import { ReactNode, useState } from "react";
 import UserPageSkeleton from "./UserPageSkeleton";
 import EditProfileModal from "./EditProfileModal";
 import useDocumentTitle from "@/hooks/use-document-title";
+import strings from "@/translations/strings";
 
 type EventLike = { startTime?: unknown; phase?: EventPhase } | null | undefined;
 
@@ -54,11 +55,10 @@ function sortByStartTimeDesc<T extends EventLike>(
   });
 }
 
-const GENDER_LABELS: Partial<Record<Gender, string>> = {
-  [Gender.Female]: "Female",
-  [Gender.Male]: "Male",
-  [Gender.NonBinary]: "Non-binary",
-};
+function genderLabel(g: Gender): string | undefined {
+  const labels = strings.enums.gender as unknown as Record<string, string>;
+  return labels[g];
+}
 
 type ProfileTab = "posts" | "attending" | "organizing";
 
@@ -91,7 +91,11 @@ function UserPage() {
   if (error) {
     return (
       <div className="m-4">
-        <p>No user with username '{username}' found.</p>
+        <p>
+          {strings.formatString(strings.profile.userNotFound, {
+            username: username ?? "",
+          })}
+        </p>
       </div>
     );
   }
@@ -114,14 +118,17 @@ function UserPage() {
   const locationName = user.location?.city ?? user.location?.name ?? null;
   const age =
     user.dateOfBirth != null ? getAge(new Date(user.dateOfBirth)) : null;
-  const genderLabel = user.gender ? GENDER_LABELS[user.gender] : undefined;
+  const gLabel = user.gender ? genderLabel(user.gender) : undefined;
 
   const facts: { icon: IconType; label: string }[] = [];
   if (locationName)
     facts.push({ icon: HiOutlineLocationMarker, label: locationName });
   if (age != null)
-    facts.push({ icon: HiOutlineCake, label: `${age} years old` });
-  if (genderLabel) facts.push({ icon: HiOutlineUser, label: genderLabel });
+    facts.push({
+      icon: HiOutlineCake,
+      label: strings.formatString(strings.profile.yearsOld, { age }) as string,
+    });
+  if (gLabel) facts.push({ icon: HiOutlineUser, label: gLabel });
 
   const showFollowers =
     user.followerCount != null || user.followingCount != null;
@@ -148,13 +155,13 @@ function UserPage() {
   const tabs: { value: ProfileTab; label: ReactNode }[] = [
     {
       value: "posts",
-      label: tabLabel(HiOutlineNewspaper, "Posts", posts.length),
+      label: tabLabel(HiOutlineNewspaper, strings.ui.posts, posts.length),
     },
     {
       value: "attending",
       label: tabLabel(
         HiOutlineCalendar,
-        "Attending",
+        strings.profile.attendingTab,
         user.attendingEvents?.length ?? 0,
       ),
     },
@@ -162,7 +169,7 @@ function UserPage() {
       value: "organizing",
       label: tabLabel(
         HiOutlineStar,
-        "Organizing",
+        strings.profile.organizingTab,
         user.organizingEvents?.length ?? 0,
       ),
     },
@@ -195,7 +202,7 @@ function UserPage() {
               className="flex-shrink-0 self-start"
               onClick={() => setShowEditModal(true)}
             >
-              Edit Profile
+              {strings.profile.editProfile}
             </Button>
           ) : (
             profile && (
@@ -203,7 +210,11 @@ function UserPage() {
                 <Link
                   to={`/chat?userId=${user.id}`}
                   className="btn btn-square rounded-2xl"
-                  aria-label={`Message ${name}`}
+                  aria-label={
+                    strings.formatString(strings.profile.messageAria, {
+                      name,
+                    }) as string
+                  }
                 >
                   <HiOutlineChat size={18} />
                 </Link>
@@ -219,7 +230,7 @@ function UserPage() {
 
         <p className="mt-4 max-w-prose text-sm leading-relaxed text-base-content/90">
           {isBioEmpty() ? (
-            <span className="italic text-base-content/50">No written bio.</span>
+            <span className="italic text-base-content/50">{strings.profile.noBio}</span>
           ) : (
             user.bio
           )}
@@ -246,7 +257,7 @@ function UserPage() {
                 <span className="font-bold text-base-content">
                   {user.followerCount}
                 </span>{" "}
-                <span className="text-base-content/60">Followers</span>
+                <span className="text-base-content/60">{strings.profile.followers}</span>
               </span>
             )}
             {user.followingCount != null && (
@@ -254,7 +265,7 @@ function UserPage() {
                 <span className="font-bold text-base-content">
                   {user.followingCount}
                 </span>{" "}
-                <span className="text-base-content/60">Following</span>
+                <span className="text-base-content/60">{strings.profile.following}</span>
               </span>
             )}
           </div>
@@ -281,11 +292,17 @@ function UserPage() {
         ) : (
           <EmptyState
             icon={<HiOutlineNewspaper className="h-5 w-5" />}
-            title={isSelf ? "No posts yet" : `${name} hasn't posted yet`}
+            title={
+              isSelf
+                ? strings.profile.noPostsSelf
+                : (strings.formatString(strings.profile.noPostsOther, {
+                    name,
+                  }) as string)
+            }
             description={
               isSelf
-                ? "Share a moment from a workout or event. Your posts land here."
-                : "When they share something, it'll show up here."
+                ? strings.profile.noPostsSelfDesc
+                : strings.profile.noPostsOtherDesc
             }
           />
         ))}
@@ -300,11 +317,13 @@ function UserPage() {
         ) : (
           <EmptyState
             icon={<HiOutlineCalendar className="h-5 w-5" />}
-            title="Nothing on the calendar"
+            title={strings.profile.noCalendar}
             description={
               isSelf
-                ? "Find a local event and join in. It'll show up here."
-                : `${name} isn't attending any events right now.`
+                ? strings.profile.noAttendingSelfDesc
+                : (strings.formatString(strings.profile.noAttendingOtherDesc, {
+                    name,
+                  }) as string)
             }
           />
         ))}
@@ -319,11 +338,13 @@ function UserPage() {
         ) : (
           <EmptyState
             icon={<HiOutlineStar className="h-5 w-5" />}
-            title="No events organized yet"
+            title={strings.profile.noOrganized}
             description={
               isSelf
-                ? "Host your own event and bring people together. It'll show up here."
-                : `${name} isn't organizing any events right now.`
+                ? strings.profile.noOrganizingSelfDesc
+                : (strings.formatString(strings.profile.noOrganizingOtherDesc, {
+                    name,
+                  }) as string)
             }
           />
         ))}

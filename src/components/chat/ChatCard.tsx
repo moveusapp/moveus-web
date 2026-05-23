@@ -2,6 +2,7 @@ import UserAvatar from "@/components/user/UserAvatar";
 import { ChatKind } from "@/graphql/graphql-types";
 import { timeAgo } from "@/utils/time-utils";
 import { RiCheckDoubleLine, RiCheckLine, RiGroupLine } from "react-icons/ri";
+import strings from "@/translations/strings";
 
 export interface ChatSummaryMember {
   userId: number;
@@ -30,7 +31,7 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
 
   const chatName = () => {
     if (!isGroup) {
-      return members.length > 0 ? members[0].nickname : "Empty chat";
+      return members.length > 0 ? members[0].nickname : strings.chat.emptyChat;
     }
     if (chat.groupName) return chat.groupName;
     const names = members.slice(0, 3).map((m) => m.nickname);
@@ -54,12 +55,12 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
 
   const preview = () => {
     if (!hasMessages) {
-      return <span className="italic text-base-content/40">Say hello!</span>;
+      return <span className="italic text-base-content/40">{strings.chat.sayHello}</span>;
     }
     if (chat.lastMessage!.textContent) {
       return chat.lastMessage!.textContent;
     }
-    return <span className="italic">Sent an attachment</span>;
+    return <span className="italic">{strings.chat.sentAttachment}</span>;
   };
 
   const avatar = () => {

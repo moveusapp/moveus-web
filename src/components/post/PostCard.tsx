@@ -12,6 +12,7 @@ import { displayName } from "@/utils/display-name";
 import { HiCheckBadge } from "react-icons/hi2";
 import { HiOutlineHeart, HiHeart, HiOutlineChatBubbleLeft } from "react-icons/hi2";
 import ImageLightbox from "@/components/ui/ImageLightbox";
+import strings from "@/translations/strings";
 
 function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
             >
               <img
                 src={imageUrl}
-                alt="Post image"
+                alt={strings.post.postImageAlt}
                 onError={(e) =>
                   (e.currentTarget.parentElement!.style.display = "none")
                 }
@@ -148,7 +149,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
               to={`/event/${post.event.id}`}
               className="flex items-center gap-2 text-xs text-primary hover:underline"
             >
-              <span>Posted in: {post.event.title}</span>
+              <span>{strings.formatString(strings.post.postedIn, { title: post.event.title ?? "" })}</span>
             </Link>
           )}
 
@@ -156,7 +157,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
           <div className="flex items-center gap-4 pt-3 border-t border-base-300">
             <button
               onClick={handleLike}
-              aria-label={liked ? "Unlike" : "Like"}
+              aria-label={liked ? strings.post.unlike : strings.post.like}
               aria-pressed={liked}
               className="flex items-center gap-1.5 text-sm text-base-content/60 hover:text-error transition-colors"
             >
@@ -178,7 +179,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
       <ImageLightbox
         open={showImageModal}
         src={imageUrl}
-        alt="Post image"
+        alt={strings.post.postImageAlt}
         onClose={() => setShowImageModal(false)}
       />
     </>

@@ -5,39 +5,18 @@ import {
 } from "react-icons/hi2";
 import { HiOutlineChat, HiOutlineSearch } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
-
-const items = [
-  {
-    label: "Home",
-    to: "/home",
-    icon: HiOutlineHome,
-  },
-  {
-    label: "Search",
-    to: "/search",
-    icon: HiOutlineSearch,
-  },
-  {
-    label: "Calendar",
-    to: "/calendar",
-    icon: HiOutlineCalendarDays,
-  },
-  {
-    label: "Notifications",
-    to: "/notifications",
-    icon: HiOutlineBell,
-    badge: "",
-  },
-  {
-    label: "Messages",
-    to: "/chat",
-    icon: HiOutlineChat,
-    badge: "",
-  },
-];
+import strings from "@/translations/strings";
 
 function MobileNav() {
   const location = useLocation();
+
+  const items = [
+    { label: strings.nav.home, to: "/home", icon: HiOutlineHome },
+    { label: strings.nav.search, to: "/search", icon: HiOutlineSearch },
+    { label: strings.nav.calendar, to: "/calendar", icon: HiOutlineCalendarDays },
+    { label: strings.nav.notifications, to: "/notifications", icon: HiOutlineBell, badge: "" },
+    { label: strings.nav.messages, to: "/chat", icon: HiOutlineChat, badge: "" },
+  ];
 
   const isNavItemActive = (to: string) => location.pathname === to;
 

@@ -10,6 +10,7 @@ import { fileToBase64, putFileToSignedUrl } from "@/utils/upload";
 import { useMutation } from "@apollo/client/react";
 import { formatError } from "@/utils/format-error";
 import { useToast } from "@/context/toast-context";
+import strings from "@/translations/strings";
 
 function SendMessage({ chatId, addMessage }: SendMessageInterface) {
   const toast = useToast();
@@ -88,7 +89,7 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
         },
       }).catch((error) => {
         console.error(error);
-        toast.error(formatError(error), "Message not sent");
+        toast.error(formatError(error), strings.toast.messageNotSent);
       });
     },
     [
@@ -109,7 +110,7 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
         <div className="relative inline-block w-16 h-16 ml-2">
           <img
             src={imagePreview}
-            alt="Selected"
+            alt={strings.chat.selectedAttachmentAlt}
             className="w-16 h-16 rounded-xl object-cover"
           />
           <button
@@ -146,7 +147,7 @@ function SendMessage({ chatId, addMessage }: SendMessageInterface) {
           value={text}
           onChange={(e) => setText(e.currentTarget.value)}
           className="input input-ghost border-0 flex-1 focus:outline-none"
-          placeholder="Type a message..."
+          placeholder={strings.chat.typeAMessage}
           autoComplete="off"
         />
         <button type="submit" className="btn btn-primary btn-sm btn-circle">

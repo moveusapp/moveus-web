@@ -8,9 +8,10 @@ import GlobalSearchWidget from "@/components/widgets/GlobalSearchWidget";
 import UserProgressWidget from "@/components/widgets/UserProgressWidget";
 import UserActivityWidget from "@/components/widgets/UserActivityWidget";
 import MainFooter from "@/components/misc/MainFooter";
+import strings from "@/translations/strings";
 
 function NotificationsPage() {
-  useDocumentTitle("Notfications");
+  useDocumentTitle(strings.notification.documentTitle);
 
   const { data, loading } = useQuery(GetNotificationsDocument);
 
@@ -20,7 +21,7 @@ function NotificationsPage() {
   return (
     <div className="flex flex-row h-full">
       <div className="flex flex-col mx-auto grow h-full overflow-y-auto min-w-0">
-        <PageHeader title="Notifications" />
+        <PageHeader title={strings.notification.title} />
         <div className="flex flex-col px-4 sm:px-6 pt-3 pb-6 gap-2">
           {loading ? (
             [...Array(10)].map((_, index) => (
@@ -34,7 +35,7 @@ function NotificationsPage() {
               />
             ))
           ) : (
-            <p className="text-sm text-base-content/70">No notifications at this time.</p>
+            <p className="text-sm text-base-content/70">{strings.notification.none}</p>
           )}
         </div>
       </div>

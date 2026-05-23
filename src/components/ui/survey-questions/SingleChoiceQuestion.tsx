@@ -2,12 +2,13 @@ import { enumToOptions } from "@/utils/enum-to-options";
 
 interface Props {
   enumObj: Record<string, string>;
+  enumNamespace: string;
   value: string | null | undefined;
   onChange: (value: string) => void;
 }
 
-function SingleChoiceQuestion({ enumObj, value, onChange }: Props) {
-  const options = enumToOptions(enumObj);
+function SingleChoiceQuestion({ enumObj, enumNamespace, value, onChange }: Props) {
+  const options = enumToOptions(enumObj, enumNamespace);
 
   return (
     <div role="radiogroup" className="flex flex-col gap-2.5">

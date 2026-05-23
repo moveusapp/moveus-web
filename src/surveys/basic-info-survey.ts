@@ -3,6 +3,7 @@ import {
   AlterProfileBasicInfoMutationVariables,
   Gender,
 } from "@/graphql/graphql-types";
+import strings from "@/translations/strings";
 import { QuestionKind, Survey } from "./types";
 
 export const basicInfoSurvey: Survey<AlterProfileBasicInfoMutationVariables> = {
@@ -12,32 +13,33 @@ export const basicInfoSurvey: Survey<AlterProfileBasicInfoMutationVariables> = {
   questions: [
     {
       kind: QuestionKind.FullName,
-      title: "What is your name?",
+      title: strings.survey.basicInfo.nameTitle,
       field: ["firstName", "lastName"],
       required: true,
     },
     {
       kind: QuestionKind.ProfilePicture,
-      title: "Add a profile picture",
-      subtitle: "Optional - you can always add one later.",
+      title: strings.survey.basicInfo.pictureTitle,
+      subtitle: strings.survey.basicInfo.pictureSubtitle,
     },
     {
       kind: QuestionKind.SingleChoice,
-      title: "What is your gender?",
+      title: strings.survey.basicInfo.genderTitle,
       field: "gender",
       enum: Gender,
+      enumNamespace: "enums.gender",
       required: true,
     },
     {
       kind: QuestionKind.TextArea,
-      title: "Tell us about yourself",
-      subtitle: "Leave blank to skip",
-      placeholder: "Write a bio...",
+      title: strings.survey.basicInfo.bioTitle,
+      subtitle: strings.survey.basicInfo.bioSubtitle,
+      placeholder: strings.survey.basicInfo.bioPlaceholder,
       field: "bio",
     },
     {
       kind: QuestionKind.DateOfBirth,
-      title: "When were you born?",
+      title: strings.survey.basicInfo.dobTitle,
       field: "dateOfBirth",
       required: true,
     },

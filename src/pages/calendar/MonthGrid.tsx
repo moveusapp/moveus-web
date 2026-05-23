@@ -1,6 +1,5 @@
 import { EventCardFragment } from "@/graphql/graphql-types";
-
-const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+import strings from "@/translations/strings";
 
 interface MonthGridProps {
   monthDate: Date;
@@ -26,6 +25,7 @@ function MonthGrid({
   const cells = buildMonthCells(monthDate);
   const selectedKey = dayKey(selectedDate);
   const todayKey = dayKey(today);
+  const weekdays = strings.calendar.weekdays;
 
   return (
     <div className={className}>
@@ -36,7 +36,7 @@ function MonthGrid({
           gridTemplateRows: "auto repeat(6, minmax(0, 1fr))",
         }}
       >
-        {WEEKDAYS.map((d) => (
+        {weekdays.map((d) => (
           <div
             key={d}
             className="bg-base-200/70 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.08em] text-base-content/55"
@@ -52,13 +52,24 @@ function MonthGrid({
           const featured = events[0];
           const overflow = events.length - (featured ? 1 : 0);
 
+          const aria = events.length === 0
+            ? (strings.formatString(strings.calendar.dayAria, {
+                date: cell.date.toDateString(),
+              }) as string)
+            : (strings.formatString(
+                events.length === 1
+                  ? strings.calendar.dayAriaWithEvents
+                  : strings.calendar.dayAriaWithEventsPlural,
+                { date: cell.date.toDateString(), count: events.length },
+              ) as string);
+
           return (
             <button
               key={key}
               type="button"
               onClick={() => onSelectDate(cell.date)}
               aria-pressed={isSelected}
-              aria-label={`${cell.date.toDateString()}${events.length ? `, ${events.length} event${events.length === 1 ? "" : "s"}` : ""}`}
+              aria-label={aria}
               className={cellClass(cell.inMonth, isSelected, isToday)}
             >
               <span
@@ -86,7 +97,7 @@ function MonthGrid({
                           : "text-base-content/55"
                       }`}
                     >
-                      +{overflow} more
+                      {strings.formatString(strings.calendar.moreEvents, { count: overflow })}
                     </span>
                   )}
                 </span>

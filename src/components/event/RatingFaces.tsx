@@ -1,4 +1,5 @@
 import { EventRating } from "@/graphql/graphql-types";
+import strings from "@/translations/strings";
 
 export type RatingOption = {
   rating: EventRating;
@@ -20,7 +21,7 @@ export type RatingOption = {
 export const RATING_OPTIONS: RatingOption[] = [
   {
     rating: EventRating.VeryBad,
-    label: "Rough",
+    label: strings.event.ratingFaces.VERY_BAD,
     ink: "text-red-600",
     surface: "border-red-200 bg-red-100",
     picked:
@@ -28,7 +29,7 @@ export const RATING_OPTIONS: RatingOption[] = [
   },
   {
     rating: EventRating.Bad,
-    label: "Meh",
+    label: strings.event.ratingFaces.BAD,
     ink: "text-orange-600",
     surface: "border-orange-200 bg-orange-100",
     picked:
@@ -36,7 +37,7 @@ export const RATING_OPTIONS: RatingOption[] = [
   },
   {
     rating: EventRating.Neutral,
-    label: "Okay",
+    label: strings.event.ratingFaces.NEUTRAL,
     ink: "text-amber-700",
     surface: "border-amber-200 bg-amber-100",
     picked:
@@ -44,7 +45,7 @@ export const RATING_OPTIONS: RatingOption[] = [
   },
   {
     rating: EventRating.Good,
-    label: "Good",
+    label: strings.event.ratingFaces.GOOD,
     ink: "text-lime-700",
     surface: "border-lime-200 bg-lime-100",
     picked:
@@ -52,7 +53,7 @@ export const RATING_OPTIONS: RatingOption[] = [
   },
   {
     rating: EventRating.Great,
-    label: "Amazing",
+    label: strings.event.ratingFaces.GREAT,
     ink: "text-emerald-600",
     surface: "border-emerald-200 bg-emerald-100",
     picked:
@@ -120,7 +121,7 @@ function RatingFaces({ value, onChange, disabled }: RatingFacesProps) {
 
   return (
     <fieldset disabled={disabled} className="disabled:opacity-60">
-      <legend className="sr-only">How would you rate this event?</legend>
+      <legend className="sr-only">{strings.event.feedback.legend}</legend>
 
       <div className="grid grid-cols-5 gap-2 sm:gap-3">
         {RATING_OPTIONS.map((option, index) => (
@@ -150,7 +151,7 @@ function RatingFaces({ value, onChange, disabled }: RatingFacesProps) {
         {selected ? (
           <span className="text-primary">{selected.label}</span>
         ) : (
-          <span className="text-base-content/50">Tap a face to rate</span>
+          <span className="text-base-content/50">{strings.event.feedback.tapToRate}</span>
         )}
       </p>
     </fieldset>
@@ -181,7 +182,7 @@ export function RatingBadge({ score, size = "sm", className }: RatingBadgeProps)
     return (
       <span
         className={`flex ${BADGE_SIZES[size]} shrink-0 items-center justify-center rounded-2xl border border-base-300 bg-base-200 text-xs font-medium text-base-content/40 ${className ?? ""}`}
-        title="Not rated"
+        title={strings.event.ratingFaces.notRated}
       >
         —
       </span>

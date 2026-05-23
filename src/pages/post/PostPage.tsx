@@ -21,9 +21,10 @@ import UserAvatar from "@/components/user/UserAvatar";
 import CommentSection from "@/components/comment/CommentSection";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
+import strings from "@/translations/strings";
 
 function PostPage() {
-  useDocumentTitle("Post");
+  useDocumentTitle(strings.post.documentTitle);
 
   const { postId } = useParams();
   const id = Number(postId);
@@ -44,11 +45,11 @@ function PostPage() {
 
       {notFound && (
         <EmptyState
-          title="Post not found"
-          description="It may have been removed, or the link isn't quite right."
+          title={strings.post.notFound}
+          description={strings.post.notFoundDesc}
         >
           <Link to="/home" className="btn btn-primary rounded-2xl">
-            Back home
+            {strings.post.backHome}
           </Link>
         </EmptyState>
       )}
@@ -58,10 +59,6 @@ function PostPage() {
   );
 }
 
-/**
- * Single column on tablet and mobile (post, then comments below). On wide
- * desktop the comments move into a right-hand rail beside the post.
- */
 function PostBody({ post }: { post: PostCardFragment }) {
   return (
     <div className="flex flex-col gap-6 xl:flex-row xl:gap-0">
@@ -69,7 +66,7 @@ function PostBody({ post }: { post: PostCardFragment }) {
         <PostMain post={post} />
       </article>
       <aside
-        aria-label="Comments"
+        aria-label={strings.ui.comments}
         className="w-full border-t border-base-300 pt-6 xl:w-[360px] xl:shrink-0 xl:border-l xl:border-t-0 xl:pt-0 xl:pl-8"
       >
         <PostComments post={post} />
@@ -116,7 +113,6 @@ function PostMain({ post }: { post: PostCardFragment }) {
 
   return (
     <>
-      {/* Author */}
       <header className="flex items-center gap-3">
         <Link to={`/user/${post.author?.username}`} className="shrink-0">
           <UserAvatar userId={post.author?.id!} className="h-12 w-12" />
@@ -137,25 +133,22 @@ function PostMain({ post }: { post: PostCardFragment }) {
         </div>
       </header>
 
-      {/* Event link */}
       {post.event && (
         <Link
           to={`/event/${post.event.id}`}
           className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-base-200 px-3 py-1.5 text-xs font-medium text-base-content/70 transition-colors hover:text-primary"
         >
           <HiOutlineCalendarDays className="h-3.5 w-3.5" />
-          Posted in {post.event.title}
+          {strings.formatString(strings.post.postedInBlock, { title: post.event.title ?? "" })}
         </Link>
       )}
 
-      {/* Content */}
       {post.content && (
         <p className="mt-5 whitespace-pre-line text-lg leading-relaxed text-base-content">
           {post.content}
         </p>
       )}
 
-      {/* Image */}
       {imageUrl && (
         <button
           type="button"
@@ -164,7 +157,7 @@ function PostMain({ post }: { post: PostCardFragment }) {
         >
           <img
             src={imageUrl}
-            alt="Post attachment"
+            alt={strings.post.postAttachmentAlt}
             onError={(e) =>
               (e.currentTarget.parentElement!.style.display = "none")
             }
@@ -173,12 +166,11 @@ function PostMain({ post }: { post: PostCardFragment }) {
         </button>
       )}
 
-      {/* Like */}
       <div className="mt-6">
         <button
           type="button"
           onClick={handleLike}
-          aria-label={liked ? "Unlike" : "Like"}
+          aria-label={liked ? strings.post.unlike : strings.post.like}
           aria-pressed={liked}
           className="flex items-center gap-2 text-sm font-medium text-base-content/60 transition-colors hover:text-error"
         >
@@ -188,7 +180,10 @@ function PostMain({ post }: { post: PostCardFragment }) {
             <HiOutlineHeart className="h-6 w-6" />
           )}
           <span>
-            {likeCount} {likeCount === 1 ? "like" : "likes"}
+            {strings.formatString(
+              likeCount === 1 ? strings.post.likeCount : strings.post.likeCountPlural,
+              { count: likeCount },
+            )}
           </span>
         </button>
       </div>
@@ -196,7 +191,7 @@ function PostMain({ post }: { post: PostCardFragment }) {
       <ImageLightbox
         open={showImageModal}
         src={imageUrl}
-        alt="Post attachment"
+        alt={strings.post.postAttachmentAlt}
         onClose={() => setShowImageModal(false)}
       />
     </>
@@ -209,7 +204,7 @@ function PostComments({ post }: { post: PostCardFragment }) {
   return (
     <section>
       <h2 className="mb-4 text-base font-bold">
-        Comments
+        {strings.ui.comments}
         {comments.length > 0 && (
           <span className="ml-1.5 font-medium text-base-content/50">
             {comments.length}

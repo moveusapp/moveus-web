@@ -43,6 +43,7 @@ function QuestionRenderer({ question, value, onChange }: Props) {
       return (
         <SingleChoiceQuestion
           enumObj={question.enum}
+          enumNamespace={question.enumNamespace}
           value={value}
           onChange={onChange}
         />
@@ -51,6 +52,7 @@ function QuestionRenderer({ question, value, onChange }: Props) {
       return (
         <MultiChoiceQuestion
           enumObj={question.enum}
+          enumNamespace={question.enumNamespace}
           value={value ?? []}
           onChange={onChange}
         />

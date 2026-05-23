@@ -10,6 +10,7 @@ import UserAvatar from "@/components/user/UserAvatar";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
 import { HiOutlineHeart, HiHeart, HiOutlineChatBubbleLeft } from "react-icons/hi2";
+import strings from "@/translations/strings";
 
 function CommentCard({ comment, onReply }: CommentCardProps) {
   const [liked, setLiked] = useState(comment.isLiked ?? false);
@@ -64,7 +65,7 @@ function CommentCard({ comment, onReply }: CommentCardProps) {
           <div className="flex items-center gap-3 mt-1">
             <button
               onClick={handleLike}
-              aria-label={liked ? "Unlike" : "Like"}
+              aria-label={liked ? strings.post.unlike : strings.post.like}
               className="flex items-center gap-1 text-xs text-base-content/60 hover:text-error transition-colors"
             >
               {liked ? (
@@ -77,11 +78,11 @@ function CommentCard({ comment, onReply }: CommentCardProps) {
             {onReply && (
               <button
                 onClick={() => onReply(comment)}
-                aria-label="Reply"
+                aria-label={strings.comment.reply}
                 className="flex items-center gap-1 text-xs text-base-content/60 hover:text-primary transition-colors"
               >
                 <HiOutlineChatBubbleLeft className="w-3.5 h-3.5" />
-                Reply
+                {strings.comment.reply}
               </button>
             )}
           </div>
@@ -147,7 +148,7 @@ function ReplyCard({ reply }: { reply: CommentFragment["replies"][number] }) {
         <div className="flex items-center gap-3 mt-1">
           <button
             onClick={handleLike}
-            aria-label={liked ? "Unlike" : "Like"}
+            aria-label={liked ? strings.post.unlike : strings.post.like}
             className="flex items-center gap-1 text-xs text-base-content/60 hover:text-error transition-colors"
           >
             {liked ? (

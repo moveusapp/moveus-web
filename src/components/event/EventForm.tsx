@@ -17,6 +17,7 @@ import {
   SkillLevel,
 } from "@/graphql/graphql-types";
 import { enumToOptions } from "@/utils/enum-to-options";
+import strings from "@/translations/strings";
 
 export type EventFormValues = {
   title: string;
@@ -36,13 +37,13 @@ export type EventFormValues = {
 };
 
 function validate(values: EventFormValues, isCreate: boolean): string | null {
-  if (!values.title.trim()) return "Give your event a title.";
+  if (!values.title.trim()) return strings.event.validation.needTitle;
   if (!values.startDate || !values.startTime)
-    return "Pick a start date and time.";
+    return strings.event.validation.needStart;
   if (isCreate) {
-    if (!values.activity) return "Pick an activity.";
-    if (!values.skillLevel) return "Pick a skill level.";
-    if (!values.location?.name.trim()) return "Add a location.";
+    if (!values.activity) return strings.event.validation.needActivity;
+    if (!values.skillLevel) return strings.event.validation.needSkill;
+    if (!values.location?.name.trim()) return strings.event.validation.needLocation;
   }
   return null;
 }
@@ -126,32 +127,32 @@ function EventForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="bg-base-200 border border-base-300 rounded-2xl p-6 space-y-6">
         <TextInput
-          label="Title"
-          placeholder="e.g., Saturday Morning Basketball"
+          label={strings.event.title}
+          placeholder={strings.event.titlePlaceholder}
           value={values.title}
           onChange={(e) => set("title", e.target.value)}
           required
         />
 
         <TextArea
-          label="Description"
-          placeholder="Tell people what your event is about..."
+          label={strings.event.description}
+          placeholder={strings.event.descriptionPlaceholder}
           value={values.description}
           onChange={(e) => set("description", e.target.value)}
         />
 
         <div>
-          <h3 className="text-sm font-medium mb-3">Start Time</h3>
+          <h3 className="text-sm font-medium mb-3">{strings.event.startTime}</h3>
           <div className="grid grid-cols-2 gap-4">
             <TextInput
-              label="Date"
+              label={strings.event.date}
               type="date"
               value={values.startDate}
               onChange={(e) => set("startDate", e.target.value)}
               required
             />
             <TextInput
-              label="Time"
+              label={strings.event.time}
               type="time"
               value={values.startTime}
               onChange={(e) => set("startTime", e.target.value)}
@@ -161,16 +162,16 @@ function EventForm({
         </div>
 
         <div>
-          <h3 className="text-sm font-medium mb-3">End Time (Optional)</h3>
+          <h3 className="text-sm font-medium mb-3">{strings.event.endTime}</h3>
           <div className="grid grid-cols-2 gap-4">
             <TextInput
-              label="Date"
+              label={strings.event.date}
               type="date"
               value={values.endDate}
               onChange={(e) => set("endDate", e.target.value)}
             />
             <TextInput
-              label="Time"
+              label={strings.event.time}
               type="time"
               value={values.endTime}
               onChange={(e) => set("endTime", e.target.value)}
@@ -181,26 +182,26 @@ function EventForm({
         {isCreate && (
           <>
             <Dropdown
-              label="Activity"
+              label={strings.event.activity}
               value={values.activity}
               setValue={(v) => set("activity", v as ActivityKind | null)}
-              options={enumToOptions(ActivityKind) as any}
-              placeholder="Select an activity"
+              options={enumToOptions(ActivityKind, "enums.activityKind") as any}
+              placeholder={strings.event.selectActivity}
               required
             />
 
             <Dropdown
-              label="Skill Level"
+              label={strings.event.skillLevel}
               value={values.skillLevel}
               setValue={(v) => set("skillLevel", v as SkillLevel | null)}
-              options={enumToOptions(SkillLevel) as any}
-              placeholder="Select skill level"
+              options={enumToOptions(SkillLevel, "enums.skillLevel") as any}
+              placeholder={strings.event.selectSkillLevel}
               required
             />
 
             <LocationAutocomplete
-              label="Location"
-              placeholder="e.g., Žabica, Rijeka, Croatia"
+              label={strings.event.location}
+              placeholder={strings.event.locationPlaceholder}
               value={values.location}
               onChange={(v) => set("location", v)}
               required
@@ -209,9 +210,9 @@ function EventForm({
         )}
 
         <TextInput
-          label="Max Participants"
+          label={strings.event.maxParticipants}
           type="number"
-          placeholder="Leave empty for unlimited"
+          placeholder={strings.event.maxParticipantsPlaceholder}
           value={values.maxParticipants}
           onChange={(e) => set("maxParticipants", e.target.value)}
         />
@@ -220,20 +221,20 @@ function EventForm({
           <>
             <div>
               <h3 className="text-sm font-medium mb-3">
-                Age Constraints (Optional)
+                {strings.event.ageConstraints}
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 <TextInput
-                  label="Min Age"
+                  label={strings.event.minAge}
                   type="number"
-                  placeholder="e.g., 18"
+                  placeholder={strings.event.minAgePlaceholder}
                   value={values.minAge}
                   onChange={(e) => set("minAge", e.target.value)}
                 />
                 <TextInput
-                  label="Max Age"
+                  label={strings.event.maxAge}
                   type="number"
-                  placeholder="e.g., 65"
+                  placeholder={strings.event.maxAgePlaceholder}
                   value={values.maxAge}
                   onChange={(e) => set("maxAge", e.target.value)}
                 />
@@ -242,13 +243,13 @@ function EventForm({
 
             <div>
               <h3 className="text-sm font-medium mb-3">
-                Allowed Genders{" "}
+                {strings.event.allowedGenders}{" "}
                 <span className="text-xs text-base-content/60">
-                  (leave empty to allow all)
+                  {strings.event.leaveEmptyAll}
                 </span>
               </h3>
               <MultiChoice
-                options={enumToOptions(GenderNoPnts) as any}
+                options={enumToOptions(GenderNoPnts, "enums.genderNoPnts") as any}
                 setValue={(v) => set("acceptedGenders", v as GenderNoPnts[])}
                 value={values.acceptedGenders}
               />
@@ -256,9 +257,9 @@ function EventForm({
 
             <label className="flex items-center justify-between hover:cursor-pointer">
               <div>
-                <h3 className="text-sm font-medium">Allow Spectators</h3>
+                <h3 className="text-sm font-medium">{strings.event.allowSpectators}</h3>
                 <p className="text-xs text-base-content/60">
-                  Allow people to watch without participating
+                  {strings.event.allowSpectatorsDesc}
                 </p>
               </div>
               <input
@@ -271,12 +272,12 @@ function EventForm({
 
             <div>
               <label className="text-sm font-medium mb-2 block">
-                Cover Image (Coming Soon)
+                {strings.event.coverImage}
               </label>
               <div className="border-2 border-dashed border-base-content/20 rounded-xl p-8 text-center hover:border-primary/50 transition cursor-not-allowed opacity-50">
                 <HiPlus className="w-8 h-8 mx-auto mb-2 text-base-content/40" />
                 <p className="text-sm text-base-content/60">
-                  Image upload coming soon
+                  {strings.event.coverImageDesc}
                 </p>
               </div>
             </div>
@@ -292,8 +293,8 @@ function EventForm({
             userError
               ? undefined
               : isCreate
-                ? "Couldn't create your event"
-                : "Couldn't save your changes"
+                ? strings.event.couldntCreate
+                : strings.event.couldntSave
           }
         />
       )}
@@ -301,7 +302,7 @@ function EventForm({
       <div className="flex flex-row gap-2">
         {cancelHref && (
           <Link to={cancelHref} className="btn btn-ghost rounded-2xl flex-1">
-            Cancel
+            {strings.common.cancel}
           </Link>
         )}
         <Button

@@ -4,6 +4,7 @@ import { HiOutlinePencilSquare } from "react-icons/hi2";
 import CreatePostModal from "@/components/post/CreatePostModal";
 import UserAvatar from "@/components/user/UserAvatar";
 import { useProfile } from "@/context/profile-context";
+import strings from "@/translations/strings";
 
 function CreatePostComposer() {
   const [open, setOpen] = useState(false);
@@ -11,8 +12,8 @@ function CreatePostComposer() {
   const { profile } = useProfile();
 
   const prompt = profile?.firstName
-    ? `What's on your mind, ${profile.firstName}?`
-    : "What's on your mind?";
+    ? (strings.formatString(strings.home.composerPrompt, { name: profile.firstName }) as string)
+    : strings.home.composerPromptGeneric;
 
   return (
     <>

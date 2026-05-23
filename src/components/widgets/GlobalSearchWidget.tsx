@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { HiSearch } from "react-icons/hi";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import strings from "@/translations/strings";
 
 function GlobalSearchWidget() {
   const [searchFocused, setSearchFocused] = useState(false);
@@ -33,7 +34,7 @@ function GlobalSearchWidget() {
       <input
         type="text"
         value={searchString}
-        placeholder="Search events, people, posts..."
+        placeholder={strings.widgets.searchPlaceholder}
         className="input w-full pl-10 pr-4 h-10 rounded-xl bg-transparent border-none focus:outline-none text-sm"
         onFocus={() => setSearchFocused(true)}
         onBlur={() => setSearchFocused(false)}

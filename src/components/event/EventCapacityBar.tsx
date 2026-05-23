@@ -1,3 +1,5 @@
+import strings from "@/translations/strings";
+
 function EventCapacityBar({
   participantCount,
   maxParticipants,
@@ -8,8 +10,10 @@ function EventCapacityBar({
   const almostFull = participantCount / maxParticipants >= 0.5;
 
   if (spotsLeft === 0) {
-    return <span className="text-xs font-medium whitespace-nowrap text-error">Full</span>;
+    return <span className="text-xs font-medium whitespace-nowrap text-error">{strings.event.full}</span>;
   }
+
+  const template = spotsLeft === 1 ? strings.event.spotLeft : strings.event.spotsLeft;
 
   return (
     <span
@@ -17,7 +21,7 @@ function EventCapacityBar({
         almostFull ? "text-accent" : "text-base-content/60"
       }`}
     >
-      {spotsLeft} {spotsLeft === 1 ? "spot" : "spots"} left
+      {strings.formatString(template, { count: spotsLeft })}
     </span>
   );
 }

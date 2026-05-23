@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { HiXMark } from "react-icons/hi2";
 import Button from "@/components/ui/Button";
+import strings from "@/translations/strings";
 
 function CommentInput({ onSubmit, loading, placeholder, replyingTo, onCancelReply }: CommentInputProps) {
   const [text, setText] = useState("");
@@ -38,10 +39,10 @@ function CommentInput({ onSubmit, loading, placeholder, replyingTo, onCancelRepl
     <div className="flex flex-col gap-1">
       {replyingTo && (
         <div className="flex items-center gap-2 text-xs text-base-content/60">
-          <span>Replying to <b>@{replyingTo}</b></span>
+          <span>{strings.comment.replyingTo} <b>@{replyingTo}</b></span>
           <button
             onClick={onCancelReply}
-            aria-label="Cancel reply"
+            aria-label={strings.comment.cancelReply}
             className="hover:text-base-content transition-colors"
           >
             <HiXMark className="w-3.5 h-3.5" />
@@ -55,7 +56,7 @@ function CommentInput({ onSubmit, loading, placeholder, replyingTo, onCancelRepl
           onChange={(e) => setText(e.target.value)}
           onInput={handleInput}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder ?? "Write a comment..."}
+          placeholder={placeholder ?? strings.comment.writeAComment}
           rows={1}
           className="textarea flex-1 rounded-2xl min-h-10 max-h-32 resize-none text-sm"
         />
@@ -65,7 +66,7 @@ function CommentInput({ onSubmit, loading, placeholder, replyingTo, onCancelRepl
           loading={loading}
           className="btn-primary h-10"
         >
-          Post
+          {strings.comment.post}
         </Button>
       </div>
     </div>

@@ -11,40 +11,19 @@ import { Link, useLocation } from "react-router-dom";
 import { useProfile } from "@/context/profile-context";
 import { displayName } from "@/utils/display-name";
 import UserAvatar from "@/components/user/UserAvatar";
-
-const navItems = [
-  {
-    label: "Home",
-    to: "/home",
-    icon: HiOutlineHome,
-  },
-  {
-    label: "Search",
-    to: "/search",
-    icon: HiOutlineSearch,
-  },
-  {
-    label: "Calendar",
-    to: "/calendar",
-    icon: HiOutlineCalendarDays,
-  },
-  {
-    label: "Notifications",
-    to: "/notifications",
-    icon: HiOutlineBell,
-    badge: "",
-  },
-  {
-    label: "Messages",
-    to: "/chat",
-    icon: HiOutlineChat,
-    badge: "",
-  },
-];
+import strings from "@/translations/strings";
 
 function LeftSidebar() {
   const location = useLocation();
   const { profile } = useProfile();
+
+  const navItems = [
+    { label: strings.nav.home, to: "/home", icon: HiOutlineHome },
+    { label: strings.nav.search, to: "/search", icon: HiOutlineSearch },
+    { label: strings.nav.calendar, to: "/calendar", icon: HiOutlineCalendarDays },
+    { label: strings.nav.notifications, to: "/notifications", icon: HiOutlineBell, badge: "" },
+    { label: strings.nav.messages, to: "/chat", icon: HiOutlineChat, badge: "" },
+  ];
 
   const isActive = (to: string) => location.pathname === to;
 
@@ -62,12 +41,10 @@ function LeftSidebar() {
 
   return (
     <div className="flex flex-col h-full w-full py-6 px-4">
-      {/* Brand */}
       <div className="flex items-center px-3 mb-8">
-        <img src={moveusLogo} alt="MoveUs" />
+        <img src={moveusLogo} alt={strings.common.brand} />
       </div>
 
-      {/* Navigation */}
       <nav className="flex flex-col gap-1 flex-1">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -92,7 +69,6 @@ function LeftSidebar() {
           );
         })}
 
-        {/* Create Event CTA */}
         <Link
           to="/create-event"
           aria-current={isActive("/create-event") ? "page" : undefined}
@@ -103,11 +79,10 @@ function LeftSidebar() {
           }`}
         >
           <HiPlus size={20} strokeWidth={2.5} />
-          <span>Create Event</span>
+          <span>{strings.nav.createEvent}</span>
         </Link>
       </nav>
 
-      {/* Settings */}
       <Link
         to="/settings"
         aria-current={isActive("/settings") ? "page" : undefined}
@@ -117,17 +92,15 @@ function LeftSidebar() {
           size={20}
           strokeWidth={isActive("/settings") ? 2.5 : 2}
         />
-        <span>Settings</span>
+        <span>{strings.nav.settings}</span>
       </Link>
 
-      {/* Divider */}
       <div className="border-t border-base-300 my-3" />
 
-      {/* User card — links to own profile */}
       <Link
         to="/profile"
         aria-current={isProfileActive ? "page" : undefined}
-        aria-label="View your profile"
+        aria-label={strings.nav.viewProfileAria}
         className={`group flex items-center gap-3 p-2.5 rounded-xl border transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
           isProfileActive
             ? "bg-primary/10 border-primary/30"

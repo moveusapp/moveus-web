@@ -1,3 +1,5 @@
+import strings from "@/translations/strings";
+
 const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365;
 
 export function getAge(dob: Date): number {
@@ -12,31 +14,33 @@ export function timeAgo(inputDate: Date | string): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
 
-  if (diffMs < 60_000) return "just now";
+  if (diffMs < 60_000) return strings.time.justNow;
 
   const minutes = Math.floor(diffMs / 60_000);
-  if (minutes < 60) return plural(minutes, "minute");
+  if (minutes < 60) return ago(minutes, "minute", "minutes");
 
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return plural(hours, "hour");
+  if (hours < 24) return ago(hours, "hour", "hours");
 
   const days = Math.floor(hours / 24);
-  if (days < 7) return plural(days, "day");
+  if (days < 7) return ago(days, "day", "days");
 
-  if (days < 30) return plural(Math.floor(days / 7), "week");
+  if (days < 30) return ago(Math.floor(days / 7), "week", "weeks");
 
   let months =
     (now.getFullYear() - date.getFullYear()) * 12 +
     (now.getMonth() - date.getMonth());
   if (now.getDate() < date.getDate()) months -= 1;
 
-  if (months < 12) return plural(months, "month");
+  if (months < 12) return ago(months, "month", "months");
 
-  return plural(Math.floor(months / 12), "year");
+  return ago(Math.floor(months / 12), "year", "years");
 }
 
-function plural(value: number, unit: string): string {
-  return `${value} ${unit}${value === 1 ? "" : "s"} ago`;
+function ago(count: number, singular: string, plural: string): string {
+  const time = strings.time as unknown as Record<string, string>;
+  const unit = count === 1 ? time[singular] : time[plural];
+  return strings.formatString(strings.time.ago, { count, unit }) as string;
 }
 
 export function prependZero(number: number): string {

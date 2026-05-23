@@ -1,5 +1,6 @@
 import { InputHTMLAttributes, useState } from "react";
 import { HiEye, HiEyeSlash } from "react-icons/hi2";
+import strings from "@/translations/strings";
 
 interface TextInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> {
   label: string;
@@ -35,7 +36,7 @@ const TextInput = ({
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content transition-colors"
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? strings.ui.hidePassword : strings.ui.showPassword}
           >
             {showPassword ? (
               <HiEye className="w-5 h-5" />

@@ -17,6 +17,7 @@ import {
   HiOutlineRectangleStack,
   HiOutlineUserCircle,
   HiOutlineUserGroup,
+  HiLanguage,
 } from "react-icons/hi2";
 import { apolloClient } from "@/appolo/client";
 import { useNavigate } from "react-router-dom";
@@ -25,51 +26,10 @@ import Button from "@/components/ui/Button";
 import { clearStoredProfile } from "@/utils/auth";
 import PageHeader from "@/components/layout/PageHeader";
 import SettingsOption from "./SettingsOption";
-
-const privacySettingConfig: {
-  setting: PrivacySetting;
-  label: string;
-  description: string;
-  icon: ReactNode;
-}[] = [
-  {
-    setting: PrivacySetting.Location,
-    label: "Location",
-    description: "Your location and travel distance.",
-    icon: <HiOutlineMapPin />,
-  },
-  {
-    setting: PrivacySetting.Age,
-    label: "Age",
-    description: "Your age shown on your profile.",
-    icon: <HiOutlineCake />,
-  },
-  {
-    setting: PrivacySetting.Gender,
-    label: "Gender",
-    description: "Your gender shown on your profile.",
-    icon: <HiOutlineUserCircle />,
-  },
-  {
-    setting: PrivacySetting.Followers,
-    label: "Followers",
-    description: "Your followers and following lists.",
-    icon: <HiOutlineUserGroup />,
-  },
-  {
-    setting: PrivacySetting.Posts,
-    label: "Posts",
-    description: "Posts you have shared.",
-    icon: <HiOutlineRectangleStack />,
-  },
-];
-
-const scopeOptions: { value: PrivacyScope; label: string }[] = [
-  { value: PrivacyScope.Everyone, label: "Everyone" },
-  { value: PrivacyScope.Followers, label: "Followers" },
-  { value: PrivacyScope.Mutuals, label: "Mutuals" },
-  { value: PrivacyScope.Noone, label: "Only you" },
-];
+import strings from "@/translations/strings";
+import { Locale } from "@/translations/strings";
+import { enumToOptions } from "@/utils/enum-to-options";
+import { useLanguage } from "@/context/language-context";
 
 type PrivacySettings = ContextProfileFragment["privacySettings"];
 
@@ -85,10 +45,11 @@ function withScope(
 }
 
 function SettingsPage() {
-  useDocumentTitle("Settings");
+  useDocumentTitle(strings.settings.documentTitle);
 
   const { profile, setProfile } = useProfile();
   const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage } = useLanguage();
   const navigate = useNavigate();
 
   const [logout, { loading: logoutLoading }] = useMutation(LogOutDocument);
@@ -99,6 +60,46 @@ function SettingsPage() {
   const [erroredSetting, setErroredSetting] = useState<PrivacySetting | null>(
     null,
   );
+  const settingOptions = enumToOptions(PrivacySetting, "enums.privacySetting");
+
+  const privacySettingConfig: {
+    setting: PrivacySetting;
+    description: string;
+    icon: ReactNode;
+  }[] = [
+    {
+      setting: PrivacySetting.Location,
+      description: strings.settings.locationDesc,
+      icon: <HiOutlineMapPin />,
+    },
+    {
+      setting: PrivacySetting.Age,
+      description: strings.settings.ageDesc,
+      icon: <HiOutlineCake />,
+    },
+    {
+      setting: PrivacySetting.Gender,
+      description: strings.settings.genderDesc,
+      icon: <HiOutlineUserCircle />,
+    },
+    {
+      setting: PrivacySetting.Followers,
+      description: strings.settings.followersDesc,
+      icon: <HiOutlineUserGroup />,
+    },
+    {
+      setting: PrivacySetting.Posts,
+      description: strings.settings.postsDesc,
+      icon: <HiOutlineRectangleStack />,
+    },
+  ];
+
+  const scopeOptions: { value: PrivacyScope; label: string }[] = [
+    { value: PrivacyScope.Everyone, label: strings.settings.scopeEveryone },
+    { value: PrivacyScope.Followers, label: strings.settings.scopeFollowers },
+    { value: PrivacyScope.Mutuals, label: strings.settings.scopeMutuals },
+    { value: PrivacyScope.Noone, label: strings.settings.scopeOnlyYou },
+  ];
 
   const onLogout = useCallback(() => {
     logout()
@@ -149,33 +150,44 @@ function SettingsPage() {
 
   return (
     <div className="h-full overflow-y-auto flex flex-col">
-      <PageHeader title="Settings" />
+      <PageHeader title={strings.settings.title} />
 
       <div className="flex flex-col grow gap-2 m-4">
         <div className="mb-1">
-          <p className="text-md font-medium">Appearance</p>
+          <p className="text-md font-medium">{strings.settings.appearance}</p>
           <p className="text-sm text-base-content/70">
-            Customize how MoveUs looks on this device.
+            {strings.settings.appearanceDesc}
           </p>
         </div>
 
         <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
           <SettingsOption
             icon={<HiOutlineMoon />}
-            title="Dark mode"
-            description="Easier on the eyes in low light."
+            title={strings.settings.darkMode}
+            description={strings.settings.darkModeDesc}
             control={{
               kind: "toggle",
               checked: theme === "dark",
               onChange: () => toggleTheme(),
             }}
           />
+          <SettingsOption
+            icon={<HiLanguage />}
+            title={strings.settings.language}
+            description={strings.settings.langaugeDesc}
+            control={{
+              kind: "dropdown",
+              value: language,
+              options: enumToOptions(Locale, "enums.locale"),
+              onChange: (value) => setLanguage(value as Locale),
+            }}
+          />
         </div>
 
         <div className="mt-3 mb-1">
-          <p className="text-md font-medium">Privacy</p>
+          <p className="text-md font-medium">{strings.settings.privacy}</p>
           <p className="text-sm text-base-content/70">
-            Choose who can see each part of your profile.
+            {strings.settings.privacyDesc}
           </p>
         </div>
 
@@ -184,14 +196,18 @@ function SettingsPage() {
             <SettingsOption
               key={config.setting}
               icon={config.icon}
-              title={config.label}
+              title={settingOptions.find((m) => m.value === config.setting).label}
               description={config.description}
               error={
                 erroredSetting === config.setting
-                  ? "Couldn't save that, try again."
+                  ? strings.settings.couldntSave
                   : undefined
               }
-              controlLabel={`Who can see your ${config.label.toLowerCase()}`}
+              controlLabel={
+                strings.formatString(strings.settings.whoCanSee, {
+                  field: settingOptions.find((m) => m.value === config.setting).label.toLowerCase(),
+                }) as string
+              }
               control={{
                 kind: "dropdown",
                 value: scopeFor(config.setting),
@@ -204,14 +220,14 @@ function SettingsPage() {
         </div>
 
         <div className="mt-3 mb-1">
-          <p className="text-md font-medium">Account</p>
+          <p className="text-md font-medium">{strings.settings.account}</p>
         </div>
 
         <div className="bg-base-200 rounded-2xl border border-base-300 overflow-hidden">
           <SettingsOption
             icon={<HiOutlineArrowRightOnRectangle />}
-            title="Log out"
-            description="You'll need to sign in again next time."
+            title={strings.settings.logOut}
+            description={strings.settings.logOutDesc}
             control={{
               kind: "action",
               tone: "danger",
@@ -224,8 +240,8 @@ function SettingsPage() {
 
       <dialog id="logoutModal" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Logout?</h3>
-          <p className="py-4">Are you sure you'd like to logout?</p>
+          <h3 className="font-bold text-lg">{strings.settings.logoutModalTitle}</h3>
+          <p className="py-4">{strings.settings.logoutModalBody}</p>
           <div className="modal-action">
             <div className="flex flex-row gap-2">
               <form method="dialog">
@@ -233,17 +249,17 @@ function SettingsPage() {
                   onClick={() =>
                     (document.getElementById("logoutModal") as any).close()
                   }
-                  className={`btn btn-ghost w-22 ${logoutLoading ? "btn-disabled" : ""}`}
+                  className={`btn btn-ghost ${logoutLoading ? "btn-disabled" : ""}`}
                 >
-                  Cancel
+                  {strings.common.cancel}
                 </Button>
               </form>
               <Button
                 onClick={onLogout}
                 loading={logoutLoading}
-                className="btn btn-primary w-22"
+                className="btn btn-primary"
               >
-                Logout
+                {strings.settings.logoutConfirm}
               </Button>
             </div>
           </div>

@@ -10,6 +10,7 @@ import FormError from "@/components/ui/FormError";
 import { useProfile } from "@/context/profile-context";
 import { useToast } from "@/context/toast-context";
 import { displayName } from "@/utils/display-name";
+import strings from "@/translations/strings";
 
 const MAX_CONTENT_LENGTH = 2048;
 
@@ -106,9 +107,9 @@ function CreatePostModal({
 
       onClose();
       if (imageFailed) {
-        toast.info("Post shared, but the photo didn't upload.");
+        toast.info(strings.toast.postSharedNoPhoto);
       } else {
-        toast.success("Post shared.");
+        toast.success(strings.toast.postShared);
       }
       if (onSuccess && post?.id != null) {
         onSuccess(post.id);
@@ -134,11 +135,11 @@ function CreatePostModal({
     <dialog open className="modal modal-open">
       <div className="modal-box max-w-xl">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-bold">Create post</h3>
+          <h3 className="text-lg font-bold">{strings.post.createTitle}</h3>
           <button
             type="button"
             onClick={handleClose}
-            aria-label="Close"
+            aria-label={strings.common.close}
             className="btn btn-sm btn-circle btn-ghost"
           >
             <HiXMark className="h-5 w-5" />
@@ -164,7 +165,7 @@ function CreatePostModal({
                   name="content"
                   value={content}
                   onChange={onChange}
-                  placeholder="What's on your mind?"
+                  placeholder={strings.post.whatsOnYourMind}
                   rows={4}
                   required
                   maxLength={MAX_CONTENT_LENGTH}
@@ -177,13 +178,13 @@ function CreatePostModal({
                 <div className="relative overflow-hidden rounded-xl border border-base-300">
                   <img
                     src={imagePreview}
-                    alt="Selected attachment"
+                    alt={strings.post.selectedAttachmentAlt}
                     className="max-h-64 w-full object-cover"
                   />
                   <button
                     type="button"
                     onClick={removeImage}
-                    aria-label="Remove image"
+                    aria-label={strings.post.removeImageAria}
                     className="btn btn-sm btn-circle btn-error absolute right-2 top-2"
                   >
                     <HiXMark className="h-4 w-4" />
@@ -196,7 +197,7 @@ function CreatePostModal({
                   className="inline-flex items-center gap-1.5 py-1 text-sm font-medium text-primary transition-colors hover:text-primary/70"
                 >
                   <HiPhoto className="h-4 w-4" />
-                  Add photo
+                  {strings.post.addPhoto}
                 </button>
               )}
 
@@ -236,7 +237,7 @@ function CreatePostModal({
                 className="btn btn-ghost"
                 disabled={loading}
               >
-                Cancel
+                {strings.common.cancel}
               </button>
               <Button
                 type="submit"
@@ -244,7 +245,7 @@ function CreatePostModal({
                 disabled={!content.trim() || content.length > MAX_CONTENT_LENGTH}
                 className="btn btn-primary w-28"
               >
-                Post
+                {strings.post.post}
               </Button>
             </div>
           </div>

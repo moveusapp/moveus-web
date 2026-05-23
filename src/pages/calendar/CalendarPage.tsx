@@ -11,12 +11,13 @@ import {
 import CalendarPageSkeleton from "./CalendarPageSkeleton";
 import MonthGrid from "./MonthGrid";
 import PageHeader from "@/components/layout/PageHeader";
+import strings from "@/translations/strings";
 
 const navButtonClass =
   "inline-flex items-center justify-center w-9 h-9 rounded-full text-base-content/70 hover:bg-base-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-colors";
 
 function CalendarPage() {
-  useDocumentTitle("Calendar");
+  useDocumentTitle(strings.calendar.documentTitle);
 
   const { profile } = useProfile();
 
@@ -96,8 +97,9 @@ function CalendarPage() {
     }
   };
 
+  const locale = strings.getLanguage();
   const relative = relativeLabel(selectedDate, today);
-  const monthLabel = new Intl.DateTimeFormat("en-US", {
+  const monthLabel = new Intl.DateTimeFormat(locale, {
     month: "long",
     year: "numeric",
   }).format(monthDate);
@@ -105,7 +107,7 @@ function CalendarPage() {
   return (
     <div className="h-full overflow-y-auto">
       <PageHeader
-        title="Calendar"
+        title={strings.calendar.title}
         actions={
           <MonthNavActions
             monthLabel={monthLabel}
@@ -132,15 +134,19 @@ function CalendarPage() {
       <section className="flex flex-col gap-2 px-4 sm:px-6 pt-2 pb-6">
         <div className="flex items-baseline gap-2">
           <h2 className="text-base font-semibold">
-            {formatLongDate(selectedDate)}
+            {formatLongDate(selectedDate, locale)}
           </h2>
           {relative && (
             <span className="text-sm text-base-content/55">· {relative}</span>
           )}
           {selectedEvents.length > 0 && (
             <span className="text-sm text-base-content/45 ml-auto">
-              {selectedEvents.length} event
-              {selectedEvents.length === 1 ? "" : "s"}
+              {strings.formatString(
+                selectedEvents.length === 1
+                  ? strings.calendar.eventCount
+                  : strings.calendar.eventCountPlural,
+                { count: selectedEvents.length },
+              )}
             </span>
           )}
         </div>
@@ -180,7 +186,7 @@ function MonthNavActions({
         <button
           type="button"
           onClick={onPrev}
-          aria-label="Previous month"
+          aria-label={strings.calendar.previousMonth}
           className={navButtonClass}
         >
           <HiOutlineChevronLeft size={20} />
@@ -194,7 +200,7 @@ function MonthNavActions({
         <button
           type="button"
           onClick={onNext}
-          aria-label="Next month"
+          aria-label={strings.calendar.nextMonth}
           className={navButtonClass}
         >
           <HiOutlineChevronRight size={20} />
@@ -205,7 +211,7 @@ function MonthNavActions({
         onClick={onToday}
         className="inline-flex items-center px-3 h-8 rounded-full text-sm font-medium text-base-content/80 bg-base-200 hover:bg-base-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-colors"
       >
-        Today
+        {strings.calendar.today}
       </button>
     </>
   );
@@ -240,8 +246,8 @@ function dayKey(d: Date): string {
   return `${d.getFullYear()}-${prependZero(d.getMonth() + 1)}-${prependZero(d.getDate())}`;
 }
 
-function formatLongDate(d: Date): string {
-  return new Intl.DateTimeFormat("en-US", {
+function formatLongDate(d: Date, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     weekday: "long",
     month: "long",
     day: "numeric",
@@ -252,9 +258,9 @@ function relativeLabel(d: Date, today: Date): string | null {
   const diffDays = Math.round(
     (startOfDay(d).getTime() - today.getTime()) / 86_400_000,
   );
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Tomorrow";
-  if (diffDays === -1) return "Yesterday";
+  if (diffDays === 0) return strings.time.today;
+  if (diffDays === 1) return strings.time.tomorrow;
+  if (diffDays === -1) return strings.time.yesterday;
   return null;
 }
 
@@ -263,13 +269,13 @@ function emptyDayCopy(
   today: Date,
   noEventsAtAll: boolean,
 ): string {
-  if (noEventsAtAll) return "No events yet. Time to find one!";
+  if (noEventsAtAll) return strings.calendar.noEventsYet;
   const diff = Math.round(
     (startOfDay(selected).getTime() - today.getTime()) / 86_400_000,
   );
-  if (diff === 0) return "Nothing on today.";
-  if (diff > 0) return "Nothing planned for this day.";
-  return "No events on this day.";
+  if (diff === 0) return strings.calendar.nothingToday;
+  if (diff > 0) return strings.calendar.nothingPlanned;
+  return strings.calendar.noEventsOnDay;
 }
 
 export default CalendarPage;

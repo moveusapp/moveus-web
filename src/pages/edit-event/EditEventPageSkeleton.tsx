@@ -1,9 +1,10 @@
 import PageHeader from "@/components/layout/PageHeader";
+import strings from "@/translations/strings";
 
 function EditEventPageSkeleton() {
   return (
     <div className="min-h-full shrink-0 flex flex-col">
-      <PageHeader title="Edit Event">
+      <PageHeader title={strings.editEvent.title}>
         <div className="skeleton h-4 w-56 rounded mb-3" />
       </PageHeader>
 

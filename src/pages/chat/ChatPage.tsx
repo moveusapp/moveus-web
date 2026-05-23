@@ -8,9 +8,10 @@ import ChatView from "@/pages/chat/ChatView";
 import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
 import PageHeader from "@/components/layout/PageHeader";
+import strings from "@/translations/strings";
 
 function ChatPage() {
-  useDocumentTitle("Chats");
+  useDocumentTitle(strings.chat.documentTitle);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
@@ -152,7 +153,7 @@ function ChatPage() {
           <div className="flex-1 flex flex-col items-center justify-center gap-3 text-base-content/40">
             <HiOutlineChatBubbleLeftRight className="text-5xl" />
             <p className="text-base font-medium">
-              Pick a chat to start talking
+              {strings.chat.pickAChat}
             </p>
           </div>
         )}
@@ -163,7 +164,7 @@ function ChatPage() {
           selectedChatId ? "hidden lg:flex" : "flex"
         } flex-col w-full lg:w-[300px] xl:w-[340px] lg:flex-shrink-0 lg:border-l border-base-300 overflow-y-auto h-full`}
       >
-        <PageHeader title="Messages" />
+        <PageHeader title={strings.chat.title} />
         <div className="flex flex-col px-1 pt-2 pb-4">
           {!hasReceivedData ? (
             [...Array(8)].map((_, i) => (
@@ -181,10 +182,10 @@ function ChatPage() {
           ) : (
             <div className="px-3 py-8 text-center">
               <p className="text-sm text-base-content/50">
-                No conversations yet
+                {strings.chat.noConversations}
               </p>
               <p className="text-xs text-base-content/35 mt-1">
-                Find someone to start a conversation
+                {strings.chat.findSomeoneToStart}
               </p>
             </div>
           )}

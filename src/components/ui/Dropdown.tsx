@@ -1,3 +1,5 @@
+import strings from "@/translations/strings";
+
 interface DropdownProps<T> {
   label?: string;
   value: T | null;
@@ -15,7 +17,7 @@ function Dropdown<T = string>({
   value,
   setValue: onChange,
   options,
-  placeholder = "Select an option",
+  placeholder = strings.ui.selectAnOption,
   error,
   helperText,
   className = "",

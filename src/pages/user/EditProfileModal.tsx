@@ -12,6 +12,7 @@ import { enumToOptions } from "@/utils/enum-to-options";
 import { uploadProfilePicture } from "@/utils/upload";
 import { formatError } from "@/utils/format-error";
 import { useToast } from "@/context/toast-context";
+import strings from "@/translations/strings";
 import {
   AlterProfileBasicInfoDocument,
   ContextProfileFragment,
@@ -25,7 +26,7 @@ interface EditProfileModalProps {
   profile: ContextProfileFragment;
 }
 
-const genderOptions = enumToOptions(Gender);
+const genderOptions = enumToOptions(Gender, "enums.gender");
 
 function toDate(value: unknown): Date | null {
   if (!value) return null;
@@ -111,7 +112,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
           await uploadProfilePicture(apollo, selectedImage);
         } catch (err) {
           console.error(err);
-          setUploadError("Could not upload profile picture.");
+          setUploadError(strings.editProfile.couldNotUploadPicture);
           return;
         }
       }
@@ -133,7 +134,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
       });
 
       onClose();
-      toast.success("Profile updated.");
+      toast.success(strings.toast.profileUpdated);
     } catch (err) {
       console.error("Error updating profile:", err);
     }
@@ -148,12 +149,12 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
     <dialog open className="modal modal-open">
       <div className="modal-box max-w-xl">
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-bold">Edit profile</h3>
+          <h3 className="text-xl font-bold">{strings.editProfile.title}</h3>
           <button
             type="button"
             onClick={handleClose}
             className="btn btn-sm btn-circle btn-ghost"
-            aria-label="Close"
+            aria-label={strings.common.close}
           >
             <HiXMark className="w-5 h-5" />
           </button>
@@ -165,7 +166,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
               <label
                 htmlFor="profile-image"
                 className="group relative block cursor-pointer rounded-full focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:ring-offset-base-100"
-                aria-label="Change profile picture"
+                aria-label={strings.editProfile.changePictureAria}
               >
                 <div className="avatar">
                   <div className="relative w-20 h-20 rounded-full ring-1 ring-base-300 overflow-hidden">
@@ -196,7 +197,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
                   type="button"
                   onClick={removeImage}
                   className="absolute -top-1 -right-1 btn btn-xs btn-circle btn-error shadow"
-                  aria-label="Discard new photo"
+                  aria-label={strings.editProfile.discardPhotoAria}
                 >
                   <HiXMark className="w-3 h-3" />
                 </button>
@@ -205,14 +206,14 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
 
             <div className="grow grid grid-cols-1 sm:grid-cols-2 gap-x-4 w-full">
               <TextInput
-                label="First name"
+                label={strings.editProfile.firstName}
                 name="firstName"
                 value={firstName}
                 onChange={(e) => setFirstName(e.currentTarget.value)}
                 required
               />
               <TextInput
-                label="Last name"
+                label={strings.editProfile.lastName}
                 name="lastName"
                 value={lastName}
                 onChange={(e) => setLastName(e.currentTarget.value)}
@@ -222,22 +223,22 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
           </div>
 
           <TextArea
-            label="Bio"
+            label={strings.editProfile.bio}
             name="bio"
             value={bio}
             onChange={(e) => setBio(e.currentTarget.value)}
-            placeholder="Tell us something about yourself"
+            placeholder={strings.editProfile.bioPlaceholder}
             rows={4}
           />
 
-          <DateOfBirth label="Date of birth" dob={dob} setDob={setDob} />
+          <DateOfBirth label={strings.editProfile.dateOfBirth} dob={dob} setDob={setDob} />
 
           <Dropdown<Gender>
-            label="Gender"
+            label={strings.editProfile.gender}
             value={gender}
             setValue={setGender}
             options={genderOptions as { label: string; value: Gender }[]}
-            placeholder="Select gender"
+            placeholder={strings.editProfile.selectGender}
           />
 
           {errorMessage && <FormError message={errorMessage} />}
@@ -248,10 +249,10 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
               disabled={loading}
               className="btn-ghost"
             >
-              Cancel
+              {strings.common.cancel}
             </Button>
             <Button type="submit" loading={loading} className="btn-primary">
-              Save changes
+              {strings.editProfile.saveChanges}
             </Button>
           </div>
         </form>

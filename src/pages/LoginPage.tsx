@@ -9,9 +9,10 @@ import { HiArrowRight } from "react-icons/hi2";
 import Button from "@/components/ui/Button";
 import TextInput from "@/components/ui/TextInput";
 import { formatError } from "@/utils/format-error";
+import strings from "@/translations/strings";
 
 function LoginPage() {
-  useDocumentTitle("Login");
+  useDocumentTitle(strings.auth.loginTitle);
 
   const { setProfile } = useProfile();
 
@@ -45,27 +46,28 @@ function LoginPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-black tracking-tight leading-[1.05] mb-2">
-          Welcome <span className="text-primary">back</span>.
+          {strings.auth.welcomeBack}{" "}
+          <span className="text-primary">{strings.auth.welcomeBackHighlight}</span>.
         </h1>
         <p className="text-sm text-base-content/60">
-          Sign in and pick up where you left off.
+          {strings.auth.signInSubtitle}
         </p>
       </div>
 
       <form onSubmit={handleLogin} className="space-y-3">
         <TextInput
-          label="Email or username"
+          label={strings.auth.emailOrUsername}
           type="text"
-          placeholder="example@domain.com"
+          placeholder={strings.auth.emailOrUsernamePlaceholder}
           value={user}
           onChange={(e) => setUser(e.target.value)}
           required
         />
 
         <TextInput
-          label="Password"
+          label={strings.auth.password}
           type="password"
-          placeholder="Your password"
+          placeholder={strings.auth.passwordPlaceholder}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -83,13 +85,13 @@ function LoginPage() {
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             />
-            <span className="text-sm text-base-content/70">Remember me</span>
+            <span className="text-sm text-base-content/70">{strings.auth.rememberMe}</span>
           </label>
           <Link
             to="/forgot-password"
             className="text-sm text-primary hover:underline font-medium"
           >
-            Forgot password?
+            {strings.auth.forgotPassword}
           </Link>
         </div>
 
@@ -98,17 +100,17 @@ function LoginPage() {
           type="submit"
           className="btn-primary btn-lg w-full gap-2 btn-arrow !mt-7"
         >
-          Sign in
+          {strings.auth.signIn}
           <HiArrowRight className="w-5 h-5" />
         </Button>
 
         <p className="text-center text-sm text-base-content/60 !mt-8">
-          New to MoveUs?{" "}
+          {strings.auth.newToMoveUs}{" "}
           <Link
             to="/register"
             className="text-primary font-semibold hover:underline"
           >
-            Create an account
+            {strings.auth.createAccount}
           </Link>
         </p>
       </form>

@@ -1,5 +1,6 @@
 import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
 import { useState } from "react";
+import strings from "@/translations/strings";
 
 function UserAvatar({ userId, className }: UserImageProps) {
   const [image, setImage] = useState(
@@ -13,7 +14,7 @@ function UserAvatar({ userId, className }: UserImageProps) {
           <img
             src={image}
             className="aspect-square"
-            alt="User"
+            alt={strings.user.avatarAlt}
             onError={() => {
               setImage(defaultAvatar);
             }}
