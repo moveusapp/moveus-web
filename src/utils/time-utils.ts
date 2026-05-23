@@ -43,6 +43,11 @@ function ago(count: number, singular: string, plural: string): string {
   return strings.formatString(strings.time.ago, { count, unit }) as string;
 }
 
+export function ensureDateObject(value: Date | string | number): Date {
+  if (value instanceof Date) return value;
+  return new Date(value);
+}
+
 export function prependZero(number: number): string {
   if (number < 10) return "0" + number;
   return number + "";

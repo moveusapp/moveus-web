@@ -1,251 +1,192 @@
-import { Fragment, useCallback, useEffect, useMemo, useState, useRef } from "react";
-import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
+import {
+  Fragment,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   HiArrowLeft,
   HiUserGroup,
   HiOutlineChatBubbleOvalLeftEllipsis,
 } from "react-icons/hi2";
-
 import { useQuery, useSubscription } from "@apollo/client/react";
 import UserAvatar from "@/components/user/UserAvatar";
-import SendMessage from "@/pages/chat/SendMessage";
+import SendMessageComposer from "@/pages/chat/SendMessageComposer";
+import MessageBubble, { BubbleMember } from "@/pages/chat/MessageBubble";
+import { useChatMessages } from "@/pages/chat/use-chat-messages";
 import {
   ChatKind,
-  ChatMessagesDocument,
   GetChatDocument,
   LastOpenDocument,
-  WsChatMessageType,
 } from "@/graphql/graphql-types";
 import { setDocumentTitle } from "@/hooks/use-document-title";
+import { useProfile } from "@/context/profile-context";
 import { displayName } from "@/utils/display-name";
-import { prependZero } from "@/utils/time-utils";
+import { ensureDateObject } from "@/utils/time-utils";
 import strings from "@/translations/strings";
 
-const ensureDateObject = (value: any): Date => {
-  if (value instanceof Date) return value;
-  return new Date(value);
-};
+const NEAR_BOTTOM_PX = 80;
 
 function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
-  const { data, loading } = useQuery(GetChatDocument, {
+  const { profile } = useProfile();
+  const { data, loading: chatLoading } = useQuery(GetChatDocument, {
     variables: { chatId },
   });
 
-  type LocalMessage = WsChatMessageType & { _clientKey?: number };
-  const [messages, setMessages] = useState<LocalMessage[]>([]);
-  const clientKeyRef = useRef(0);
-  const [lastOpens, setLastOpens] = useState<Map<number, Date>>(new Map());
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const chat = useMemo(() => data?.chat, [data]);
-
-  const members = useMemo(() => {
-    if (!chat?.members) return [];
-    return chat.members.filter(Boolean);
-  }, [chat]);
-
-  const memberIds = useMemo(
-    () => new Set(members.map((m) => m!.user.id)),
-    [members],
+  const chat = data?.chat;
+  const members = useMemo(
+    () => (chat?.members ?? []).filter(Boolean) as BubbleMember[],
+    [chat?.members],
   );
-
+  const memberById = useMemo(() => {
+    const map = new Map<number, BubbleMember>();
+    for (const m of members) {
+      if (m.user.id != null) map.set(m.user.id, m);
+    }
+    return map;
+  }, [members]);
   const isGroup = chat?.kind === ChatKind.Group;
 
-  // Set document title based on chat type and members
+  const { messages, send } = useChatMessages(chat?.id ?? undefined);
+
+  const [lastOpens, setLastOpens] = useState<Map<number, Date>>(new Map());
+  useSubscription(LastOpenDocument, {
+    variables: { chatId: chat?.id ?? 0 },
+    skip: !chat?.id,
+    onData: ({ data: { data: payload } }) => {
+      if (!payload?.chatLastOpen) return;
+      setLastOpens((prev) => {
+        const next = new Map(prev);
+        for (const entry of payload.chatLastOpen!) {
+          if (entry?.userId != null && memberById.has(entry.userId)) {
+            next.set(entry.userId, ensureDateObject(entry.lastOpen));
+          }
+        }
+        return next;
+      });
+    },
+  });
+
   useEffect(() => {
     if (!chat) return;
     if (isGroup) {
       if (chat.groupName) {
         setDocumentTitle(`${chat.groupName}${strings.chat.chatTitleSuffix}`);
-      } else {
-        const names = members
-          .slice(0, 3)
-          .map((m) => m!.user.firstName || m!.user.username);
-        const label =
-          members.length > 3
-            ? `${names.join(", ")} +${members.length - 3}`
-            : names.join(", ");
-        setDocumentTitle(`${label}${strings.chat.chatTitleSuffix}`);
+        return;
       }
-    } else if (members.length > 0) {
-      const m = members[0]!;
+      const names = members
+        .slice(0, 3)
+        .map((m) => m.user.firstName || m.user.username);
+      const label =
+        members.length > 3
+          ? `${names.join(", ")} +${members.length - 3}`
+          : names.join(", ");
+      setDocumentTitle(`${label}${strings.chat.chatTitleSuffix}`);
+      return;
+    }
+    if (members.length > 0) {
+      const m = members[0];
       setDocumentTitle(
         `${displayName(m.user.username, m.user.firstName, m.user.lastName)}${strings.chat.chatTitleSuffix}`,
       );
     }
   }, [chat, members, isGroup]);
 
-  const { data: messageSubData } = useSubscription(
-    ChatMessagesDocument,
-    {
-      variables: { chatId: chat?.id! },
-      skip: !chat?.id,
-    },
-  );
-
-  const { data: lastOpenData } = useSubscription(
-    LastOpenDocument,
-    {
-      variables: { chatId: chat?.id! },
-      skip: !chat?.id,
-    },
-  );
-
-  const addNewMessage = useCallback(
-    (message: WsChatMessageType) => {
-      const clientKey = ++clientKeyRef.current;
-      setMessages((p) => [
-        ...p,
-        {
-          ...message,
-          timeSent: ensureDateObject(message.timeSent),
-          _clientKey: clientKey,
-        },
-      ]);
-      return () =>
-        setMessages((p) => p.filter((m) => m._clientKey !== clientKey));
-    },
-    [setMessages],
-  );
-
-  useEffect(() => {
-    if (Array.isArray(messageSubData?.chatMessages)) {
-      setMessages((p) => [
-        ...p.filter((m) => m.id !== null),
-        ...(messageSubData!.chatMessages as any).map((msg: any) => ({
-          ...msg,
-          timeSent: ensureDateObject(msg.timeSent),
-        })),
-      ]);
-    }
-  }, [messageSubData, setMessages]);
-
-  useEffect(() => {
-    if (lastOpenData?.chatLastOpen) {
-      setLastOpens((prev) => {
-        const next = new Map(prev);
-        for (const entry of lastOpenData.chatLastOpen!) {
-          if (entry?.userId && memberIds.has(entry.userId)) {
-            next.set(entry.userId, ensureDateObject(entry.lastOpen));
-          }
-        }
-        return next;
-      });
-    }
-  }, [lastOpenData, memberIds]);
-
-  const hasScrolledRef = useRef(false);
-
-  useEffect(() => {
-    if (!messagesEndRef.current) return;
-    messagesEndRef.current.scrollIntoView("instant" as ScrollIntoViewOptions);
-    hasScrolledRef.current = true;
-  }, [messages, loading]);
-
-  // For 1-on-1 chats, check if the single member has read a message
-  const hasBeenRead = (message: WsChatMessageType) => {
-    if (isGroup) return false;
-    const memberLastOpen = lastOpens.get(members[0]!.user.id!);
-    if (!memberLastOpen) return false;
-    return memberLastOpen.getTime() > message.timeSent!.getTime();
-  };
-
-  const getMemberForMessage = (userId: number) =>
-    members.find((m) => m!.user.id === userId);
-
   const headerTitle = useMemo(() => {
     if (isGroup && chat?.groupName) return chat.groupName;
     if (members.length === 0) return "";
     if (!isGroup) {
-      const m = members[0]!;
+      const m = members[0];
       return displayName(m.user.username, m.user.firstName, m.user.lastName);
     }
     const names = members
       .slice(0, 4)
       .map((m) =>
-        displayName(m!.user.username, m!.user.firstName, m!.user.lastName),
+        displayName(m.user.username, m.user.firstName, m.user.lastName),
       );
     return members.length > 4
       ? `${names.join(", ")} +${members.length - 4}`
       : names.join(", ");
   }, [members, isGroup, chat?.groupName]);
 
-  const formatTime = (date: Date) =>
-    `${prependZero(date.getHours())}:${prependZero(date.getMinutes())}`;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const nearBottomRef = useRef(true);
+  const previousTailKeyRef = useRef<string | null>(null);
 
-  let lastDate = new Date("1971-01-01");
+  const tailKey = messages[messages.length - 1]?.clientKey ?? null;
+  const tailUserId = messages[messages.length - 1]?.userId ?? null;
 
+  useLayoutEffect(() => {
+    const container = scrollContainerRef.current;
+    const end = messagesEndRef.current;
+    if (!container || !end) return;
+
+    const tailChanged = tailKey !== previousTailKeyRef.current;
+    const ownJustSent =
+      tailChanged && tailUserId !== null && tailUserId === profile?.id;
+    const firstLoad = previousTailKeyRef.current === null;
+
+    previousTailKeyRef.current = tailKey;
+
+    if (!tailChanged && !firstLoad) return;
+    if (firstLoad || ownJustSent || nearBottomRef.current) {
+      end.scrollIntoView({ block: "end" });
+    }
+  }, [tailKey, tailUserId, profile?.id]);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const onScroll = () => {
+      const distance =
+        container.scrollHeight - container.scrollTop - container.clientHeight;
+      nearBottomRef.current = distance <= NEAR_BOTTOM_PX;
+    };
+    onScroll();
+    container.addEventListener("scroll", onScroll, { passive: true });
+    return () => container.removeEventListener("scroll", onScroll);
+  }, [chat?.id]);
+
+  const hasBeenRead = (timeSent: Date): boolean => {
+    if (isGroup) return false;
+    const other = members[0];
+    if (!other?.user.id) return false;
+    const open = lastOpens.get(other.user.id);
+    return !!open && open.getTime() > timeSent.getTime();
+  };
+
+  let lastDateString = "";
   const messageElements = messages.map((message) => {
-    const showDate =
-      message.timeSent!.toDateString() !== lastDate.toDateString();
-    lastDate = message.timeSent!;
+    const dateString = message.timeSent.toDateString();
+    const showDate = dateString !== lastDateString;
+    lastDateString = dateString;
 
-    const isOtherUser = memberIds.has(message.userId!);
-    const chatAlignment = isOtherUser ? "chat-start" : "chat-end";
+    const isOwn = message.userId === profile?.id;
+    const author = !isOwn ? memberById.get(message.userId) ?? null : null;
 
     return (
-      <Fragment key={message.id}>
+      <Fragment key={message.clientKey}>
         {showDate && (
           <div className="divider text-base-content/50 text-xs font-medium">
-            {message.timeSent!.toDateString()}
+            {dateString}
           </div>
         )}
-        <div className={`chat ${chatAlignment}`}>
-          {isOtherUser && (
-            <div className="chat-image">
-              <UserAvatar
-                userId={message.userId!}
-                className="w-8 h-8 rounded-full"
-              />
-            </div>
-          )}
-          {isGroup && isOtherUser && (
-            <div className="chat-header text-xs font-medium mb-0.5">
-              {(() => {
-                const m = getMemberForMessage(message.userId!);
-                return m
-                  ? displayName(
-                      m.user.username,
-                      m.user.firstName,
-                      m.user.lastName,
-                    )
-                  : "";
-              })()}
-            </div>
-          )}
-          <div
-            className={`chat-bubble wrap-break-word ${
-              isOtherUser
-                ? "bg-base-200 text-base-content"
-                : "chat-bubble-primary"
-            }`}
-          >
-            {message.textContent && <p>{message.textContent}</p>}
-            {message.attachmentUrl && (
-              <img
-                src={message.attachmentUrl}
-                alt=""
-                className="rounded-xl max-w-xs mt-1"
-              />
-            )}
-          </div>
-          <div className="chat-footer text-xs text-base-content/40 mt-0.5">
-            <span>{formatTime(message.timeSent!)}</span>
-            {!isOtherUser &&
-              (hasBeenRead(message) ? (
-                <RiCheckDoubleLine className="inline ml-1 text-primary" />
-              ) : (
-                <RiCheckLine
-                  className={`inline ml-1 ${
-                    message.id === null ? "text-base-content/30" : ""
-                  }`}
-                />
-              ))}
-          </div>
-        </div>
+        <MessageBubble
+          message={message}
+          isOwn={isOwn}
+          showAuthor={isGroup && !isOwn}
+          author={author}
+          hasBeenRead={isOwn ? hasBeenRead(message.timeSent) : false}
+        />
       </Fragment>
     );
   });
+
+  const showEmptyState =
+    !chatLoading && messages.length === 0 && chat?.lastMessage == null;
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
@@ -256,6 +197,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
               <button
                 className="btn btn-ghost btn-sm btn-circle lg:hidden"
                 onClick={onBack}
+                aria-label={strings.common.back}
               >
                 <HiArrowLeft className="text-lg" />
               </button>
@@ -266,7 +208,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
               </div>
             ) : (
               <UserAvatar
-                userId={members[0]!.user.id!}
+                userId={members[0].user.id!}
                 className="w-10 h-10 rounded-full"
               />
             )}
@@ -276,7 +218,9 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
               </h2>
               {isGroup && (
                 <p className="text-xs text-base-content/50">
-                  {strings.formatString(strings.chat.members, { count: members.length })}
+                  {strings.formatString(strings.chat.members, {
+                    count: members.length,
+                  })}
                 </p>
               )}
             </div>
@@ -284,28 +228,28 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
         )}
       </nav>
 
-      {loading ? (
+      {chatLoading ? (
         <div className="flex-1 flex flex-col justify-center items-center">
           <div className="loading loading-dots text-primary" />
         </div>
       ) : (
         <>
-          <div className="flex-1 overflow-y-auto px-4 py-2">
-            {messages.length === 0 && chat?.lastMessage == null ? (
+          <div
+            ref={scrollContainerRef}
+            className="flex-1 overflow-y-auto px-4 py-2"
+          >
+            {showEmptyState ? (
               <div className="h-full flex flex-col items-center justify-center gap-3 text-center px-6 py-10 text-base-content/40">
                 <HiOutlineChatBubbleOvalLeftEllipsis className="text-5xl" />
                 <p className="text-base font-medium text-base-content/60">
                   {isGroup
                     ? strings.chat.emptyChatHeadingGroup
-                    : strings.formatString(
-                        strings.chat.emptyChatHeading1on1,
-                        {
-                          name:
-                            members[0]?.user.firstName ||
-                            members[0]?.user.username ||
-                            "",
-                        },
-                      )}
+                    : strings.formatString(strings.chat.emptyChatHeading1on1, {
+                        name:
+                          members[0]?.user.firstName ||
+                          members[0]?.user.username ||
+                          "",
+                      })}
                 </p>
                 <p className="text-sm text-base-content/40 max-w-xs leading-snug">
                   {isGroup
@@ -319,7 +263,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
             <div ref={messagesEndRef} />
           </div>
           <div className="flex-shrink-0 p-3">
-            <SendMessage chatId={chat?.id!} addMessage={addNewMessage} />
+            <SendMessageComposer onSend={send} />
           </div>
         </>
       )}
