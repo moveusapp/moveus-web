@@ -5,19 +5,28 @@ import UserProgressWidget from "@/components/widgets/UserProgressWidget";
 import UserActivityWidget from "@/components/widgets/UserActivityWidget";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { useQuery } from "@apollo/client/react";
-import { GetHomeEventsDocument } from "@/graphql/graphql-types";
+import { GetMyFeedDocument } from "@/graphql/graphql-types";
 import strings from "@/translations/strings";
 import { useProfile } from "@/context/profile-context";
-import { FaSadTear } from "react-icons/fa";
 import EventCardSkeleton from "@/components/event/EventCardSkeleton";
 import PageHeader from "@/components/layout/PageHeader";
 import FeedbackReminder from "@/pages/home/FeedbackReminder";
 import CreatePostComposer from "@/pages/home/CreatePostComposer";
+import PostCard from "@/components/post/PostCard";
+import PostCardSkeleton from "@/components/post/PostCardSkeleton";
+import { useMemo } from "react";
 
 function HomePage() {
   useDocumentTitle(strings.home.documentTitle);
 
-  const { data, loading } = useQuery(GetHomeEventsDocument);
+  const { data, loading } = useQuery(GetMyFeedDocument, {
+    variables: { start: 0, end: 50 },
+  });
+
+  const skeletonTypes = useMemo(
+    () => Array.from({ length: 12 }, () => (Math.random() < 0.5 ? "event" : "post")),
+    [],
+  );
   const { profile } = useProfile();
   const profileName = !profile?.firstName
     ? profile?.username!
@@ -33,17 +42,35 @@ function HomePage() {
           <FeedbackReminder />
           <CreatePostComposer />
           {loading ? (
-            [...Array(12)].map((_, index) => (
-              <EventCardSkeleton key={`event-skeleton-${index}`} />
-            ))
+            skeletonTypes.map((type, index) =>
+              type === "event" ? (
+                <EventCardSkeleton key={`feed-skeleton-${index}`} />
+              ) : (
+                <PostCardSkeleton key={`feed-skeleton-${index}`} />
+              ),
+            )
           ) : (
             <>
-              {data?.myRecommendedEvents?.map((event) => (
-                <EventCard
-                  key={`event-recommended-${event?.id}`}
-                  event={event!}
-                />
-              ))}
+              {data?.myFeed?.map((item) => {
+                if (!item) return null;
+                if (item.__typename === "EventType") {
+                  return (
+                    <EventCard
+                      key={`feed-event-${item.id}`}
+                      event={item}
+                    />
+                  );
+                }
+                if (item.__typename === "PostType") {
+                  return (
+                    <PostCard
+                      key={`feed-post-${item.id}`}
+                      post={item}
+                    />
+                  );
+                }
+                return null;
+              })}
             </>
           )}
         </div>

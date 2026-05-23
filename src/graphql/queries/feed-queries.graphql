@@ -1,5 +1,11 @@
-query GetHomeEvents {
-  myRecommendedEvents {
-    ...EventCard
+query GetMyFeed($start: Int!, $end: Int!) {
+  myFeed(start: $start, end: $end) {
+    __typename
+    ... on EventType {
+      ...EventCard
+    }
+    ... on PostType {
+      ...PostCard
+    }
   }
 }
