@@ -225,6 +225,7 @@ export function useChatMessages(chatId: number | undefined) {
         try {
           const result = await apolloClient.query({
             query: GetAttachmentUploadUrlDocument,
+            variables: { contentType: image.type },
           });
           const newAttachment = result.data?.newAttachment;
           if (!newAttachment?.id || !newAttachment?.url) {

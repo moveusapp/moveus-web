@@ -17,8 +17,8 @@ query GetChat($chatId: Int!) {
   }
 }
 
-query GetAttachmentUploadURL {
-  newAttachment {
+query GetAttachmentUploadURL($contentType: String!) {
+  newAttachment(contentType: $contentType) {
     id
     url
   }

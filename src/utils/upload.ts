@@ -10,7 +10,10 @@ export async function putFileToSignedUrl(
   const res = await fetch(url, {
     method: "PUT",
     body: blob,
-    headers: { "cache-control": "must-revalidate" },
+    headers: {
+      "cache-control": "must-revalidate",
+      "content-type": file.type,
+    },
   });
   if (!res.ok) {
     throw new Error(`Upload failed with status ${res.status}`);
@@ -23,6 +26,7 @@ export async function uploadProfilePicture(
 ): Promise<void> {
   const { data } = await apollo.query({
     query: GetProfilePictureUploadUrlDocument,
+    variables: { contentType: file.type },
     fetchPolicy: "network-only",
   });
   const uploadUrl = data?.profilePictureUrl;

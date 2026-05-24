@@ -91,16 +91,18 @@ function CreatePostModal({
         variables: {
           eventId,
           content,
+          withPicture: !!selectedImage,
+          contentType: selectedImage?.type,
         },
       });
 
       const post = result.data?.createPost?.post;
 
       let imageFailed = false;
-      if (selectedImage && post?.imageUploadUrl) {
+      if (selectedImage && post?.postPictureUrl) {
         setUploading(true);
         try {
-          await putFileToSignedUrl(post.imageUploadUrl, selectedImage);
+          await putFileToSignedUrl(post.postPictureUrl, selectedImage);
         } catch (err) {
           console.error("Error uploading image:", err);
           imageFailed = true;

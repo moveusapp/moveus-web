@@ -4,8 +4,8 @@ query GetMyProfile {
     }
 }
 
-query GetProfilePictureUploadURL {
-  profilePictureUrl
+query GetProfilePictureUploadURL($contentType: String!) {
+  profilePictureUrl(contentType: $contentType)
 }
 
 query GetNotifications {
