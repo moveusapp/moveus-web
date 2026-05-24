@@ -25,7 +25,7 @@ mutation AlterProfileBasicInfo(
 }
 
 mutation AlterProfileSurveyInfo(
-  $frequencyOfPhysicalActivity: FrequencyOfPhycicalActivity
+  $frequencyOfPhysicalActivity: FrequencyOfPhysicalActivity
   $socialInteractionImportance: SocialInteractionImportance
   $preferredPartySize: PreferredPartySize
   $formedRelationshipKinds: [FormedRelationshipsKind]

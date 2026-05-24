@@ -19,7 +19,7 @@ mutation CreatePost($content: String!, $eventId: Int) {
   createPost(content: $content, eventId: $eventId) {
     post {
       id
-      imageUploadUrl
+      postPictureUrl
     }
   }
 }
