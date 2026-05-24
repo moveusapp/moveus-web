@@ -744,25 +744,5 @@
   .lp-carousel-arrow { display: none; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .lp-carousel-track { scroll-behavior: auto; }
-  .lp-carousel-arrow { transition: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .lp-hero-logo-tilt,
-  .lp-hero-logo-breathe,
-  .lp-hero-logo-enter,
-  .lp-hero-logo-shadow,
-  .lp-hero-kicker,
-  .lp-hero-tagline,
-  .lp-hero-ctas,
-  .lp-hero-scroll-lift,
-  .lp-strip,
-  .lp-stk {
-    animation: none !important;
-    transition: none !important;
-  }
-  .lp-strip,
-  .lp-stk { opacity: 1 !important; }
-}
+/* Landing page intentionally ignores prefers-reduced-motion: the brand
+   personality depends on the motion. Other surfaces still honor the OS setting. */
