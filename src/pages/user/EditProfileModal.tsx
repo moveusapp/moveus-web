@@ -26,8 +26,6 @@ interface EditProfileModalProps {
   profile: ContextProfileFragment;
 }
 
-const genderOptions = enumToOptions(Gender, "enums.gender");
-
 function toDate(value: unknown): Date | null {
   if (!value) return null;
   if (value instanceof Date) return value;
@@ -60,6 +58,8 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
   const [bio, setBio] = useState(profile.bio ?? "");
   const [gender, setGender] = useState<Gender | null>(toGender(profile.gender));
   const [dob, setDob] = useState<Date | null>(toDate(profile.dateOfBirth));
+
+  const genderOptions = enumToOptions(Gender, "enums.gender");
 
   const initialAvatar = `${import.meta.env.VITE_BUCKET_URL}/profile-pictures/${profile.id}`;
   const [avatarSrc, setAvatarSrc] = useState(initialAvatar);

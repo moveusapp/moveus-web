@@ -8,11 +8,6 @@ const dayOptions = Array.from({ length: 31 }, (_, i) => ({
   value: i + 1,
 }));
 
-const monthOptions = getMonthNames().map((name, i) => ({
-  label: name,
-  value: i + 1,
-}));
-
 const maxYear = new Date().getFullYear() - 18;
 const yearOptions = Array.from({ length: 82 }, (_, i) => ({
   label: String(maxYear - i),
@@ -41,6 +36,11 @@ function DateOfBirth({
     dob ? dob.getMonth() + 1 : null,
   );
   const [year, setYear] = useState<number | null>(dob?.getFullYear() ?? null);
+
+  const monthOptions = getMonthNames().map((name, i) => ({
+    label: name,
+    value: i + 1,
+  }));
 
   const validationError = useMemo(() => {
     if (!day || !month || !year) return "";
