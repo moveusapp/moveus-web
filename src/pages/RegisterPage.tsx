@@ -7,11 +7,8 @@ import {
 } from "@/graphql/graphql-types";
 import { useProfile } from "@/context/profile-context";
 import { setStoredProfile } from "@/utils/auth";
-import {
-  usernameValidator,
-  usernameTaken,
-} from "@/utils/validators/username-validator";
-import { emailTaken, emailValidator } from "@/utils/validators/email-validator";
+import { usernameValidator } from "@/utils/validators/username-validator";
+import { emailValidator } from "@/utils/validators/email-validator";
 import { passwordValidator } from "@/utils/validators/password-validator";
 import { useMutation } from "@apollo/client/react";
 import { HiArrowRight } from "react-icons/hi2";
@@ -58,21 +55,11 @@ function RegisterPage() {
     const emailValidationError = emailValidator(email);
     if (emailValidationError) {
       newErrors.email = emailValidationError;
-    } else {
-      const isEmailTaken = await emailTaken(email);
-      if (isEmailTaken) {
-        newErrors.email = strings.auth.emailAlreadyRegistered;
-      }
     }
 
     const usernameValidationError = usernameValidator(username);
     if (usernameValidationError) {
       newErrors.username = usernameValidationError;
-    } else {
-      const isUsernameTaken = await usernameTaken(username);
-      if (isUsernameTaken) {
-        newErrors.username = strings.auth.usernameAlreadyTaken;
-      }
     }
 
     const passwordValidationError = passwordValidator(password);
