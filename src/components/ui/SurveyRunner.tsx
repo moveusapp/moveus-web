@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useApolloClient } from "@apollo/client/react";
 import { HiArrowLeft, HiArrowRight, HiCheck } from "react-icons/hi";
 import { QuestionKind, Question, Survey } from "@/surveys/types";
 import { uploadProfilePicture } from "@/utils/upload";
+import { formatError } from "@/utils/format-error";
 import QuestionRenderer, { isValid } from "./QuestionRenderer";
 import FormError from "./FormError";
 import strings from "@/translations/strings";
@@ -41,7 +42,7 @@ function answerKey(q: Question<any>) {
 function SurveyRunner({ survey }: Props) {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, any>>({});
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const apollo = useApolloClient();
@@ -49,6 +50,7 @@ function SurveyRunner({ survey }: Props) {
     survey.mutation,
   );
   const loading = mutationLoading || uploading;
+  const errorRef = useRef<HTMLDivElement | null>(null);
 
   const total = survey.questions.length;
   const question = survey.questions[index];
@@ -58,7 +60,10 @@ function SurveyRunner({ survey }: Props) {
   const isLast = index === total - 1;
   const canAdvance = isValid(question, value) && !loading;
 
-  const setValue = (v: any) => setAnswers((a) => ({ ...a, [key]: v }));
+  const setValue = (v: any) => {
+    setSubmitError(null);
+    setAnswers((a) => ({ ...a, [key]: v }));
+  };
 
   const handleNext = async () => {
     if (!canAdvance) return;
@@ -66,29 +71,40 @@ function SurveyRunner({ survey }: Props) {
       setIndex((i) => i + 1);
       return;
     }
-    setUploadError(null);
-    try {
-      const picture = answers[QuestionKind.ProfilePicture] as File | undefined;
-      if (picture instanceof File) {
-        setUploading(true);
-        try {
-          await uploadProfilePicture(apollo, picture);
-        } catch (err) {
-          console.error(err);
-          setUploadError(strings.validation.profilePictureUploadFailed);
-          return;
-        } finally {
-          setUploading(false);
-        }
+    setSubmitError(null);
+    const picture = answers[QuestionKind.ProfilePicture] as File | undefined;
+    if (picture instanceof File) {
+      setUploading(true);
+      try {
+        await uploadProfilePicture(apollo, picture);
+      } catch (err) {
+        console.error(err);
+        setSubmitError(strings.validation.profilePictureUploadFailed);
+        return;
+      } finally {
+        setUploading(false);
       }
+    }
+    try {
       await runMutation({ variables: buildVariables(survey, answers) });
-      navigate(survey.onFinishedRoute);
     } catch (err) {
       console.error(err);
+      setSubmitError(formatError(err));
+      return;
     }
+    navigate(survey.onFinishedRoute);
   };
 
-  const handleBack = () => setIndex((i) => Math.max(0, i - 1));
+  const handleBack = () => {
+    setSubmitError(null);
+    setIndex((i) => Math.max(0, i - 1));
+  };
+
+  useEffect(() => {
+    if (submitError && errorRef.current) {
+      errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [submitError]);
 
   return (
     <div className="min-h-full flex flex-col py-8 px-5 max-w-2xl mx-auto w-full">
@@ -125,9 +141,9 @@ function SurveyRunner({ survey }: Props) {
           value={value}
           onChange={setValue}
         />
-        {uploadError && isLast && (
+        {submitError && isLast && (
           <div className="mt-4">
-            <FormError message={uploadError} />
+            <FormError ref={errorRef} message={submitError} />
           </div>
         )}
       </div>
