@@ -33,6 +33,9 @@ function MessageBubble({
   const bubbleClass = isOwn
     ? "chat-bubble-primary"
     : "bg-base-200 text-base-content";
+  const roundedClass = isOwn
+    ? "rounded-tl-2xl! rounded-tr-2xl! rounded-bl-2xl!"
+    : "rounded-tl-2xl! rounded-tr-2xl! rounded-br-2xl!";
 
   return (
     <div className={`chat ${alignment}`}>
@@ -53,7 +56,7 @@ function MessageBubble({
           )}
         </div>
       )}
-      <div className={`chat-bubble wrap-break-word ${bubbleClass}`}>
+      <div className={`chat-bubble wrap-break-word ${roundedClass} ${bubbleClass}`}>
         {message.textContent && <p>{message.textContent}</p>}
         {message.attachmentUrl && (
           <img
