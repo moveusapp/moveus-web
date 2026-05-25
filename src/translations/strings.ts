@@ -1,6 +1,6 @@
 import LocalizedStrings from "react-localization";
-import en from "./en.json";
-import hr from "./hr.json";
+// Type-only import — TS strips this, so the JSON does NOT land in the eager bundle.
+import type EnContent from "./en.json";
 
 export enum Locale {
   EN = "en",
@@ -10,10 +10,17 @@ export enum Locale {
 const STORAGE_KEY = "moveus-language";
 const DEFAULT_LOCALE: Locale = Locale.EN;
 
-const strings = new LocalizedStrings({
-  en: en,
-  hr: hr,
-});
+type LocaleContent = typeof EnContent;
+
+const loaders: Record<Locale, () => Promise<LocaleContent>> = {
+  [Locale.EN]: () => import("./en.json").then((m) => m.default as LocaleContent),
+  [Locale.HR]: () => import("./hr.json").then((m) => m.default as LocaleContent),
+};
+
+const loaded: Partial<Record<Locale, LocaleContent>> = {};
+
+// Single stable instance; content is seeded on demand via loadLocale().
+const strings = new LocalizedStrings<LocaleContent>({ en: {} as LocaleContent });
 
 export function getStoredLocale(): Locale {
   try {
@@ -26,22 +33,29 @@ export function getStoredLocale(): Locale {
 }
 
 function apply(locale: Locale): void {
+  strings.setContent(loaded as Record<string, LocaleContent>);
   strings.setLanguage(locale);
   if (typeof document !== "undefined") {
     document.documentElement.setAttribute("lang", locale);
   }
 }
 
-/** Apply the locale to react-localization, persist to localStorage, set <html lang>. */
-export function setLocale(locale: Locale): void {
+/** Fetch a locale chunk (if not already loaded) and activate it. */
+export async function loadLocale(locale: Locale): Promise<void> {
+  if (!loaded[locale]) {
+    loaded[locale] = await loaders[locale]();
+  }
   apply(locale);
+}
+
+/** Activate a locale and persist the choice. */
+export async function setLocale(locale: Locale): Promise<void> {
+  await loadLocale(locale);
   try {
     localStorage.setItem(STORAGE_KEY, locale);
   } catch {
     // storage unavailable
   }
 }
-
-apply(getStoredLocale());
 
 export default strings;

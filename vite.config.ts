@@ -19,7 +19,9 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ["react", "react-dom", "react-router-dom"],
-          apollo: ["@apollo/client", "graphql", "graphql-ws"],
+          apollo: ["@apollo/client"],
+          graphql: ["graphql", "graphql-ws", "graphql-tag"],
+          rxjs: ["rxjs"],
         },
       },
     },

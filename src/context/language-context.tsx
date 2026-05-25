@@ -18,8 +18,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLanguage = (next: Locale) => {
     if (next === language) return;
-    setLocale(next);
-    setLanguageState(next);
+    void setLocale(next).then(() => setLanguageState(next));
   };
 
   return (
