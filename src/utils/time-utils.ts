@@ -48,6 +48,14 @@ export function ensureDateObject(value: Date | string | number): Date {
   return new Date(value);
 }
 
+/** Like `new Date(value)` but returns null for nullish input or invalid dates. */
+export function parseDateOrNull(value: unknown): Date | null {
+  if (value == null) return null;
+  if (value instanceof Date) return isNaN(value.getTime()) ? null : value;
+  const d = new Date(value as string);
+  return isNaN(d.getTime()) ? null : d;
+}
+
 export function prependZero(number: number): string {
   if (number < 10) return "0" + number;
   return number + "";

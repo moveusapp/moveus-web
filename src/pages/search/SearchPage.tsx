@@ -9,7 +9,7 @@ import { useLazyQuery } from "@apollo/client/react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import EventCard from "../../components/event/EventCard";
-import UserCard from "@/components/user/UserCard";
+import UserCard from "./UserCard";
 import { useProfile } from "@/context/profile-context";
 import PostCard from "@/components/post/PostCard";
 import TabButtons from "@/components/ui/TabButtons";

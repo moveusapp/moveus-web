@@ -11,6 +11,7 @@ import DateOfBirth from "@/components/ui/DateOfBirth";
 import FormError from "@/components/ui/FormError";
 import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
 import { enumToOptions } from "@/utils/enum-to-options";
+import { dayKey, parseDateOrNull } from "@/utils/time-utils";
 import { uploadProfilePicture } from "@/utils/upload";
 import { formatError } from "@/utils/format-error";
 import { useToast } from "@/context/toast-context";
@@ -28,24 +29,10 @@ interface EditProfileModalProps {
   profile: ContextProfileFragment;
 }
 
-function toDate(value: unknown): Date | null {
-  if (!value) return null;
-  if (value instanceof Date) return value;
-  const d = new Date(value as string);
-  return isNaN(d.getTime()) ? null : d;
-}
-
 function toGender(value: string | null | undefined): Gender | null {
   if (!value) return null;
   const match = (Object.values(Gender) as string[]).find((g) => g === value);
   return (match as Gender) ?? null;
-}
-
-function formatDateForApi(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
 }
 
 function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
@@ -59,7 +46,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
   const [lastName, setLastName] = useState(profile.lastName ?? "");
   const [bio, setBio] = useState(profile.bio ?? "");
   const [gender, setGender] = useState<Gender | null>(toGender(profile.gender));
-  const [dob, setDob] = useState<Date | null>(toDate(profile.dateOfBirth));
+  const [dob, setDob] = useState<Date | null>(parseDateOrNull(profile.dateOfBirth));
 
   const genderOptions = enumToOptions(Gender, "enums.gender");
 
@@ -80,7 +67,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
     setLastName(profile.lastName ?? "");
     setBio(profile.bio ?? "");
     setGender(toGender(profile.gender));
-    setDob(toDate(profile.dateOfBirth));
+    setDob(parseDateOrNull(profile.dateOfBirth));
     removeImage();
     setUploadError(null);
     setAvatarSrc(initialAvatar);
@@ -111,7 +98,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
           firstName,
           lastName,
           bio,
-          dateOfBirth: dob ? formatDateForApi(dob) : null,
+          dateOfBirth: dob ? dayKey(dob) : null,
           gender,
         },
         // The mutation returns ProfileType, but the user page reads UserType.

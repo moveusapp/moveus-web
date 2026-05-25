@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { HiXMark, HiOutlineStar } from "react-icons/hi2";
 import { EventFragment } from "@/graphql/graphql-types";
 import UserAvatar from "@/components/user/UserAvatar";
-import { RatingBadge, ratingIndex } from "@/components/event/RatingFaces";
+import RatingBadge from "@/components/event/RatingBadge";
+import { ratingIndex } from "@/components/event/rating-options";
 import { displayName } from "@/utils/display-name";
 import strings from "@/translations/strings";
 

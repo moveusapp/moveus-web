@@ -1,4 +1,5 @@
-import { RATING_OPTIONS, RatingBadge } from "@/components/event/RatingFaces";
+import RatingBadge from "@/components/event/RatingBadge";
+import { RATING_OPTIONS } from "@/components/event/rating-options";
 import strings from "@/translations/strings";
 
 interface EventScoreProps {

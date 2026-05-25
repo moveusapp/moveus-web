@@ -17,6 +17,7 @@ import {
   SkillLevel,
 } from "@/graphql/graphql-types";
 import { enumToOptions } from "@/utils/enum-to-options";
+import { validateEventForm } from "@/utils/validate-event-form";
 import strings from "@/translations/strings";
 
 export type EventFormValues = {
@@ -35,18 +36,6 @@ export type EventFormValues = {
   acceptedGenders: GenderNoPnts[];
   allowSpectators: boolean;
 };
-
-function validate(values: EventFormValues, isCreate: boolean): string | null {
-  if (!values.title.trim()) return strings.event.validation.needTitle;
-  if (!values.startDate || !values.startTime)
-    return strings.event.validation.needStart;
-  if (isCreate) {
-    if (!values.activity) return strings.event.validation.needActivity;
-    if (!values.skillLevel) return strings.event.validation.needSkill;
-    if (!values.location?.name.trim()) return strings.event.validation.needLocation;
-  }
-  return null;
-}
 
 const EMPTY: EventFormValues = {
   title: "",
@@ -113,7 +102,7 @@ function EventForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const missing = validate(values, isCreate);
+    const missing = validateEventForm(values, isCreate);
     if (missing) {
       setUserError(missing);
       return;

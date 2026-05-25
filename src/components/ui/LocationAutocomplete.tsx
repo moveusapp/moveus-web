@@ -1,6 +1,12 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { HiOutlineLightBulb } from "react-icons/hi2";
 import { CountryCode } from "@/graphql/graphql-types";
+import {
+  composeLabel,
+  mapFeatureToLocationData,
+  useLocationSearch,
+  type PhotonFeature,
+} from "@/hooks/use-location-search";
 import strings from "@/translations/strings";
 
 export type LocationData = {
@@ -14,24 +20,6 @@ export type LocationData = {
   longitude?: number;
 };
 
-type PhotonProperties = {
-  name?: string;
-  street?: string;
-  housenumber?: string;
-  city?: string;
-  district?: string;
-  locality?: string;
-  state?: string;
-  country?: string;
-  countrycode?: string;
-  postcode?: string;
-};
-
-type PhotonFeature = {
-  geometry: { coordinates: [number, number] };
-  properties: PhotonProperties;
-};
-
 type Props = {
   label: string;
   value: LocationData | null;
@@ -41,45 +29,6 @@ type Props = {
   error?: string;
   className?: string;
 };
-
-const PHOTON_URL = "https://photon.komoot.io/api/";
-const DEBOUNCE_MS = 250;
-
-function composeLabel(p: PhotonProperties): string {
-  const parts: string[] = [];
-  const streetLine = [p.housenumber, p.street].filter(Boolean).join(" ");
-  if (p.name) parts.push(p.name);
-  if (streetLine && streetLine !== p.name) parts.push(streetLine);
-  const city = p.city ?? p.district ?? p.locality;
-  if (city && city !== p.name) parts.push(city);
-  if (p.country) parts.push(p.country);
-  return parts.join(", ");
-}
-
-function toCountryCode(code: string | undefined): CountryCode | undefined {
-  if (!code) return undefined;
-  const key = code[0].toUpperCase() + code.slice(1).toLowerCase();
-  const value = (CountryCode as Record<string, CountryCode>)[key];
-  return value;
-}
-
-function mapFeatureToLocationData(feature: PhotonFeature): LocationData {
-  const p = feature.properties;
-  const streetLine = [p.housenumber, p.street].filter(Boolean).join(" ");
-  const city = p.city ?? p.district ?? p.locality;
-  const zip = p.postcode ? parseInt(p.postcode, 10) : NaN;
-
-  return {
-    name: composeLabel(p),
-    addressLine1: streetLine || undefined,
-    addressLine2: city || undefined,
-    region: p.state || undefined,
-    countryCode: toCountryCode(p.countrycode),
-    zipCode: Number.isFinite(zip) ? zip : undefined,
-    latitude: feature.geometry.coordinates[1],
-    longitude: feature.geometry.coordinates[0],
-  };
-}
 
 const LocationAutocomplete = ({
   label,
@@ -91,10 +40,9 @@ const LocationAutocomplete = ({
   className = "",
 }: Props) => {
   const [query, setQuery] = useState(value?.name ?? "");
-  const [results, setResults] = useState<PhotonFeature[]>([]);
   const [open, setOpen] = useState(false);
   const [touched, setTouched] = useState(false);
-  const biasCoords = useRef<{ lat: number; lon: number } | null>(null);
+  const results = useLocationSearch(query);
   const listboxId = useId();
   const hasError = !!error;
   const isSelected = value?.latitude != null;
@@ -102,58 +50,8 @@ const LocationAutocomplete = ({
     touched && !!value?.name?.trim() && !isSelected && !open;
 
   useEffect(() => {
-    if (!("geolocation" in navigator)) return;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        biasCoords.current = {
-          lat: pos.coords.latitude,
-          lon: pos.coords.longitude,
-        };
-      },
-      () => {},
-      { maximumAge: 5 * 60 * 1000, timeout: 5000 },
-    );
-  }, []);
-
-  useEffect(() => {
     if (value?.name !== query && value === null) setQuery("");
   }, [value]);
-
-  useEffect(() => {
-    const trimmed = query.trim();
-    if (!trimmed) {
-      setResults([]);
-      return;
-    }
-
-    const controller = new AbortController();
-    const timer = setTimeout(async () => {
-      const url = new URL(PHOTON_URL);
-      url.searchParams.set("q", trimmed);
-      url.searchParams.set("limit", "15");
-      url.searchParams.set("lang", "en");
-      if (biasCoords.current) {
-        url.searchParams.set("lat", String(biasCoords.current.lat));
-        url.searchParams.set("lon", String(biasCoords.current.lon));
-      }
-
-      try {
-        const res = await fetch(url.toString(), { signal: controller.signal });
-        if (!res.ok) return;
-        const data: { features?: PhotonFeature[] } = await res.json();
-        setResults(data.features ?? []);
-      } catch (err) {
-        if ((err as Error).name !== "AbortError") {
-          console.error("Photon request failed", err);
-        }
-      }
-    }, DEBOUNCE_MS);
-
-    return () => {
-      controller.abort();
-      clearTimeout(timer);
-    };
-  }, [query]);
 
   const handleSelect = (feature: PhotonFeature) => {
     const loc = mapFeatureToLocationData(feature);
@@ -212,16 +110,16 @@ const LocationAutocomplete = ({
             className="menu bg-base-100 rounded-2xl shadow absolute z-10 left-0 right-0 mt-1 p-2 max-h-72 overflow-y-auto flex-nowrap"
           >
             {results.map((feature, i) => {
-              const label = composeLabel(feature.properties);
+              const featureLabel = composeLabel(feature.properties);
               return (
-                <li key={`${label}-${i}`}>
+                <li key={`${featureLabel}-${i}`}>
                   <button
                     type="button"
                     role="option"
                     onClick={() => handleSelect(feature)}
                     className="focus:bg-primary/15 focus:text-primary focus:outline-none"
                   >
-                    {label}
+                    {featureLabel}
                   </button>
                 </li>
               );
