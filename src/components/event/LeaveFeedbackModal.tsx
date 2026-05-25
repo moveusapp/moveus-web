@@ -37,8 +37,20 @@ function LeaveFeedbackModal({
   const [score, setScore] = useState<EventRating | null>(initialScore);
   const [comment, setComment] = useState("");
 
+  // The mutation returns the full rated event, so Apollo updates GetEvent via
+  // normalization. We just need to remove the rated event from `unratedEvents`.
   const [rateEvent, { loading, error, reset }] = useMutation(RateEventDocument, {
-    refetchQueries: ["GetEvent", "GetUnratedEvents"],
+    update(cache, { data }) {
+      const ratedId = data?.rateEvent?.event?.id;
+      if (ratedId == null) return;
+      cache.modify({
+        fields: {
+          unratedEvents(existing: ReadonlyArray<{ __ref?: string }> = [], { readField }) {
+            return existing.filter((ref) => readField("id", ref) !== ratedId);
+          },
+        },
+      });
+    },
   });
 
   // Reset the form each time the modal opens, seeding the tapped rating.
@@ -62,8 +74,8 @@ function LeaveFeedbackModal({
         toast.success(strings.toast.thanksForFeedback);
         onSubmitted?.();
       }
-    } catch (err) {
-      console.error("Error rating event:", err);
+    } catch {
+      // Errors surface inline via the FormError below the rating.
     }
   };
 

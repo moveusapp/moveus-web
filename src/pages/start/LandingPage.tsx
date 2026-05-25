@@ -28,15 +28,15 @@ function LandingPage() {
 
   useHeroTilt(heroRef, logoTiltRef);
 
-  if (profile) {
-    return <Navigate to="/home" replace />;
-  }
-
   useDocumentTitle(strings.landing.documentTitle);
 
   const { data: eventsData, loading: eventsLoading } = useQuery(
     GetAnonymousUserEventsDocument,
   );
+
+  if (profile) {
+    return <Navigate to="/home" replace />;
+  }
 
   const strips = [
     {

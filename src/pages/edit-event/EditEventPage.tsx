@@ -19,14 +19,9 @@ import PageHeader from "@/components/layout/PageHeader";
 import { useToast } from "@/context/toast-context";
 import strings from "@/translations/strings";
 import { useHtmlDialog } from "@/hooks/use-html-dialog";
+import { dayKey, formatTime } from "@/utils/time-utils";
 
 const pageWrap = "w-full mx-auto max-w-3xl p-4";
-
-const pad = (n: number) => n.toString().padStart(2, "0");
-
-const dateString = (d: Date) =>
-  `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-const timeString = (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
 
 function EditEventPage() {
   useDocumentTitle(strings.editEvent.documentTitle);
@@ -75,10 +70,10 @@ function EditEventPage() {
   const initialValues: Partial<EventFormValues> = {
     title: event.title ?? "",
     description: event.description ?? "",
-    startDate: dateString(startDate),
-    startTime: timeString(startDate),
-    endDate: endDate && !isDefaultEnd ? dateString(endDate) : "",
-    endTime: endDate && !isDefaultEnd ? timeString(endDate) : "",
+    startDate: dayKey(startDate),
+    startTime: formatTime(startDate),
+    endDate: endDate && !isDefaultEnd ? dayKey(endDate) : "",
+    endTime: endDate && !isDefaultEnd ? formatTime(endDate) : "",
     maxParticipants: event.maxParticipants?.toString() ?? "",
   };
 
@@ -107,8 +102,8 @@ function EditEventPage() {
         toast.success(strings.toast.changesSaved);
         navigate(`/event/${id}`);
       }
-    } catch (err) {
-      console.error("Error updating event:", err);
+    } catch {
+      // Errors surface inline via EventForm's apiError prop.
     }
   };
 
@@ -120,7 +115,7 @@ function EditEventPage() {
         navigate(`/event/${id}`);
       }
     } catch (err) {
-      console.error("Error cancelling event:", err);
+      toast.error(formatError(err));
     }
   };
 
@@ -138,7 +133,7 @@ function EditEventPage() {
         navigate("/home", { replace: true });
       }
     } catch (err) {
-      console.error("Error deleting event:", err);
+      toast.error(formatError(err));
     }
   };
 

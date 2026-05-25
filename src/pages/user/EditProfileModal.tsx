@@ -124,8 +124,8 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
 
       onClose();
       toast.success(strings.toast.profileUpdated);
-    } catch (err) {
-      console.error("Error updating profile:", err);
+    } catch {
+      // Errors surface inline via the FormError below the fields.
     }
   };
 

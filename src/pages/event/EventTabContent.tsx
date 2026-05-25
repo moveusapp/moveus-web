@@ -44,7 +44,7 @@ function EventTabContent({
 
         {posts.length > 0 ? (
           <div className="flex flex-col gap-4">
-            {posts.toReversed().map((post) => (
+            {[...posts].reverse().map((post) => (
               <PostCard key={post.id} post={post} hideEventLink />
             ))}
           </div>

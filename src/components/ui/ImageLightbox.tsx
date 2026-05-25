@@ -23,11 +23,13 @@ function ImageLightbox({ open, src, alt = "", onClose }: ImageLightboxProps) {
         >
           <HiXMark className="h-5 w-5" />
         </button>
-        <img
-          src={src}
-          alt={alt}
-          className="h-auto max-h-[95vh] w-full object-contain"
-        />
+        {src && (
+          <img
+            src={src}
+            alt={alt}
+            className="h-auto max-h-[95vh] w-full object-contain"
+          />
+        )}
       </div>
       <form method="dialog" className="modal-backdrop">
         <button type="button" onClick={onClose}>

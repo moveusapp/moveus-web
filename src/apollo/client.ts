@@ -14,6 +14,7 @@ import {
 import { createClient } from "graphql-ws";
 import { isSubscriptionOperation } from "@apollo/client/utilities";
 import { DateParsingLink } from "./date-parsing-link";
+import { typePolicies } from "./type-policies";
 import { clearStoredProfile } from "@/utils/auth";
 
 const isDev = import.meta.env.DEV;
@@ -62,5 +63,5 @@ const authErrorLink = new ErrorLink(({ error }) => {
 
 export const apolloClient = new ApolloClient({
   link: ApolloLink.from([authErrorLink, DateParsingLink, splitLink]),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({ typePolicies }),
 });

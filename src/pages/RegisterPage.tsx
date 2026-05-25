@@ -92,8 +92,8 @@ function RegisterPage() {
       setStoredProfile(profile);
       setProfile(profile);
       navigate("/welcome");
-    } catch (err) {
-      console.error("Signup error:", err);
+    } catch {
+      // Errors surface inline via the apiError display below the form.
     }
   };
 

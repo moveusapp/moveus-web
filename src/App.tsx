@@ -1,57 +1,63 @@
+import { lazy, Suspense } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ProtectedRoutes } from "./components/routes/ProtectedRoutes";
-import HomePage from "./pages/home/HomePage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import SurveyPage from "./pages/survey/SurveyPage";
 import { NavRoutes } from "./components/routes/nav/NavRoutes";
-import ProfileRedirect from "./pages/user/ProfileRedirect";
-import SettingsPage from "./pages/settings/SettingsPage";
-import EventPage from "./pages/event/EventPage";
-import UserPage from "./pages/user/UserPage";
-import ChatPage from "./pages/chat/ChatPage";
-import NotificationsPage from "./pages/notifications/NotificationsPage";
-import SearchPage from "./pages/search/SearchPage";
 import { AuthRoutes } from "./components/routes/AuthRoutes";
-import CreateEventPage from "./pages/create-event/CreateEventPage";
-import EditEventPage from "./pages/edit-event/EditEventPage";
 import LandingPage from "./pages/start/LandingPage";
-import WelcomePage from "./pages/onboarding/WelcomePage";
-import CalendarPage from "./pages/calendar/CalendarPage";
-import PostPage from "./pages/post/PostPage";
+
+// LandingPage stays eager — it's the unauthenticated entry point and lazy-loading
+// it would add a blank flash on first visit.
+const HomePage = lazy(() => import("./pages/home/HomePage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const RegisterPage = lazy(() => import("./pages/RegisterPage"));
+const SurveyPage = lazy(() => import("./pages/survey/SurveyPage"));
+const ProfileRedirect = lazy(() => import("./pages/user/ProfileRedirect"));
+const SettingsPage = lazy(() => import("./pages/settings/SettingsPage"));
+const EventPage = lazy(() => import("./pages/event/EventPage"));
+const UserPage = lazy(() => import("./pages/user/UserPage"));
+const ChatPage = lazy(() => import("./pages/chat/ChatPage"));
+const NotificationsPage = lazy(() => import("./pages/notifications/NotificationsPage"));
+const SearchPage = lazy(() => import("./pages/search/SearchPage"));
+const CreateEventPage = lazy(() => import("./pages/create-event/CreateEventPage"));
+const EditEventPage = lazy(() => import("./pages/edit-event/EditEventPage"));
+const WelcomePage = lazy(() => import("./pages/onboarding/WelcomePage"));
+const CalendarPage = lazy(() => import("./pages/calendar/CalendarPage"));
+const PostPage = lazy(() => import("./pages/post/PostPage"));
 
 function App() {
   return (
     <main>
       <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route element={<ProtectedRoutes />}>
-            <Route element={<NavRoutes />}>
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/chat" element={<ChatPage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/profile" element={<ProfileRedirect />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
-              <Route path="/calendar" element={<CalendarPage />} />
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route element={<ProtectedRoutes />}>
+              <Route element={<NavRoutes />}>
+                <Route path="/home" element={<HomePage />} />
+                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/profile" element={<ProfileRedirect />} />
+                <Route path="/notifications" element={<NotificationsPage />} />
+                <Route path="/calendar" element={<CalendarPage />} />
 
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/create-event" element={<CreateEventPage />} />
-              <Route path="/event/:eventId/edit" element={<EditEventPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/create-event" element={<CreateEventPage />} />
+                <Route path="/event/:eventId/edit" element={<EditEventPage />} />
+              </Route>
+              <Route path="/survey/:id" element={<SurveyPage />} />
+              <Route path="/welcome" element={<WelcomePage />} />
             </Route>
-            <Route path="/survey/:id" element={<SurveyPage />} />
-            <Route path="/welcome" element={<WelcomePage />} />
-          </Route>
-          <Route element={<NavRoutes />}>
-            <Route path="/user/:username" element={<UserPage />} />
-            <Route path="/event/:eventId" element={<EventPage />} />
-            <Route path="/post/:postId" element={<PostPage />} />
-          </Route>
-          <Route element={<AuthRoutes />}>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-          </Route>
-        </Routes>
+            <Route element={<NavRoutes />}>
+              <Route path="/user/:username" element={<UserPage />} />
+              <Route path="/event/:eventId" element={<EventPage />} />
+              <Route path="/post/:postId" element={<PostPage />} />
+            </Route>
+            <Route element={<AuthRoutes />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+            </Route>
+          </Routes>
+        </Suspense>
       </Router>
     </main>
   );

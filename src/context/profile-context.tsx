@@ -27,7 +27,7 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 export const useProfile = () => {
   const context = useContext(ProfileContext);
   if (!context) {
-    throw new Error("useUser must be used within a UserProvider");
+    throw new Error("useProfile must be used within a UserProvider");
   }
   return context;
 };
@@ -37,9 +37,12 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     () => getStoredProfile(),
   );
 
+  // Cache-first: localStorage seeds the initial paint (see getStoredProfile),
+  // then Apollo's cache is the source of truth. `network-only` here used to
+  // re-fetch on every provider remount; that was wasteful since login/signup
+  // mutations write the profile into the cache and subscriptions keep it warm.
   const { data } = useQuery(GetMyProfileDocument, {
     skip: !profile,
-    fetchPolicy: "network-only",
   });
 
   useEffect(() => {

@@ -53,8 +53,8 @@ function CreateEventPage() {
         toast.success(strings.toast.eventCreated);
         navigate(`/event/${result.data.createEvent.event.id}`);
       }
-    } catch (err) {
-      console.error("Error creating event:", err);
+    } catch {
+      // Errors surface inline via EventForm's apiError prop.
     }
   };
 

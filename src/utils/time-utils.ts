@@ -53,19 +53,54 @@ export function prependZero(number: number): string {
   return number + "";
 }
 
-export function formatDate(date: Date | string, locale: string = 'en-US'): string {
+export function formatDate(
+  date: Date | string,
+  locale: string = strings.getLanguage(),
+): string {
   const d = date instanceof Date ? date : new Date(date);
   const sameYear = d.getFullYear() === new Date().getFullYear();
   return new Intl.DateTimeFormat(locale, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    ...(sameYear ? {} : { year: 'numeric' }),
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    ...(sameYear ? {} : { year: "numeric" }),
+  }).format(d);
+}
+
+export function formatLongDate(
+  date: Date | string,
+  locale: string = strings.getLanguage(),
+): string {
+  const d = date instanceof Date ? date : new Date(date);
+  return new Intl.DateTimeFormat(locale, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
   }).format(d);
 }
 
 export function formatTime(date: Date | string): string {
   const d = date instanceof Date ? date : new Date(date);
   return `${prependZero(d.getHours())}:${prependZero(d.getMinutes())}`;
+}
+
+export function startOfDay(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+/** YYYY-MM-DD — stable map key and HTML <input type="date"> value. */
+export function dayKey(date: Date): string {
+  return `${date.getFullYear()}-${prependZero(date.getMonth() + 1)}-${prependZero(date.getDate())}`;
+}
+
+/** "today" / "tomorrow" / "yesterday", or null if outside that window. */
+export function relativeLabel(date: Date, today: Date): string | null {
+  const diffDays = Math.round(
+    (startOfDay(date).getTime() - today.getTime()) / 86_400_000,
+  );
+  if (diffDays === 0) return strings.time.today;
+  if (diffDays === 1) return strings.time.tomorrow;
+  if (diffDays === -1) return strings.time.yesterday;
+  return null;
 }
 

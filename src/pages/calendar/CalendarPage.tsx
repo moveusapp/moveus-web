@@ -2,7 +2,12 @@ import EventCard from "@/components/event/EventCard";
 import { useProfile } from "@/context/profile-context";
 import { ContextProfileFragment, EventCardFragment } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
-import { prependZero } from "@/utils/time-utils";
+import {
+  dayKey,
+  formatLongDate,
+  relativeLabel,
+  startOfDay,
+} from "@/utils/time-utils";
 import { useMemo, useState } from "react";
 import {
   HiOutlineChevronLeft,
@@ -238,32 +243,6 @@ function mergeEvents(
   return out;
 }
 
-function startOfDay(d: Date): Date {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
-
-function dayKey(d: Date): string {
-  return `${d.getFullYear()}-${prependZero(d.getMonth() + 1)}-${prependZero(d.getDate())}`;
-}
-
-function formatLongDate(d: Date, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  }).format(d);
-}
-
-function relativeLabel(d: Date, today: Date): string | null {
-  const diffDays = Math.round(
-    (startOfDay(d).getTime() - today.getTime()) / 86_400_000,
-  );
-  if (diffDays === 0) return strings.time.today;
-  if (diffDays === 1) return strings.time.tomorrow;
-  if (diffDays === -1) return strings.time.yesterday;
-  return null;
-}
-
 function emptyDayCopy(
   selected: Date,
   today: Date,
@@ -277,5 +256,4 @@ function emptyDayCopy(
   if (diff > 0) return strings.calendar.nothingPlanned;
   return strings.calendar.noEventsOnDay;
 }
-
 export default CalendarPage;
