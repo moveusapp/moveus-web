@@ -39,12 +39,14 @@ export type Question<TVars> =
       kind: QuestionKind.SingleChoice;
       field: keyof TVars & string;
       enum: Record<string, string>;
+      enumNamespace: string;
       validate?: (value: string) => boolean;
     })
   | (Base & {
       kind: QuestionKind.MultiChoice;
       field: keyof TVars & string;
       enum: Record<string, string>;
+      enumNamespace: string;
       validate?: (value: string[]) => boolean;
     })
   | (Base & {

@@ -55,7 +55,7 @@ const authErrorLink = new ErrorLink(({ error }) => {
   }
   if (CombinedGraphQLErrors.is(error)) {
     const isAuth = error.errors.some(
-      (e) => e.error_code === UNAUTHORIZED_CODE,
+      (e) => e.extensions?.code === UNAUTHORIZED_CODE,
     );
     if (isAuth) redirectToLogin();
   }
