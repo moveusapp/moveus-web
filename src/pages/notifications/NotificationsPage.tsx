@@ -28,9 +28,9 @@ function NotificationsPage() {
               <NotificationCardSkeleton key={`notif-skeleton-${index}`} />
             ))
           ) : hasNotifications() ? (
-            data?.myNotifications?.map((notification) => (
+            data?.myNotifications?.filter((n): n is NonNullable<typeof n> => n != null).map((notification) => (
               <NotificationCard
-                key={`notif-${notification?.id}`}
+                key={`notif-${notification.id}`}
                 notification={notification}
               />
             ))

@@ -1,50 +1,40 @@
 import defaultEventThumbnail from "@/assets/default-images/event-default-thumbnail.webp";
 import { setDocumentTitle } from "@/hooks/use-document-title";
-import Button from "@/components/ui/Button";
 import UserAvatar from "@/components/user/UserAvatar";
 import {
-  ActivityKind,
-  DeleteEventDocument,
   EventPhase,
   JoinEventDocument,
   LeaveEventDocument,
   MemberRole,
 } from "@/graphql/graphql-types";
 import EventPhaseBadge from "@/components/event/EventPhaseBadge";
-import { displayName } from "@/utils/display-name";
 import { formatDate, formatTime } from "@/utils/time-utils";
 import { formatError } from "@/utils/format-error";
 import { useToast } from "@/context/toast-context";
 import { useMutation } from "@apollo/client/react";
 import { useEvent } from "@/hooks/use-event";
 import {
-  HiArrowUpTray,
-  HiPlus,
   HiOutlineMapPin,
   HiOutlineCalendarDays,
   HiOutlineNewspaper,
   HiOutlineChatBubbleOvalLeft,
-  HiOutlineChatBubbleLeftRight,
   HiCheckBadge,
-  HiOutlinePencilSquare,
   HiOutlineArrowTopRightOnSquare,
-  HiOutlineStar,
-  HiOutlineChartBar,
   HiOutlineUsers,
   HiChevronRight,
 } from "react-icons/hi2";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import EventPageSkeleton from "./EventPageSkeleton";
-import PostCard from "@/components/post/PostCard";
 import TabButtons from "@/components/ui/TabButtons";
-import CommentSection from "@/components/comment/CommentSection";
 import CreatePostModal from "@/components/post/CreatePostModal";
 import LeaveFeedbackModal from "@/components/event/LeaveFeedbackModal";
 import ViewFeedbackModal from "@/pages/event/ViewFeedbackModal";
 import ParticipantsModal from "@/pages/event/ParticipantsModal";
-import ParticipantsList from "@/pages/event/ParticipantsList"
 import EventScore from "@/pages/event/EventScore";
+import EventActionBar from "@/pages/event/EventActionBar";
+import EventTabContent, { EventTabId } from "@/pages/event/EventTabContent";
+import { deriveEventState } from "@/pages/event/derive-event-state";
 import strings from "@/translations/strings";
 
 function EventPage() {
@@ -56,13 +46,9 @@ function EventPage() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [desktopActiveTab, setDesktopActiveTab] = useState<
-    "posts" | "comments"
-  >("posts");
-
-  const [mobileActiveTab, setMobileActiveTab] = useState<
-    "posts" | "comments" | "participants"
-  >("posts");
+  const [desktopActiveTab, setDesktopActiveTab] =
+    useState<Extract<EventTabId, "posts" | "comments">>("posts");
+  const [mobileActiveTab, setMobileActiveTab] = useState<EventTabId>("posts");
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const [showLeaveFeedback, setShowLeaveFeedback] = useState(false);
   const [showViewFeedback, setShowViewFeedback] = useState(false);
@@ -71,7 +57,6 @@ function EventPage() {
   const [joinEvent, { loading: joinLoading }] = useMutation(JoinEventDocument);
   const [leaveEvent, { loading: leaveLoading }] =
     useMutation(LeaveEventDocument);
-  const [deleteEvent] = useMutation(DeleteEventDocument);
 
   const toast = useToast();
 
@@ -86,32 +71,15 @@ function EventPage() {
     if (event.phase === EventPhase.Finished && attended) {
       setShowLeaveFeedback(true);
     }
-  }, [event, searchParams]);
+  }, [event, searchParams, setSearchParams]);
 
   if (fallback) return fallback;
-  if (!event) {
-    return null;
-  }
+  if (!event) return null;
 
-  const isFull =
-    event.maxParticipants &&
-    event.members.length! >= event.maxParticipants!;
-  const organizerName = displayName(
-    event.organizer?.user.username!,
-    event.organizer?.user.firstName!,
-    event.organizer?.user.lastName!,
-  );
-
-  const canCreatePost = [MemberRole.Organizer, MemberRole.Moderator].includes(
-    event.role!,
-  );
-
-  const handlePostCreated = () => {
-    refetch();
-  };
+  const d = deriveEventState(event);
 
   const handleJoin = async () => {
-    if (isFull) return;
+    if (d.isFull) return;
     try {
       await joinEvent({ variables: { eventId: id } });
       toast.success(strings.toast.joinedEvent);
@@ -138,114 +106,75 @@ function EventPage() {
     }
   };
 
-  const activityValue = Object.values(ActivityKind)[event.activity.id!];
-  const activityLabels = strings.enums.activityKind as unknown as Record<string, string>;
-  const activity = activityLabels[activityValue] ?? activityValue;
-  const postCount = event.posts?.length ?? 0;
-  const commentCount = event.comments?.length ?? 0;
-  const participantCount = event.members?.length ?? 0;
-
-  const isCancelled = event.phase === EventPhase.Cancelled;
-  const isFinished = event.phase === EventPhase.Finished;
-  const isLocked = event.phase !== EventPhase.Scheduled;
-  const lockedLabel = isCancelled
-    ? strings.event.page.eventCancelled
-    : isFinished
-      ? strings.event.page.eventEnded
-      : strings.event.page.eventInProgress;
-  const titleClass = isCancelled
-    ? "text-base-content/60 line-through decoration-error/50 decoration-2"
-    : isFinished
-      ? "text-base-content/80"
-      : "text-foreground";
-
-  const canRate =
-    isFinished &&
-    [
-      MemberRole.Participant,
-      MemberRole.Moderator,
-      MemberRole.Spectator,
-    ].includes(event.role!);
-
-  const canViewFeedback = isFinished && event.role === MemberRole.Organizer;
-
-  const showScore = isFinished && event.score != null && event.score >= 1;
-
-  const locationName = event.location?.name;
-  const mapsUrl =
-    event.location?.latitude != null && event.location?.longitude != null
-      ? `https://www.google.com/maps/search/?api=1&query=${event.location.latitude},${event.location.longitude}`
-      : locationName
-        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationName)}`
-        : null;
-
-  const tabContent = (tab) => {
-    switch (tab) {
-      case "posts":
-        return (
-          <div>
-            {canCreatePost && (
-              <button
-                onClick={() => setShowCreatePostModal(true)}
-                className="group mb-4 flex w-full items-center gap-3 rounded-2xl border border-base-300 bg-base-200 px-4 py-3 text-left transition-colors hover:bg-base-300"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-content transition-transform duration-200 group-hover:scale-105">
-                  <HiPlus className="h-5 w-5" />
-                </span>
-                <span className="text-sm text-base-content/60 transition-colors group-hover:text-base-content">
-                  {strings.event.page.shareUpdate}
-                </span>
-              </button>
-            )}
-
-            {event.posts && event.posts.length > 0 ? (
-              <div className="flex flex-col gap-4">
-                {event.posts.toReversed().map((post) => (
-                  <PostCard key={post.id} post={post} hideEventLink />
-                ))}
-              </div>
-            ) : (
-                <div className="flex flex-col items-center gap-1 rounded-2xl border border-base-300 bg-base-200 px-6 py-10 text-center">
-                  <p className="text-sm font-medium text-foreground">
-                    {strings.event.page.quietHere}
-                  </p>
-                  <p className="text-sm text-base-content/60">
-                    {canCreatePost
-                      ? strings.event.page.shareFirst
-                      : strings.event.page.postsFromOrganizer}
-                  </p>
-                </div>
-              )}
-          </div>
-        );
-      case "comments":
-        return (
-          <div className="rounded-2xl border border-base-300 bg-base-200 p-5">
-            <CommentSection
-              entityType="event"
-              entityId={id}
-              comments={(event.comments ?? []).filter(Boolean) as any}
-            />
-          </div>
-        )
-      case "participants":
-        return <ParticipantsList event={event} />
-    }
-
-    return <></>
-  }
-
   setDocumentTitle(event.title);
+
+  const actionBar = (
+    <EventActionBar
+      eventId={eventId!}
+      organizerId={event.organizer?.user.id}
+      isOrganizer={d.isOrganizer}
+      isAttendee={d.isAttendee}
+      isLocked={d.isLocked}
+      isFull={d.isFull}
+      canRate={d.canRate}
+      canViewFeedback={d.canViewFeedback}
+      lockedLabel={d.lockedLabel}
+      joinLoading={joinLoading}
+      leaveLoading={leaveLoading}
+      onJoin={handleJoin}
+      onLeave={handleLeave}
+      onShare={handleShare}
+      onRate={() => setShowLeaveFeedback(true)}
+      onViewFeedback={() => setShowViewFeedback(true)}
+    />
+  );
+
+  const postsTab = {
+    value: "posts",
+    label: (
+      <span className="inline-flex items-center gap-1.5">
+        <HiOutlineNewspaper size={16} className="opacity-70" />
+        <span>{strings.ui.posts}</span>
+        <span className="text-xs opacity-50 tabular-nums">{d.postCount}</span>
+      </span>
+    ),
+  };
+  const commentsTab = {
+    value: "comments",
+    label: (
+      <span className="inline-flex items-center gap-1.5">
+        <HiOutlineChatBubbleOvalLeft size={16} className="opacity-70" />
+        <span>{strings.ui.comments}</span>
+        <span className="text-xs opacity-50 tabular-nums">{d.commentCount}</span>
+      </span>
+    ),
+  };
+  const participantsTab = {
+    value: "participants",
+    label: (
+      <span className="inline-flex items-center gap-1.5">
+        <HiOutlineUsers size={16} className="opacity-70" />
+        <span>{strings.event.page.participants}</span>
+        <span className="text-xs opacity-50 tabular-nums">
+          {d.participantCount}
+        </span>
+      </span>
+    ),
+  };
 
   return (
     <div className="w-full mx-auto max-w-5xl px-4 py-6">
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-xs font-semibold uppercase tracking-wide text-primary">{activity}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+              {d.activity}
+            </p>
             <EventPhaseBadge phase={event.phase} />
           </div>
-          <h1 className={`text-xl sm:text-2xl lg:text-3xl font-bold text-balance mt-1 ${titleClass}`}>
+          <h1
+            className={`text-xl sm:text-2xl lg:text-3xl font-bold text-balance mt-1 ${d.titleClass}`}
+          >
             {event.title}
           </h1>
 
@@ -260,7 +189,7 @@ function EventPage() {
             <span className="flex items-center gap-1">
               {strings.event.page.hostedBy}{" "}
               <span className="text-foreground font-medium group-hover:text-primary">
-                {organizerName}
+                {d.organizerName}
               </span>
               {event.organizer?.user.verified && (
                 <HiCheckBadge size={16} className="text-primary shrink-0" />
@@ -271,19 +200,18 @@ function EventPage() {
           <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-muted-foreground mt-3 lg:hidden">
             <span className="flex items-center gap-1.5">
               <HiOutlineCalendarDays className="h-4 w-4 text-primary" />
-              {formatDate(event.startTime)} •{" "}
-              {formatTime(event.startTime)}
+              {formatDate(event.startTime)} • {formatTime(event.startTime)}
             </span>
-            {mapsUrl ? (
+            {d.mapsUrl ? (
               <a
-                href={mapsUrl}
+                href={d.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 hover:text-primary transition-colors"
               >
                 <HiOutlineMapPin className="h-4 w-4 text-primary" />
                 <span className="underline-offset-2 hover:underline">
-                  {locationName || strings.event.locationTBD}
+                  {d.locationName || strings.event.locationTBD}
                 </span>
               </a>
             ) : (
@@ -298,192 +226,52 @@ function EventPage() {
             {event.description}
           </p>
 
-          {showScore && (
+          {d.showScore && (
             <div className="lg:hidden mt-4">
               <EventScore score={event.score!} />
             </div>
           )}
 
-          <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4 flex flex-col gap-2">
-            <div className="flex items-center gap-3">
-              {canRate ? (
-                <button
-                  type="button"
-                  onClick={() => setShowLeaveFeedback(true)}
-                  className="btn btn-primary flex-1 rounded-2xl"
-                >
-                  <HiOutlineStar className="h-4 w-4" />
-                  {strings.event.page.leaveFeedback}
-                </button>
-              ) : canViewFeedback ? (
-                <button
-                  type="button"
-                  onClick={() => setShowViewFeedback(true)}
-                  className="btn btn-primary flex-1 rounded-2xl"
-                >
-                  <HiOutlineChartBar className="h-4 w-4" />
-                  {strings.event.page.viewFeedback}
-                </button>
-              ) : isLocked ? (
-                <button
-                  type="button"
-                  disabled
-                  className="btn btn-disabled flex-1 rounded-2xl"
-                >
-                  {lockedLabel}
-                </button>
-              ) : event.role === MemberRole.Organizer ? (
-                <Link
-                  to={`/event/${eventId}/edit`}
-                  className="btn btn-primary flex-1 rounded-2xl"
-                >
-                  <HiOutlinePencilSquare className="h-4 w-4" />
-                  {strings.event.page.editEvent}
-                </Link>
-              ) : [
-                  MemberRole.Participant,
-                  MemberRole.Moderator,
-                  MemberRole.Spectator,
-                ].includes(event.role!) ? (
-                <Button
-                  onClick={handleLeave}
-                  loading={leaveLoading}
-                  className="btn btn-error btn-outline flex-1"
-                >
-                  {strings.event.page.leaveEvent}
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleJoin}
-                  loading={joinLoading}
-                  disabled={!!isFull}
-                  className={`btn btn-primary flex-1 ${isFull ? "btn-disabled" : ""}`}
-                >
-                  {isFull ? strings.event.page.eventFull : strings.event.page.joinEvent}
-                </Button>
-              )}
-
-              <button
-                type="button"
-                onClick={handleShare}
-                disabled={isLocked}
-                className={`btn btn-square rounded-2xl ${isLocked ? "btn-disabled" : ""}`}
-                aria-label={strings.event.page.shareEventAria}
-              >
-                <HiArrowUpTray className="h-4 w-4" />
-              </button>
-            </div>
-
-            {event.role !== MemberRole.Organizer && (
-              <Link
-                to={`/chat?userId=${event.organizer?.user.id}`}
-                className="btn btn-outline btn-primary w-full"
-              >
-                <HiOutlineChatBubbleLeftRight className="h-4 w-4" />
-                {strings.event.page.messageOrganizer}
-              </Link>
-            )}
+          <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4">
+            {actionBar}
           </div>
 
           <div className="hidden lg:block border-b border-base-300 mt-4">
             <TabButtons
-              tabs={[
-                {
-                  value: "posts",
-                  label: (
-                    <span className="inline-flex items-center gap-1.5">
-                      <HiOutlineNewspaper size={16} className="opacity-70" />
-                      <span>{strings.ui.posts}</span>
-                      <span className="text-xs opacity-50 tabular-nums">
-                        {postCount}
-                      </span>
-                    </span>
-                  ),
-                },
-                {
-                  value: "comments",
-                  label: (
-                    <span className="inline-flex items-center gap-1.5">
-                      <HiOutlineChatBubbleOvalLeft
-                        size={16}
-                        className="opacity-70"
-                      />
-                      <span>{strings.ui.comments}</span>
-                      <span className="text-xs opacity-50 tabular-nums">
-                        {commentCount}
-                      </span>
-                    </span>
-                  ),
-                },
-              ]}
+              tabs={[postsTab, commentsTab]}
               activeTab={desktopActiveTab}
               onChange={(tab) =>
-                setDesktopActiveTab(tab as "posts" | "comments")
+                setDesktopActiveTab(tab as Extract<EventTabId, "posts" | "comments">)
               }
             />
           </div>
 
           <div className="lg:hidden border-b border-base-300 mt-4">
             <TabButtons
-              tabs={[
-                {
-                  value: "posts",
-                  label: (
-                    <span className="inline-flex items-center gap-1.5">
-                      <HiOutlineNewspaper size={16} className="opacity-70" />
-                      <span>{strings.ui.posts}</span>
-                      <span className="text-xs opacity-50 tabular-nums">
-                        {postCount}
-                      </span>
-                    </span>
-                  ),
-                },
-                {
-                  value: "comments",
-                  label: (
-                    <span className="inline-flex items-center gap-1.5">
-                      <HiOutlineChatBubbleOvalLeft
-                        size={16}
-                        className="opacity-70"
-                      />
-                      <span>{strings.ui.comments}</span>
-                      <span className="text-xs opacity-50 tabular-nums">
-                        {commentCount}
-                      </span>
-                    </span>
-                  ),
-                },
-                {
-                  value: "participants",
-                  label: (
-                    <span className="inline-flex items-center gap-1.5">
-                      <HiOutlineUsers
-                        size={16}
-                        className="opacity-70"
-                      />
-                      <span>{strings.event.page.participants}</span>
-                      <span className="text-xs opacity-50 tabular-nums">
-                        {participantCount}
-                      </span>
-                    </span>
-                  ),
-                },
-              ]}
+              tabs={[postsTab, commentsTab, participantsTab]}
               activeTab={mobileActiveTab}
-              onChange={(tab) =>
-                setMobileActiveTab(
-                  tab as "posts" | "comments" | "participants"
-                )
-              }
+              onChange={(tab) => setMobileActiveTab(tab as EventTabId)}
             />
           </div>
 
           <div className="hidden lg:block mt-4 pb-6">
-            {tabContent(desktopActiveTab)}
+            <EventTabContent
+              tab={desktopActiveTab}
+              event={event}
+              eventId={id}
+              canCreatePost={d.canCreatePost}
+              onCreatePost={() => setShowCreatePostModal(true)}
+            />
           </div>
 
           <div className="lg:hidden mt-4 pb-6">
-            {tabContent(mobileActiveTab)}
+            <EventTabContent
+              tab={mobileActiveTab}
+              event={event}
+              eventId={id}
+              canCreatePost={d.canCreatePost}
+              onCreatePost={() => setShowCreatePostModal(true)}
+            />
           </div>
         </div>
 
@@ -494,9 +282,9 @@ function EventPage() {
                 src={defaultEventThumbnail}
                 alt={event.title ?? ""}
                 className={`w-full aspect-video object-cover transition-[filter] duration-300 ${
-                  isCancelled
+                  d.isCancelled
                     ? "grayscale brightness-75"
-                    : isFinished
+                    : d.isFinished
                       ? "grayscale-[60%] brightness-90"
                       : ""
                 }`}
@@ -505,92 +293,13 @@ function EventPage() {
               />
             </div>
 
-            {showScore && (
+            {d.showScore && (
               <div className="hidden lg:block">
                 <EventScore score={event.score!} />
               </div>
             )}
 
-            <div className="hidden lg:flex flex-col gap-2">
-              <div className="flex items-center gap-3">
-                {canRate ? (
-                  <button
-                    type="button"
-                    onClick={() => setShowLeaveFeedback(true)}
-                    className="btn btn-primary flex-1 rounded-2xl"
-                  >
-                    <HiOutlineStar className="h-4 w-4" />
-                    {strings.event.page.leaveFeedback}
-                  </button>
-                ) : canViewFeedback ? (
-                  <button
-                    type="button"
-                    onClick={() => setShowViewFeedback(true)}
-                    className="btn btn-primary flex-1 rounded-2xl"
-                  >
-                    <HiOutlineChartBar className="h-4 w-4" />
-                    {strings.event.page.viewFeedback}
-                  </button>
-                ) : isLocked ? (
-                  <button
-                    type="button"
-                    disabled
-                    className="btn btn-disabled flex-1 rounded-2xl"
-                  >
-                    {lockedLabel}
-                  </button>
-                ) : event.role === MemberRole.Organizer ? (
-                  <Link
-                    to={`/event/${eventId}/edit`}
-                    className="btn btn-primary flex-1 rounded-2xl"
-                  >
-                    <HiOutlinePencilSquare className="h-4 w-4" />
-                    {strings.event.page.editEvent}
-                  </Link>
-                ) : [
-                    MemberRole.Participant,
-                    MemberRole.Moderator,
-                    MemberRole.Spectator,
-                  ].includes(event.role!) ? (
-                  <Button
-                    onClick={handleLeave}
-                    loading={leaveLoading}
-                    className="btn btn-error btn-outline flex-1"
-                  >
-                    {strings.event.page.leaveEvent}
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleJoin}
-                    loading={joinLoading}
-                    disabled={!!isFull}
-                    className={`btn btn-primary flex-1 ${isFull ? "btn-disabled" : ""}`}
-                  >
-                    {isFull ? strings.event.page.eventFull : strings.event.page.joinEvent}
-                  </Button>
-                )}
-
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  disabled={isLocked}
-                  className={`btn btn-square rounded-2xl ${isLocked ? "btn-disabled" : ""}`}
-                  aria-label={strings.event.page.shareEventAria}
-                >
-                  <HiArrowUpTray className="h-4 w-4" />
-                </button>
-              </div>
-
-              {event.role !== MemberRole.Organizer && (
-                <Link
-                  to={`/chat?userId=${event.organizer?.user.id}`}
-                  className="btn btn-outline btn-primary w-full"
-                >
-                  <HiOutlineChatBubbleLeftRight className="h-4 w-4" />
-                  {strings.event.page.messageOrganizer}
-                </Link>
-              )}
-            </div>
+            <div className="hidden lg:block">{actionBar}</div>
 
             <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
               <HiOutlineCalendarDays className="h-5 w-5 text-primary shrink-0" />
@@ -602,11 +311,11 @@ function EventPage() {
             <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
               <HiOutlineMapPin className="h-5 w-5 text-primary shrink-0" />
               <p className="text-sm font-medium text-foreground flex-1 min-w-0 truncate">
-                {locationName || strings.event.locationTBD}
+                {d.locationName || strings.event.locationTBD}
               </p>
-              {mapsUrl && (
+              {d.mapsUrl && (
                 <a
-                  href={mapsUrl}
+                  href={d.mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={strings.event.page.openInMapsAria}
@@ -626,9 +335,7 @@ function EventPage() {
                   </p>
                   <span className="text-xs tabular-nums text-base-content/50">
                     {event.members.length}
-                    {event.maxParticipants
-                      ? `/${event.maxParticipants}`
-                      : ""}
+                    {event.maxParticipants ? `/${event.maxParticipants}` : ""}
                   </span>
                 </div>
                 {event.members.length > 0 && (
@@ -676,7 +383,7 @@ function EventPage() {
         eventId={id}
         isOpen={showCreatePostModal}
         onClose={() => setShowCreatePostModal(false)}
-        onSuccess={handlePostCreated}
+        onSuccess={refetch}
       />
 
       <LeaveFeedbackModal

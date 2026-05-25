@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useReducer } from "react";
 import { useMutation, useSubscription } from "@apollo/client/react";
-import { apolloClient } from "@/appolo/client";
+import { apolloClient } from "@/apollo/client";
 import {
   ChatMessagesDocument,
   GetAttachmentUploadUrlDocument,

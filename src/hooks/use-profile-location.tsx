@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { apolloClient } from "@/appolo/client";
+import { apolloClient } from "@/apollo/client";
 import { useProfile } from "@/context/profile-context";
 import { AlterLocationDocument } from "@/graphql/graphql-types";
 

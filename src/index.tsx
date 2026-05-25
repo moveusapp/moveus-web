@@ -4,7 +4,7 @@ import "@/styles/index.css";
 import "@/styles/reuseable.css";
 import App from "./App";
 import { ApolloProvider } from "@apollo/client/react";
-import { apolloClient } from "./appolo/client";
+import { apolloClient } from "./apollo/client";
 import { UserProvider } from "./context/profile-context";
 import { ToastProvider } from "./context/toast-context";
 import { LanguageProvider } from "./context/language-context";

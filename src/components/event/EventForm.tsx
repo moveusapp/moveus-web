@@ -185,7 +185,7 @@ function EventForm({
               label={strings.event.activity}
               value={values.activity}
               setValue={(v) => set("activity", v as ActivityKind | null)}
-              options={enumToOptions(ActivityKind, "enums.activityKind") as any}
+              options={enumToOptions(ActivityKind, "enums.activityKind")}
               placeholder={strings.event.selectActivity}
               required
             />
@@ -194,7 +194,7 @@ function EventForm({
               label={strings.event.skillLevel}
               value={values.skillLevel}
               setValue={(v) => set("skillLevel", v as SkillLevel | null)}
-              options={enumToOptions(SkillLevel, "enums.skillLevel") as any}
+              options={enumToOptions(SkillLevel, "enums.skillLevel")}
               placeholder={strings.event.selectSkillLevel}
               required
             />
@@ -249,7 +249,7 @@ function EventForm({
                 </span>
               </h3>
               <MultiChoice
-                options={enumToOptions(GenderNoPnts, "enums.genderNoPnts") as any}
+                options={enumToOptions(GenderNoPnts, "enums.genderNoPnts")}
                 setValue={(v) => set("acceptedGenders", v as GenderNoPnts[])}
                 value={values.acceptedGenders}
               />

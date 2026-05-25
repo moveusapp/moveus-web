@@ -1,6 +1,8 @@
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 import { HiXMark, HiCamera } from "react-icons/hi2";
 import { useMutation, useApolloClient } from "@apollo/client/react";
+import { useHtmlDialog } from "@/hooks/use-html-dialog";
+import { useImageSelect } from "@/hooks/use-image-select";
 import TextInput from "@/components/ui/TextInput";
 import TextArea from "@/components/ui/TextArea";
 import Dropdown from "@/components/ui/Dropdown";
@@ -63,34 +65,15 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
 
   const initialAvatar = `${import.meta.env.VITE_BUCKET_URL}/profile-pictures/${profile.id}`;
   const [avatarSrc, setAvatarSrc] = useState(initialAvatar);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const {
+    inputRef: imageRef,
+    file: selectedImage,
+    previewUrl: imagePreview,
+    onSelect: handleImageSelect,
+    clear: removeImage,
+  } = useImageSelect();
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const imageRef = useRef<HTMLInputElement>(null);
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (isOpen && !dialog.open) dialog.showModal();
-    if (!isOpen && dialog.open) dialog.close();
-  }, [isOpen]);
-
-  const handleImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const removeImage = () => {
-    setSelectedImage(null);
-    setImagePreview(null);
-    if (imageRef.current) imageRef.current.value = "";
-  };
+  const { dialogRef } = useHtmlDialog(isOpen);
 
   const resetForm = () => {
     setFirstName(profile.firstName ?? "");
@@ -98,11 +81,9 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
     setBio(profile.bio ?? "");
     setGender(toGender(profile.gender));
     setDob(toDate(profile.dateOfBirth));
-    setSelectedImage(null);
-    setImagePreview(null);
+    removeImage();
     setUploadError(null);
     setAvatarSrc(initialAvatar);
-    if (imageRef.current) imageRef.current.value = "";
   };
 
   const handleClose = () => {

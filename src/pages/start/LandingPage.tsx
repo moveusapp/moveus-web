@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
 import { HiArrowLeft, HiArrowRight, HiLockClosed } from "react-icons/hi2";
-import { LuCheck, LuFlame, LuHeart, LuMapPin } from "react-icons/lu";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
 import "./landing.css";
 import EventCard from "@/components/event/EventCard";
@@ -11,188 +10,33 @@ import { GetAnonymousUserEventsDocument } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { useProfile } from "@/context/profile-context";
 import strings from "@/translations/strings";
-
-function MatchedStickers() {
-  const s = strings.landing.matchedSticker;
-  return (
-    <div className="lp-stk-cluster">
-      <div className="lp-stk lp-stk--survey" style={{ top: "4%", left: "6%", transform: "rotate(-5deg)" }}>
-        <div className="lp-stk-eyebrow">{s.eyebrow}</div>
-        <div className="lp-stk-q">{s.question}</div>
-        <div className="lp-stk-row lp-stk-row--on">
-          <span className="lp-stk-radio" aria-hidden="true" />
-          {s.optionOn}
-        </div>
-        <div className="lp-stk-row">
-          <span className="lp-stk-radio" aria-hidden="true" />
-          {s.optionOff}
-        </div>
-      </div>
-      <div className="lp-stk lp-stk--chip lp-stk--chip-blue" style={{ top: "18%", right: "4%", transform: "rotate(7deg)" }}>
-        <LuMapPin className="w-3.5 h-3.5" />
-        {s.chipLocation}
-      </div>
-      <div className="lp-stk lp-stk--chip lp-stk--chip-orange" style={{ bottom: "6%", left: "30%", transform: "rotate(-3deg)" }}>
-        <span className="lp-stk-dot" aria-hidden="true" />
-        {s.chipMatches}
-      </div>
-    </div>
-  );
-}
-
-function MakeItRealStickers() {
-  const s = strings.landing.makeItRealSticker;
-  return (
-    <div className="lp-stk-cluster">
-      <div className="lp-stk lp-stk--event" style={{ top: "2%", left: "8%", transform: "rotate(-4deg)" }}>
-        <div className="lp-stk-event-date">
-          <span className="lp-stk-event-day">{s.eventDay}</span>
-          <span className="lp-stk-event-num">{s.eventNum}</span>
-        </div>
-        <div>
-          <div className="lp-stk-event-title">{s.eventTitle}</div>
-          <div className="lp-stk-event-meta">{s.eventMeta}</div>
-        </div>
-      </div>
-      <div className="lp-stk lp-stk--bubble lp-stk--bubble-in" style={{ top: "44%", right: "10%", transform: "rotate(4deg)" }}>
-        {s.bubbleIn}
-      </div>
-      <div className="lp-stk lp-stk--bubble lp-stk--bubble-out" style={{ top: "62%", right: "28%", transform: "rotate(-3deg)" }}>
-        {s.bubbleOut}
-      </div>
-      <div className="lp-stk lp-stk--chip lp-stk--chip-green" style={{ bottom: "4%", left: "12%", transform: "rotate(6deg)" }}>
-        <LuCheck className="w-3.5 h-3.5" />
-        {s.chipLockedIn}
-      </div>
-    </div>
-  );
-}
-
-function StayInItStickers() {
-  const s = strings.landing.stayInItSticker;
-  return (
-    <div className="lp-stk-cluster">
-      <div className="lp-stk lp-stk--post" style={{ top: "4%", left: "10%", transform: "rotate(-4deg)" }}>
-        <div className="lp-stk-post-head">
-          <div className="lp-stk-post-avatar" aria-hidden="true">{s.avatar}</div>
-          <div className="leading-tight">
-            <div className="lp-stk-post-name">{s.name}</div>
-            <div className="lp-stk-post-time">{s.time}</div>
-          </div>
-        </div>
-        <p className="lp-stk-post-body">{s.body}</p>
-        <div className="lp-stk-post-meta">
-          <span className="lp-stk-post-stat">
-            <LuHeart className="w-3.5 h-3.5" /> 24
-          </span>
-        </div>
-      </div>
-      <div className="lp-stk lp-stk--chip lp-stk--chip-flame" style={{ top: "22%", right: "6%", transform: "rotate(8deg)" }}>
-        <LuFlame className="w-4 h-4" />
-        <span><strong>{s.streakNum}</strong> {s.streakLabel}</span>
-      </div>
-      <div className="lp-stk lp-stk--chip lp-stk--chip-cream" style={{ bottom: "6%", left: "42%", transform: "rotate(-5deg)" }}>
-        <span className="lp-stk-xp">{s.xp}</span>
-        {s.xpLabel}
-      </div>
-    </div>
-  );
-}
-
-type VerbSize = "sm" | "md" | "lg";
-
-const VERB_SIZE_CLASS: Record<VerbSize, string> = {
-  sm: "text-[clamp(1.5rem,5vw,3.25rem)]",
-  md: "text-[clamp(2rem,7.5vw,5.5rem)]",
-  lg: "text-[clamp(3rem,10.5vw,8.5rem)]",
-};
-
-function VerbSlot({
-  offset,
-  size,
-  color,
-  rotate,
-  positionClass,
-}: {
-  offset: number;
-  size: VerbSize;
-  color: "primary" | "accent";
-  rotate: number;
-  positionClass: string;
-}) {
-  const verbs = strings.landing.verbs;
-  const [idx, setIdx] = useState(offset % verbs.length);
-  const [fade, setFade] = useState(false);
-  const [entered, setEntered] = useState(false);
-
-  const enterDelay = 120 + (offset % 6) * 110;
-
-  useEffect(() => {
-    const enterId = window.setTimeout(() => setEntered(true), enterDelay);
-    const firstTickDelay = enterDelay + 1300 + (offset % 4) * 200;
-    const period = 2800 + (offset % 4) * 450;
-    let intervalId = 0;
-    const firstId = window.setTimeout(() => {
-      const tick = () => {
-        setFade(true);
-        window.setTimeout(() => {
-          setIdx((i) => (i + 7) % verbs.length);
-          setFade(false);
-        }, 360);
-      };
-      tick();
-      intervalId = window.setInterval(tick, period);
-    }, firstTickDelay);
-    return () => {
-      window.clearTimeout(enterId);
-      window.clearTimeout(firstId);
-      if (intervalId) window.clearInterval(intervalId);
-    };
-  }, [offset, verbs.length, enterDelay]);
-
-  const colorClass = color === "primary" ? "text-primary/45" : "text-accent/50";
-
-  let scale = 1;
-  let translateY = 0;
-  let blur = 0;
-  let opacity = 1;
-  if (!entered) {
-    scale = 0.7;
-    translateY = 28;
-    blur = 10;
-    opacity = 0;
-  } else if (fade) {
-    scale = 0.94;
-    translateY = 14;
-    blur = 5;
-    opacity = 0;
-  }
-
-  return (
-    <span
-      aria-hidden="true"
-      className={`absolute font-black tracking-[-0.04em] leading-none select-none whitespace-nowrap ${colorClass} ${VERB_SIZE_CLASS[size]} ${positionClass}`}
-      style={{
-        transform: `rotate(${rotate}deg) scale(${scale}) translateY(${translateY}px)`,
-        opacity,
-        filter: `blur(${blur}px)`,
-        transition:
-          "opacity 520ms cubic-bezier(0.16, 1, 0.3, 1), transform 520ms cubic-bezier(0.16, 1, 0.3, 1), filter 520ms cubic-bezier(0.16, 1, 0.3, 1)",
-        willChange: "transform, opacity, filter",
-      }}
-    >
-      {verbs[idx]}
-    </span>
-  );
-}
+import MatchedStickers from "./stickers/MatchedStickers";
+import MakeItRealStickers from "./stickers/MakeItRealStickers";
+import StayInItStickers from "./stickers/StayInItStickers";
+import VerbSlot from "./VerbSlot";
+import { useCarouselNav } from "./use-carousel-nav";
+import { useHeroTilt } from "./use-hero-tilt";
 
 function LandingPage() {
   const { profile } = useProfile();
   const heroRef = useRef<HTMLElement>(null);
   const logoTiltRef = useRef<HTMLDivElement>(null);
   const [carouselEl, setCarouselEl] = useState<HTMLUListElement | null>(null);
-  const [canPrev, setCanPrev] = useState(false);
-  const [canNext, setCanNext] = useState(false);
+
+  const { canPrev, canNext, scrollBy: scrollCarousel } =
+    useCarouselNav(carouselEl);
+
+  useHeroTilt(heroRef, logoTiltRef);
+
+  if (profile) {
+    return <Navigate to="/home" replace />;
+  }
+
+  useDocumentTitle(strings.landing.documentTitle);
+
+  const { data: eventsData, loading: eventsLoading } = useQuery(
+    GetAnonymousUserEventsDocument,
+  );
 
   const strips = [
     {
@@ -224,84 +68,9 @@ function LandingPage() {
     },
   ];
 
-  const scrollCarousel = (dir: 1 | -1) => {
-    if (!carouselEl) return;
-    const first = carouselEl.querySelector("li") as HTMLElement | null;
-    if (!first) return;
-    const styles = window.getComputedStyle(carouselEl);
-    const gap = parseFloat(styles.columnGap || styles.gap || "0") || 24;
-    carouselEl.scrollBy({ left: dir * (first.offsetWidth + gap), behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    if (!carouselEl) return;
-    const update = () => {
-      const max = carouselEl.scrollWidth - carouselEl.clientWidth;
-      setCanPrev(carouselEl.scrollLeft > 1);
-      setCanNext(carouselEl.scrollLeft < max - 1);
-    };
-    update();
-    carouselEl.addEventListener("scroll", update, { passive: true });
-    const ro = new ResizeObserver(update);
-    ro.observe(carouselEl);
-    return () => {
-      carouselEl.removeEventListener("scroll", update);
-      ro.disconnect();
-    };
-  }, [carouselEl]);
-
-  useEffect(() => {
-    const hero = heroRef.current;
-    const tilt = logoTiltRef.current;
-    if (!hero || !tilt) return;
-    if (!window.matchMedia("(hover: hover)").matches) return;
-
-    let raf = 0;
-    let tx = 0,
-      ty = 0,
-      cx = 0,
-      cy = 0;
-
-    const onMove = (e: PointerEvent) => {
-      const rect = hero.getBoundingClientRect();
-      tx = (e.clientX - rect.left) / rect.width - 0.5;
-      ty = (e.clientY - rect.top) / rect.height - 0.5;
-    };
-    const onLeave = () => {
-      tx = 0;
-      ty = 0;
-    };
-    const loop = () => {
-      cx += (tx - cx) * 0.08;
-      cy += (ty - cy) * 0.08;
-      tilt.style.setProperty("--tx", `${cx * 9}deg`);
-      tilt.style.setProperty("--ty", `${cy * -9}deg`);
-      tilt.style.setProperty("--shx", `${cx * -22}px`);
-      tilt.style.setProperty("--shy", `${cy * -22 + 30}px`);
-      hero.style.setProperty("--cx", `${cx}`);
-      hero.style.setProperty("--cy", `${cy}`);
-      raf = requestAnimationFrame(loop);
-    };
-
-    hero.addEventListener("pointermove", onMove);
-    hero.addEventListener("pointerleave", onLeave);
-    raf = requestAnimationFrame(loop);
-    return () => {
-      cancelAnimationFrame(raf);
-      hero.removeEventListener("pointermove", onMove);
-      hero.removeEventListener("pointerleave", onLeave);
-    };
-  }, []);
-
-  if (profile) {
-    return <Navigate to="/home" replace />;
-  }
-
-  useDocumentTitle(strings.landing.documentTitle);
-
-  const { data: eventsData, loading: eventsLoading } = useQuery(
-    GetAnonymousUserEventsDocument,
-  );
+  const nearbyEvents = (eventsData?.anonymousUserEvents ?? [])
+    .filter((e): e is NonNullable<typeof e> => Boolean(e))
+    .slice(0, 6);
 
   return (
     <div className="min-h-screen bg-base-100">
@@ -461,107 +230,99 @@ function LandingPage() {
       </section>
 
       {/* NEARBY EVENTS */}
-      {(() => {
-        const nearbyEvents = (eventsData?.anonymousUserEvents ?? [])
-          .filter((e): e is NonNullable<typeof e> => Boolean(e))
-          .slice(0, 6);
-
-        return (
-          <section className="py-20 lg:py-24 bg-base-100 border-t border-base-300 overflow-hidden">
-            <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
-              <div className="text-center mb-10 lg:mb-12 max-w-2xl mx-auto">
-                <h2 className="lp-story-h2 sm:whitespace-nowrap">
-                  {strings.landing.happeningPrefix}{" "}
-                  <span className="relative inline-block text-primary">
-                    {strings.landing.happeningHighlight}
-                    <svg
-                      className="absolute left-0 right-0 -bottom-2 w-full h-3 pointer-events-none overflow-visible"
-                      viewBox="0 0 200 12"
-                      preserveAspectRatio="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        className="text-accent"
-                        d="M2 7 Q 40 1, 80 7 T 160 7 T 198 7"
-                        stroke="currentColor"
-                        strokeWidth="3.5"
-                        strokeLinecap="round"
-                        fill="none"
-                      />
-                    </svg>
-                  </span>
-                  .
-                </h2>
-                <p className="lp-story-lede">
-                  {strings.landing.happeningLede}
-                </p>
-              </div>
-            </div>
-
-            {eventsLoading ? (
-              <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
-                <div className="lp-carousel" aria-hidden="true">
-                  <div className="lp-carousel-arrow invisible" />
-                  <div className="lp-carousel-viewport">
-                    <ul className="lp-carousel-track">
-                      {Array.from({ length: 3 }).map((_, i) => (
-                        <li key={i} className="lp-carousel-card">
-                          <EventCardSkeleton />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="lp-carousel-arrow invisible" />
-                </div>
-              </div>
-            ) : nearbyEvents.length > 0 ? (
-              <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
-                <div className="lp-carousel" aria-label={strings.landing.eventsAriaLabel}>
-                  <button
-                    type="button"
-                    onClick={() => scrollCarousel(-1)}
-                    className="lp-carousel-arrow lp-carousel-arrow--prev"
-                    aria-label={strings.landing.previousEvents}
-                    disabled={!canPrev}
-                  >
-                    <HiArrowLeft className="w-5 h-5" />
-                  </button>
-                  <div className="lp-carousel-viewport">
-                    <ul ref={setCarouselEl} className="lp-carousel-track">
-                      {nearbyEvents.map((event) => (
-                        <li key={event.id} className="lp-carousel-card">
-                          <EventCard event={event} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => scrollCarousel(1)}
-                    className="lp-carousel-arrow lp-carousel-arrow--next"
-                    aria-label={strings.landing.nextEvents}
-                    disabled={!canNext}
-                  >
-                    <HiArrowRight className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            ) : null}
-
-            <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
-              <div className="text-center mt-8 lg:mt-10">
-                <Link
-                  to="/search"
-                  className="btn btn-primary btn-lg gap-2 btn-arrow"
+      <section className="py-20 lg:py-24 bg-base-100 border-t border-base-300 overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+          <div className="text-center mb-10 lg:mb-12 max-w-2xl mx-auto">
+            <h2 className="lp-story-h2 sm:whitespace-nowrap">
+              {strings.landing.happeningPrefix}{" "}
+              <span className="relative inline-block text-primary">
+                {strings.landing.happeningHighlight}
+                <svg
+                  className="absolute left-0 right-0 -bottom-2 w-full h-3 pointer-events-none overflow-visible"
+                  viewBox="0 0 200 12"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
                 >
-                  {strings.landing.seeAllEvents}
-                  <HiArrowRight className="w-5 h-5" />
-                </Link>
+                  <path
+                    className="text-accent"
+                    d="M2 7 Q 40 1, 80 7 T 160 7 T 198 7"
+                    stroke="currentColor"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </svg>
+              </span>
+              .
+            </h2>
+            <p className="lp-story-lede">
+              {strings.landing.happeningLede}
+            </p>
+          </div>
+        </div>
+
+        {eventsLoading ? (
+          <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+            <div className="lp-carousel" aria-hidden="true">
+              <div className="lp-carousel-arrow invisible" />
+              <div className="lp-carousel-viewport">
+                <ul className="lp-carousel-track">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <li key={i} className="lp-carousel-card">
+                      <EventCardSkeleton />
+                    </li>
+                  ))}
+                </ul>
               </div>
+              <div className="lp-carousel-arrow invisible" />
             </div>
-          </section>
-        );
-      })()}
+          </div>
+        ) : nearbyEvents.length > 0 ? (
+          <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+            <div className="lp-carousel" aria-label={strings.landing.eventsAriaLabel}>
+              <button
+                type="button"
+                onClick={() => scrollCarousel(-1)}
+                className="lp-carousel-arrow lp-carousel-arrow--prev"
+                aria-label={strings.landing.previousEvents}
+                disabled={!canPrev}
+              >
+                <HiArrowLeft className="w-5 h-5" />
+              </button>
+              <div className="lp-carousel-viewport">
+                <ul ref={setCarouselEl} className="lp-carousel-track">
+                  {nearbyEvents.map((event) => (
+                    <li key={event.id} className="lp-carousel-card">
+                      <EventCard event={event} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                type="button"
+                onClick={() => scrollCarousel(1)}
+                className="lp-carousel-arrow lp-carousel-arrow--next"
+                aria-label={strings.landing.nextEvents}
+                disabled={!canNext}
+              >
+                <HiArrowRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        ) : null}
+
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+          <div className="text-center mt-8 lg:mt-10">
+            <Link
+              to="/search"
+              className="btn btn-primary btn-lg gap-2 btn-arrow"
+            >
+              {strings.landing.seeAllEvents}
+              <HiArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* FINAL CTA */}
       <section className="relative overflow-hidden bg-[#028ED1] py-24 lg:py-28">

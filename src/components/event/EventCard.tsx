@@ -1,12 +1,12 @@
 import defaultEventThumbnail from "@/assets/default-images/event-default-thumbnail.webp";
 import UserAvatar from "@/components/user/UserAvatar";
 import {
-  ActivityKind,
   EventCardFragment,
   EventPhase,
 } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { formatDate, formatTime } from "@/utils/time-utils";
+import { getActivityLabel } from "@/utils/activity-label";
 import {
   HiOutlineMapPin,
   HiCheckBadge,
@@ -18,9 +18,7 @@ import EventPhaseBadge from "./EventPhaseBadge";
 import strings from "@/translations/strings";
 
 function EventCard({ event }: EventCardProps) {
-  const activityValue = Object.values(ActivityKind)[event.activity.id!];
-  const activityLabels = strings.enums.activityKind as unknown as Record<string, string>;
-  const activity = activityLabels[activityValue] ?? activityValue;
+  const activity = getActivityLabel(event.activity.id);
 
   const organizerName = displayName(
     event.organizer?.user.username!,

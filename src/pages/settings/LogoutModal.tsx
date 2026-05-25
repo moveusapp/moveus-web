@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
-import { apolloClient } from "@/appolo/client";
+import { apolloClient } from "@/apollo/client";
 import { useProfile } from "@/context/profile-context";
 import { LogOutDocument } from "@/graphql/graphql-types";
 import { clearStoredProfile } from "@/utils/auth";

@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { HiXMark, HiPhoto } from "react-icons/hi2";
 import Button from "@/components/ui/Button";
 import UserAvatar from "@/components/user/UserAvatar";
@@ -11,6 +11,8 @@ import { useProfile } from "@/context/profile-context";
 import { useToast } from "@/context/toast-context";
 import { displayName } from "@/utils/display-name";
 import strings from "@/translations/strings";
+import { useHtmlDialog } from "@/hooks/use-html-dialog";
+import { useImageSelect } from "@/hooks/use-image-select";
 
 const MAX_CONTENT_LENGTH = 2048;
 
@@ -35,18 +37,15 @@ function CreatePostModal({
     useMutation(CreatePostDocument);
 
   const [content, setContent] = useState("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const {
+    inputRef: imageRef,
+    file: selectedImage,
+    previewUrl: imagePreview,
+    onSelect: handleImageSelect,
+    clear: removeImage,
+  } = useImageSelect();
   const [uploading, setUploading] = useState(false);
-  const imageRef = useRef<HTMLInputElement>(null);
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (isOpen && !dialog.open) dialog.showModal();
-    if (!isOpen && dialog.open) dialog.close();
-  }, [isOpen]);
+  const { dialogRef } = useHtmlDialog(isOpen);
 
   const loading = creating || uploading;
   const errorMessage = error ? formatError(error) : null;
@@ -58,26 +57,6 @@ function CreatePostModal({
   const onChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.currentTarget.value);
   }, []);
-
-  const handleImageSelect = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const removeImage = () => {
-    setSelectedImage(null);
-    setImagePreview(null);
-    if (imageRef.current) {
-      imageRef.current.value = "";
-    }
-  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -112,8 +91,7 @@ function CreatePostModal({
       }
 
       setContent("");
-      setSelectedImage(null);
-      setImagePreview(null);
+      removeImage();
 
       onClose();
       if (imageFailed) {
@@ -131,11 +109,7 @@ function CreatePostModal({
 
   const handleClose = () => {
     setContent("");
-    setSelectedImage(null);
-    setImagePreview(null);
-    if (imageRef.current) {
-      imageRef.current.value = "";
-    }
+    removeImage();
     onClose();
   };
 

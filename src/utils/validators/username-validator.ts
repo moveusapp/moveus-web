@@ -1,4 +1,4 @@
-import { apolloClient } from "@/appolo/client";
+import { apolloClient } from "@/apollo/client";
 import { UsernameTakenDocument } from "@/graphql/graphql-types";
 import strings from "@/translations/strings";
 

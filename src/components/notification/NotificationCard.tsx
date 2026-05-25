@@ -1,4 +1,4 @@
-import { NotificationKind } from "@/graphql/graphql-types";
+import { GetNotificationsQueryResult, NotificationKind } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
 import { Link } from "react-router-dom";
@@ -55,7 +55,7 @@ function NotificationCard({ notification }: NotificationCardProps) {
             to={`/user/${notification.user?.username}`}
           >
             <div className="flex flex-row items-center gap-3">
-              <UserAvatar userId={notification.user?.id} className="w-11 shrink-0" />
+              <UserAvatar userId={notification.user?.id!} className="w-11 shrink-0" />
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 grow min-w-0">
                 <p className="text-[14px] sm:text-[15px] leading-snug text-base-content/80 line-clamp-2 break-words">
                   <b className="font-bold text-base-content">{name}</b> {strings.notification.nowFollowing}
@@ -113,8 +113,12 @@ function NotificationCard({ notification }: NotificationCardProps) {
   return <></>;
 }
 
+type Notification = NonNullable<
+  NonNullable<GetNotificationsQueryResult["myNotifications"]>[number]
+>;
+
 interface NotificationCardProps {
-  notification: any;
+  notification: Notification;
 }
 
 export default NotificationCard;

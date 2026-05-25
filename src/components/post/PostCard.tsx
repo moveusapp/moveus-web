@@ -5,7 +5,6 @@ import {
   LikePostDocument,
   UnlikePostDocument,
 } from "@/graphql/graphql-types";
-import { useMutation } from "@apollo/client/react";
 import { timeAgo } from "@/utils/time-utils";
 import UserAvatar from "../user/UserAvatar";
 import { displayName } from "@/utils/display-name";
@@ -13,15 +12,19 @@ import { HiCheckBadge } from "react-icons/hi2";
 import { HiOutlineHeart, HiHeart, HiOutlineChatBubbleLeft } from "react-icons/hi2";
 import ImageLightbox from "@/components/ui/ImageLightbox";
 import strings from "@/translations/strings";
+import { useLikeToggle } from "@/hooks/use-like-toggle";
 
 function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
   const navigate = useNavigate();
   const [showImageModal, setShowImageModal] = useState(false);
-  const [liked, setLiked] = useState(post.isLiked ?? false);
-  const [likeCount, setLikeCount] = useState(post.likes ?? 0);
 
-  const [likePost] = useMutation(LikePostDocument);
-  const [unlikePost] = useMutation(UnlikePostDocument);
+  const { liked, likeCount, toggle: handleLike } = useLikeToggle({
+    variables: { postId: post.id! },
+    initialLiked: post.isLiked ?? false,
+    initialCount: post.likes ?? 0,
+    likeDoc: LikePostDocument,
+    unlikeDoc: UnlikePostDocument,
+  });
 
   const organizerName = displayName(
     post.author!.username,
@@ -34,24 +37,6 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
     : null;
 
   const commentCount = post.comments?.length ?? 0;
-
-  const handleLike = useCallback(() => {
-    if (liked) {
-      setLiked(false);
-      setLikeCount((c) => c - 1);
-      unlikePost({ variables: { postId: post.id! } }).catch(() => {
-        setLiked(true);
-        setLikeCount((c) => c + 1);
-      });
-    } else {
-      setLiked(true);
-      setLikeCount((c) => c + 1);
-      likePost({ variables: { postId: post.id! } }).catch(() => {
-        setLiked(false);
-        setLikeCount((c) => c - 1);
-      });
-    }
-  }, [liked, post.id, likePost, unlikePost]);
 
   const navigable = clickable && post.id != null;
 

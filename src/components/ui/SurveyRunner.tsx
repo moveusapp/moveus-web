@@ -9,15 +9,21 @@ import QuestionRenderer, { isValid } from "./QuestionRenderer";
 import FormError from "./FormError";
 import strings from "@/translations/strings";
 
-interface Props {
-  survey: Survey<any>;
+type AnyVars = Record<string, unknown>;
+type Answers = Record<string, unknown>;
+
+interface Props<TVars extends AnyVars> {
+  survey: Survey<TVars>;
 }
 
-function buildVariables(survey: Survey<any>, answers: Record<string, any>) {
-  const vars: Record<string, any> = {};
+function buildVariables<TVars extends AnyVars>(
+  survey: Survey<TVars>,
+  answers: Answers,
+): AnyVars {
+  const vars: AnyVars = {};
   for (const q of survey.questions) {
     if (q.kind === QuestionKind.FullName) {
-      const v = answers[q.kind] ?? {};
+      const v = (answers[q.kind] ?? {}) as { firstName?: string; lastName?: string };
       vars[q.field[0]] = v.firstName ?? null;
       vars[q.field[1]] = v.lastName ?? null;
     } else if (q.kind === QuestionKind.ProfilePicture) {
@@ -33,15 +39,15 @@ function buildVariables(survey: Survey<any>, answers: Record<string, any>) {
   return vars;
 }
 
-function answerKey(q: Question<any>) {
+function answerKey<TVars extends AnyVars>(q: Question<TVars>): string {
   if (q.kind === QuestionKind.FullName) return QuestionKind.FullName;
   if (q.kind === QuestionKind.ProfilePicture) return QuestionKind.ProfilePicture;
   return q.field as string;
 }
 
-function SurveyRunner({ survey }: Props) {
+function SurveyRunner<TVars extends AnyVars>({ survey }: Props<TVars>) {
   const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [answers, setAnswers] = useState<Answers>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
@@ -60,7 +66,7 @@ function SurveyRunner({ survey }: Props) {
   const isLast = index === total - 1;
   const canAdvance = isValid(question, value) && !loading;
 
-  const setValue = (v: any) => {
+  const setValue = (v: unknown) => {
     setSubmitError(null);
     setAnswers((a) => ({ ...a, [key]: v }));
   };
@@ -86,7 +92,9 @@ function SurveyRunner({ survey }: Props) {
       }
     }
     try {
-      await runMutation({ variables: buildVariables(survey, answers) });
+      await runMutation({
+        variables: buildVariables(survey, answers) as TVars,
+      });
     } catch (err) {
       console.error(err);
       setSubmitError(formatError(err));

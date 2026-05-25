@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { HiXMark } from "react-icons/hi2";
 import { useMutation } from "@apollo/client/react";
 import { EventRating, RateEventDocument } from "@/graphql/graphql-types";
@@ -9,6 +9,7 @@ import RatingFaces from "@/components/event/RatingFaces";
 import { formatError } from "@/utils/format-error";
 import { useToast } from "@/context/toast-context";
 import strings from "@/translations/strings";
+import { useHtmlDialog } from "@/hooks/use-html-dialog";
 
 const MAX_COMMENT = 500;
 const COMMENT_WARN_AT = MAX_COMMENT - 50;
@@ -32,7 +33,7 @@ function LeaveFeedbackModal({
   onSubmitted,
 }: LeaveFeedbackModalProps) {
   const toast = useToast();
-  const dialogRef = useRef<HTMLDialogElement>(null);
+  const { dialogRef } = useHtmlDialog(isOpen);
   const [score, setScore] = useState<EventRating | null>(initialScore);
   const [comment, setComment] = useState("");
 
@@ -48,13 +49,6 @@ function LeaveFeedbackModal({
       reset();
     }
   }, [isOpen, initialScore, reset]);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (isOpen && !dialog.open) dialog.showModal();
-    if (!isOpen && dialog.open) dialog.close();
-  }, [isOpen]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

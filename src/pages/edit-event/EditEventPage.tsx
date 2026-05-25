@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
 import { HiOutlineNoSymbol, HiOutlineTrash } from "react-icons/hi2";
@@ -18,6 +18,7 @@ import { formatError } from "@/utils/format-error";
 import PageHeader from "@/components/layout/PageHeader";
 import { useToast } from "@/context/toast-context";
 import strings from "@/translations/strings";
+import { useHtmlDialog } from "@/hooks/use-html-dialog";
 
 const pageWrap = "w-full mx-auto max-w-3xl p-4";
 
@@ -52,28 +53,14 @@ function EditEventPage() {
 
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
-  const confirmDialogRef = useRef<HTMLDialogElement>(null);
-  const cancelDialogRef = useRef<HTMLDialogElement>(null);
+  const { dialogRef: confirmDialogRef } = useHtmlDialog(confirmOpen);
+  const { dialogRef: cancelDialogRef } = useHtmlDialog(cancelOpen);
 
   useEffect(() => {
     if (event && event.role !== MemberRole.Organizer) {
       navigate(`/event/${id}`, { replace: true });
     }
   }, [event, id, navigate]);
-
-  useEffect(() => {
-    const dialog = confirmDialogRef.current;
-    if (!dialog) return;
-    if (confirmOpen && !dialog.open) dialog.showModal();
-    if (!confirmOpen && dialog.open) dialog.close();
-  }, [confirmOpen]);
-
-  useEffect(() => {
-    const dialog = cancelDialogRef.current;
-    if (!dialog) return;
-    if (cancelOpen && !dialog.open) dialog.showModal();
-    if (!cancelOpen && dialog.open) dialog.close();
-  }, [cancelOpen]);
 
   if (fallback) return fallback;
   if (!event || event.role !== MemberRole.Organizer) return null;

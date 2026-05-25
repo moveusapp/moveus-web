@@ -1,6 +1,4 @@
-import { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation } from "@apollo/client/react";
 import {
   CommentFragment,
   LikeCommentDocument,
@@ -11,37 +9,22 @@ import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
 import { HiOutlineHeart, HiHeart, HiOutlineChatBubbleLeft } from "react-icons/hi2";
 import strings from "@/translations/strings";
+import { useLikeToggle } from "@/hooks/use-like-toggle";
 
 function CommentCard({ comment, onReply }: CommentCardProps) {
-  const [liked, setLiked] = useState(comment.isLiked ?? false);
-  const [likeCount, setLikeCount] = useState(comment.likes ?? 0);
-
-  const [likeComment] = useMutation(LikeCommentDocument);
-  const [unlikeComment] = useMutation(UnlikeCommentDocument);
+  const { liked, likeCount, toggle: handleLike } = useLikeToggle({
+    variables: { commentId: comment.id! },
+    initialLiked: comment.isLiked ?? false,
+    initialCount: comment.likes ?? 0,
+    likeDoc: LikeCommentDocument,
+    unlikeDoc: UnlikeCommentDocument,
+  });
 
   const name = displayName(
     comment.user.username,
     comment.user.firstName,
     comment.user.lastName,
   );
-
-  const handleLike = useCallback(() => {
-    if (liked) {
-      setLiked(false);
-      setLikeCount((c) => c - 1);
-      unlikeComment({ variables: { commentId: comment.id! } }).catch(() => {
-        setLiked(true);
-        setLikeCount((c) => c + 1);
-      });
-    } else {
-      setLiked(true);
-      setLikeCount((c) => c + 1);
-      likeComment({ variables: { commentId: comment.id! } }).catch(() => {
-        setLiked(false);
-        setLikeCount((c) => c - 1);
-      });
-    }
-  }, [liked, comment.id, likeComment, unlikeComment]);
 
   return (
     <div className="flex flex-col gap-1">
@@ -101,31 +84,15 @@ function CommentCard({ comment, onReply }: CommentCardProps) {
 }
 
 function ReplyCard({ reply }: { reply: CommentFragment["replies"][number] }) {
-  const [liked, setLiked] = useState(reply.isLiked ?? false);
-  const [likeCount, setLikeCount] = useState(reply.likes ?? 0);
-
-  const [likeComment] = useMutation(LikeCommentDocument);
-  const [unlikeComment] = useMutation(UnlikeCommentDocument);
+  const { liked, likeCount, toggle: handleLike } = useLikeToggle({
+    variables: { commentId: reply.id! },
+    initialLiked: reply.isLiked ?? false,
+    initialCount: reply.likes ?? 0,
+    likeDoc: LikeCommentDocument,
+    unlikeDoc: UnlikeCommentDocument,
+  });
 
   const name = displayName(reply.user.username, reply.user.firstName, reply.user.lastName);
-
-  const handleLike = useCallback(() => {
-    if (liked) {
-      setLiked(false);
-      setLikeCount((c) => c - 1);
-      unlikeComment({ variables: { commentId: reply.id! } }).catch(() => {
-        setLiked(true);
-        setLikeCount((c) => c + 1);
-      });
-    } else {
-      setLiked(true);
-      setLikeCount((c) => c + 1);
-      likeComment({ variables: { commentId: reply.id! } }).catch(() => {
-        setLiked(false);
-        setLikeCount((c) => c - 1);
-      });
-    }
-  }, [liked, reply.id, likeComment, unlikeComment]);
 
   return (
     <div className="flex gap-3">
