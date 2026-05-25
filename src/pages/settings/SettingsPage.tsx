@@ -179,11 +179,14 @@ function SettingsPage() {
         </div>
 
         <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
-          {privacySettingConfig.map((config) => (
+          {privacySettingConfig.map((config) => {
+            const label =
+              settingOptions.find((m) => m.value === config.setting)?.label ?? "";
+            return (
             <SettingsOption
               key={config.setting}
               icon={config.icon}
-              title={settingOptions.find((m) => m.value === config.setting).label}
+              title={label}
               description={config.description}
               error={
                 erroredSetting === config.setting
@@ -192,7 +195,7 @@ function SettingsPage() {
               }
               controlLabel={
                 strings.formatString(strings.settings.whoCanSee, {
-                  field: settingOptions.find((m) => m.value === config.setting).label.toLowerCase(),
+                  field: label.toLowerCase(),
                 }) as string
               }
               control={{
@@ -203,7 +206,8 @@ function SettingsPage() {
                 onChange: (value) => handlePrivacyChange(config.setting, value),
               }}
             />
-          ))}
+            );
+          })}
         </div>
 
         <div className="mt-3 mb-1">

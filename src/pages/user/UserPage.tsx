@@ -82,7 +82,7 @@ function UserPage() {
   });
   const { profile } = useProfile();
 
-  useDocumentTitle(username);
+  useDocumentTitle(username!);
 
   if (loading) {
     return <UserPageSkeleton />;
