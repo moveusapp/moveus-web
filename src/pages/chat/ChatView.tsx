@@ -48,6 +48,13 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
     return map;
   }, [members]);
   const isGroup = chat?.kind === ChatKind.Group;
+  const otherMember = useMemo(
+    () =>
+      isGroup
+        ? null
+        : members.find((m) => m.user.id !== profile?.id) ?? members[0] ?? null,
+    [members, isGroup, profile?.id],
+  );
 
   const { messages, send } = useChatMessages(chat?.id ?? undefined);
 
@@ -86,19 +93,19 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
       setDocumentTitle(`${label}${strings.chat.chatTitleSuffix}`);
       return;
     }
-    if (members.length > 0) {
-      const m = members[0];
+    if (otherMember) {
+      const m = otherMember;
       setDocumentTitle(
         `${displayName(m.user.username, m.user.firstName, m.user.lastName)}${strings.chat.chatTitleSuffix}`,
       );
     }
-  }, [chat, members, isGroup]);
+  }, [chat, otherMember, isGroup]);
 
   const headerTitle = useMemo(() => {
     if (isGroup && chat?.groupName) return chat.groupName;
     if (members.length === 0) return "";
     if (!isGroup) {
-      const m = members[0];
+      const m = otherMember ?? members[0];
       return displayName(m.user.username, m.user.firstName, m.user.lastName);
     }
     const names = members
@@ -109,7 +116,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
     return members.length > 4
       ? `${names.join(", ")} +${members.length - 4}`
       : names.join(", ");
-  }, [members, isGroup, chat?.groupName]);
+  }, [members, otherMember, isGroup, chat?.groupName]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -152,9 +159,8 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
 
   const hasBeenRead = (timeSent: Date): boolean => {
     if (isGroup) return false;
-    const other = members[0];
-    if (!other?.user.id) return false;
-    const open = lastOpens.get(other.user.id);
+    if (!otherMember?.user.id) return false;
+    const open = lastOpens.get(otherMember.user.id);
     return !!open && open.getTime() > timeSent.getTime();
   };
 
@@ -208,7 +214,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
               </div>
             ) : (
               <UserAvatar
-                userId={members[0].user.id!}
+                userId={(otherMember ?? members[0]).user.id!}
                 className="w-10 h-10 rounded-full"
               />
             )}
@@ -246,8 +252,8 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
                     ? strings.chat.emptyChatHeadingGroup
                     : strings.formatString(strings.chat.emptyChatHeading1on1, {
                         name:
-                          members[0]?.user.firstName ||
-                          members[0]?.user.username ||
+                          otherMember?.user.firstName ||
+                          otherMember?.user.username ||
                           "",
                       })}
                 </p>
