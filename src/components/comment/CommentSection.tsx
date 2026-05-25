@@ -1,7 +1,16 @@
 import { useCallback, useState } from "react";
 import { useMutation } from "@apollo/client/react";
+import type { Reference } from "@apollo/client/cache";
+
+// Apollo's Modifier type accepts `Reference | readonly Reference[] | undefined`,
+// but for a normalized list field we only ever see the array case.
+const appendRef =
+  (ref: Reference) =>
+  (existing: readonly Reference[] | Reference = []): readonly Reference[] =>
+    Array.isArray(existing) ? [...existing, ref] : [ref];
 import {
   CommentFragment,
+  CommentFragmentDoc,
   CommentOnPostDocument,
   CommentOnEventDocument,
   ReplyOnCommentDocument,
@@ -15,15 +24,9 @@ function CommentSection({ comments, entityType, entityId }: CommentSectionProps)
   const toast = useToast();
   const [replyingTo, setReplyingTo] = useState<CommentFragment | null>(null);
 
-  const [commentOnPost, { loading: postLoading }] = useMutation(CommentOnPostDocument, {
-    refetchQueries: ["GetEvent", "GetFeed", "GetPost"],
-  });
-  const [commentOnEvent, { loading: eventLoading }] = useMutation(CommentOnEventDocument, {
-    refetchQueries: ["GetEvent"],
-  });
-  const [replyOnComment, { loading: replyLoading }] = useMutation(ReplyOnCommentDocument, {
-    refetchQueries: ["GetEvent", "GetFeed", "GetPost"],
-  });
+  const [commentOnPost, { loading: postLoading }] = useMutation(CommentOnPostDocument);
+  const [commentOnEvent, { loading: eventLoading }] = useMutation(CommentOnEventDocument);
+  const [replyOnComment, { loading: replyLoading }] = useMutation(ReplyOnCommentDocument);
 
   const loading = postLoading || eventLoading || replyLoading;
 
@@ -32,16 +35,68 @@ function CommentSection({ comments, entityType, entityId }: CommentSectionProps)
       const onError = (err: unknown) => toast.error(formatError(err));
 
       if (replyingTo) {
-        replyOnComment({ variables: { commentId: replyingTo.id!, text } })
+        const parentId = replyingTo.id!;
+        replyOnComment({
+          variables: { commentId: parentId, text },
+          update(cache, { data }) {
+            const reply = data?.replyOnComment?.comment;
+            if (!reply) return;
+            const ref = cache.writeFragment({
+              data: reply,
+              fragment: CommentFragmentDoc,
+              fragmentName: "Comment",
+            });
+            if (!ref) return;
+            cache.modify({
+              id: cache.identify({ __typename: "CommentType", id: parentId }),
+              fields: {
+                hasReplies: () => true,
+                replies: appendRef(ref),
+              },
+            });
+          },
+        })
           .then(() => setReplyingTo(null))
           .catch(onError);
         return;
       }
 
       if (entityType === "post") {
-        commentOnPost({ variables: { postId: entityId, text } }).catch(onError);
+        commentOnPost({
+          variables: { postId: entityId, text },
+          update(cache, { data }) {
+            const comment = data?.commentOnPost?.comment;
+            if (!comment) return;
+            const ref = cache.writeFragment({
+              data: comment,
+              fragment: CommentFragmentDoc,
+              fragmentName: "Comment",
+            });
+            if (!ref) return;
+            cache.modify({
+              id: cache.identify({ __typename: "PostType", id: entityId }),
+              fields: { comments: appendRef(ref) },
+            });
+          },
+        }).catch(onError);
       } else {
-        commentOnEvent({ variables: { eventId: entityId, text } }).catch(onError);
+        commentOnEvent({
+          variables: { eventId: entityId, text },
+          update(cache, { data }) {
+            const comment = data?.commentOnEvent?.comment;
+            if (!comment) return;
+            const ref = cache.writeFragment({
+              data: comment,
+              fragment: CommentFragmentDoc,
+              fragmentName: "Comment",
+            });
+            if (!ref) return;
+            cache.modify({
+              id: cache.identify({ __typename: "EventType", id: entityId }),
+              fields: { comments: appendRef(ref) },
+            });
+          },
+        }).catch(onError);
       }
     },
     [replyingTo, entityType, entityId, commentOnPost, commentOnEvent, replyOnComment, toast],

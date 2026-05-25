@@ -114,6 +114,9 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
           dateOfBirth: dob ? formatDateForApi(dob) : null,
           gender,
         },
+        // The mutation returns ProfileType, but the user page reads UserType.
+        // They're separate normalized cache entries; normalization can't sync
+        // them, so we explicitly refetch the user page's query.
         refetchQueries: [
           {
             query: GetUserByUsernameDocument,
