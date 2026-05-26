@@ -1,3 +1,11 @@
+mutation CreateGroupChat($name: String, $userIds: [Int!]!) {
+  createGroupChat(name: $name, userIds: $userIds) {
+    chat {
+      id
+    }
+  }
+}
+
 mutation CreateDirectChat($userId: Int!) {
   createDirectChat(userId: $userId) {
     chat {

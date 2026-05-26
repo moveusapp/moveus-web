@@ -297,7 +297,8 @@
     "couldntCopyLink": "Couldn't copy the link. Try again.",
     "changesSaved": "Changes saved.",
     "eventCancelled": "Event cancelled.",
-    "eventDeleted": "Event deleted."
+    "eventDeleted": "Event deleted.",
+    "groupChatCreated": "Group chat created."
   },
   "auth": {
     "loginTitle": "Login",
@@ -486,7 +487,21 @@
     "members": "{count} members",
     "typeAMessage": "Type a message...",
     "selectedAttachmentAlt": "Selected",
-    "chatTitleSuffix": " - Chat"
+    "chatTitleSuffix": " - Chat",
+    "newGroup": "New group",
+    "newGroupAria": "Create a new group chat",
+    "newGroupTitle": "Start a group chat",
+    "searchFollowingPlaceholder": "Search people you follow",
+    "groupNameLabel": "Group name (optional)",
+    "groupNamePlaceholder": "e.g. Tuesday run crew",
+    "selectedCount": "Selected: {count}",
+    "selectAtLeastTwo": "Pick at least 2 to start",
+    "noFollowingTitle": "No one to invite yet",
+    "noFollowingBody": "Follow people from Search and they'll show up here.",
+    "noFollowingCta": "Find people",
+    "noSearchMatches": "No one matches that search",
+    "createGroup": "Create group",
+    "removeMemberAria": "Remove {name}"
   },
   "comment": {
     "writeAComment": "Write a comment...",

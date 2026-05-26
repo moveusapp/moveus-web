@@ -1,13 +1,41 @@
+import { useState } from "react";
 import UserAvatar from "@/components/user/UserAvatar";
+import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
 import { ChatKind } from "@/graphql/graphql-types";
 import { timeAgo } from "@/utils/time-utils";
+import { displayName } from "@/utils/display-name";
 import { RiCheckDoubleLine, RiCheckLine, RiGroupLine } from "react-icons/ri";
 import strings from "@/translations/strings";
 
+function StackedAvatar({ userId, className }: { userId: number; className: string }) {
+  const [src, setSrc] = useState(
+    `${import.meta.env.VITE_BUCKET_URL}/profile-pictures/${userId}`,
+  );
+  return (
+    <div className={`avatar absolute ${className}`}>
+      <div className="rounded-full ring-2 ring-base-100 bg-base-100">
+        <img
+          src={src}
+          alt={strings.user.avatarAlt}
+          className="aspect-square h-full w-full object-cover"
+          onError={() => setSrc(defaultAvatar)}
+        />
+      </div>
+    </div>
+  );
+}
+
 export interface ChatSummaryMember {
   userId: number;
+  username: string;
+  firstName: string;
+  lastName: string;
   nickname: string;
   lastOpen: Date | null;
+}
+
+function memberName(m: ChatSummaryMember): string {
+  return m.nickname || displayName(m.username, m.firstName, m.lastName);
 }
 
 export interface ChatSummary {
@@ -31,10 +59,10 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
 
   const chatName = () => {
     if (!isGroup) {
-      return members.length > 0 ? members[0].nickname : strings.chat.emptyChat;
+      return members.length > 0 ? memberName(members[0]) : strings.chat.emptyChat;
     }
     if (chat.groupName) return chat.groupName;
-    const names = members.slice(0, 3).map((m) => m.nickname);
+    const names = members.slice(0, 3).map(memberName);
     return members.length > 3
       ? `${names.join(", ")} +${members.length - 3}`
       : names.join(", ");
@@ -65,6 +93,29 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
 
   const avatar = () => {
     if (isGroup) {
+      const stack = members.slice(0, 2);
+      if (stack.length === 2) {
+        return (
+          <div className="relative w-10 h-10 shrink-0">
+            <StackedAvatar
+              userId={stack[0].userId}
+              className="w-7 h-7 top-0 left-0"
+            />
+            <StackedAvatar
+              userId={stack[1].userId}
+              className="w-7 h-7 bottom-0 right-0"
+            />
+          </div>
+        );
+      }
+      if (stack.length === 1) {
+        return (
+          <UserAvatar
+            userId={stack[0].userId}
+            className="w-10 h-10 shrink-0"
+          />
+        );
+      }
       return (
         <div className="w-10 h-10 shrink-0 rounded-full bg-primary/15 flex items-center justify-center">
           <RiGroupLine className="text-lg text-primary" />

@@ -25,6 +25,9 @@ subscription MyChats {
       timeCreated
       members {
         userId
+        username
+        firstName
+        lastName
         nickname
         lastOpen
       }
@@ -34,6 +37,9 @@ subscription MyChats {
     }
     member {
       userId
+      username
+      firstName
+      lastName
       nickname
       lastOpen
     }

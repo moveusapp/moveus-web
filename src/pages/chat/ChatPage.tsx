@@ -5,9 +5,10 @@ import useDocumentTitle from "@/hooks/use-document-title";
 import ChatCard, { ChatSummary, ChatSummaryMember } from "@/components/chat/ChatCard";
 import ChatCardSkeleton from "@/components/chat/ChatCardSkeleton";
 import ChatView from "@/pages/chat/ChatView";
-import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
+import { HiOutlineChatBubbleLeftRight, HiOutlinePencilSquare } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
 import PageHeader from "@/components/layout/PageHeader";
+import CreateGroupChatModal from "@/pages/chat/CreateGroupChatModal";
 import strings from "@/translations/strings";
 
 function ChatPage() {
@@ -17,6 +18,7 @@ function ChatPage() {
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const [chatsMap, setChatsMap] = useState<Map<number, ChatSummary>>(new Map());
   const [hasReceivedData, setHasReceivedData] = useState(false);
+  const [isNewGroupOpen, setIsNewGroupOpen] = useState(false);
 
   const [createDirectChat] = useMutation(CreateDirectChatDocument);
 
@@ -33,6 +35,9 @@ function ChatPage() {
             .filter(Boolean)
             .map((m) => ({
               userId: m!.userId!,
+              username: m!.username ?? "",
+              firstName: m!.firstName ?? "",
+              lastName: m!.lastName ?? "",
               nickname: m!.nickname ?? "",
               lastOpen: m!.lastOpen ? new Date(m!.lastOpen) : null,
             }));
@@ -81,6 +86,9 @@ function ChatPage() {
               m.userId === updatedUserId
                 ? {
                     userId: updatedUserId,
+                    username: event.member!.username ?? m.username,
+                    firstName: event.member!.firstName ?? m.firstName,
+                    lastName: event.member!.lastName ?? m.lastName,
                     nickname: event.member!.nickname ?? m.nickname,
                     lastOpen: event.member!.lastOpen ? new Date(event.member!.lastOpen) : m.lastOpen,
                   }
@@ -169,7 +177,19 @@ function ChatPage() {
           selectedChatId ? "hidden lg:flex" : "flex"
         } flex-col w-full lg:w-[300px] xl:w-[340px] lg:flex-shrink-0 lg:border-l border-base-300 overflow-y-auto h-full`}
       >
-        <PageHeader title={strings.chat.title} />
+        <PageHeader
+          title={strings.chat.title}
+          actions={
+            <button
+              type="button"
+              onClick={() => setIsNewGroupOpen(true)}
+              aria-label={strings.chat.newGroupAria}
+              className="btn btn-sm btn-circle btn-ghost text-base-content/70 hover:text-primary"
+            >
+              <HiOutlinePencilSquare className="w-5 h-5" />
+            </button>
+          }
+        />
         <div className="flex flex-col px-1 pt-2 pb-4">
           {!hasReceivedData ? (
             [...Array(8)].map((_, i) => (
@@ -196,6 +216,12 @@ function ChatPage() {
           )}
         </div>
       </aside>
+
+      <CreateGroupChatModal
+        isOpen={isNewGroupOpen}
+        onClose={() => setIsNewGroupOpen(false)}
+        onCreated={(chatId) => setSelectedChatId(chatId)}
+      />
     </div>
   );
 }

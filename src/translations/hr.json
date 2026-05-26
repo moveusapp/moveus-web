@@ -297,7 +297,8 @@
     "couldntCopyLink": "Nije moguće kopirati poveznicu. Pokušaj ponovno.",
     "changesSaved": "Promjene su spremljene.",
     "eventCancelled": "Događaj je otkazan.",
-    "eventDeleted": "Događaj je obrisan."
+    "eventDeleted": "Događaj je obrisan.",
+    "groupChatCreated": "Grupni razgovor je stvoren."
   },
   "auth": {
     "loginTitle": "Prijava",
@@ -483,10 +484,24 @@
     "emptyChatSubtitle1on1": "Pošalji prvu poruku i probij led.",
     "emptyChatSubtitleGroup": "Budi prvi koji će nešto reći.",
     "sentAttachment": "Šalje privitak",
-    "members": "{count} članova",
+    "members": "{count} člana",
     "typeAMessage": "Upiši poruku...",
     "selectedAttachmentAlt": "Odabrano",
-    "chatTitleSuffix": " - Chat"
+    "chatTitleSuffix": " - Chat",
+    "newGroup": "Nova grupa",
+    "newGroupAria": "Stvori novi grupni razgovor",
+    "newGroupTitle": "Pokreni grupni razgovor",
+    "searchFollowingPlaceholder": "Pretraži ljude koje pratiš",
+    "groupNameLabel": "Naziv grupe (neobavezno)",
+    "groupNamePlaceholder": "npr. Ekipa za trčanje",
+    "selectedCount": "Odabrano: {count}",
+    "selectAtLeastTwo": "Odaberi barem 2 osobe za početak",
+    "noFollowingTitle": "Još nemaš koga pozvati",
+    "noFollowingBody": "Prati ljude iz Pretrage i pojavit će se ovdje.",
+    "noFollowingCta": "Pronađi ljude",
+    "noSearchMatches": "Nema rezultata pretrage",
+    "createGroup": "Stvori grupu",
+    "removeMemberAria": "Ukloni {name}"
   },
   "comment": {
     "writeAComment": "Napiši komentar...",
