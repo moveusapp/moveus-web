@@ -27,6 +27,39 @@ mutation CreateDirectChat($userId: Int!) {
   }
 }
 
+mutation SetChatNickname($chatId: Int!, $nickname: String!) {
+  setChatNickname(chatId: $chatId, nickname: $nickname) {
+    chatMember {
+      nickname
+      user {
+        id
+      }
+    }
+  }
+}
+
+mutation AddChatMember($chatId: Int!, $userId: Int!) {
+  addChatMember(chatId: $chatId, userId: $userId) {
+    chat {
+      id
+      members {
+        user {
+          id
+          username
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+}
+
+mutation LeaveChat($chatId: Int!) {
+  leaveChat(chatId: $chatId) {
+    success
+  }
+}
+
 mutation SendChatMessage (
   $chatId: Int!,
   $message: String,

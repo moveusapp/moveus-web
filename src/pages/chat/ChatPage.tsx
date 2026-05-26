@@ -9,11 +9,14 @@ import { HiOutlineChatBubbleLeftRight, HiOutlinePencilSquare } from "react-icons
 import { useSearchParams } from "react-router-dom";
 import PageHeader from "@/components/layout/PageHeader";
 import CreateGroupChatModal from "@/pages/chat/CreateGroupChatModal";
+import { useProfile } from "@/context/profile-context";
 import strings from "@/translations/strings";
 
 function ChatPage() {
   useDocumentTitle(strings.chat.documentTitle);
 
+  const { profile } = useProfile();
+  const myId = profile?.id ?? null;
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
   const [chatsMap, setChatsMap] = useState<Map<number, ChatSummary>>(new Map());
@@ -100,10 +103,12 @@ function ChatPage() {
 
         // Member removed
         if (event.removedUserId != null && existing) {
-          const members = existing.members.filter((m) => m.userId !== event.removedUserId);
-          if (members.length === 0) {
+          if (event.removedUserId === myId) {
             next.delete(chatId);
           } else {
+            const members = existing.members.filter(
+              (m) => m.userId !== event.removedUserId,
+            );
             next.set(chatId, { ...existing, members });
           }
         }
@@ -111,7 +116,7 @@ function ChatPage() {
         return next;
       });
     },
-    [],
+    [myId],
   );
 
   useSubscription(MyChatsDocument, {
@@ -143,13 +148,13 @@ function ChatPage() {
 
   const chats = useMemo(() => {
     return [...chatsMap.values()]
-      .filter((chat) => chat.members.length > 0)
+      .filter((chat) => chat.members.some((m) => m.userId !== myId))
       .sort((a, b) => {
         const aTime = a.lastMessage?.timeSent?.getTime() ?? 0;
         const bTime = b.lastMessage?.timeSent?.getTime() ?? 0;
         return bTime - aTime;
       });
-  }, [chatsMap]);
+  }, [chatsMap, myId]);
 
   const hasChats = hasReceivedData && chats.length > 0;
 
@@ -161,7 +166,20 @@ function ChatPage() {
         }`}
       >
         {selectedChatId ? (
-          <ChatView key={selectedChatId} chatId={selectedChatId} onBack={() => setSelectedChatId(null)} />
+          <ChatView
+            key={selectedChatId}
+            chatId={selectedChatId}
+            onBack={() => setSelectedChatId(null)}
+            onLeft={(leftId) => {
+              setSelectedChatId(null);
+              setChatsMap((prev) => {
+                if (!prev.has(leftId)) return prev;
+                const next = new Map(prev);
+                next.delete(leftId);
+                return next;
+              });
+            }}
+          />
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center gap-3 text-base-content/40">
             <HiOutlineChatBubbleLeftRight className="text-5xl" />

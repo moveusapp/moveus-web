@@ -14,6 +14,11 @@ import {
 import { useQuery, useSubscription } from "@apollo/client/react";
 import UserAvatar from "@/components/user/UserAvatar";
 import SendMessageComposer from "@/pages/chat/SendMessageComposer";
+import GroupMembersModal from "@/pages/chat/GroupMembersModal";
+import ChatHeaderMenu from "@/pages/chat/ChatHeaderMenu";
+import SetNicknameModal from "@/pages/chat/SetNicknameModal";
+import AddChatMembersModal from "@/pages/chat/AddChatMembersModal";
+import LeaveChatModal from "@/pages/chat/LeaveChatModal";
 import MessageBubble, { BubbleMember } from "@/pages/chat/MessageBubble";
 import { useChatMessages } from "@/pages/chat/use-chat-messages";
 import {
@@ -29,8 +34,20 @@ import strings from "@/translations/strings";
 
 const NEAR_BOTTOM_PX = 80;
 
-function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
+function ChatView({
+  chatId,
+  onBack,
+  onLeft,
+}: {
+  chatId: number;
+  onBack?: () => void;
+  onLeft?: (chatId: number) => void;
+}) {
   const { profile } = useProfile();
+  const [showMembers, setShowMembers] = useState(false);
+  const [showSetNickname, setShowSetNickname] = useState(false);
+  const [showAddMembers, setShowAddMembers] = useState(false);
+  const [showLeaveChat, setShowLeaveChat] = useState(false);
   const { data, loading: chatLoading } = useQuery(GetChatDocument, {
     variables: { chatId },
   });
@@ -55,6 +72,17 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
         : members.find((m) => m.user.id !== profile?.id) ?? members[0] ?? null,
     [members, isGroup, profile?.id],
   );
+  const existingMemberIds = useMemo(() => {
+    const ids = new Set<number>();
+    for (const m of members) {
+      if (m.user.id != null) ids.add(m.user.id);
+    }
+    return ids;
+  }, [members]);
+  const currentNickname = useMemo(() => {
+    const me = members.find((m) => m.user.id === profile?.id);
+    return me?.nickname ?? "";
+  }, [members, profile?.id]);
 
   const { messages, send } = useChatMessages(chat?.id ?? undefined);
 
@@ -83,12 +111,13 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
         setDocumentTitle(`${chat.groupName}${strings.chat.chatTitleSuffix}`);
         return;
       }
-      const names = members
+      const others = members.filter((m) => m.user.id !== profile?.id);
+      const names = others
         .slice(0, 3)
         .map((m) => m.user.firstName || m.user.username);
       const label =
-        members.length > 3
-          ? `${names.join(", ")} +${members.length - 3}`
+        others.length > 3
+          ? `${names.join(", ")} +${others.length - 3}`
           : names.join(", ");
       setDocumentTitle(`${label}${strings.chat.chatTitleSuffix}`);
       return;
@@ -99,24 +128,23 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
         `${displayName(m.user.username, m.user.firstName, m.user.lastName)}${strings.chat.chatTitleSuffix}`,
       );
     }
-  }, [chat, otherMember, isGroup]);
+  }, [chat, otherMember, isGroup, members, profile?.id]);
 
   const headerTitle = useMemo(() => {
     if (isGroup && chat?.groupName) return chat.groupName;
     if (members.length === 0) return "";
+    const memberName = (m: BubbleMember) =>
+      m.nickname ||
+      displayName(m.user.username, m.user.firstName, m.user.lastName);
     if (!isGroup) {
-      const m = otherMember ?? members[0];
-      return displayName(m.user.username, m.user.firstName, m.user.lastName);
+      return memberName(otherMember ?? members[0]);
     }
-    const names = members
-      .slice(0, 4)
-      .map((m) =>
-        displayName(m.user.username, m.user.firstName, m.user.lastName),
-      );
-    return members.length > 4
-      ? `${names.join(", ")} +${members.length - 4}`
+    const others = members.filter((m) => m.user.id !== profile?.id);
+    const names = others.slice(0, 4).map(memberName);
+    return others.length > 4
+      ? `${names.join(", ")} +${others.length - 4}`
       : names.join(", ");
-  }, [members, otherMember, isGroup, chat?.groupName]);
+  }, [members, otherMember, isGroup, chat?.groupName, profile?.id]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -209,7 +237,7 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
               </button>
             )}
             {isGroup ? (
-              <div className="w-10 h-10 rounded-full bg-base-300 flex items-center justify-center">
+              <div className="w-10 h-10 shrink-0 rounded-full bg-base-300 flex items-center justify-center">
                 <HiUserGroup className="text-lg text-base-content/60" />
               </div>
             ) : (
@@ -218,8 +246,8 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
                 className="w-10 h-10 rounded-full"
               />
             )}
-            <div>
-              <h2 className="font-semibold text-base leading-tight">
+            <div className="min-w-0 flex-1">
+              <h2 className="font-semibold text-base leading-tight truncate">
                 {headerTitle}
               </h2>
               {isGroup && (
@@ -230,6 +258,13 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
                 </p>
               )}
             </div>
+            <ChatHeaderMenu
+              isGroup={isGroup}
+              onSetNickname={() => setShowSetNickname(true)}
+              onViewMembers={() => setShowMembers(true)}
+              onAddMembers={() => setShowAddMembers(true)}
+              onLeaveChat={() => setShowLeaveChat(true)}
+            />
           </div>
         )}
       </nav>
@@ -271,6 +306,41 @@ function ChatView({ chatId, onBack }: { chatId: number; onBack?: () => void }) {
           <div className="flex-shrink-0 p-3">
             <SendMessageComposer onSend={send} />
           </div>
+        </>
+      )}
+
+      {isGroup && (
+        <GroupMembersModal
+          isOpen={showMembers}
+          onClose={() => setShowMembers(false)}
+          groupName={chat?.groupName ?? null}
+          members={members}
+        />
+      )}
+
+      {showSetNickname && chat?.id != null && (
+        <SetNicknameModal
+          isOpen
+          onClose={() => setShowSetNickname(false)}
+          chatId={chat.id}
+          currentNickname={currentNickname}
+        />
+      )}
+
+      {isGroup && chat?.id != null && (
+        <>
+          <AddChatMembersModal
+            isOpen={showAddMembers}
+            onClose={() => setShowAddMembers(false)}
+            chatId={chat.id}
+            existingMemberIds={existingMemberIds}
+          />
+          <LeaveChatModal
+            isOpen={showLeaveChat}
+            onClose={() => setShowLeaveChat(false)}
+            chatId={chat.id}
+            onLeft={() => onLeft?.(chat.id!)}
+          />
         </>
       )}
     </div>

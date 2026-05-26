@@ -2,6 +2,7 @@ import { useState } from "react";
 import UserAvatar from "@/components/user/UserAvatar";
 import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
 import { ChatKind } from "@/graphql/graphql-types";
+import { useProfile } from "@/context/profile-context";
 import { timeAgo } from "@/utils/time-utils";
 import { displayName } from "@/utils/display-name";
 import { RiCheckDoubleLine, RiCheckLine, RiGroupLine } from "react-icons/ri";
@@ -53,27 +54,30 @@ export interface ChatSummary {
 }
 
 function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
-  const members = chat.members;
+  const { profile } = useProfile();
+  const myId = profile?.id ?? null;
+  const others = chat.members.filter((m) => m.userId !== myId);
   const hasMessages = !!chat.lastMessage;
   const isGroup = chat.kind === ChatKind.Group;
 
   const chatName = () => {
     if (!isGroup) {
-      return members.length > 0 ? memberName(members[0]) : strings.chat.emptyChat;
+      return others.length > 0 ? memberName(others[0]) : strings.chat.emptyChat;
     }
     if (chat.groupName) return chat.groupName;
-    const names = members.slice(0, 3).map(memberName);
-    return members.length > 3
-      ? `${names.join(", ")} +${members.length - 3}`
+    const names = others.slice(0, 3).map(memberName);
+    return others.length > 3
+      ? `${names.join(", ")} +${others.length - 3}`
       : names.join(", ");
   };
 
   const readReceipt = () => {
     if (!hasMessages || isGroup) return null;
-    const member = members[0];
-    if (chat.lastMessage!.userId === member.userId) return null;
+    const other = others[0];
+    if (!other) return null;
+    if (chat.lastMessage!.userId === other.userId) return null;
     const sent = chat.lastMessage!.timeSent?.getTime() ?? 0;
-    const opened = (member.lastOpen ?? new Date("1971-01-01")).getTime();
+    const opened = (other.lastOpen ?? new Date("1971-01-01")).getTime();
     return sent > opened ? (
       <RiCheckLine className="text-sm shrink-0 text-base-content/40" />
     ) : (
@@ -93,7 +97,7 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
 
   const avatar = () => {
     if (isGroup) {
-      const stack = members.slice(0, 2);
+      const stack = others.slice(0, 2);
       if (stack.length === 2) {
         return (
           <div className="relative w-10 h-10 shrink-0">
@@ -122,10 +126,10 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
         </div>
       );
     }
-    if (members.length > 0) {
+    if (others.length > 0) {
       return (
         <UserAvatar
-          userId={members[0].userId}
+          userId={others[0].userId}
           className="w-10 h-10 shrink-0"
         />
       );

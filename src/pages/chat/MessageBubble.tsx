@@ -6,6 +6,7 @@ import { formatTime } from "@/utils/time-utils";
 import type { LocalMessage } from "./use-chat-messages";
 
 export type BubbleMember = {
+  nickname?: string | null;
   user: {
     id?: number | null;
     username: string;

@@ -7,6 +7,7 @@ query GetChat($chatId: Int!) {
       id
     }
     members {
+      nickname
       user {
         id
         username
