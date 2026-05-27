@@ -20,9 +20,11 @@ import SetNicknameModal from "@/pages/chat/SetNicknameModal";
 import AddChatMembersModal from "@/pages/chat/AddChatMembersModal";
 import LeaveChatModal from "@/pages/chat/LeaveChatModal";
 import MessageBubble, { BubbleMember } from "@/pages/chat/MessageBubble";
+import SystemMessage from "@/pages/chat/SystemMessage";
 import { useChatMessages } from "@/pages/chat/use-chat-messages";
 import {
   ChatKind,
+  ChatMessageKind,
   GetChatDocument,
   LastOpenDocument,
 } from "@/graphql/graphql-types";
@@ -48,15 +50,22 @@ function ChatView({
   const [showSetNickname, setShowSetNickname] = useState(false);
   const [showAddMembers, setShowAddMembers] = useState(false);
   const [showLeaveChat, setShowLeaveChat] = useState(false);
-  const { data, loading: chatLoading } = useQuery(GetChatDocument, {
-    variables: { chatId },
-  });
+  const { data, loading, refetch: refetchChat } = useQuery(
+    GetChatDocument,
+    { variables: { chatId }, notifyOnNetworkStatusChange: false },
+  );
+  const chatLoading = loading && !data;
 
   const chat = data?.chat;
   const members = useMemo(
     () => (chat?.members ?? []).filter(Boolean) as BubbleMember[],
     [chat?.members],
   );
+  const allMembers = useMemo(
+    () => (chat?.allMembers ?? []).filter(Boolean) as BubbleMember[],
+    [chat?.allMembers],
+  );
+  // Active member lookups (avatars, author labels) come from current members.
   const memberById = useMemo(() => {
     const map = new Map<number, BubbleMember>();
     for (const m of members) {
@@ -64,6 +73,15 @@ function ChatView({
     }
     return map;
   }, [members]);
+  // Name resolution for system messages includes former members so
+  // "X left the chat" / "X removed Y" can name them after they're gone.
+  const allMemberById = useMemo(() => {
+    const map = new Map<number, BubbleMember>();
+    for (const m of allMembers) {
+      if (m.user.id != null) map.set(m.user.id, m);
+    }
+    return map;
+  }, [allMembers]);
   const isGroup = chat?.kind === ChatKind.Group;
   const otherMember = useMemo(
     () =>
@@ -85,6 +103,29 @@ function ChatView({
   }, [members, profile?.id]);
 
   const { messages, send } = useChatMessages(chat?.id ?? undefined);
+
+  const resolveMember = (id: number | null): BubbleMember | null => {
+    if (id == null) return null;
+    return allMemberById.get(id) ?? memberById.get(id) ?? null;
+  };
+
+  // Refetch chat (members, nicknames) when a new structural system message
+  // arrives so the header count and `headerTitle` stay accurate.
+  const lastStructuralIdRef = useRef<number | null>(null);
+  useEffect(() => {
+    let latest: number | null = null;
+    for (const m of messages) {
+      if (m.kind !== ChatMessageKind.Text && m.id != null) {
+        if (latest == null || m.id > latest) latest = m.id;
+      }
+    }
+    if (latest != null && latest !== lastStructuralIdRef.current) {
+      lastStructuralIdRef.current = latest;
+      refetchChat().catch(() => {
+        // ignore — next refetch will retry on the next structural event
+      });
+    }
+  }, [messages, refetchChat]);
 
   const [lastOpens, setLastOpens] = useState<Map<number, Date>>(new Map());
   useSubscription(LastOpenDocument, {
@@ -198,16 +239,32 @@ function ChatView({
     const showDate = dateString !== lastDateString;
     lastDateString = dateString;
 
+    const dateDivider = showDate ? (
+      <div className="divider text-base-content/50 text-xs font-medium">
+        {dateString}
+      </div>
+    ) : null;
+
+    if (message.kind !== ChatMessageKind.Text) {
+      return (
+        <Fragment key={message.clientKey}>
+          {dateDivider}
+          <SystemMessage
+            message={message}
+            actor={resolveMember(message.userId)}
+            target={resolveMember(message.targetUserId)}
+            myId={profile?.id ?? null}
+          />
+        </Fragment>
+      );
+    }
+
     const isOwn = message.userId === profile?.id;
-    const author = !isOwn ? memberById.get(message.userId) ?? null : null;
+    const author = !isOwn ? resolveMember(message.userId) : null;
 
     return (
       <Fragment key={message.clientKey}>
-        {showDate && (
-          <div className="divider text-base-content/50 text-xs font-medium">
-            {dateString}
-          </div>
-        )}
+        {dateDivider}
         <MessageBubble
           message={message}
           isOwn={isOwn}

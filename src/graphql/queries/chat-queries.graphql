@@ -15,6 +15,15 @@ query GetChat($chatId: Int!) {
         lastName
       }
     }
+    allMembers: members(includeFormer: true) {
+      nickname
+      user {
+        id
+        username
+        firstName
+        lastName
+      }
+    }
   }
 }
 

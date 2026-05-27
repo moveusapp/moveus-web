@@ -521,7 +521,18 @@
     "noFollowingCta": "Find people",
     "noSearchMatches": "No one matches that search",
     "createGroup": "Create group",
-    "removeMemberAria": "Remove {name}"
+    "removeMemberAria": "Remove {name}",
+    "system": {
+      "nicknameChangedSelf": "You changed your nickname to {nickname}",
+      "nicknameChangedOther": "{actor} changed their nickname to {nickname}",
+      "memberAddedSelf": "You added {target} to the chat",
+      "memberAddedOther": "{actor} added {target}",
+      "memberAddedYouAsTarget": "{actor} added you",
+      "memberRemovedSelf": "You left the chat",
+      "memberRemovedOther": "{actor} left the chat",
+      "memberRemovedTarget": "{actor} removed {target}",
+      "unknownActor": "Someone"
+    }
   },
   "comment": {
     "writeAComment": "Write a comment...",

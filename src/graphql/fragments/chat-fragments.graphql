@@ -13,6 +13,13 @@ fragment ChatMessage on ChatMessageType {
   user {
     id
   }
+  kind
+  targetUser {
+    id
+    username
+    firstName
+    lastName
+  }
   textContent
   timeSent
   attachmentUrl
@@ -28,11 +35,16 @@ fragment Chat on ChatType {
   members {
     ...ChatMember
   }
+  allMembers: members(includeFormer: true) {
+    ...ChatMember
+  }
 }
 
 fragment WSChatMessage on WSChatMessageType {
   id
   userId
+  kind
+  targetUserId
   textContent
   timeSent
   attachmentUrl

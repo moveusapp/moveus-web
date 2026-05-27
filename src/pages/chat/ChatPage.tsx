@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useSubscription } from "@apollo/client/react";
-import { ChatKind, CreateDirectChatDocument, MyChatsDocument, WsMyChatUpdateType } from "@/graphql/graphql-types";
+import { ChatKind, ChatMessageKind, CreateDirectChatDocument, MyChatsDocument, WsMyChatUpdateType } from "@/graphql/graphql-types";
 import useDocumentTitle from "@/hooks/use-document-title";
 import ChatCard, { ChatSummary, ChatSummaryMember } from "@/components/chat/ChatCard";
 import ChatCardSkeleton from "@/components/chat/ChatCardSkeleton";
@@ -11,6 +11,19 @@ import PageHeader from "@/components/layout/PageHeader";
 import CreateGroupChatModal from "@/pages/chat/CreateGroupChatModal";
 import { useProfile } from "@/context/profile-context";
 import strings from "@/translations/strings";
+
+function parseMessageKind(raw: unknown): ChatMessageKind {
+  switch (raw) {
+    case "NICKNAME_CHANGED":
+      return ChatMessageKind.NicknameChanged;
+    case "MEMBER_ADDED":
+      return ChatMessageKind.MemberAdded;
+    case "MEMBER_REMOVED":
+      return ChatMessageKind.MemberRemoved;
+    default:
+      return ChatMessageKind.Text;
+  }
+}
 
 function ChatPage() {
   useDocumentTitle(strings.chat.documentTitle);
@@ -48,6 +61,8 @@ function ChatPage() {
             ? {
                 id: wsChat.lastMessage.id ?? null,
                 userId: wsChat.lastMessage.userId ?? null,
+                kind: parseMessageKind(wsChat.lastMessage.kind),
+                targetUserId: wsChat.lastMessage.targetUserId ?? null,
                 textContent: wsChat.lastMessage.textContent ?? null,
                 timeSent: wsChat.lastMessage.timeSent ? new Date(wsChat.lastMessage.timeSent) : null,
                 attachmentUrl: wsChat.lastMessage.attachmentUrl ?? null,
@@ -71,6 +86,8 @@ function ChatPage() {
           const msg = {
             id: event.lastMessage.id ?? null,
             userId: event.lastMessage.userId ?? null,
+            kind: parseMessageKind(event.lastMessage.kind),
+            targetUserId: event.lastMessage.targetUserId ?? null,
             textContent: event.lastMessage.textContent ?? null,
             timeSent: event.lastMessage.timeSent ? new Date(event.lastMessage.timeSent) : null,
             attachmentUrl: event.lastMessage.attachmentUrl ?? null,
@@ -80,7 +97,8 @@ function ChatPage() {
           }
         }
 
-        // Member updated (e.g. lastOpen change)
+        // Member updated or added (lastOpen change, nickname change, or
+        // a freshly-added member arriving via MEMBER_ADDED).
         if (event.member && existing) {
           const updatedUserId = event.member.userId!;
           const memberExists = existing.members.some((m) => m.userId === updatedUserId);
@@ -97,6 +115,19 @@ function ChatPage() {
                   }
                 : m,
             );
+            next.set(chatId, { ...existing, members });
+          } else {
+            const members = [
+              ...existing.members,
+              {
+                userId: updatedUserId,
+                username: event.member.username ?? "",
+                firstName: event.member.firstName ?? "",
+                lastName: event.member.lastName ?? "",
+                nickname: event.member.nickname ?? "",
+                lastOpen: event.member.lastOpen ? new Date(event.member.lastOpen) : null,
+              },
+            ];
             next.set(chatId, { ...existing, members });
           }
         }

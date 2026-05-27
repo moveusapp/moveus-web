@@ -521,7 +521,18 @@
     "noFollowingCta": "Pronađi ljude",
     "noSearchMatches": "Nema rezultata pretrage",
     "createGroup": "Stvori grupu",
-    "removeMemberAria": "Ukloni {name}"
+    "removeMemberAria": "Ukloni {name}",
+    "system": {
+      "nicknameChangedSelf": "Promijenio/la si nadimak u {nickname}",
+      "nicknameChangedOther": "{actor} je promijenio/la nadimak u {nickname}",
+      "memberAddedSelf": "Dodao/la si {target} u chat",
+      "memberAddedOther": "{actor} je dodao/la {target}",
+      "memberAddedYouAsTarget": "{actor} te dodao/la u chat",
+      "memberRemovedSelf": "Napustio/la si chat",
+      "memberRemovedOther": "{actor} je napustio/la chat",
+      "memberRemovedTarget": "{actor} je uklonio/la {target}",
+      "unknownActor": "Netko"
+    }
   },
   "comment": {
     "writeAComment": "Napiši komentar...",

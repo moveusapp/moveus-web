@@ -1,12 +1,13 @@
 import { useState } from "react";
 import UserAvatar from "@/components/user/UserAvatar";
 import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
-import { ChatKind } from "@/graphql/graphql-types";
+import { ChatKind, ChatMessageKind } from "@/graphql/graphql-types";
 import { useProfile } from "@/context/profile-context";
 import { timeAgo } from "@/utils/time-utils";
 import { displayName } from "@/utils/display-name";
 import { RiCheckDoubleLine, RiCheckLine, RiGroupLine } from "react-icons/ri";
 import strings from "@/translations/strings";
+import { systemMessageLabel } from "@/pages/chat/system-message-label";
 
 function StackedAvatar({ userId, className }: { userId: number; className: string }) {
   const [src, setSrc] = useState(
@@ -46,6 +47,8 @@ export interface ChatSummary {
   lastMessage: {
     id: number | null;
     userId: number | null;
+    kind: ChatMessageKind;
+    targetUserId: number | null;
     textContent: string | null;
     timeSent: Date | null;
     attachmentUrl: string | null;
@@ -71,8 +74,11 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
       : names.join(", ");
   };
 
+  const isSystemLast =
+    hasMessages && chat.lastMessage!.kind !== ChatMessageKind.Text;
+
   const readReceipt = () => {
-    if (!hasMessages || isGroup) return null;
+    if (!hasMessages || isGroup || isSystemLast) return null;
     const other = others[0];
     if (!other) return null;
     if (chat.lastMessage!.userId === other.userId) return null;
@@ -85,14 +91,44 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
     );
   };
 
+  const memberLookup = (id: number | null): string | null => {
+    if (id == null) return null;
+    const m = chat.members.find((x) => x.userId === id);
+    return m ? memberName(m) : null;
+  };
+  const realLookup = (id: number | null): string | null => {
+    if (id == null) return null;
+    const m = chat.members.find((x) => x.userId === id);
+    return m ? displayName(m.username, m.firstName, m.lastName) : null;
+  };
+
   const preview = () => {
     if (!hasMessages) {
       return <span className="italic text-base-content/40">{strings.chat.sayHello}</span>;
     }
-    if (chat.lastMessage!.textContent) {
-      return chat.lastMessage!.textContent;
+    const lm = chat.lastMessage!;
+    if (lm.kind !== ChatMessageKind.Text) {
+      const isNicknameChange = lm.kind === ChatMessageKind.NicknameChanged;
+      const label = systemMessageLabel({
+        kind: lm.kind,
+        actorId: lm.userId ?? 0,
+        targetId: lm.targetUserId,
+        myId,
+        actorName: isNicknameChange
+          ? realLookup(lm.userId)
+          : memberLookup(lm.userId),
+        targetName: memberLookup(lm.targetUserId),
+        newNickname: lm.textContent,
+      });
+      return <span className="italic">{label}</span>;
     }
-    return <span className="italic">{strings.chat.sentAttachment}</span>;
+    if (lm.attachmentUrl) {
+      return <span className="italic">{strings.chat.sentAttachment}</span>;
+    }
+    if (lm.textContent) {
+      return lm.textContent;
+    }
+    return null;
   };
 
   const avatar = () => {

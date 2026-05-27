@@ -50,11 +50,12 @@ function MessageBubble({
       )}
       {showAuthor && author && (
         <div className="chat-header text-xs font-medium mb-0.5">
-          {displayName(
-            author.user.username,
-            author.user.firstName,
-            author.user.lastName,
-          )}
+          {author.nickname ||
+            displayName(
+              author.user.username,
+              author.user.firstName,
+              author.user.lastName,
+            )}
         </div>
       )}
       <div className={`chat-bubble wrap-break-word ${roundedClass} ${bubbleClass}`}>

@@ -2,6 +2,7 @@ import { useCallback, useMemo, useReducer } from "react";
 import { useMutation, useSubscription } from "@apollo/client/react";
 import { apolloClient } from "@/apollo/client";
 import {
+  ChatMessageKind,
   ChatMessagesDocument,
   GetAttachmentUploadUrlDocument,
   SendChatMessageDocument,
@@ -19,11 +20,26 @@ export type LocalMessage = {
   clientKey: string;
   id: number | null;
   userId: number;
+  kind: ChatMessageKind;
+  targetUserId: number | null;
   textContent: string | null;
   attachmentUrl: string | null;
   timeSent: Date;
   status: SendStatus;
 };
+
+function parseKind(raw: unknown): ChatMessageKind {
+  switch (raw) {
+    case "NICKNAME_CHANGED":
+      return ChatMessageKind.NicknameChanged;
+    case "MEMBER_ADDED":
+      return ChatMessageKind.MemberAdded;
+    case "MEMBER_REMOVED":
+      return ChatMessageKind.MemberRemoved;
+    default:
+      return ChatMessageKind.Text;
+  }
+}
 
 type State = {
   byKey: Map<string, LocalMessage>;
@@ -49,6 +65,8 @@ type Action =
 type IncomingMessage = {
   id?: number | null;
   userId?: number | null;
+  kind?: string | null;
+  targetUserId?: number | null;
   textContent?: string | null;
   timeSent?: unknown;
   attachmentUrl?: string | null;
@@ -77,6 +95,7 @@ function reducer(state: State, action: Action): State {
 
       for (const msg of action.messages) {
         if (msg?.id == null) continue;
+        const kind = parseKind(msg.kind);
         const existingKey = serverIdToKey.get(msg.id);
         if (existingKey) {
           const prev = byKey.get(existingKey);
@@ -85,6 +104,8 @@ function reducer(state: State, action: Action): State {
               ...prev,
               id: msg.id,
               userId: msg.userId ?? prev.userId,
+              kind,
+              targetUserId: msg.targetUserId ?? null,
               textContent: msg.textContent ?? null,
               attachmentUrl: msg.attachmentUrl ?? null,
               timeSent: ensureDateObject(msg.timeSent as Date | string),
@@ -96,6 +117,7 @@ function reducer(state: State, action: Action): State {
 
         let adoptedKey: string | null = null;
         if (
+          kind === ChatMessageKind.Text &&
           action.currentUserId != null &&
           msg.userId === action.currentUserId
         ) {
@@ -116,6 +138,8 @@ function reducer(state: State, action: Action): State {
           clientKey,
           id: msg.id,
           userId: msg.userId ?? 0,
+          kind,
+          targetUserId: msg.targetUserId ?? null,
           textContent: msg.textContent ?? null,
           attachmentUrl: msg.attachmentUrl ?? null,
           timeSent: ensureDateObject(msg.timeSent as Date | string),
@@ -213,6 +237,8 @@ export function useChatMessages(chatId: number | undefined) {
           clientKey,
           id: null,
           userId: profile?.id ?? 0,
+          kind: ChatMessageKind.Text,
+          targetUserId: null,
           textContent: trimmed || null,
           attachmentUrl: previewUrl,
           timeSent: new Date(),

@@ -55,12 +55,10 @@ function GroupMembersModal({
         <ul className="flex-1 min-h-0 overflow-y-auto px-3 py-2">
           {members.map((m) => {
             const isSelf = m.user.id != null && m.user.id === profile?.id;
-            const name = displayName(
-              m.user.username,
-              m.user.firstName,
-              m.user.lastName,
-              isSelf,
-            );
+            const baseName =
+              m.nickname ||
+              displayName(m.user.username, m.user.firstName, m.user.lastName);
+            const name = `${baseName}${isSelf ? " (You)" : ""}`;
             const row = (
               <div className="w-full flex items-center gap-3 px-2 py-2 rounded-2xl hover:bg-base-200 transition-colors">
                 <UserAvatar userId={m.user.id!} className="w-10 h-10 shrink-0" />
