@@ -234,6 +234,34 @@
       "EVENING": "Navečer",
       "NIGHT": "Noću"
     },
+    "dayOfWeek": {
+      "MONDAY": "Pon",
+      "TUESDAY": "Uto",
+      "WEDNESDAY": "Sri",
+      "THURSDAY": "Čet",
+      "FRIDAY": "Pet",
+      "SATURDAY": "Sub",
+      "SUNDAY": "Ned"
+    },
+    "organizingOpenness": {
+      "YES": "Da",
+      "SOMETIMES": "Ponekad",
+      "NO": "Ne"
+    },
+    "acquaintancePreference": {
+      "NOBODY": "Nikoga",
+      "ONE": "Jednog poznanika",
+      "TWO": "Dva poznanika",
+      "THREE_PLUS": "Tri ili više poznanika",
+      "EVERYONE": "Sve"
+    },
+    "participationGroupKind": {
+      "FIRST_HAND": "Bliski kontakti (prijatelji i obitelj)",
+      "SECOND_HAND": "Posredni kontakti (prijatelji prijatelja)",
+      "COMMON_INTERESTS": "Nepoznati ljudi sa zajedničkim interesima",
+      "ROMANTIC_ONE_ON_ONE": "Potencijalni partneri (jedan na jedan)",
+      "ROMANTIC_GROUP": "Potencijalni partneri (unutar grupe)"
+    },
     "eventPhase": {
       "SCHEDULED": "Zakazano",
       "IN_PROGRESS": "U tijeku",
@@ -761,7 +789,6 @@
     "previousQuestion": "Prethodno pitanje",
     "nextQuestion": "Sljedeće pitanje",
     "finishSurvey": "Završi anketu",
-    "notSelected": "Nije odabrano",
     "firstName": "Ime",
     "lastName": "Prezime",
     "choosePicture": "Odaberi profilnu sliku",
@@ -777,16 +804,37 @@
       "dobTitle": "Kada si rođen/a?"
     },
     "preferences": {
-      "mainInterestTitle": "Što prvenstveno želiš dobiti od ove aplikacije?",
-      "frequencyTitle": "Koliko često sudjeluješ u fizičkim aktivnostima?",
-      "satisfactionTitle": "Koliko si zadovoljan/na svojom trenutnom razinom aktivnosti?",
-      "socialImportanceTitle": "Koliko ti je važno druženje?",
-      "partySizeTitle": "Koja je tvoja idealna veličina grupe za bavljenje fizičkim aktivnostima?",
-      "relationshipsTitle": "Kakve si odnose dosad razvio/la kroz fizičke aktivnosti?",
-      "partnerCharsTitle": "Što najviše cijeniš kod ljudi s kojima provodiš vrijeme?",
-      "matchedLikelihoodTitle": "Kolika je vjerojatnost da odeš na događaj s nekime zbog slične osobnosti?",
-      "genderPrefTitle": "U okruženju kojih spolova se najugodnije osjećaš?",
-      "timeOfDayTitle": "U koje doba dana najradije vježbaš?"
+      "activitiesTitle": "Koje si aktivnosti probao/la?",
+      "activitiesSubtitle": "Odaberi one kojima se baviš ili ih želiš probati, pa ocijeni svoju razinu.",
+      "activitiesSearchPlaceholder": "Pretraži aktivnosti",
+      "activitiesSelectedTitle": "Tvoje aktivnosti",
+      "activitiesBrowseTitle": "Sve aktivnosti",
+      "activitiesEmpty": "Nijedna aktivnost ne odgovara pretrazi",
+      "sessionDurationTitle": "Koliko bi tipičan termin trebao trajati?",
+      "organizingTitle": "Jesi li otvoren/a za organiziranje događaja?",
+      "leadershipTitle": "Često preuzimam ulogu vođe u grupnim aktivnostima",
+      "availabilityTitle": "Kada si tijekom tjedna obično slobodan/na?",
+      "availabilitySubtitle": "Označi sve termine koji ti odgovaraju.",
+      "travelDistanceTitle": "Koliko si daleko spreman/na putovati?",
+      "weeklyTargetTitle": "Koliko često tjedno želiš biti aktivan/na?",
+      "difficultyTitle": "Koja je tvoja željena težina aktivnosti?",
+      "discomfortTitle": "Guram kroz nelagodu kako bih napredovao/la",
+      "groupSizeTitle": "Koja je tvoja željena veličina grupe?",
+      "groupSizeSubtitle": "Od samo vas dvoje do velike ekipe.",
+      "participationGroupsTitle": "S kojom od ovih grupa bi se bavio/la aktivnošću?",
+      "acquaintanceTitle": "Volim ići na događaje gdje poznajem:",
+      "mixedGenderTitle": "Jednako bih uživao/la u mješovitim kao i u istospolnim aktivnostima",
+      "meetNewPeopleTitle": "Uživam upoznavati nove ljude",
+      "activityVsSocialTitle": "Što ti je važnije?",
+      "competitionTitle": "Dodatno me motivira natjecateljski suigrač",
+      "planningHorizonTitle": "Koliko unaprijed ti planovi moraju biti dogovoreni?",
+      "burdenTitle": "Često se osjećam kao teret svom suigraču",
+      "scaleAgreement": ["Uopće se ne slažem", "Ne slažem se", "Neutralno", "Slažem se", "Potpuno se slažem"],
+      "scaleFrequency": ["Nikad", "Rijetko", "Ponekad", "Često", "Uvijek"],
+      "scaleWeekly": ["Jednom tjedno", "Dvaput tjedno", "3 puta tjedno", "4 puta tjedno", "5 puta tjedno", "6 puta tjedno", "Svaki dan"],
+      "scaleGroupSize": ["Samo ja +1", "3 osobe", "4 osobe", "5 osoba", "6 osoba", "7 osoba", "8 osoba", "9 osoba", "10 osoba", "Velika grupa (10+)"],
+      "scaleActivitySocial": ["Samo aktivnost", "Uglavnom aktivnost", "Podjednako oboje", "Uglavnom ljudi", "Samo ljudi"],
+      "scalePlanning": ["U zadnji čas", "Nekoliko dana unaprijed", "Otprilike tjedan", "Dva tjedna", "Mjesec unaprijed"]
     }
   }
 }

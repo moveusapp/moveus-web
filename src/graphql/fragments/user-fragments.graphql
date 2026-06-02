@@ -1,14 +1,37 @@
+fragment UserPreferences on UserPreferencesType {
+  preferredSessionDuration
+  organizingOpenness
+  leadershipInclination
+  maxTravelDistance
+  weeklyActivityTarget
+  preferredDifficulty
+  pushesThroughDiscomfort
+  preferredGroupSize
+  acquaintancePreference
+  mixedGenderComfort
+  enjoysMeetingNewPeople
+  activityVsSocial
+  motivatedByCompetition
+  planningHorizon
+  feelsLikeBurden
+  participationGroups
+  availabilities {
+    dayOfWeek
+    timeOfDay
+  }
+}
+
 fragment Survey on ProfileType {
-  frequencyOfPhysicalActivity
-  socialInteractionImportance
-  preferredPartySize
-  formedRelationshipKinds
-  physicalActivitySatisfaction
-  preferredPartnerCharacteristics
-  matchedParticipationLikelihood
-  preferredTimeOfTheDay
-  genderPreference
-  mainInterest
+  preferences {
+    ...UserPreferences
+  }
+  preferredActivities {
+    activity {
+      id
+      name
+    }
+    skillLevel
+  }
 }
 
 fragment BasicInfo on ProfileType {
@@ -23,7 +46,6 @@ fragment ContextProfile on ProfileType{
   id
   username
   lastLogin
-  maxTravelDistance
   isCapeable
   lastName
   verified

@@ -1,4 +1,5 @@
 import strings from "@/translations/strings";
+import { sliderMidpoint } from "@/surveys/types";
 
 interface Props {
   value: number | null | undefined;
@@ -6,8 +7,17 @@ interface Props {
   min: number;
   max: number;
   step?: number;
-  minLabel?: string;
-  maxLabel?: string;
+  labelsNamespace?: string;
+  unit?: string;
+}
+
+function resolveLabels(namespace?: string): string[] | null {
+  if (!namespace) return null;
+  let node: unknown = strings;
+  for (const part of namespace.split(".")) {
+    node = (node as Record<string, unknown> | null | undefined)?.[part];
+  }
+  return Array.isArray(node) ? (node as string[]) : null;
 }
 
 function SliderQuestion({
@@ -16,23 +26,31 @@ function SliderQuestion({
   min,
   max,
   step,
-  minLabel,
-  maxLabel,
+  labelsNamespace,
+  unit,
 }: Props) {
-  const midpoint = min + Math.floor((max - min) / 2);
-  const hasValue = typeof value === "number" && Number.isFinite(value);
-  const displayValue = hasValue ? (value as number) : midpoint;
-  const showLabels = !!minLabel || !!maxLabel;
+  // The runner seeds the value; the fallback is only defensive.
+  const displayValue =
+    typeof value === "number" && Number.isFinite(value)
+      ? value
+      : sliderMidpoint(min, max, step);
+
+  const labels = resolveLabels(labelsNamespace);
+  const readout =
+    labels?.[displayValue - min] ??
+    (unit ? `${displayValue} ${unit}` : String(displayValue));
+  const endLabels =
+    labels && labels.length >= 2
+      ? [labels[0], labels[labels.length - 1]]
+      : null;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <div
-        className={`text-center text-4xl font-semibold tabular-nums transition-colors duration-150 ${
-          hasValue ? "text-primary" : "text-base-content/30"
-        }`}
+        className="flex items-center justify-center min-h-[2.5rem] text-center text-xl sm:text-2xl font-semibold tabular-nums text-primary px-2"
         aria-live="polite"
       >
-        {displayValue}
+        {readout}
       </div>
       <input
         type="range"
@@ -42,12 +60,12 @@ function SliderQuestion({
         step={step ?? 1}
         value={displayValue}
         onChange={(e) => onChange(Number(e.target.value))}
-        aria-valuetext={hasValue ? String(displayValue) : strings.survey.notSelected}
+        aria-valuetext={readout}
       />
-      {showLabels && (
-        <div className="flex justify-between text-sm font-medium text-base-content/60 px-1">
-          <span>{minLabel ?? ""}</span>
-          <span>{maxLabel ?? ""}</span>
+      {endLabels && (
+        <div className="flex justify-between gap-4 px-1 text-sm font-medium text-base-content/60">
+          <span className="max-w-[48%] text-left">{endLabels[0]}</span>
+          <span className="max-w-[48%] text-right">{endLabels[1]}</span>
         </div>
       )}
     </div>

@@ -25,28 +25,44 @@ mutation AlterProfileBasicInfo(
 }
 
 mutation AlterProfileSurveyInfo(
-  $frequencyOfPhysicalActivity: FrequencyOfPhysicalActivity
-  $socialInteractionImportance: SocialInteractionImportance
-  $preferredPartySize: PreferredPartySize
-  $formedRelationshipKinds: [FormedRelationshipsKind]
-  $physicalActivitySatisfaction: PhysicalActivitySatisfaction
-  $preferredPartnerCharacteristics: [PreferredPartnerCharacteristics]
-  $matchedParticipationLikelihood: MatchedParticipationLikelihood
-  $genderPreference: [GenderNoPNTS]
-  $mainInterest: MainInterest
-  $preferredTimeOfTheDay: [TimeOfTheDay]
+  $preferredActivities: [PreferredActivityInput]
+  $preferredSessionDuration: Int
+  $organizingOpenness: OrganizingOpenness
+  $leadershipInclination: Int
+  $availabilities: [AvailabilityInput]
+  $maxTravelDistance: Int
+  $weeklyActivityTarget: Int
+  $preferredDifficulty: SkillLevel
+  $pushesThroughDiscomfort: Int
+  $preferredGroupSize: Int
+  $participationGroups: [ParticipationGroupKind]
+  $acquaintancePreference: AcquaintancePreference
+  $mixedGenderComfort: Int
+  $enjoysMeetingNewPeople: Int
+  $activityVsSocial: Int
+  $motivatedByCompetition: Int
+  $planningHorizon: Int
+  $feelsLikeBurden: Int
 ) {
   alterSurveyInfo(
-    frequencyOfPhysicalActivity: $frequencyOfPhysicalActivity
-    socialInteractionImportance: $socialInteractionImportance
-    preferredPartySize: $preferredPartySize
-    formedRelationshipKinds: $formedRelationshipKinds
-    physicalActivitySatisfaction: $physicalActivitySatisfaction
-    preferredPartnerCharacteristics: $preferredPartnerCharacteristics
-    matchedParticipationLikelihood: $matchedParticipationLikelihood
-    genderPreference: $genderPreference
-    mainInterest: $mainInterest
-    preferredTimeOfTheDay: $preferredTimeOfTheDay
+    preferredActivities: $preferredActivities
+    preferredSessionDuration: $preferredSessionDuration
+    organizingOpenness: $organizingOpenness
+    leadershipInclination: $leadershipInclination
+    availabilities: $availabilities
+    maxTravelDistance: $maxTravelDistance
+    weeklyActivityTarget: $weeklyActivityTarget
+    preferredDifficulty: $preferredDifficulty
+    pushesThroughDiscomfort: $pushesThroughDiscomfort
+    preferredGroupSize: $preferredGroupSize
+    participationGroups: $participationGroups
+    acquaintancePreference: $acquaintancePreference
+    mixedGenderComfort: $mixedGenderComfort
+    enjoysMeetingNewPeople: $enjoysMeetingNewPeople
+    activityVsSocial: $activityVsSocial
+    motivatedByCompetition: $motivatedByCompetition
+    planningHorizon: $planningHorizon
+    feelsLikeBurden: $feelsLikeBurden
   ) {
     myProfile {
       ...ContextProfile

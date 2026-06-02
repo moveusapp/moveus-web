@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useApolloClient } from "@apollo/client/react";
 import { HiArrowLeft, HiArrowRight, HiCheck } from "react-icons/hi";
-import { QuestionKind, Question, Survey } from "@/surveys/types";
+import { QuestionKind, Question, Survey, sliderMidpoint } from "@/surveys/types";
 import { uploadProfilePicture } from "@/utils/upload";
 import { formatError } from "@/utils/format-error";
 import QuestionRenderer, { isValid } from "./QuestionRenderer";
@@ -45,9 +45,21 @@ function answerKey<TVars extends AnyVars>(q: Question<TVars>): string {
   return q.field as string;
 }
 
+// Seed sliders at their midpoint so the knob reflects a real value and the
+// user can submit without touching every one.
+function initialAnswers<TVars extends AnyVars>(survey: Survey<TVars>): Answers {
+  const answers: Answers = {};
+  for (const q of survey.questions) {
+    if (q.kind === QuestionKind.Slider) {
+      answers[q.field] = sliderMidpoint(q.min, q.max, q.step);
+    }
+  }
+  return answers;
+}
+
 function SurveyRunner<TVars extends AnyVars>({ survey }: Props<TVars>) {
   const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
+  const [answers, setAnswers] = useState<Answers>(() => initialAnswers(survey));
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();

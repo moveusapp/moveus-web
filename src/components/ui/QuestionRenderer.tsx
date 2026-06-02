@@ -7,6 +7,8 @@ import MultiChoiceQuestion from "./survey-questions/MultiChoiceQuestion";
 import DateOfBirthQuestion from "./survey-questions/DateOfBirthQuestion";
 import SliderQuestion from "./survey-questions/SliderQuestion";
 import ProfilePictureQuestion from "./survey-questions/ProfilePictureQuestion";
+import ActivityRatingQuestion from "./survey-questions/ActivityRatingQuestion";
+import AvailabilityQuestion from "./survey-questions/AvailabilityQuestion";
 
 interface Props {
   question: Question<any>;
@@ -67,13 +69,35 @@ function QuestionRenderer({ question, value, onChange }: Props) {
           min={question.min}
           max={question.max}
           step={question.step}
-          minLabel={question.minLabel}
-          maxLabel={question.maxLabel}
+          labelsNamespace={question.labelsNamespace}
+          unit={question.unit}
         />
       );
     case QuestionKind.ProfilePicture:
       return (
         <ProfilePictureQuestion value={value ?? null} onChange={onChange} />
+      );
+    case QuestionKind.ActivityRating:
+      return (
+        <ActivityRatingQuestion
+          activityEnum={question.activityEnum}
+          activityNamespace={question.activityNamespace}
+          skillEnum={question.skillEnum}
+          skillNamespace={question.skillNamespace}
+          value={value ?? []}
+          onChange={onChange}
+        />
+      );
+    case QuestionKind.Availability:
+      return (
+        <AvailabilityQuestion
+          dayEnum={question.dayEnum}
+          dayNamespace={question.dayNamespace}
+          timeEnum={question.timeEnum}
+          timeNamespace={question.timeNamespace}
+          value={value ?? []}
+          onChange={onChange}
+        />
       );
   }
 }
@@ -97,6 +121,14 @@ export function isAnswered(question: Question<any>, value: any): boolean {
       return typeof value === "number" && Number.isFinite(value);
     case QuestionKind.ProfilePicture:
       return value instanceof File;
+    case QuestionKind.ActivityRating:
+      return (
+        Array.isArray(value) &&
+        value.length > 0 &&
+        value.every((v) => v.activity && v.skillLevel)
+      );
+    case QuestionKind.Availability:
+      return Array.isArray(value) && value.length > 0;
   }
 }
 

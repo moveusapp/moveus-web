@@ -9,6 +9,19 @@ export enum QuestionKind {
   DateOfBirth = "DateOfBirth",
   Slider = "Slider",
   ProfilePicture = "ProfilePicture",
+  ActivityRating = "ActivityRating",
+  Availability = "Availability",
+}
+
+export type ActivityRatingValue = { activity: string; skillLevel: string };
+export type AvailabilityValue = { dayOfWeek: string; timeOfDay: string };
+
+// Seeds a slider's starting value so it never submits null. Snapped to the
+// step so the seed lands on a valid notch.
+export function sliderMidpoint(min: number, max: number, step = 1): number {
+  const mid = min + (max - min) / 2;
+  const snapped = min + Math.round((mid - min) / step) * step;
+  return Math.min(max, Math.max(min, snapped));
 }
 
 type Base = {
@@ -60,13 +73,32 @@ export type Question<TVars> =
       min: number;
       max: number;
       step?: number;
-      minLabel?: string;
-      maxLabel?: string;
+      labelsNamespace?: string;
+      // For metric sliders that can't enumerate a label per value (e.g. "km").
+      unit?: string;
       validate?: (value: number) => boolean;
     })
   | (Base & {
       kind: QuestionKind.ProfilePicture;
       validate?: (value: File) => boolean;
+    })
+  | (Base & {
+      kind: QuestionKind.ActivityRating;
+      field: keyof TVars & string;
+      activityEnum: Record<string, string>;
+      activityNamespace: string;
+      skillEnum: Record<string, string>;
+      skillNamespace: string;
+      validate?: (value: ActivityRatingValue[]) => boolean;
+    })
+  | (Base & {
+      kind: QuestionKind.Availability;
+      field: keyof TVars & string;
+      dayEnum: Record<string, string>;
+      dayNamespace: string;
+      timeEnum: Record<string, string>;
+      timeNamespace: string;
+      validate?: (value: AvailabilityValue[]) => boolean;
     });
 
 export type Survey<TVars = Record<string, unknown>> = {
