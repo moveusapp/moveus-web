@@ -316,14 +316,77 @@ export const cookiesContent: LegalContent = {
   documentTitle: "Cookie Policy",
   eyebrow: "Legal",
   title: "Cookie Policy",
-  lede: "The cookies we use to keep MoveUs running and how to control them.",
-  lastUpdatedDate: "June 2026",
+  lede: "MoveUs is in closed beta, and we keep cookies to the minimum needed to run the app. Here's what we use and how to control them.",
+  lastUpdatedDate: "June 3, 2026",
   sections: [
-    { id: "what", title: "What are cookies" },
-    { id: "types", title: "Types we use" },
-    { id: "essential", title: "Essential cookies" },
-    { id: "analytics", title: "Analytics cookies" },
-    { id: "managing", title: "Managing cookies" },
-    { id: "contact", title: "Contact us" },
+    {
+      id: "what",
+      title: "What cookies are",
+      body: [
+        {
+          type: "p",
+          text: "Cookies are small files placed on your computer or device by a website. They help the site remember things about your visit, like keeping you logged in. MoveUs is operated by MoveUs j.d.o.o., based in Pićan, Croatia, and this policy explains the cookies we use.",
+        },
+        {
+          type: "p",
+          text: "Cookies don't usually identify you on their own, but information we store about you may be linked to them. We never store sensitive details like your password in cookies. For the bigger picture on how we handle your data, see our Privacy Policy at moveusapp.com/privacy.",
+        },
+      ],
+    },
+    {
+      id: "use",
+      title: "How we use cookies",
+      body: [
+        {
+          type: "p",
+          text: "We only use cookies that help MoveUs work — we don't use them for advertising or third-party tracking. The cookies we set fall into two groups:",
+        },
+        { type: "h", text: "Essential cookies" },
+        {
+          type: "p",
+          text: "These keep MoveUs running. They sign you in, keep your session secure, and help prevent fraudulent use of accounts. The app can't work properly without them, so they can't be switched off.",
+        },
+        { type: "h", text: "Functionality cookies" },
+        {
+          type: "p",
+          text: "These remember the choices you make — like your login or language preference — so you don't have to set them every time. They make the app feel more personal, but aren't strictly required.",
+        },
+      ],
+    },
+    {
+      id: "managing",
+      title: "Managing cookies",
+      body: [
+        {
+          type: "p",
+          text: "You're in control of cookies. Every major browser — Chrome, Safari, Firefox, and Edge — lets you block or delete cookies from its settings or help pages. You can do this at any time.",
+        },
+        {
+          type: "p",
+          text: "Just keep in mind that if you block our essential cookies, parts of MoveUs may stop working or behave unexpectedly.",
+        },
+      ],
+    },
+    {
+      id: "changes",
+      title: "Changes to this policy",
+      body: [
+        {
+          type: "p",
+          text: "Since MoveUs is still in beta, we may update this Cookie Policy as the app changes. The \"Last updated\" date at the top always shows when we last revised it.",
+        },
+      ],
+    },
+    {
+      id: "contact",
+      title: "Contact us",
+      body: [
+        {
+          type: "p",
+          text: "Questions about our use of cookies? Reach us any time:",
+        },
+        { type: "p", text: "moveus.dev@gmail.com" },
+      ],
+    },
   ],
 };
