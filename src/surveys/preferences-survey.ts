@@ -12,6 +12,15 @@ import {
 import strings from "@/translations/strings";
 import { QuestionKind, Survey } from "./types";
 
+// Low → high, so each slider notch maps to the right enum value.
+const acquaintanceOrder = [
+  AcquaintancePreference.Nobody,
+  AcquaintancePreference.One,
+  AcquaintancePreference.Two,
+  AcquaintancePreference.ThreePlus,
+  AcquaintancePreference.Everyone,
+] as const;
+
 export const preferencesSurvey: Survey<AlterProfileSurveyInfoMutationVariables> = {
   id: "preferences",
   mutation: AlterProfileSurveyInfoDocument,
@@ -79,14 +88,6 @@ export const preferencesSurvey: Survey<AlterProfileSurveyInfoMutationVariables> 
       labelsNamespace: "survey.preferences.scaleWeekly",
     },
     {
-      kind: QuestionKind.SingleChoice,
-      title: strings.survey.preferences.difficultyTitle,
-      field: "preferredDifficulty",
-      enum: SkillLevel,
-      enumNamespace: "enums.skillLevel",
-      required: true,
-    },
-    {
       kind: QuestionKind.Slider,
       title: strings.survey.preferences.discomfortTitle,
       field: "pushesThroughDiscomfort",
@@ -112,20 +113,14 @@ export const preferencesSurvey: Survey<AlterProfileSurveyInfoMutationVariables> 
       enumNamespace: "enums.participationGroupKind",
     },
     {
-      kind: QuestionKind.SingleChoice,
+      kind: QuestionKind.Slider,
       title: strings.survey.preferences.acquaintanceTitle,
       field: "acquaintancePreference",
-      enum: AcquaintancePreference,
-      enumNamespace: "enums.acquaintancePreference",
-      required: true,
-    },
-    {
-      kind: QuestionKind.Slider,
-      title: strings.survey.preferences.mixedGenderTitle,
-      field: "mixedGenderComfort",
       min: 1,
-      max: 5,
-      labelsNamespace: "survey.preferences.scaleAgreement",
+      max: acquaintanceOrder.length,
+      enumValues: acquaintanceOrder,
+      labelsNamespace: "survey.preferences.scaleAcquaintance",
+      required: true,
     },
     {
       kind: QuestionKind.Slider,

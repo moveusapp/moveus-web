@@ -817,13 +817,11 @@
       "availabilitySubtitle": "Označi sve termine koji ti odgovaraju.",
       "travelDistanceTitle": "Koliko si daleko spreman/na putovati?",
       "weeklyTargetTitle": "Koliko često tjedno želiš biti aktivan/na?",
-      "difficultyTitle": "Koja je tvoja željena težina aktivnosti?",
       "discomfortTitle": "Guram kroz nelagodu kako bih napredovao/la",
       "groupSizeTitle": "Koja je tvoja željena veličina grupe?",
       "groupSizeSubtitle": "Od samo vas dvoje do velike ekipe.",
       "participationGroupsTitle": "S kojom od ovih grupa bi se bavio/la aktivnošću?",
       "acquaintanceTitle": "Volim ići na događaje gdje poznajem:",
-      "mixedGenderTitle": "Jednako bih uživao/la u mješovitim kao i u istospolnim aktivnostima",
       "meetNewPeopleTitle": "Uživam upoznavati nove ljude",
       "activityVsSocialTitle": "Što ti je važnije?",
       "competitionTitle": "Dodatno me motivira natjecateljski suigrač",
@@ -834,7 +832,8 @@
       "scaleWeekly": ["Jednom tjedno", "Dvaput tjedno", "3 puta tjedno", "4 puta tjedno", "5 puta tjedno", "6 puta tjedno", "Svaki dan"],
       "scaleGroupSize": ["Samo ja +1", "3 osobe", "4 osobe", "5 osoba", "6 osoba", "7 osoba", "8 osoba", "9 osoba", "10 osoba", "Velika grupa (10+)"],
       "scaleActivitySocial": ["Samo aktivnost", "Uglavnom aktivnost", "Podjednako oboje", "Uglavnom ljudi", "Samo ljudi"],
-      "scalePlanning": ["U zadnji čas", "Nekoliko dana unaprijed", "Otprilike tjedan", "Dva tjedna", "Mjesec unaprijed"]
+      "scalePlanning": ["U zadnji čas", "Nekoliko dana unaprijed", "Otprilike tjedan", "Dva tjedna", "Mjesec unaprijed"],
+      "scaleAcquaintance": ["Nikoga", "Jednog poznanika", "Dva poznanika", "Tri ili više poznanika", "Sve"]
     }
   }
 }

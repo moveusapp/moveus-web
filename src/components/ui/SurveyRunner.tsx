@@ -32,6 +32,12 @@ function buildVariables<TVars extends AnyVars>(
       let value = answers[q.field];
       if (value instanceof Date) {
         value = value.toISOString().slice(0, 10);
+      } else if (
+        q.kind === QuestionKind.Slider &&
+        q.enumValues &&
+        typeof value === "number"
+      ) {
+        value = q.enumValues[value - q.min] ?? null;
       }
       vars[q.field] = value ?? null;
     }

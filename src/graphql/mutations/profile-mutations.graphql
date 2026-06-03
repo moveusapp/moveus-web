@@ -32,12 +32,10 @@ mutation AlterProfileSurveyInfo(
   $availabilities: [AvailabilityInput]
   $maxTravelDistance: Int
   $weeklyActivityTarget: Int
-  $preferredDifficulty: SkillLevel
   $pushesThroughDiscomfort: Int
   $preferredGroupSize: Int
   $participationGroups: [ParticipationGroupKind]
   $acquaintancePreference: AcquaintancePreference
-  $mixedGenderComfort: Int
   $enjoysMeetingNewPeople: Int
   $activityVsSocial: Int
   $motivatedByCompetition: Int
@@ -52,12 +50,10 @@ mutation AlterProfileSurveyInfo(
     availabilities: $availabilities
     maxTravelDistance: $maxTravelDistance
     weeklyActivityTarget: $weeklyActivityTarget
-    preferredDifficulty: $preferredDifficulty
     pushesThroughDiscomfort: $pushesThroughDiscomfort
     preferredGroupSize: $preferredGroupSize
     participationGroups: $participationGroups
     acquaintancePreference: $acquaintancePreference
-    mixedGenderComfort: $mixedGenderComfort
     enjoysMeetingNewPeople: $enjoysMeetingNewPeople
     activityVsSocial: $activityVsSocial
     motivatedByCompetition: $motivatedByCompetition

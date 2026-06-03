@@ -4,11 +4,9 @@ fragment UserPreferences on UserPreferencesType {
   leadershipInclination
   maxTravelDistance
   weeklyActivityTarget
-  preferredDifficulty
   pushesThroughDiscomfort
   preferredGroupSize
   acquaintancePreference
-  mixedGenderComfort
   enjoysMeetingNewPeople
   activityVsSocial
   motivatedByCompetition

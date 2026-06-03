@@ -76,6 +76,10 @@ export type Question<TVars> =
       labelsNamespace?: string;
       // For metric sliders that can't enumerate a label per value (e.g. "km").
       unit?: string;
+      // Maps each slider notch to an ordered enum value, low → high. When set,
+      // the runner submits enumValues[value - min] instead of the raw number,
+      // letting an ordinal enum field render as a slider.
+      enumValues?: readonly string[];
       validate?: (value: number) => boolean;
     })
   | (Base & {
