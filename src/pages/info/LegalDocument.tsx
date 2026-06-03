@@ -4,6 +4,7 @@ import useDocumentTitle from "@/hooks/use-document-title";
 import InfoHero from "./InfoHero";
 import { useScrollSpy } from "./use-scroll-spy";
 import { placeholderBody } from "./placeholder-prose";
+import { renderLegalBody } from "./legal-blocks";
 import { legalChrome, type LegalContent } from "./legal-content";
 
 function LegalDocument({
@@ -104,7 +105,7 @@ function LegalDocument({
                     {s.title}
                   </h2>
                   <div className="info-prose">
-                    {placeholderBody(i, i % 3 === 1)}
+                    {s.body ? renderLegalBody(s.body) : placeholderBody(i, i % 3 === 1)}
                   </div>
                 </section>
               ))}

@@ -28,6 +28,20 @@
   border-radius: 9999px;
   background: var(--color-primary);
 }
+.info-prose h3 {
+  margin-block: 1.75rem 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+.info-prose h3:first-child { margin-top: 0; }
+.info-prose a {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-underline-offset: 2px;
+  text-decoration-line: underline;
+}
+.info-prose a:hover { text-decoration-thickness: 2px; }
 
 /* ── TOC active state ───────────────────────────────────────────── */
 .info-toc-link[data-active="true"] {
