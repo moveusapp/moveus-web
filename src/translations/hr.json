@@ -7,7 +7,7 @@
     "messages": "Poruke",
     "settings": "Postavke",
     "createEvent": "Izradi događaj",
-    "closedBeta": "Zatvorena beta",
+    "openBeta": "Otvorena beta",
     "viewProfileAria": "Pogledaj svoj profil",
     "yourProfileAria": "Tvoj profil"
   },
@@ -779,12 +779,12 @@
         "body": "Podijeli fotku poslije treninga, gradi niz dana i gledaj kako se tjedni zbrajaju. Male nagrade za ustrajnost."
       }
     },
-    "closedBetaPrefix": "MoveUs je u",
-    "closedBetaHighlight": "zatvorenoj beti",
-    "closedBetaSuffix": ", zatraži pozivnicu kako bi se pridružio/la ranije.",
-    "kicker": "Your Workout Wingman · Beta samo s pozivnicom",
+    "openBetaPrefix": "MoveUs je u",
+    "openBetaHighlight": "otvorenoj beti",
+    "openBetaSuffix": ", prijavi se i kreni.",
+    "kicker": "Your Workout Wingman · Sad u otvorenoj beti",
     "tagline": "Pronađi ljude koji se zapravo pojave. MoveUs koristi tvoj psihološki profil kako bi te spojio s partnerima za trening i lokalnim sportskim događajima koji odgovaraju tvom načinu kretanja.",
-    "requestInvite": "Zatraži pozivnicu",
+    "getStarted": "Započni",
     "iHaveAccount": "Imam račun",
     "howItWorksPrefix": "Kako",
     "howItWorksSuffix": "funkcionira.",
@@ -797,7 +797,7 @@
     "nextEvents": "Sljedeći događaji",
     "seeAllEvents": "Pogledaj sve događaje",
     "finalCtaHeadline": "Patka te čeka.",
-    "finalCtaBody": "Broj mjesta je ograničen dok smo u beta fazi. Uhvati pozivnicu i prestani preskakati odlazak u teretanu.",
+    "finalCtaBody": "Besplatno je dok smo u beti. Prijavi se i prestani preskakati odlazak u teretanu.",
     "footerContact": "Kontakt"
   },
   "welcome": {

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
-import { HiArrowLeft, HiArrowRight, HiLockClosed } from "react-icons/hi2";
+import { HiArrowLeft, HiArrowRight, HiBeaker } from "react-icons/hi2";
 import SocialLinks from "@/components/misc/SocialLinks";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
 import "./landing.css";
@@ -75,14 +75,14 @@ function LandingPage() {
 
   return (
     <div className="min-h-screen bg-base-100">
-      {/* Closed beta strip */}
+      {/* Open beta strip */}
       <div className="sticky top-0 z-[60] bg-accent text-accent-content">
         <div className="mx-auto px-6 py-2 flex items-center justify-center gap-2 text-sm font-medium">
-          <HiLockClosed className="w-4 h-4 shrink-0" />
+          <HiBeaker className="w-4 h-4 shrink-0" />
           <span>
-            {strings.landing.closedBetaPrefix}{" "}
-            <span className="font-bold">{strings.landing.closedBetaHighlight}</span>
-            {strings.landing.closedBetaSuffix}
+            {strings.landing.openBetaPrefix}{" "}
+            <span className="font-bold">{strings.landing.openBetaHighlight}</span>
+            {strings.landing.openBetaSuffix}
           </span>
         </div>
       </div>
@@ -154,7 +154,7 @@ function LandingPage() {
               to="/register"
               className="btn btn-primary btn-lg gap-2 btn-arrow w-full sm:w-auto"
             >
-              {strings.landing.requestInvite}
+              {strings.landing.getStarted}
               <HiArrowRight className="w-5 h-5" />
             </Link>
             <Link to="/login" className="btn btn-ghost btn-lg w-full sm:w-auto">
@@ -348,7 +348,7 @@ function LandingPage() {
               to="/register"
               className="btn btn-lg bg-base-100 text-primary hover:bg-base-200 border-0 gap-2 btn-arrow"
             >
-              {strings.landing.requestInvite}
+              {strings.landing.getStarted}
               <HiArrowRight className="w-5 h-5" />
             </Link>
             <Link

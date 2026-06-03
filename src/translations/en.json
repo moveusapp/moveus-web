@@ -7,7 +7,7 @@
     "messages": "Messages",
     "settings": "Settings",
     "createEvent": "Create Event",
-    "closedBeta": "Closed beta",
+    "openBeta": "Open beta",
     "viewProfileAria": "View your profile",
     "yourProfileAria": "Your profile"
   },
@@ -779,12 +779,12 @@
         "body": "Share the after, build a streak, watch the weeks add up. Small rewards for sticking with it."
       }
     },
-    "closedBetaPrefix": "MoveUs is in",
-    "closedBetaHighlight": "closed beta",
-    "closedBetaSuffix": ", request an invite to join early.",
-    "kicker": "Your workout wingman · Invite-only beta",
+    "openBetaPrefix": "MoveUs is in",
+    "openBetaHighlight": "open beta",
+    "openBetaSuffix": ", sign up and start moving.",
+    "kicker": "Your workout wingman · Now in open beta",
     "tagline": "Find people who actually show up. MoveUs uses your psychological profile to match you with workout partners and local sports events that click with how you move.",
-    "requestInvite": "Request invite",
+    "getStarted": "Get started",
     "iHaveAccount": "I have an account",
     "howItWorksPrefix": "How",
     "howItWorksSuffix": "works.",
@@ -797,7 +797,7 @@
     "nextEvents": "Next events",
     "seeAllEvents": "See all events",
     "finalCtaHeadline": "The duck is waiting.",
-    "finalCtaBody": "Spots are limited while we're in beta. Grab an invite and stop ghosting your gym routine.",
+    "finalCtaBody": "Free while we're in beta. Sign up and stop ghosting your gym routine.",
     "footerContact": "Contact"
   },
   "welcome": {

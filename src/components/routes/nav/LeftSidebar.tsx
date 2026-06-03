@@ -4,7 +4,7 @@ import {
   HiOutlineCalendarDays,
   HiOutlineCog6Tooth,
   HiPlus,
-  HiLockClosed,
+  HiBeaker,
 } from "react-icons/hi2";
 import { HiOutlineChat, HiOutlineSearch } from "react-icons/hi";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
@@ -44,8 +44,8 @@ function LeftSidebar() {
     <div className="flex flex-col h-full w-full py-6 px-4">
       <div className="flex flex-col gap-1.5 px-3 mb-8">
         <span className="inline-flex items-center gap-1.5 self-start text-[11px] font-bold uppercase tracking-wide text-accent">
-          <HiLockClosed className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-          {strings.nav.closedBeta}
+          <HiBeaker className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+          {strings.nav.openBeta}
         </span>
         <img src={moveusLogo} alt={strings.common.brand} className="self-start" />
       </div>

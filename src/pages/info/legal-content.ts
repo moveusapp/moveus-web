@@ -32,7 +32,7 @@ export const termsContent: LegalContent = {
   documentTitle: "Terms of Service",
   eyebrow: "Legal",
   title: "Terms of Service",
-  lede: "MoveUs is in closed beta, so we're keeping this short. Here are the ground rules for using the app while we build it out.",
+  lede: "MoveUs is in open beta, so we're keeping this short. Here are the ground rules for using the app while we build it out.",
   lastUpdatedDate: "June 3, 2026",
   sections: [
     {
@@ -45,7 +45,7 @@ export const termsContent: LegalContent = {
         },
         {
           type: "p",
-          text: "By creating an account or using MoveUs, you agree to these terms. If you don't agree with them, please don't use the app. We're currently in a closed beta, so expect things to change and improve quickly.",
+          text: "By creating an account or using MoveUs, you agree to these terms. If you don't agree with them, please don't use the app. We're currently in an open beta, so expect things to change and improve quickly.",
         },
         {
           type: "p",
@@ -165,7 +165,7 @@ export const privacyContent: LegalContent = {
   documentTitle: "Privacy Policy",
   eyebrow: "Legal",
   title: "Privacy Policy",
-  lede: "MoveUs is in closed beta, and we try to collect only what we need to help you find events and people to move with. Here's the plain-language version.",
+  lede: "MoveUs is in open beta, and we try to collect only what we need to help you find events and people to move with. Here's the plain-language version.",
   lastUpdatedDate: "June 3, 2026",
   sections: [
     {
@@ -178,7 +178,7 @@ export const privacyContent: LegalContent = {
         },
         {
           type: "p",
-          text: "MoveUs is in closed beta, so the app and this policy will keep evolving. We don't sell your personal information, and we don't show you third-party ads.",
+          text: "MoveUs is in open beta, so the app and this policy will keep evolving. We don't sell your personal information, and we don't show you third-party ads.",
         },
       ],
     },
@@ -316,7 +316,7 @@ export const cookiesContent: LegalContent = {
   documentTitle: "Cookie Policy",
   eyebrow: "Legal",
   title: "Cookie Policy",
-  lede: "MoveUs is in closed beta, and we keep cookies to the minimum needed to run the app. Here's what we use and how to control them.",
+  lede: "MoveUs is in open beta, and we keep cookies to the minimum needed to run the app. Here's what we use and how to control them.",
   lastUpdatedDate: "June 3, 2026",
   sections: [
     {
