@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
 import { HiArrowLeft, HiArrowRight, HiLockClosed } from "react-icons/hi2";
+import SocialLinks from "@/components/misc/SocialLinks";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
 import "./landing.css";
 import EventCard from "@/components/event/EventCard";
@@ -369,6 +370,7 @@ function LandingPage() {
             <Link to="/contact" className="hover:text-primary transition-colors">{strings.landing.footerContact}</Link>
             <Link to="/privacy" className="hover:text-primary transition-colors">{strings.footer.privacy}</Link>
             <Link to="/terms" className="hover:text-primary transition-colors">{strings.footer.terms}</Link>
+            <SocialLinks />
           </nav>
           <p className="sm:justify-self-end">{strings.footer.copy}</p>
         </div>

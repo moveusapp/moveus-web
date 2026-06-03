@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi2";
+import SocialLinks from "@/components/misc/SocialLinks";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
 import strings from "@/translations/strings";
 import "./info.css";
@@ -60,6 +61,7 @@ function InfoPageLayout() {
             <Link to="/terms" className="hover:text-primary transition-colors">{strings.footer.terms}</Link>
             <Link to="/privacy" className="hover:text-primary transition-colors">{strings.footer.privacy}</Link>
             <Link to="/cookies" className="hover:text-primary transition-colors">{strings.footer.cookies}</Link>
+            <SocialLinks />
           </nav>
           <p className="sm:justify-self-end">{strings.footer.copy}</p>
         </div>

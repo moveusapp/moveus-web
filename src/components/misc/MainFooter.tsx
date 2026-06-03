@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import strings from "@/translations/strings";
+import SocialLinks from "@/components/misc/SocialLinks";
 
 function MainFooter() {
   return (
@@ -18,6 +19,7 @@ function MainFooter() {
           {strings.footer.cookies}
         </Link>
       </div>
+      <SocialLinks className="mt-2 text-neutral/50" />
       <p className="text-[11px] text-neutral/40 mt-1.5">
         {strings.footer.copy}
       </p>
