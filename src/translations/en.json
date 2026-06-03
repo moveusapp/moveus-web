@@ -28,6 +28,25 @@
     "about": "About",
     "copy": "MoveUs, j.d.o.o. 2026"
   },
+  "info": {
+    "back": "Back",
+    "about": {
+      "documentTitle": "About",
+      "eyebrow": "Our story",
+      "title": "Your Workout Wingman.",
+      "lede": "MoveUs turns \"I should work out\" into \"see you there.\" Find local events, meet people who train like you, and actually show up.",
+      "missionEyebrow": "Why we exist",
+      "missionTitle": "Movement is social. Your app should be too.",
+      "missionBody": "Gyms can feel lonely and group chats go quiet. We built MoveUs so finding a running partner or a pickup game takes two taps, not two weeks of nerve.",
+      "valuesEyebrow": "What you get",
+      "valueOneTitle": "Find your people",
+      "valueOneBody": "Match with players, runners and lifters near you who move at your pace.",
+      "valueTwoTitle": "Make it real",
+      "valueTwoBody": "Turn a maybe into a plan. Events, times, places, no endless back-and-forth.",
+      "valueThreeTitle": "Keep showing up",
+      "valueThreeBody": "Streaks, reminders and a crew that notices when you skip leg day."
+    }
+  },
   "user": {
     "follow": "Follow",
     "following": "Following",

@@ -28,6 +28,25 @@
     "about": "O nama",
     "copy": "MoveUs, j.d.o.o. 2026"
   },
+  "info": {
+    "back": "Natrag",
+    "about": {
+      "documentTitle": "O nama",
+      "eyebrow": "Naša priča",
+      "title": "Your Workout Wingman.",
+      "lede": "MoveUs pretvara \"trebao bih vježbati\" u \"vidimo se tamo.\" Pronađi lokalne događaje, upoznaj ljude koji treniraju kao ti i stvarno se pojavi.",
+      "missionEyebrow": "Zašto postojimo",
+      "missionTitle": "Kretanje je društveno. I tvoja aplikacija bi trebala biti.",
+      "missionBody": "Teretane znaju biti usamljene, a grupni chatovi utihnu. Napravili smo MoveUs da pronalazak partnera za trčanje ili ekipe za rekreaciju traje dva tapa, a ne dva tjedna skupljanja hrabrosti.",
+      "valuesEyebrow": "Što dobivaš",
+      "valueOneTitle": "Pronađi svoje ljude",
+      "valueOneBody": "Spoji se s igračima, trkačima i dizačima u blizini koji se kreću tvojim tempom.",
+      "valueTwoTitle": "Ostvari to",
+      "valueTwoBody": "Pretvori 'možda' u plan. Događaji, vremena, mjesta, bez beskonačnog dogovaranja.",
+      "valueThreeTitle": "Nastavi se pojavljivati",
+      "valueThreeBody": "Nizovi, podsjetnici i ekipa koja primijeti kad preskočiš dan nogu."
+    }
+  },
   "user": {
     "follow": "Prati",
     "following": "Pratiš",
