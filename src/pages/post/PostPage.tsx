@@ -89,9 +89,7 @@ function PostMain({ post }: { post: PostCardFragment }) {
     post.author!.lastName,
   );
 
-  const imageUrl = post.id
-    ? `${import.meta.env.VITE_BUCKET_URL}/post-pictures/${post.id}`
-    : null;
+  const imageUrl = post.imageUrl ?? null;
 
   const handleLike = useCallback(() => {
     if (liked) {
@@ -115,7 +113,7 @@ function PostMain({ post }: { post: PostCardFragment }) {
     <>
       <header className="flex items-center gap-3">
         <Link to={`/user/${post.author?.username}`} className="shrink-0">
-          <UserAvatar userId={post.author?.id!} className="h-12 w-12" />
+          <UserAvatar imageUrl={post.author?.profileImageUrl} className="h-12 w-12" />
         </Link>
         <div className="flex min-w-0 flex-col">
           <Link

@@ -23,6 +23,7 @@ interface FollowingUser {
   username: string;
   firstName: string;
   lastName: string;
+  profileImageUrl?: string | null;
 }
 
 interface CreateGroupChatModalProps {
@@ -67,6 +68,7 @@ function CreateGroupChatModal({ isOpen, onClose, onCreated }: CreateGroupChatMod
         username: u.username,
         firstName: u.firstName,
         lastName: u.lastName,
+        profileImageUrl: u.profileImageUrl,
       }));
   }, [data]);
 
@@ -164,7 +166,7 @@ function CreateGroupChatModal({ isOpen, onClose, onCreated }: CreateGroupChatMod
                         }) as string
                       }
                     >
-                      <UserAvatar userId={u.id} className="w-6 h-6" />
+                      <UserAvatar imageUrl={u.profileImageUrl} className="w-6 h-6" />
                       <span className="font-medium max-w-[10rem] truncate">
                         {name}
                       </span>
@@ -243,7 +245,7 @@ function CreateGroupChatModal({ isOpen, onClose, onCreated }: CreateGroupChatMod
                         }`}
                       >
                         <div className="relative shrink-0">
-                          <UserAvatar userId={u.id} className="w-10 h-10" />
+                          <UserAvatar imageUrl={u.profileImageUrl} className="w-10 h-10" />
                           {selected && (
                             <span className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-primary text-primary-content flex items-center justify-center shadow-sm ring-2 ring-base-100">
                               <RiCheckLine className="w-3.5 h-3.5" />

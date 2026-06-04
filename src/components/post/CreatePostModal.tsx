@@ -3,7 +3,7 @@ import { HiXMark, HiPhoto } from "react-icons/hi2";
 import Button from "@/components/ui/Button";
 import UserAvatar from "@/components/user/UserAvatar";
 import { CreatePostDocument } from "@/graphql/graphql-types";
-import { putFileToSignedUrl } from "@/utils/upload";
+import { uploadWithTicket } from "@/utils/upload";
 import { useMutation } from "@apollo/client/react";
 import { formatError } from "@/utils/format-error";
 import FormError from "@/components/ui/FormError";
@@ -78,10 +78,10 @@ function CreatePostModal({
       const post = result.data?.createPost?.post;
 
       let imageFailed = false;
-      if (selectedImage && post?.postPictureUrl) {
+      if (selectedImage && post?.imageUpload) {
         setUploading(true);
         try {
-          await putFileToSignedUrl(post.postPictureUrl, selectedImage);
+          await uploadWithTicket(post.imageUpload, selectedImage);
         } catch (err) {
           console.error("Error uploading image:", err);
           imageFailed = true;
@@ -132,7 +132,7 @@ function CreatePostModal({
           <div className="flex items-start gap-3">
             {profile?.id != null && (
               <UserAvatar
-                userId={profile.id}
+                imageUrl={profile.profileImageUrl}
                 className="h-10 w-10 shrink-0"
               />
             )}

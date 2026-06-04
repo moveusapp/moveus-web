@@ -4,6 +4,7 @@ fragment ChatMember on ChatMemberType {
     username
     firstName
     lastName
+    profileImageUrl
   }
   lastOpen
 }

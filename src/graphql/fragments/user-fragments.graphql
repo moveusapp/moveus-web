@@ -47,6 +47,7 @@ fragment ContextProfile on ProfileType{
   isCapeable
   lastName
   verified
+  profileImageUrl
   likes
   dislikes
   followerCount
@@ -72,6 +73,7 @@ fragment User on UserType {
   gender
   firstName
   lastName
+  profileImageUrl
   likes
   dislikes
   dateOfBirth
@@ -102,4 +104,5 @@ fragment UserCard on UserType {
   firstName
   lastName
   verified
+  profileImageUrl
 }

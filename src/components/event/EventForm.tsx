@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { HiArrowRight, HiCheck, HiPlus } from "react-icons/hi";
+import { HiArrowRight, HiCheck } from "react-icons/hi";
+import { HiPhoto, HiXMark } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import { useImageSelect } from "@/hooks/use-image-select";
 import Button from "@/components/ui/Button";
 import { formatError } from "@/utils/format-error";
 import TextInput from "@/components/ui/TextInput";
@@ -35,6 +37,7 @@ export type EventFormValues = {
   maxAge: string;
   acceptedGenders: GenderNoPnts[];
   allowSpectators: boolean;
+  thumbnail: File | null;
 };
 
 const EMPTY: EventFormValues = {
@@ -52,11 +55,14 @@ const EMPTY: EventFormValues = {
   maxAge: "",
   acceptedGenders: [],
   allowSpectators: true,
+  thumbnail: null,
 };
 
 type Props = {
   mode: "create" | "edit";
   initialValues?: Partial<EventFormValues>;
+  /** Existing thumbnail URL to preview in edit mode. */
+  initialThumbnailUrl?: string;
   submitLabel: string;
   loading: boolean;
   apiError?: unknown;
@@ -67,6 +73,7 @@ type Props = {
 function EventForm({
   mode,
   initialValues,
+  initialThumbnailUrl,
   submitLabel,
   loading,
   apiError,
@@ -79,6 +86,19 @@ function EventForm({
   });
   const [userError, setUserError] = useState("");
   const errorRef = useRef<HTMLDivElement | null>(null);
+
+  const {
+    inputRef: thumbnailRef,
+    file: thumbnailFile,
+    previewUrl: thumbnailPreview,
+    onSelect: onThumbnailSelect,
+    clear: clearThumbnail,
+  } = useImageSelect();
+  const [existingThumbnailFailed, setExistingThumbnailFailed] = useState(false);
+
+  const existingThumbnail =
+    initialThumbnailUrl && !existingThumbnailFailed ? initialThumbnailUrl : null;
+  const thumbnailSrc = thumbnailPreview ?? existingThumbnail;
 
   const apiErrorMessage = formatError(apiError);
   const error = userError || apiErrorMessage;
@@ -109,7 +129,7 @@ function EventForm({
     }
 
     setUserError("");
-    await onSubmit(values);
+    await onSubmit({ ...values, thumbnail: thumbnailFile });
   };
 
   return (
@@ -258,20 +278,67 @@ function EventForm({
                 onChange={(e) => set("allowSpectators", e.target.checked)}
               />
             </label>
-
-            <div>
-              <label className="text-sm font-medium mb-2 block">
-                {strings.event.coverImage}
-              </label>
-              <div className="border-2 border-dashed border-base-content/20 rounded-xl p-8 text-center hover:border-primary/50 transition cursor-not-allowed opacity-50">
-                <HiPlus className="w-8 h-8 mx-auto mb-2 text-base-content/40" />
-                <p className="text-sm text-base-content/60">
-                  {strings.event.coverImageDesc}
-                </p>
-              </div>
-            </div>
           </>
         )}
+
+        <div>
+          <label className="text-sm font-medium mb-2 block">
+            {strings.event.coverImage}
+          </label>
+
+          {thumbnailSrc ? (
+            <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-base-300">
+              <img
+                src={thumbnailSrc}
+                alt={strings.event.coverImagePreviewAlt}
+                onError={() => {
+                  if (!thumbnailPreview) setExistingThumbnailFailed(true);
+                }}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => thumbnailRef.current?.click()}
+                className="btn btn-sm absolute bottom-2.5 right-2.5 rounded-full shadow-md"
+              >
+                <HiPhoto className="h-4 w-4" />
+                {strings.event.changeCoverImage}
+              </button>
+              {thumbnailPreview && (
+                <button
+                  type="button"
+                  onClick={clearThumbnail}
+                  aria-label={strings.event.removeCoverImageAria}
+                  className="btn btn-sm btn-circle btn-error absolute right-2.5 top-2.5 shadow-md"
+                >
+                  <HiXMark className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => thumbnailRef.current?.click()}
+              className="flex aspect-video w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-base-content/20 text-center transition hover:border-primary/50 hover:bg-base-100"
+            >
+              <HiPhoto className="mb-2 h-8 w-8 text-base-content/40" />
+              <span className="text-sm font-medium text-base-content/70">
+                {strings.event.addCoverImage}
+              </span>
+              <span className="mt-0.5 text-xs text-base-content/50">
+                {strings.event.coverImageDesc}
+              </span>
+            </button>
+          )}
+
+          <input
+            type="file"
+            accept="image/*"
+            ref={thumbnailRef}
+            onChange={onThumbnailSelect}
+            className="hidden"
+          />
+        </div>
       </div>
 
       {error && (

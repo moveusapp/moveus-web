@@ -13,6 +13,7 @@ query GetChat($chatId: Int!) {
         username
         firstName
         lastName
+        profileImageUrl
       }
     }
     allMembers: members(includeFormer: true) {
@@ -22,14 +23,17 @@ query GetChat($chatId: Int!) {
         username
         firstName
         lastName
+        profileImageUrl
       }
     }
   }
 }
 
-query GetAttachmentUploadURL($contentType: String!) {
+query GetAttachmentUpload($contentType: String!) {
   newAttachment(contentType: $contentType) {
     id
-    url
+    upload {
+      ...UploadTicket
+    }
   }
 }

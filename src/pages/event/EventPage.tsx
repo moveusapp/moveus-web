@@ -1,4 +1,4 @@
-import defaultEventThumbnail from "@/assets/default-images/event-default-thumbnail.webp";
+import EventThumbnail from "@/components/event/EventThumbnail";
 import { setDocumentTitle } from "@/hooks/use-document-title";
 import UserAvatar from "@/components/user/UserAvatar";
 import {
@@ -183,7 +183,7 @@ function EventPage() {
             className="flex items-center gap-2 group text-sm text-muted-foreground hover:text-foreground transition-colors mt-2"
           >
             <UserAvatar
-              userId={event.organizer?.user.id!}
+              imageUrl={event.organizer?.user.profileImageUrl}
               className="flex w-7 h-7"
             />
             <span className="flex items-center gap-1">
@@ -278,9 +278,10 @@ function EventPage() {
         <aside className="w-full lg:w-[340px] xl:w-[380px] lg:flex-shrink-0 order-first lg:order-last">
           <div className="lg:sticky lg:top-6 lg:self-start flex flex-col gap-4">
             <div className="relative rounded-2xl overflow-hidden bg-base-300">
-              <img
-                src={defaultEventThumbnail}
+              <EventThumbnail
+                imageUrl={event.imageUrl}
                 alt={event.title ?? ""}
+                crossOrigin="anonymous"
                 className={`w-full aspect-video object-cover transition-[filter] duration-300 ${
                   d.isCancelled
                     ? "grayscale brightness-75"
@@ -288,8 +289,6 @@ function EventPage() {
                       ? "grayscale-[60%] brightness-90"
                       : ""
                 }`}
-                crossOrigin="anonymous"
-                loading="lazy"
               />
             </div>
 
@@ -355,7 +354,7 @@ function EventPage() {
                   {event.members.slice(0, 5).map((member) => (
                     <UserAvatar
                       key={member.user.id}
-                      userId={member.user.id!}
+                      imageUrl={member.user.profileImageUrl}
                       className="w-10 h-10"
                     />
                   ))}

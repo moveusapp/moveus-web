@@ -50,7 +50,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
 
   const genderOptions = enumToOptions(Gender, "enums.gender");
 
-  const initialAvatar = `${import.meta.env.VITE_BUCKET_URL}/profile-pictures/${profile.id}`;
+  const initialAvatar = profile.profileImageUrl || defaultAvatar;
   const [avatarSrc, setAvatarSrc] = useState(initialAvatar);
   const {
     inputRef: imageRef,

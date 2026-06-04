@@ -180,7 +180,7 @@ function UserPage() {
       <div className="bg-base-200 rounded-2xl border border-base-300 p-5">
         <div className="flex flex-row items-center gap-4">
           <UserAvatar
-            userId={user.id!}
+            imageUrl={user.profileImageUrl}
             className="flex-shrink-0 w-20 h-20"
           />
 

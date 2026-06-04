@@ -23,7 +23,7 @@ function CreatePostComposer() {
         className="group flex w-full items-center gap-3 rounded-2xl border border-base-300 bg-base-200 px-4 py-3 text-left transition-colors hover:bg-base-300"
       >
         {profile?.id != null && (
-          <UserAvatar userId={profile.id} className="h-10 w-10 shrink-0" />
+          <UserAvatar imageUrl={profile.profileImageUrl} className="h-10 w-10 shrink-0" />
         )}
         <span className="flex-1 truncate text-sm text-base-content/60 transition-colors group-hover:text-base-content">
           {prompt}

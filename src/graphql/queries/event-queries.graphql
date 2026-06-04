@@ -10,6 +10,12 @@ query GetAnonymousUserEvents {
   }
 }
 
+query GetEventImageUpload($eventId: Int!, $contentType: String!) {
+  eventImageUpload(eventId: $eventId, contentType: $contentType) {
+    ...UploadTicket
+  }
+}
+
 query GetUnratedEvents {
   unratedEvents {
     id

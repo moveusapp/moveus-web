@@ -19,7 +19,7 @@ function UserCard({ user, tags, isSelf }: UserCardProps) {
       to={`/user/${user?.username}`}
     >
       <div className="flex flex-row gap-2">
-        <UserAvatar userId={user?.id!} className="w-12" />
+        <UserAvatar imageUrl={user.profileImageUrl} className="w-12" />
         <div className="flex flex-col w-full justify-between">
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-1">

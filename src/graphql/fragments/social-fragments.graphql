@@ -23,6 +23,7 @@ fragment Comment on CommentType {
 fragment PostCard on PostType {
   id
   content
+  imageUrl
   timePosted
   author {
     ...UserCard

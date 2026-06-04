@@ -112,7 +112,7 @@ function LeftSidebar() {
             : "bg-base-100 border-base-300 hover:bg-base-200 hover:border-base-300"
         }`}
       >
-        <UserAvatar userId={profile?.id!} className="w-9 h-9 shrink-0" />
+        <UserAvatar imageUrl={profile?.profileImageUrl} className="w-9 h-9 shrink-0" />
         <div className="flex flex-col min-w-0 flex-1">
           <span className="text-sm font-semibold truncate text-base-content">
             {displayName(

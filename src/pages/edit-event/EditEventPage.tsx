@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useApolloClient } from "@apollo/client/react";
 import { useMutation } from "@apollo/client/react";
 import { HiOutlineNoSymbol, HiOutlineTrash } from "react-icons/hi2";
 import {
@@ -19,6 +20,7 @@ import PageHeader from "@/components/layout/PageHeader";
 import { useToast } from "@/context/toast-context";
 import strings from "@/translations/strings";
 import { useHtmlDialog } from "@/hooks/use-html-dialog";
+import { uploadEventThumbnail } from "@/utils/upload";
 import { dayKey, formatTime } from "@/utils/time-utils";
 
 const pageWrap = "w-full mx-auto max-w-3xl p-4";
@@ -29,6 +31,7 @@ function EditEventPage() {
   const { eventId } = useParams();
   const navigate = useNavigate();
   const toast = useToast();
+  const apollo = useApolloClient();
 
   const { id, event, fallback } = useEvent({
     eventIdParam: eventId,
@@ -99,7 +102,20 @@ function EditEventPage() {
       });
 
       if (result.data?.alterEvent?.event?.id) {
-        toast.success(strings.toast.changesSaved);
+        let imageFailed = false;
+        if (values.thumbnail) {
+          try {
+            await uploadEventThumbnail(apollo, id, values.thumbnail);
+          } catch {
+            imageFailed = true;
+          }
+        }
+
+        if (imageFailed) {
+          toast.info(strings.toast.changesSavedNoPhoto);
+        } else {
+          toast.success(strings.toast.changesSaved);
+        }
         navigate(`/event/${id}`);
       }
     } catch {
@@ -149,6 +165,7 @@ function EditEventPage() {
         <EventForm
           mode="edit"
           initialValues={initialValues}
+          initialThumbnailUrl={event.imageUrl ?? undefined}
           submitLabel={strings.editEvent.submit}
           loading={saving}
           apiError={apiError}

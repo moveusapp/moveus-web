@@ -5,6 +5,7 @@ import useDocumentTitle from "@/hooks/use-document-title";
 import EventForm, { type EventFormValues } from "@/components/event/EventForm";
 import PageHeader from "@/components/layout/PageHeader";
 import { useToast } from "@/context/toast-context";
+import { uploadWithTicket } from "@/utils/upload";
 import strings from "@/translations/strings";
 
 function CreateEventPage() {
@@ -46,12 +47,28 @@ function CreateEventPage() {
           maxAge: values.maxAge ? parseInt(values.maxAge) : null,
           acceptedGenders: values.acceptedGenders,
           allowSpectators: values.allowSpectators,
+          withPicture: !!values.thumbnail,
+          contentType: values.thumbnail?.type,
         },
       });
 
-      if (result.data?.createEvent?.event?.id) {
-        toast.success(strings.toast.eventCreated);
-        navigate(`/event/${result.data.createEvent.event.id}`);
+      const event = result.data?.createEvent?.event;
+      if (event?.id) {
+        let imageFailed = false;
+        if (values.thumbnail && event.imageUpload) {
+          try {
+            await uploadWithTicket(event.imageUpload, values.thumbnail);
+          } catch {
+            imageFailed = true;
+          }
+        }
+
+        if (imageFailed) {
+          toast.info(strings.toast.eventCreatedNoPhoto);
+        } else {
+          toast.success(strings.toast.eventCreated);
+        }
+        navigate(`/event/${event.id}`);
       }
     } catch {
       // Errors surface inline via EventForm's apiError prop.

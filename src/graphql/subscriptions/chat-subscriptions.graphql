@@ -30,6 +30,7 @@ subscription MyChats {
         lastName
         nickname
         lastOpen
+        profileImageUrl
       }
       lastMessage {
         ...WSChatMessage
@@ -42,6 +43,7 @@ subscription MyChats {
       lastName
       nickname
       lastOpen
+      profileImageUrl
     }
     removedUserId
   }

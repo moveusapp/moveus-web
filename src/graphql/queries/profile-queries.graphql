@@ -4,8 +4,10 @@ query GetMyProfile {
     }
 }
 
-query GetProfilePictureUploadURL($contentType: String!) {
-  profilePictureUrl(contentType: $contentType)
+query GetProfileImageUpload($contentType: String!) {
+  profileImageUpload(contentType: $contentType) {
+    ...UploadTicket
+  }
 }
 
 query GetNotifications {
@@ -19,6 +21,7 @@ query GetNotifications {
         username
         firstName
         lastName
+        profileImageUrl
       }
     }
     ... on EventNotificationType {

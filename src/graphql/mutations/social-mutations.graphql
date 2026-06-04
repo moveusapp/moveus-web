@@ -24,7 +24,9 @@ mutation CreatePost(
   createPost(content: $content, eventId: $eventId) {
     post {
       id
-      postPictureUrl(contentType: $contentType) @include(if: $withPicture)
+      imageUpload(contentType: $contentType) @include(if: $withPicture) {
+        ...UploadTicket
+      }
     }
   }
 }

@@ -4,12 +4,12 @@ import { apolloClient } from "@/apollo/client";
 import {
   ChatMessageKind,
   ChatMessagesDocument,
-  GetAttachmentUploadUrlDocument,
+  GetAttachmentUploadDocument,
   SendChatMessageDocument,
 } from "@/graphql/graphql-types";
 import { useProfile } from "@/context/profile-context";
 import { useToast } from "@/context/toast-context";
-import { fileToBase64, putFileToSignedUrl } from "@/utils/upload";
+import { fileToBase64, uploadWithTicket } from "@/utils/upload";
 import { formatError } from "@/utils/format-error";
 import { ensureDateObject } from "@/utils/time-utils";
 import strings from "@/translations/strings";
@@ -250,14 +250,14 @@ export function useChatMessages(chatId: number | undefined) {
       if (image) {
         try {
           const result = await apolloClient.query({
-            query: GetAttachmentUploadUrlDocument,
+            query: GetAttachmentUploadDocument,
             variables: { contentType: image.type },
           });
           const newAttachment = result.data?.newAttachment;
-          if (!newAttachment?.id || !newAttachment?.url) {
-            throw new Error("Missing attachment upload URL");
+          if (!newAttachment?.id || !newAttachment?.upload) {
+            throw new Error("Missing attachment upload ticket");
           }
-          await putFileToSignedUrl(newAttachment.url, image);
+          await uploadWithTicket(newAttachment.upload, image);
           attachmentId = newAttachment.id;
         } catch (error) {
           console.error(error);

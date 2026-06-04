@@ -32,9 +32,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
     post.author!.lastName,
   );
 
-  const imageUrl = post.id
-    ? `${import.meta.env.VITE_BUCKET_URL}/post-pictures/${post.id}`
-    : null;
+  const imageUrl = post.imageUrl ?? null;
 
   const commentCount = post.comments?.length ?? 0;
 
@@ -84,7 +82,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
               className="flex items-center gap-3 flex-1 min-w-0 group"
             >
               <UserAvatar
-                userId={post?.author?.id!}
+                imageUrl={post?.author?.profileImageUrl}
                 className="w-10 h-10 flex-shrink-0"
               />
               <div className="flex flex-col min-w-0">

@@ -1,0 +1,8 @@
+fragment UploadTicket on UploadTicketType {
+  url
+  method
+  headers {
+    name
+    value
+  }
+}

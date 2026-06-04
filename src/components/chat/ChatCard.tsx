@@ -9,10 +9,14 @@ import { RiCheckDoubleLine, RiCheckLine, RiGroupLine } from "react-icons/ri";
 import strings from "@/translations/strings";
 import { systemMessageLabel } from "@/pages/chat/system-message-label";
 
-function StackedAvatar({ userId, className }: { userId: number; className: string }) {
-  const [src, setSrc] = useState(
-    `${import.meta.env.VITE_BUCKET_URL}/profile-pictures/${userId}`,
-  );
+function StackedAvatar({
+  imageUrl,
+  className,
+}: {
+  imageUrl?: string | null;
+  className: string;
+}) {
+  const [src, setSrc] = useState(imageUrl || defaultAvatar);
   return (
     <div className={`avatar absolute ${className}`}>
       <div className="rounded-full ring-2 ring-base-100 bg-base-100">
@@ -34,6 +38,7 @@ export interface ChatSummaryMember {
   lastName: string;
   nickname: string;
   lastOpen: Date | null;
+  profileImageUrl?: string | null;
 }
 
 function memberName(m: ChatSummaryMember): string {
@@ -138,11 +143,11 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
         return (
           <div className="relative w-10 h-10 shrink-0">
             <StackedAvatar
-              userId={stack[0].userId}
+              imageUrl={stack[0].profileImageUrl}
               className="w-7 h-7 top-0 left-0"
             />
             <StackedAvatar
-              userId={stack[1].userId}
+              imageUrl={stack[1].profileImageUrl}
               className="w-7 h-7 bottom-0 right-0"
             />
           </div>
@@ -151,7 +156,7 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
       if (stack.length === 1) {
         return (
           <UserAvatar
-            userId={stack[0].userId}
+            imageUrl={stack[0].profileImageUrl}
             className="w-10 h-10 shrink-0"
           />
         );
@@ -165,7 +170,7 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
     if (others.length > 0) {
       return (
         <UserAvatar
-          userId={others[0].userId}
+          imageUrl={others[0].profileImageUrl}
           className="w-10 h-10 shrink-0"
         />
       );

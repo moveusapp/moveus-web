@@ -299,7 +299,7 @@ function ChatView({
               </div>
             ) : (
               <UserAvatar
-                userId={(otherMember ?? members[0]).user.id!}
+                imageUrl={(otherMember ?? members[0]).user.profileImageUrl}
                 className="w-10 h-10 rounded-full"
               />
             )}

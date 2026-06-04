@@ -1,4 +1,4 @@
-import defaultEventThumbnail from "@/assets/default-images/event-default-thumbnail.webp";
+import EventThumbnail from "@/components/event/EventThumbnail";
 import UserAvatar from "@/components/user/UserAvatar";
 import {
   EventCardFragment,
@@ -50,10 +50,9 @@ function EventCard({ event }: EventCardProps) {
     >
       {/* Thumbnail */}
       <div className="relative w-full aspect-video overflow-hidden rounded-xl bg-base-300">
-        <img
-          src={defaultEventThumbnail}
+        <EventThumbnail
+          imageUrl={event.imageUrl}
           alt={strings.formatString(strings.event.thumbnailAlt, { title: event.title ?? "" }) as string}
-          loading="lazy"
           className={`absolute inset-0 w-full h-full object-cover transition-[filter] duration-300 ${thumbnailFilter}`}
         />
         <span
@@ -94,7 +93,7 @@ function EventCard({ event }: EventCardProps) {
       {/* Footer: organizer + capacity */}
       <div className="px-0.5 flex items-center justify-between gap-3 pt-1.5 border-t border-base-300">
         <div className="flex items-center gap-2 min-w-0">
-          <UserAvatar userId={event.organizer?.user.id!} className="w-6 h-6 shrink-0" />
+          <UserAvatar imageUrl={event.organizer?.user.profileImageUrl} className="w-6 h-6 shrink-0" />
           <div className="min-w-0 flex items-center gap-1">
             <span className="text-xs text-muted-foreground">{strings.event.hostedBy}</span>
             <span className="text-xs font-medium text-foreground truncate">{organizerName}</span>

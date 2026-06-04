@@ -49,6 +49,7 @@ fragment Event on EventType {
   phase
   role
   score
+  imageUrl
 }
 
 fragment EventCard on EventType {
@@ -72,4 +73,5 @@ fragment EventCard on EventType {
     latitude
   }
   phase
+  imageUrl
 }

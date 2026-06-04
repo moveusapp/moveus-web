@@ -2,10 +2,8 @@ import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
 import { useState } from "react";
 import strings from "@/translations/strings";
 
-function UserAvatar({ userId, className }: UserImageProps) {
-  const [image, setImage] = useState(
-    `${import.meta.env.VITE_BUCKET_URL}/profile-pictures/${userId}`,
-  );
+function UserAvatar({ imageUrl, className }: UserImageProps) {
+  const [image, setImage] = useState(imageUrl || defaultAvatar);
 
   return (
     <div className={className}> {/* Wrapped in 2 divs because of some daisyUI bull */}
@@ -26,7 +24,7 @@ function UserAvatar({ userId, className }: UserImageProps) {
 }
 
 interface UserImageProps {
-  userId: number;
+  imageUrl?: string | null;
   className?: string;
 }
 
