@@ -53,7 +53,7 @@ function LeftSidebar() {
           aria-label={strings.common.brand}
           className="self-start rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
         >
-          <img src={moveusLogo} alt={strings.common.brand} />
+          <img src={moveusLogo} alt={strings.common.brand} className="block h-8 w-auto" />
         </Link>
       </div>
 
