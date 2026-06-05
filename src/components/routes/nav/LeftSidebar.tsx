@@ -5,6 +5,7 @@ import {
   HiOutlineCog6Tooth,
   HiPlus,
   HiBeaker,
+  HiCheckBadge,
 } from "react-icons/hi2";
 import { HiOutlineChat, HiOutlineSearch } from "react-icons/hi";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
@@ -47,7 +48,13 @@ function LeftSidebar() {
           <HiBeaker className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
           {strings.nav.openBeta}
         </span>
-        <img src={moveusLogo} alt={strings.common.brand} className="self-start" />
+        <Link
+          to="/home"
+          aria-label={strings.common.brand}
+          className="self-start rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+        >
+          <img src={moveusLogo} alt={strings.common.brand} />
+        </Link>
       </div>
 
       <nav className="flex flex-col gap-1 flex-1">
@@ -114,11 +121,16 @@ function LeftSidebar() {
       >
         <UserAvatar imageUrl={profile?.profileImageUrl} className="w-9 h-9 shrink-0" />
         <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-sm font-semibold truncate text-base-content">
-            {displayName(
-              profile?.username!,
-              profile?.firstName!,
-              profile?.lastName!,
+          <span className="flex items-center gap-1 text-sm font-semibold text-base-content">
+            <span className="truncate">
+              {displayName(
+                profile?.username!,
+                profile?.firstName!,
+                profile?.lastName!,
+              )}
+            </span>
+            {profile?.verified && (
+              <HiCheckBadge size={16} className="text-primary shrink-0" />
             )}
           </span>
           <span className="text-xs text-base-content/60 truncate">
