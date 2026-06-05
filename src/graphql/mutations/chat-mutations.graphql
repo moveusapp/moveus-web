@@ -60,6 +60,12 @@ mutation LeaveChat($chatId: Int!) {
   }
 }
 
+mutation MarkChatRead($chatId: Int!) {
+  markChatRead(chatId: $chatId) {
+    lastOpen
+  }
+}
+
 mutation SendChatMessage (
   $chatId: Int!,
   $message: String,

@@ -11,7 +11,7 @@ import {
   HiUserGroup,
   HiOutlineChatBubbleOvalLeftEllipsis,
 } from "react-icons/hi2";
-import { useQuery, useSubscription } from "@apollo/client/react";
+import { useMutation, useQuery, useSubscription } from "@apollo/client/react";
 import UserAvatar from "@/components/user/UserAvatar";
 import SendMessageComposer from "@/pages/chat/SendMessageComposer";
 import GroupMembersModal from "@/pages/chat/GroupMembersModal";
@@ -27,6 +27,7 @@ import {
   ChatMessageKind,
   GetChatDocument,
   LastOpenDocument,
+  MarkChatReadDocument,
 } from "@/graphql/graphql-types";
 import { setDocumentTitle } from "@/hooks/use-document-title";
 import { useProfile } from "@/context/profile-context";
@@ -103,6 +104,8 @@ function ChatView({
   }, [members, profile?.id]);
 
   const { messages, send } = useChatMessages(chat?.id ?? undefined);
+
+  const [markChatRead] = useMutation(MarkChatReadDocument);
 
   const resolveMember = (id: number | null): BubbleMember | null => {
     if (id == null) return null;
@@ -194,6 +197,12 @@ function ChatView({
 
   const tailKey = messages[messages.length - 1]?.clientKey ?? null;
   const tailUserId = messages[messages.length - 1]?.userId ?? null;
+
+  useEffect(() => {
+    if (!chat?.id) return;
+    markChatRead({ variables: { chatId: chat.id } }).catch(() => {
+    });
+  }, [chat?.id, tailKey, markChatRead]);
 
   useLayoutEffect(() => {
     const container = scrollContainerRef.current;
