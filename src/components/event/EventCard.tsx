@@ -18,7 +18,7 @@ import EventPhaseBadge from "./EventPhaseBadge";
 import strings from "@/translations/strings";
 
 function EventCard({ event }: EventCardProps) {
-  const activity = getActivityLabel(event.activity.id);
+  const activity = getActivityLabel(event.activity);
 
   const organizerName = displayName(
     event.organizer?.user.username!,

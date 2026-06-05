@@ -24,10 +24,7 @@ fragment Event on EventType {
     longitude
     latitude
   }
-  activity {
-    id
-    name
-  }
+  activity
   skillLevel
   maxParticipants
   allowSpectators
@@ -55,9 +52,7 @@ fragment Event on EventType {
 fragment EventCard on EventType {
   id
   title
-  activity {
-    id
-  }
+  activity
   organizer {
     user {
       ...UserCard

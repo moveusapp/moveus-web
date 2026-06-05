@@ -24,10 +24,7 @@ fragment Survey on ProfileType {
     ...UserPreferences
   }
   preferredActivities {
-    activity {
-      id
-      name
-    }
+    activity
     skillLevel
   }
 }

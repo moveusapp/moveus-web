@@ -62,6 +62,6 @@ export const RATING_OPTIONS: RatingOption[] = [
 ];
 
 /** Index of a rating within `RATING_OPTIONS` (0-4), or -1 if unknown. */
-export function ratingIndex(rating: EventRating | string | null | undefined) {
+export function ratingIndex(rating: EventRating | null | undefined) {
   return RATING_OPTIONS.findIndex((o) => o.rating === rating);
 }

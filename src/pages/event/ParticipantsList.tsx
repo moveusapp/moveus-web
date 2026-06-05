@@ -6,14 +6,14 @@ import UserAvatar from "@/components/user/UserAvatar";
 import { displayName } from "@/utils/display-name";
 import strings from "@/translations/strings";
 
-const ROLE_ORDER: Record<string, number> = {
+const ROLE_ORDER: Record<MemberRole, number> = {
   [MemberRole.Organizer]: 0,
   [MemberRole.Moderator]: 1,
   [MemberRole.Participant]: 2,
   [MemberRole.Spectator]: 3,
 };
 
-function roleBadge(role: string | null | undefined) {
+function roleBadge(role: MemberRole | null | undefined) {
   switch (role) {
     case MemberRole.Organizer:
       return <span className="badge badge-sm badge-primary shrink-0">{strings.event.page.roleHost}</span>;
@@ -29,7 +29,7 @@ function roleBadge(role: string | null | undefined) {
 function ParticipantsList({ event }: ParticipantsListProps) {
   const members = [...event.members].sort(
     (a, b) =>
-      (ROLE_ORDER[a.role ?? ""] ?? 99) - (ROLE_ORDER[b.role ?? ""] ?? 99),
+      (a.role ? ROLE_ORDER[a.role] : 99) - (b.role ? ROLE_ORDER[b.role] : 99),
   );
 
   const count = members.length;

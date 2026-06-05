@@ -21,8 +21,6 @@ query GetUnratedEvents {
     id
     title
     endTime
-    activity {
-      id
-    }
+    activity
   }
 }

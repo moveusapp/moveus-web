@@ -3,7 +3,6 @@ mutation CreateEvent(
   $description: String
   $startTime: DateTime!
   $endTime: DateTime!
-  $requirements: String
   $locationName: String
   $locationAddressLine1: String
   $locationAddressLine2: String
@@ -27,7 +26,6 @@ mutation CreateEvent(
     description: $description
     startTime: $startTime
     endTime: $endTime
-    requirements: $requirements
     locationName: $locationName
     locationAddressLine1: $locationAddressLine1
     locationAddressLine2: $locationAddressLine2

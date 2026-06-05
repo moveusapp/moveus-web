@@ -22,7 +22,7 @@ export function deriveEventState(event: Event) {
     event.organizer?.user.lastName!,
   );
 
-  const activity = getActivityLabel(event.activity.id);
+  const activity = getActivityLabel(event.activity);
 
   const isCancelled = event.phase === EventPhase.Cancelled;
   const isFinished = event.phase === EventPhase.Finished;

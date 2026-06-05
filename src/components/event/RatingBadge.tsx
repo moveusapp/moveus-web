@@ -9,7 +9,7 @@ const BADGE_SIZES = {
 } as const;
 
 type RatingBadgeProps = {
-  score: EventRating | string | number | null | undefined;
+  score: EventRating | number | null | undefined;
   size?: keyof typeof BADGE_SIZES;
   className?: string;
 };

@@ -1,9 +1,11 @@
-import { ActivityKind } from "@/graphql/graphql-types";
 import strings from "@/translations/strings";
 
-export function getActivityLabel(activityId: number | null | undefined): string {
-  const value = activityId != null ? Object.values(ActivityKind)[activityId] : undefined;
-  if (value == null) return "";
+// The backend returns the activity as its enum name (e.g. "RUNNING"), which
+// matches the keys under enums.activityKind in the translation files.
+export function getActivityLabel(
+  activity: string | null | undefined,
+): string {
+  if (activity == null) return "";
   const labels = strings.enums.activityKind as unknown as Record<string, string>;
-  return labels[value] ?? value;
+  return labels[activity] ?? activity;
 }

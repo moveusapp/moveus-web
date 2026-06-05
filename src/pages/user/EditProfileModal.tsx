@@ -29,12 +29,6 @@ interface EditProfileModalProps {
   profile: ContextProfileFragment;
 }
 
-function toGender(value: string | null | undefined): Gender | null {
-  if (!value) return null;
-  const match = (Object.values(Gender) as string[]).find((g) => g === value);
-  return (match as Gender) ?? null;
-}
-
 function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
   const apollo = useApolloClient();
   const toast = useToast();
@@ -45,7 +39,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
   const [firstName, setFirstName] = useState(profile.firstName ?? "");
   const [lastName, setLastName] = useState(profile.lastName ?? "");
   const [bio, setBio] = useState(profile.bio ?? "");
-  const [gender, setGender] = useState<Gender | null>(toGender(profile.gender));
+  const [gender, setGender] = useState<Gender | null>(profile.gender ?? null);
   const [dob, setDob] = useState<Date | null>(parseDateOrNull(profile.dateOfBirth));
 
   const genderOptions = enumToOptions(Gender, "enums.gender");
@@ -66,7 +60,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
     setFirstName(profile.firstName ?? "");
     setLastName(profile.lastName ?? "");
     setBio(profile.bio ?? "");
-    setGender(toGender(profile.gender));
+    setGender(profile.gender ?? null);
     setDob(parseDateOrNull(profile.dateOfBirth));
     removeImage();
     setUploadError(null);
