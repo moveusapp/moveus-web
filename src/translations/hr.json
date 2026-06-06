@@ -351,7 +351,9 @@
     "nicknameSaved": "Nadimak je ažuriran.",
     "membersAdded": "Dodano u razgovor.",
     "leftChat": "Napustio/la si razgovor.",
-    "preferencesSaved": "Preferencije su spremljene. Doradit ćemo tvoje prijedloge!"
+    "preferencesSaved": "Preferencije su spremljene. Doradit ćemo tvoje prijedloge!",
+    "codeSent": "Poslali smo ti novi kod.",
+    "emailVerified": "E-mail potvrđen!"
   },
   "auth": {
     "loginTitle": "Prijava",
@@ -389,7 +391,18 @@
     "alreadyHaveAccount": "Već imaš račun?",
     "back": "Natrag",
     "brandHeadline": "Your Workout Wingman.",
-    "brandSubhead": "Pronađi ljude koji se zapravo pojave. Spoji se po psihologiji, krećite se zajedno."
+    "brandSubhead": "Pronađi ljude koji se zapravo pojave. Spoji se po psihologiji, krećite se zajedno.",
+    "verifyTitle": "Potvrda e-maila",
+    "verifyHeading": "Provjeri svoj",
+    "verifyHeadingHighlight": "inbox",
+    "verifySubtitle": "Unesi 6-znakovni kod koji smo poslali na {email}.",
+    "codeLabel": "Kod za potvrdu",
+    "verifyAction": "Potvrdi e-mail",
+    "didntGetCode": "Nisi ga dobio?",
+    "resend": "Pošalji ponovno",
+    "resendCooldown": "Ponovno za {seconds}s",
+    "wrongEmail": "Krivi e-mail?",
+    "backToSignUp": "Natrag na registraciju"
   },
   "event": {
     "title": "Naslov",

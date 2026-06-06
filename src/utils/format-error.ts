@@ -7,6 +7,19 @@ import {
 const GENERIC = "Something went wrong. Please try again.";
 const NETWORK = "Couldn't reach the server. Check your connection and retry.";
 
+/** GraphQL extensions code the backend returns when the request is unauthenticated. */
+export const UNAUTHORIZED_CODE = 100;
+
+/** GraphQL extensions code the backend returns when an account's email is unverified. */
+export const VERIFICATION_PENDING_CODE = 103;
+
+export function isVerificationPendingError(err: unknown): boolean {
+  return (
+    CombinedGraphQLErrors.is(err) &&
+    err.errors.some((e) => e.extensions?.code === VERIFICATION_PENDING_CODE)
+  );
+}
+
 export function formatError(err: unknown): string {
   if (!err) return "";
 

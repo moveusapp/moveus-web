@@ -15,6 +15,7 @@ import { isSubscriptionOperation } from "@apollo/client/utilities";
 import { DateParsingLink } from "./date-parsing-link";
 import { typePolicies } from "./type-policies";
 import { clearStoredProfile } from "@/utils/auth";
+import { UNAUTHORIZED_CODE } from "@/utils/format-error";
 
 const isDev = import.meta.env.DEV;
 const secure = isDev ? "" : "s";
@@ -36,8 +37,6 @@ const splitLink = ApolloLink.split(
   wsLink,
   httpLink,
 );
-
-const UNAUTHORIZED_CODE = 100;
 
 const redirectToLogin = () => {
   clearStoredProfile();

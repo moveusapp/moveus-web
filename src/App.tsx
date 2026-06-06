@@ -10,6 +10,7 @@ import LandingPage from "./pages/start/LandingPage";
 const HomePage = lazy(() => import("./pages/home/HomePage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
+const VerifyEmailPage = lazy(() => import("./pages/VerifyEmailPage"));
 const SurveyPage = lazy(() => import("./pages/survey/SurveyPage"));
 const ProfileRedirect = lazy(() => import("./pages/user/ProfileRedirect"));
 const SettingsPage = lazy(() => import("./pages/settings/SettingsPage"));
@@ -66,6 +67,7 @@ function App() {
             <Route element={<AuthRoutes />}>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/verify-email" element={<VerifyEmailPage />} />
             </Route>
           </Routes>
         </Suspense>

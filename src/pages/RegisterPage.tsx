@@ -1,12 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import useDocumentTitle from "../hooks/use-document-title";
 import { FormEvent, useState } from "react";
-import {
-  ContextProfileFragment,
-  SignUpDocument,
-} from "@/graphql/graphql-types";
-import { useProfile } from "@/context/profile-context";
-import { setStoredProfile } from "@/utils/auth";
+import { SignUpDocument } from "@/graphql/graphql-types";
+import { setPendingVerificationEmail } from "@/utils/auth";
 import { usernameValidator } from "@/utils/validators/username-validator";
 import { emailValidator } from "@/utils/validators/email-validator";
 import { passwordValidator } from "@/utils/validators/password-validator";
@@ -20,7 +16,6 @@ import strings from "@/translations/strings";
 function RegisterPage() {
   useDocumentTitle(strings.auth.registerTitle);
 
-  const { setProfile } = useProfile();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -83,15 +78,15 @@ function RegisterPage() {
     }
 
     try {
-      const response = await signup({
+      await signup({
         variables: { username, email, password, rememberMe },
       });
 
-      const profile = response.data?.signUp
-        ?.myProfile as ContextProfileFragment;
-      setStoredProfile(profile);
-      setProfile(profile);
-      navigate("/survey/basic-info");
+      // The account exists but its email isn't verified yet. Keep the session
+      // (preserved automatically via cookies) and send the user to verify,
+      // without logging them in until the code is confirmed.
+      setPendingVerificationEmail(email);
+      navigate("/verify-email", { state: { email } });
     } catch {
       // Errors surface inline via the apiError display below the form.
     }

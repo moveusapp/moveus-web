@@ -9,7 +9,10 @@ export function AuthRoutes() {
   const location = useLocation();
 
   if (profile) {
-    const target = location.pathname === "/register" ? "/survey/basic-info" : "/home";
+    const onboardingPaths = ["/register", "/verify-email"];
+    const target = onboardingPaths.includes(location.pathname)
+      ? "/survey/basic-info"
+      : "/home";
     return <Navigate to={target} replace />;
   }
 

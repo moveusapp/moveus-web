@@ -3,12 +3,15 @@ import useDocumentTitle from "../hooks/use-document-title";
 import { FormEvent, useCallback, useState } from "react";
 import { ContextProfileFragment, LoginDocument } from "@/graphql/graphql-types";
 import { useProfile } from "@/context/profile-context";
-import { setStoredProfile } from "@/utils/auth";
+import { setStoredProfile, setPendingVerificationEmail } from "@/utils/auth";
 import { useMutation } from "@apollo/client/react";
 import { HiArrowRight } from "react-icons/hi2";
 import Button from "@/components/ui/Button";
 import TextInput from "@/components/ui/TextInput";
-import { formatError } from "@/utils/format-error";
+import {
+  formatError,
+  isVerificationPendingError,
+} from "@/utils/format-error";
 import strings from "@/translations/strings";
 
 function LoginPage() {
@@ -33,11 +36,25 @@ function LoginPage() {
         .then((response) => {
           const profile = response.data?.login
             ?.myProfile as ContextProfileFragment;
+          // Backend may return an unverified profile instead of erroring;
+          // route to verification rather than logging the user in. Only an
+          // explicit false counts; a missing flag shouldn't trap a real user.
+          if (profile && profile.emailVerified === false) {
+            setPendingVerificationEmail(profile.email);
+            navigate("/verify-email", { state: { email: profile.email } });
+            return;
+          }
           setStoredProfile(profile);
           setProfile(profile);
           navigate("/home");
         })
-        .catch((_) => {});
+        .catch((err) => {
+          // Backend may instead reject an unverified login with code 103.
+          if (isVerificationPendingError(err)) {
+            setPendingVerificationEmail(user);
+            navigate("/verify-email", { state: { email: user } });
+          }
+        });
     },
     [user, password, rememberMe, setProfile, navigate, login],
   );

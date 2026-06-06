@@ -351,7 +351,9 @@
     "nicknameSaved": "Nickname updated.",
     "membersAdded": "Added to the chat.",
     "leftChat": "You left the chat.",
-    "preferencesSaved": "Preferences saved. We'll fine tune your matches!"
+    "preferencesSaved": "Preferences saved. We'll fine tune your matches!",
+    "codeSent": "We sent you a new code.",
+    "emailVerified": "Email verified!"
   },
   "auth": {
     "loginTitle": "Login",
@@ -389,7 +391,18 @@
     "alreadyHaveAccount": "Already have an account?",
     "back": "Back",
     "brandHeadline": "Your Workout Wingman.",
-    "brandSubhead": "Find people who actually show up. Match by psychology, move together."
+    "brandSubhead": "Find people who actually show up. Match by psychology, move together.",
+    "verifyTitle": "Verify email",
+    "verifyHeading": "Check your",
+    "verifyHeadingHighlight": "inbox",
+    "verifySubtitle": "Enter the 6-character code we sent to {email}.",
+    "codeLabel": "Verification code",
+    "verifyAction": "Verify email",
+    "didntGetCode": "Didn't get it?",
+    "resend": "Resend code",
+    "resendCooldown": "Resend in {seconds}s",
+    "wrongEmail": "Wrong email?",
+    "backToSignUp": "Back to sign up"
   },
   "event": {
     "title": "Title",

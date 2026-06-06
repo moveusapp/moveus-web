@@ -28,3 +28,17 @@ mutation LogOut {
     success
   }
 }
+
+mutation ConfirmEmail($code: String!) {
+  confirmEmail(code: $code) {
+    myProfile {
+      ...ContextProfile
+    }
+  }
+}
+
+mutation ResendVerificationCode($email: String!) {
+  resendVerificationCode(email: $email) {
+    success
+  }
+}

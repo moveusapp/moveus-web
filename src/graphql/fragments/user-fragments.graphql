@@ -40,6 +40,8 @@ fragment BasicInfo on ProfileType {
 fragment ContextProfile on ProfileType{
   id
   username
+  email
+  emailVerified
   lastLogin
   isCapeable
   lastName
