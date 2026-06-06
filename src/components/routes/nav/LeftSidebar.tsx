@@ -48,12 +48,14 @@ function LeftSidebar() {
           <HiBeaker className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
           {strings.nav.openBeta}
         </span>
-        <Link
-          to="/home"
-          aria-label={strings.common.brand}
-          className="self-start rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-        >
-          <img src={moveusLogo} alt={strings.common.brand} className="block h-8 w-auto" />
+        <Link to="/home" aria-label={strings.common.brand} className="contents">
+          <img
+            src={moveusLogo}
+            alt={strings.common.brand}
+            width={277}
+            height={198}
+            className="w-full h-auto"
+          />
         </Link>
       </div>
 
