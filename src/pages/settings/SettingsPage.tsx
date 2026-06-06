@@ -17,6 +17,7 @@ import {
   HiOutlineTrash,
   HiOutlineUserCircle,
   HiOutlineUserGroup,
+  HiOutlineChatBubbleLeftRight,
   HiLanguage,
 } from "react-icons/hi2";
 import { useMutation } from "@apollo/client/react";
@@ -90,14 +91,14 @@ function SettingsPage() {
       description: strings.settings.postsDesc,
       icon: <HiOutlineRectangleStack />,
     },
+    {
+      setting: PrivacySetting.Messages,
+      description: strings.settings.messagesDesc,
+      icon: <HiOutlineChatBubbleLeftRight />,
+    },
   ];
 
-  const scopeOptions: { value: PrivacyScope; label: string }[] = [
-    { value: PrivacyScope.Everyone, label: strings.settings.scopeEveryone },
-    { value: PrivacyScope.Followers, label: strings.settings.scopeFollowers },
-    { value: PrivacyScope.Mutuals, label: strings.settings.scopeMutuals },
-    { value: PrivacyScope.Noone, label: strings.settings.scopeOnlyYou },
-  ];
+  const scopeOptions = enumToOptions(PrivacyScope, "enums.privacyScope");
 
   const scopeFor = (setting: PrivacySetting): PrivacyScope =>
     profile?.privacySettings.find((p) => p.setting === setting)?.scope ??

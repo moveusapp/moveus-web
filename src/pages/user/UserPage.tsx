@@ -205,17 +205,19 @@ function UserPage() {
           ) : (
             profile && (
               <div className="flex flex-row gap-2 flex-shrink-0 self-start">
-                <Link
-                  to={`/chat?userId=${user.id}`}
-                  className="btn btn-square rounded-2xl"
-                  aria-label={
-                    strings.formatString(strings.profile.messageAria, {
-                      name,
-                    }) as string
-                  }
-                >
-                  <HiOutlineChat size={18} />
-                </Link>
+                {user.canMessage && (
+                  <Link
+                    to={`/chat?userId=${user.id}`}
+                    className="btn btn-square rounded-2xl"
+                    aria-label={
+                      strings.formatString(strings.profile.messageAria, {
+                        name,
+                      }) as string
+                    }
+                  >
+                    <HiOutlineChat size={18} />
+                  </Link>
+                )}
 
                 <FollowButton
                   userId={user.id!}

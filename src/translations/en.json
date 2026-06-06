@@ -315,7 +315,8 @@
       "FOLLOWERS": "Followers",
       "GENDER": "Gender",
       "LOCATION": "Location",
-      "POSTS": "Posts"
+      "POSTS": "Posts",
+      "MESSAGES": "Messages"
     },
     "notificationKind": {
       "EVENT_CANCELLED": "Event cancelled",
@@ -680,10 +681,7 @@
     "genderDesc": "Your gender shown on your profile.",
     "followersDesc": "Your followers and following lists.",
     "postsDesc": "Posts you have shared.",
-    "scopeEveryone": "Everyone",
-    "scopeFollowers": "Followers",
-    "scopeMutuals": "Mutuals",
-    "scopeOnlyYou": "Only you"
+    "messagesDesc": "Who can start a chat with you."
   },
   "notification": {
     "documentTitle": "Notifications",

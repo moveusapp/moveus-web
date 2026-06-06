@@ -112,6 +112,7 @@ function EventPage() {
     <EventActionBar
       eventId={eventId!}
       organizerId={event.organizer?.user.id}
+      organizerCanMessage={event.organizer?.user.canMessage}
       isOrganizer={d.isOrganizer}
       isAttendee={d.isAttendee}
       isLocked={d.isLocked}

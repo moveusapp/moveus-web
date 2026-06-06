@@ -315,7 +315,8 @@
       "FOLLOWERS": "Pratitelji",
       "GENDER": "Spol",
       "LOCATION": "Lokacija",
-      "POSTS": "Objave"
+      "POSTS": "Objave",
+      "MESSAGES": "Poruke"
     },
     "notificationKind": {
       "EVENT_CANCELLED": "Događaj je otkazan",
@@ -680,10 +681,7 @@
     "genderDesc": "Tvoj spol prikazan na profilu.",
     "followersDesc": "Popis tvojih pratitelja i onih koje pratiš.",
     "postsDesc": "Objave koje si podijelio/la.",
-    "scopeEveryone": "Svi",
-    "scopeFollowers": "Pratitelji",
-    "scopeMutuals": "Međusobni pratitelji",
-    "scopeOnlyYou": "Samo ja"
+    "messagesDesc": "Tko ti može poslati poruku."
   },
   "notification": {
     "documentTitle": "Obavijesti",

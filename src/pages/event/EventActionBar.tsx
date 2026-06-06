@@ -12,6 +12,7 @@ import strings from "@/translations/strings";
 interface EventActionBarProps {
   eventId: number | string;
   organizerId: number | null | undefined;
+  organizerCanMessage: boolean | null | undefined;
   isOrganizer: boolean;
   isAttendee: boolean;
   isLocked: boolean;
@@ -31,6 +32,7 @@ interface EventActionBarProps {
 function EventActionBar({
   eventId,
   organizerId,
+  organizerCanMessage,
   isOrganizer,
   isAttendee,
   isLocked,
@@ -77,7 +79,7 @@ function EventActionBar({
         </button>
       </div>
 
-      {!isOrganizer && organizerId != null && (
+      {!isOrganizer && organizerId != null && organizerCanMessage && (
         <Link
           to={`/chat?userId=${organizerId}`}
           className="btn btn-outline btn-primary w-full"
@@ -105,7 +107,7 @@ function PrimaryAction({
   onLeave,
   onRate,
   onViewFeedback,
-}: Omit<EventActionBarProps, "onShare" | "organizerId">) {
+}: Omit<EventActionBarProps, "onShare" | "organizerId" | "organizerCanMessage">) {
   if (canRate) {
     return (
       <button
