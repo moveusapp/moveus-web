@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { HiBolt, HiFlag, HiXMark } from "react-icons/hi2";
 import type { IconType } from "react-icons";
 import UserAvatar from "../user/UserAvatar";
+import UserBadge from "../user/UserBadge";
 import strings from "@/translations/strings";
 
 const cardChassis =
@@ -58,7 +59,11 @@ function NotificationCard({ notification }: NotificationCardProps) {
               <UserAvatar imageUrl={notification.user?.avatarUrl} className="w-11 shrink-0" />
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 grow min-w-0">
                 <p className="text-[14px] sm:text-[15px] leading-snug text-base-content/80 line-clamp-2 break-words">
-                  <b className="font-bold text-base-content">{name}</b> {strings.notification.nowFollowing}
+                  <span className="inline-flex items-center gap-1.5 align-middle font-bold text-base-content">
+                    {name}
+                    <UserBadge badge={notification.user?.badge} />
+                  </span>{" "}
+                  {strings.notification.nowFollowing}
                 </p>
                 <span className="text-xs text-base-content/60 shrink-0 mt-1 sm:mt-0">{time}</span>
               </div>

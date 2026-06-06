@@ -14,6 +14,7 @@ import {
 import { useMutation, useQuery, useSubscription } from "@apollo/client/react";
 import { Link } from "react-router-dom";
 import UserAvatar from "@/components/user/UserAvatar";
+import UserBadge from "@/components/user/UserBadge";
 import SendMessageComposer from "@/pages/chat/SendMessageComposer";
 import GroupMembersModal from "@/pages/chat/GroupMembersModal";
 import ChatHeaderMenu from "@/pages/chat/ChatHeaderMenu";
@@ -328,9 +329,12 @@ function ChatView({
                   imageUrl={(otherMember ?? members[0]).user.avatarUrl}
                   className="w-10 h-10 rounded-full"
                 />
-                <h2 className="min-w-0 flex-1 font-semibold text-base leading-tight truncate group-hover:text-primary">
-                  {headerTitle}
-                </h2>
+                <div className="min-w-0 flex-1 flex items-center gap-1.5">
+                  <h2 className="min-w-0 font-semibold text-base leading-tight truncate group-hover:text-primary">
+                    {headerTitle}
+                  </h2>
+                  <UserBadge badge={(otherMember ?? members[0]).user.badge} />
+                </div>
               </Link>
             )}
             <ChatHeaderMenu

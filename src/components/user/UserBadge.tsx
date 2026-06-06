@@ -41,7 +41,7 @@ function UserBadge({ badge, size = 16, className = "" }: UserBadgeProps) {
   return (
     <span
       ref={anchorRef}
-      className={`inline-flex shrink-0 ${className}`}
+      className={`inline-flex shrink-0 align-middle ${className}`}
       onMouseEnter={show}
       onMouseLeave={hide}
       onFocus={show}

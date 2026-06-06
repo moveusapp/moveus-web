@@ -22,6 +22,7 @@ query GetNotifications {
         firstName
         lastName
         avatarUrl
+        badge
       }
     }
     ... on EventNotificationType {

@@ -5,10 +5,12 @@ import { RiCheckLine } from "react-icons/ri";
 import {
   AddChatMemberDocument,
   GetMyFollowingDocument,
+  UserBadge as UserBadgeType,
 } from "@/graphql/graphql-types";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
 import UserAvatar from "@/components/user/UserAvatar";
+import UserBadge from "@/components/user/UserBadge";
 import { useHtmlDialog } from "@/hooks/use-html-dialog";
 import { useToast } from "@/context/toast-context";
 import { formatError } from "@/utils/format-error";
@@ -28,6 +30,7 @@ interface FollowingUser {
   firstName: string;
   lastName: string;
   avatarUrl?: string | null;
+  badge?: UserBadgeType | null;
 }
 
 function AddChatMembersModal({
@@ -69,6 +72,7 @@ function AddChatMembersModal({
         firstName: u.firstName,
         lastName: u.lastName,
         avatarUrl: u.avatarUrl,
+        badge: u.badge,
       }));
   }, [data, existingMemberIds]);
 
@@ -195,9 +199,12 @@ function AddChatMembersModal({
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-semibold text-sm truncate">
-                            {name}
-                          </p>
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <p className="font-semibold text-sm truncate">
+                              {name}
+                            </p>
+                            <UserBadge badge={u.badge} />
+                          </div>
                           <p className="text-xs text-base-content/55 truncate">
                             @{u.username}
                           </p>

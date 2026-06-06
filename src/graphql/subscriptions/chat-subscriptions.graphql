@@ -31,6 +31,7 @@ subscription MyChats {
         nickname
         lastOpen
         avatarUrl
+        badge
       }
       lastMessage {
         ...WSChatMessage
@@ -44,6 +45,7 @@ subscription MyChats {
       nickname
       lastOpen
       avatarUrl
+      badge
     }
     removedUserId
   }

@@ -5,6 +5,7 @@ import {
   UnlikeCommentDocument,
 } from "@/graphql/graphql-types";
 import UserAvatar from "@/components/user/UserAvatar";
+import UserBadge from "@/components/user/UserBadge";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
 import { HiOutlineHeart, HiHeart, HiOutlineChatBubbleLeft } from "react-icons/hi2";
@@ -34,13 +35,16 @@ function CommentCard({ comment, onReply }: CommentCardProps) {
         </Link>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <Link
-              to={`/user/${comment.user.username}`}
-              className="text-sm font-semibold hover:text-primary transition-colors"
-            >
-              {name}
-            </Link>
-            <span className="text-xs text-base-content/60">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <Link
+                to={`/user/${comment.user.username}`}
+                className="text-sm font-semibold hover:text-primary transition-colors truncate"
+              >
+                {name}
+              </Link>
+              <UserBadge badge={comment.user.badge} />
+            </div>
+            <span className="text-xs text-base-content/60 shrink-0">
               {timeAgo(comment.timePosted)}
             </span>
           </div>
@@ -101,13 +105,16 @@ function ReplyCard({ reply }: { reply: CommentFragment["replies"][number] }) {
       </Link>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <Link
-            to={`/user/${reply.user.username}`}
-            className="text-sm font-semibold hover:text-primary transition-colors"
-          >
-            {name}
-          </Link>
-          <span className="text-xs text-base-content/60">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <Link
+              to={`/user/${reply.user.username}`}
+              className="text-sm font-semibold hover:text-primary transition-colors truncate"
+            >
+              {name}
+            </Link>
+            <UserBadge badge={reply.user.badge} />
+          </div>
+          <span className="text-xs text-base-content/60 shrink-0">
             {timeAgo(reply.timePosted)}
           </span>
         </div>

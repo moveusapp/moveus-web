@@ -1,6 +1,7 @@
 import { HiXMark } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import UserAvatar from "@/components/user/UserAvatar";
+import UserBadge from "@/components/user/UserBadge";
 import { useHtmlDialog } from "@/hooks/use-html-dialog";
 import { useProfile } from "@/context/profile-context";
 import { displayName } from "@/utils/display-name";
@@ -63,7 +64,10 @@ function GroupMembersModal({
               <div className="w-full flex items-center gap-3 px-2 py-2 rounded-2xl hover:bg-base-200 transition-colors">
                 <UserAvatar imageUrl={m.user.avatarUrl} className="w-10 h-10 shrink-0" />
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-sm truncate">{name}</p>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <p className="font-semibold text-sm truncate">{name}</p>
+                    <UserBadge badge={m.user.badge} />
+                  </div>
                   <p className="text-xs text-base-content/55 truncate">
                     @{m.user.username}
                   </p>

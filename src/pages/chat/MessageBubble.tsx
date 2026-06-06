@@ -1,8 +1,10 @@
 import { memo } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
 import UserAvatar from "@/components/user/UserAvatar";
+import UserBadge from "@/components/user/UserBadge";
 import { displayName } from "@/utils/display-name";
 import { formatTime } from "@/utils/time-utils";
+import type { UserBadge as UserBadgeType } from "@/graphql/graphql-types";
 import type { LocalMessage } from "./use-chat-messages";
 
 export type BubbleMember = {
@@ -13,6 +15,7 @@ export type BubbleMember = {
     firstName: string;
     lastName: string;
     avatarUrl?: string | null;
+    badge?: UserBadgeType | null;
   };
 };
 
@@ -50,13 +53,14 @@ function MessageBubble({
         </div>
       )}
       {showAuthor && author && (
-        <div className="chat-header text-xs font-medium mb-0.5">
+        <div className="chat-header text-xs font-medium mb-0.5 inline-flex items-center gap-1.5">
           {author.nickname ||
             displayName(
               author.user.username,
               author.user.firstName,
               author.user.lastName,
             )}
+          <UserBadge badge={author.user.badge} />
         </div>
       )}
       <div className={`chat-bubble wrap-break-word ${roundedClass} ${bubbleClass}`}>

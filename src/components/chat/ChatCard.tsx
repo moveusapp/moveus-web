@@ -1,7 +1,8 @@
 import { useState } from "react";
 import UserAvatar from "@/components/user/UserAvatar";
+import UserBadge from "@/components/user/UserBadge";
 import defaultAvatar from "@/assets/default-images/user-default-avatar.svg";
-import { ChatKind, ChatMessageKind } from "@/graphql/graphql-types";
+import { ChatKind, ChatMessageKind, UserBadge as UserBadgeType } from "@/graphql/graphql-types";
 import { useProfile } from "@/context/profile-context";
 import { timeAgo } from "@/utils/time-utils";
 import { displayName } from "@/utils/display-name";
@@ -39,6 +40,7 @@ export interface ChatSummaryMember {
   nickname: string;
   lastOpen: Date | null;
   avatarUrl?: string | null;
+  badge?: UserBadgeType | null;
 }
 
 function memberName(m: ChatSummaryMember): string {
@@ -191,8 +193,11 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
     >
       {avatar()}
       <div className="min-w-0 flex-1">
-        <div className="flex items-baseline justify-between gap-2">
-          <p className="font-semibold text-sm truncate">{chatName()}</p>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <p className="font-semibold text-sm truncate">{chatName()}</p>
+            {!isGroup && <UserBadge badge={others[0]?.badge} />}
+          </div>
           {hasMessages && chat.lastMessage!.timeSent && (
             <span className="text-[11px] text-base-content/50 shrink-0">
               {timeAgo(chat.lastMessage!.timeSent)}

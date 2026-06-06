@@ -14,6 +14,7 @@ query GetChat($chatId: Int!) {
         firstName
         lastName
         avatarUrl
+        badge
       }
     }
     allMembers: members(includeFormer: true) {
@@ -24,6 +25,7 @@ query GetChat($chatId: Int!) {
         firstName
         lastName
         avatarUrl
+        badge
       }
     }
   }

@@ -57,6 +57,7 @@ function ChatPage() {
               nickname: m!.nickname ?? "",
               lastOpen: m!.lastOpen ? new Date(m!.lastOpen) : null,
               avatarUrl: m!.avatarUrl,
+              badge: m!.badge,
             }));
           const lastMessage = wsChat.lastMessage
             ? {
@@ -114,6 +115,7 @@ function ChatPage() {
                     nickname: event.member!.nickname ?? m.nickname,
                     lastOpen: event.member!.lastOpen ? new Date(event.member!.lastOpen) : m.lastOpen,
                     avatarUrl: event.member!.avatarUrl ?? m.avatarUrl,
+                    badge: event.member!.badge ?? m.badge,
                   }
                 : m,
             );
@@ -129,6 +131,7 @@ function ChatPage() {
                 nickname: event.member.nickname ?? "",
                 lastOpen: event.member.lastOpen ? new Date(event.member.lastOpen) : null,
                 avatarUrl: event.member.avatarUrl,
+                badge: event.member.badge,
               },
             ];
             next.set(chatId, { ...existing, members });
