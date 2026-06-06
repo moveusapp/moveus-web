@@ -88,7 +88,7 @@ function WelcomePage() {
           </button>
           <button
             type="button"
-            onClick={() => navigate("/survey/basic-info")}
+            onClick={() => navigate("/survey/preferences")}
             className="btn btn-primary btn-lg flex-1 h-14 min-h-14 gap-2 btn-arrow"
             autoFocus
           >

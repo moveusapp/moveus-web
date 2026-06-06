@@ -350,7 +350,8 @@
     "groupChatCreated": "Grupni razgovor je stvoren.",
     "nicknameSaved": "Nadimak je ažuriran.",
     "membersAdded": "Dodano u razgovor.",
-    "leftChat": "Napustio/la si razgovor."
+    "leftChat": "Napustio/la si razgovor.",
+    "preferencesSaved": "Preferencije su spremljene. Doradit ćemo tvoje prijedloge!"
   },
   "auth": {
     "loginTitle": "Prijava",

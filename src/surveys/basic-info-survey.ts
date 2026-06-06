@@ -9,7 +9,7 @@ import { QuestionKind, Survey } from "./types";
 export const basicInfoSurvey: Survey<AlterProfileBasicInfoMutationVariables> = {
   id: "basic-info",
   mutation: AlterProfileBasicInfoDocument,
-  onFinishedRoute: "/survey/preferences",
+  onFinishedRoute: "/welcome",
   questions: [
     {
       kind: QuestionKind.FullName,

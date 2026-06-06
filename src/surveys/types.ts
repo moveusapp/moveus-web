@@ -110,4 +110,6 @@ export type Survey<TVars = Record<string, unknown>> = {
   mutation: TypedDocumentNode<unknown, TVars>;
   questions: Question<TVars>[];
   onFinishedRoute: string;
+  // Shown as a success toast once the survey is submitted. Omit for no toast.
+  successToast?: string;
 };

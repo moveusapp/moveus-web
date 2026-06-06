@@ -25,6 +25,7 @@ export const preferencesSurvey: Survey<AlterProfileSurveyInfoMutationVariables> 
   id: "preferences",
   mutation: AlterProfileSurveyInfoDocument,
   onFinishedRoute: "/home",
+  successToast: strings.toast.preferencesSaved,
   questions: [
     {
       kind: QuestionKind.ActivityRating,

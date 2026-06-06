@@ -51,6 +51,17 @@ function useProfileLocation() {
       },
     );
   }, [profile, prevUserId]);
+
+  // Stop watching when the hook unmounts (e.g. navigating away from /home) so
+  // the browser doesn't keep tracking location in the background.
+  useEffect(() => {
+    return () => {
+      if (watchId.current) {
+        navigator.geolocation.clearWatch(watchId.current);
+        watchId.current = null;
+      }
+    };
+  }, []);
 }
 
 export default useProfileLocation;

@@ -5,6 +5,7 @@ import { HiArrowLeft, HiArrowRight, HiCheck } from "react-icons/hi";
 import { QuestionKind, Question, Survey, sliderMidpoint } from "@/surveys/types";
 import { uploadProfilePicture } from "@/utils/upload";
 import { formatError } from "@/utils/format-error";
+import { useToast } from "@/context/toast-context";
 import QuestionRenderer, { isValid } from "./QuestionRenderer";
 import FormError from "./FormError";
 import strings from "@/translations/strings";
@@ -70,6 +71,7 @@ function SurveyRunner<TVars extends AnyVars>({ survey }: Props<TVars>) {
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const apollo = useApolloClient();
+  const toast = useToast();
   const [runMutation, { loading: mutationLoading }] = useMutation(
     survey.mutation,
   );
@@ -118,6 +120,7 @@ function SurveyRunner<TVars extends AnyVars>({ survey }: Props<TVars>) {
       setSubmitError(formatError(err));
       return;
     }
+    if (survey.successToast) toast.success(survey.successToast);
     navigate(survey.onFinishedRoute);
   };
 

@@ -91,7 +91,7 @@ function RegisterPage() {
         ?.myProfile as ContextProfileFragment;
       setStoredProfile(profile);
       setProfile(profile);
-      navigate("/welcome");
+      navigate("/survey/basic-info");
     } catch {
       // Errors surface inline via the apiError display below the form.
     }

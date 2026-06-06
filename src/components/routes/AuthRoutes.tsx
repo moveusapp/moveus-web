@@ -9,7 +9,7 @@ export function AuthRoutes() {
   const location = useLocation();
 
   if (profile) {
-    const target = location.pathname === "/register" ? "/welcome" : "/home";
+    const target = location.pathname === "/register" ? "/survey/basic-info" : "/home";
     return <Navigate to={target} replace />;
   }
 

@@ -350,7 +350,8 @@
     "groupChatCreated": "Group chat created.",
     "nicknameSaved": "Nickname updated.",
     "membersAdded": "Added to the chat.",
-    "leftChat": "You left the chat."
+    "leftChat": "You left the chat.",
+    "preferencesSaved": "Preferences saved. We'll fine tune your matches!"
   },
   "auth": {
     "loginTitle": "Login",

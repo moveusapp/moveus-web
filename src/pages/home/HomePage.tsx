@@ -3,6 +3,7 @@ import EventCard from "../../components/event/EventCard";
 import MainFooter from "@/components/misc/MainFooter";
 import UpcomingEventsWidget from "@/components/widgets/UpcomingEventsWidget";
 import useDocumentTitle from "@/hooks/use-document-title";
+import useProfileLocation from "@/hooks/use-profile-location";
 import { useQuery } from "@apollo/client/react";
 import { GetMyFeedDocument } from "@/graphql/graphql-types";
 import strings from "@/translations/strings";
@@ -17,6 +18,7 @@ import { useMemo } from "react";
 
 function HomePage() {
   useDocumentTitle(strings.home.documentTitle);
+  useProfileLocation();
 
   const { data, loading } = useQuery(GetMyFeedDocument, {
     variables: { start: 0, end: 50 },
