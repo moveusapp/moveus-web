@@ -12,6 +12,7 @@ import {
   HiOutlineChatBubbleOvalLeftEllipsis,
 } from "react-icons/hi2";
 import { useMutation, useQuery, useSubscription } from "@apollo/client/react";
+import { Link } from "react-router-dom";
 import UserAvatar from "@/components/user/UserAvatar";
 import SendMessageComposer from "@/pages/chat/SendMessageComposer";
 import GroupMembersModal from "@/pages/chat/GroupMembersModal";
@@ -303,27 +304,35 @@ function ChatView({
               </button>
             )}
             {isGroup ? (
-              <div className="w-10 h-10 shrink-0 rounded-full bg-base-300 flex items-center justify-center">
-                <HiUserGroup className="text-lg text-base-content/60" />
-              </div>
+              <>
+                <div className="w-10 h-10 shrink-0 rounded-full bg-base-300 flex items-center justify-center">
+                  <HiUserGroup className="text-lg text-base-content/60" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-semibold text-base leading-tight truncate">
+                    {headerTitle}
+                  </h2>
+                  <p className="text-xs text-base-content/50">
+                    {strings.formatString(strings.chat.members, {
+                      count: members.length,
+                    })}
+                  </p>
+                </div>
+              </>
             ) : (
-              <UserAvatar
-                imageUrl={(otherMember ?? members[0]).user.avatarUrl}
-                className="w-10 h-10 rounded-full"
-              />
+              <Link
+                to={`/user/${(otherMember ?? members[0]).user.username}`}
+                className="group flex min-w-0 flex-1 items-center gap-3 transition-colors"
+              >
+                <UserAvatar
+                  imageUrl={(otherMember ?? members[0]).user.avatarUrl}
+                  className="w-10 h-10 rounded-full"
+                />
+                <h2 className="min-w-0 flex-1 font-semibold text-base leading-tight truncate group-hover:text-primary">
+                  {headerTitle}
+                </h2>
+              </Link>
             )}
-            <div className="min-w-0 flex-1">
-              <h2 className="font-semibold text-base leading-tight truncate">
-                {headerTitle}
-              </h2>
-              {isGroup && (
-                <p className="text-xs text-base-content/50">
-                  {strings.formatString(strings.chat.members, {
-                    count: members.length,
-                  })}
-                </p>
-              )}
-            </div>
             <ChatHeaderMenu
               isGroup={isGroup}
               onSetNickname={() => setShowSetNickname(true)}
