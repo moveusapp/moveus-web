@@ -5,7 +5,6 @@ import {
   HiOutlineCog6Tooth,
   HiPlus,
   HiBeaker,
-  HiCheckBadge,
 } from "react-icons/hi2";
 import { HiOutlineChat, HiOutlineSearch } from "react-icons/hi";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
@@ -13,6 +12,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useProfile } from "@/context/profile-context";
 import { displayName } from "@/utils/display-name";
 import UserAvatar from "@/components/user/UserAvatar";
+import UserBadge from "@/components/user/UserBadge";
 import strings from "@/translations/strings";
 
 function LeftSidebar() {
@@ -131,9 +131,7 @@ function LeftSidebar() {
                 profile?.lastName!,
               )}
             </span>
-            {profile?.verified && (
-              <HiCheckBadge size={16} className="text-primary shrink-0" />
-            )}
+            <UserBadge badge={profile?.badge} size={16} />
           </span>
           <span className="text-xs text-base-content/60 truncate">
             @{profile?.username}

@@ -19,7 +19,7 @@ import {
   HiOutlineCake,
   HiOutlineUser,
 } from "react-icons/hi";
-import { HiCheckBadge } from "react-icons/hi2";
+import UserBadge from "@/components/user/UserBadge";
 import { IconType } from "react-icons";
 import { Link, useParams } from "react-router-dom";
 import EventCard from "../../components/event/EventCard";
@@ -187,9 +187,7 @@ function UserPage() {
           <div className="flex flex-col grow min-w-0 gap-0.5">
             <div className="flex flex-row gap-1.5 items-center">
               <h1 className="font-bold text-2xl truncate">{name}</h1>
-              {user.verified && (
-                <HiCheckBadge size={22} className="text-primary shrink-0" />
-              )}
+              <UserBadge badge={user.badge} size={22} />
             </div>
 
             <p className="text-sm text-base-content/60 truncate">

@@ -63,7 +63,9 @@
     "dismissNotification": "Dismiss notification",
     "pickASuggestion": "Pick a suggestion so participants can find this spot easily.",
     "posts": "Posts",
-    "comments": "Comments"
+    "comments": "Comments",
+    "badgeVerified": "Verified",
+    "badgeEmployee": "MoveUs team"
   },
   "common": {
     "cancel": "Cancel",

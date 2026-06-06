@@ -2,7 +2,6 @@ import { useParams, Link } from "react-router-dom";
 import { useCallback, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client/react";
 import {
-  HiCheckBadge,
   HiHeart,
   HiOutlineHeart,
   HiOutlineCalendarDays,
@@ -18,6 +17,7 @@ import useDocumentTitle from "@/hooks/use-document-title";
 import EmptyState from "@/components/ui/EmptyState";
 import ImageLightbox from "@/components/ui/ImageLightbox";
 import UserAvatar from "@/components/user/UserAvatar";
+import UserBadge from "@/components/user/UserBadge";
 import CommentSection from "@/components/comment/CommentSection";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
@@ -121,9 +121,7 @@ function PostMain({ post }: { post: PostCardFragment }) {
             className="flex items-center gap-1.5 transition-colors hover:text-primary"
           >
             <span className="truncate text-lg font-bold">{authorName}</span>
-            {post.author?.verified && (
-              <HiCheckBadge className="h-5 w-5 shrink-0 text-primary" />
-            )}
+            <UserBadge badge={post.author?.badge} size={20} />
           </Link>
           <span className="truncate text-sm text-base-content/60">
             @{post.author?.username} · {timeAgo(post.timePosted)}

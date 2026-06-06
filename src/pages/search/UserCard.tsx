@@ -2,7 +2,7 @@ import { UserCardFragment } from "@/graphql/graphql-types";
 import { Link } from "react-router-dom";
 import UserAvatar from "@/components/user/UserAvatar";
 import { displayName } from "@/utils/display-name";
-import { HiCheckBadge } from "react-icons/hi2";
+import UserBadge from "@/components/user/UserBadge";
 
 function UserCard({ user, tags, isSelf }: UserCardProps) {
   const name = displayName(
@@ -24,7 +24,7 @@ function UserCard({ user, tags, isSelf }: UserCardProps) {
           <div className="flex flex-row justify-between">
             <div className="flex flex-row items-center gap-1">
               <b>{name}</b>
-              {user.verified && <HiCheckBadge className="text-primary" />}
+              <UserBadge badge={user.badge} />
             </div>
             <div className="flex flex-row gap-1">
               {tags?.map((tag) => (

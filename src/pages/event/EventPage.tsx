@@ -1,6 +1,7 @@
 import EventThumbnail from "@/components/event/EventThumbnail";
 import { setDocumentTitle } from "@/hooks/use-document-title";
 import UserAvatar from "@/components/user/UserAvatar";
+import UserBadge from "@/components/user/UserBadge";
 import {
   EventPhase,
   JoinEventDocument,
@@ -18,7 +19,6 @@ import {
   HiOutlineCalendarDays,
   HiOutlineNewspaper,
   HiOutlineChatBubbleOvalLeft,
-  HiCheckBadge,
   HiOutlineArrowTopRightOnSquare,
   HiOutlineUsers,
   HiChevronRight,
@@ -191,9 +191,7 @@ function EventPage() {
               <span className="text-foreground font-medium group-hover:text-primary">
                 {d.organizerName}
               </span>
-              {event.organizer?.user.verified && (
-                <HiCheckBadge size={16} className="text-primary shrink-0" />
-              )}
+              <UserBadge badge={event.organizer?.user.badge} size={16} />
             </span>
           </Link>
 

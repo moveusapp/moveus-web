@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { EventFragment, MemberRole } from "@/graphql/graphql-types";
-import { HiCheckBadge } from "react-icons/hi2";
+import UserBadge from "@/components/user/UserBadge";
 import { HiOutlineUsers } from "react-icons/hi";
 import UserAvatar from "@/components/user/UserAvatar";
 import { displayName } from "@/utils/display-name";
@@ -69,9 +69,7 @@ function ParticipantsList({ event }: ParticipantsListProps) {
                   <span className="truncate text-sm font-semibold">
                     {name}
                   </span>
-                  {member.user.verified && (
-                    <HiCheckBadge className="h-4 w-4 shrink-0 text-primary" />
-                  )}
+                  <UserBadge badge={member.user.badge} size={16} />
                 </span>
                 {roleBadge(member.role)}
               </Link>

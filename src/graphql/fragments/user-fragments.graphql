@@ -43,7 +43,7 @@ fragment ContextProfile on ProfileType{
   lastLogin
   isCapeable
   lastName
-  verified
+  badge
   profileImageUrl
   likes
   dislikes
@@ -81,7 +81,7 @@ fragment User on UserType {
   }
   followerCount
   followingCount
-  verified
+  badge
   isFollowing
   isFollowedBy
   attendingEvents {
@@ -100,6 +100,6 @@ fragment UserCard on UserType {
   username
   firstName
   lastName
-  verified
+  badge
   profileImageUrl
 }

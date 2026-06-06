@@ -63,7 +63,9 @@
     "dismissNotification": "Odbaci obavijest",
     "pickASuggestion": "Odaberi prijedlog kako bi sudionici lakše pronašli ovo mjesto.",
     "posts": "Objave",
-    "comments": "Komentari"
+    "comments": "Komentari",
+    "badgeVerified": "Provjereno",
+    "badgeEmployee": "MoveUs tim"
   },
   "common": {
     "cancel": "Odustani",

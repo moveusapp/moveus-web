@@ -1,5 +1,6 @@
 import EventThumbnail from "@/components/event/EventThumbnail";
 import UserAvatar from "@/components/user/UserAvatar";
+import UserBadge from "@/components/user/UserBadge";
 import {
   EventCardFragment,
   EventPhase,
@@ -9,7 +10,6 @@ import { formatDate, formatTime } from "@/utils/time-utils";
 import { getActivityLabel } from "@/utils/activity-label";
 import {
   HiOutlineMapPin,
-  HiCheckBadge,
   HiOutlineCalendarDays,
 } from "react-icons/hi2";
 import { Link } from "react-router-dom";
@@ -97,9 +97,7 @@ function EventCard({ event }: EventCardProps) {
           <div className="min-w-0 flex items-center gap-1">
             <span className="text-xs text-muted-foreground">{strings.event.hostedBy}</span>
             <span className="text-xs font-medium text-foreground truncate">{organizerName}</span>
-            {event.organizer?.user.verified && (
-              <HiCheckBadge size={16} className="text-primary shrink-0" />
-            )}
+            <UserBadge badge={event.organizer?.user.badge} size={16} />
           </div>
         </div>
         {isScheduled && (

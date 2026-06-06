@@ -8,7 +8,7 @@ import {
 import { timeAgo } from "@/utils/time-utils";
 import UserAvatar from "../user/UserAvatar";
 import { displayName } from "@/utils/display-name";
-import { HiCheckBadge } from "react-icons/hi2";
+import UserBadge from "../user/UserBadge";
 import { HiOutlineHeart, HiHeart, HiOutlineChatBubbleLeft } from "react-icons/hi2";
 import ImageLightbox from "@/components/ui/ImageLightbox";
 import strings from "@/translations/strings";
@@ -90,9 +90,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
                   <span className="text-sm font-semibold text-base-content truncate group-hover:text-primary transition-colors">
                     {organizerName}
                   </span>
-                  {post?.author?.verified && (
-                    <HiCheckBadge className="w-4 h-4 text-primary flex-shrink-0" />
-                  )}
+                  <UserBadge badge={post?.author?.badge} size={16} />
                 </div>
                 <span className="text-xs text-base-content/60 truncate">
                   @{post?.author?.username}
