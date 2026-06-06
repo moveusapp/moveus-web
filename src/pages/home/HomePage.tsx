@@ -1,8 +1,7 @@
 import GlobalSearchWidget from "@/components/widgets/GlobalSearchWidget";
 import EventCard from "../../components/event/EventCard";
 import MainFooter from "@/components/misc/MainFooter";
-import UserProgressWidget from "@/components/widgets/UserProgressWidget";
-import UserActivityWidget from "@/components/widgets/UserActivityWidget";
+import UpcomingEventsWidget from "@/components/widgets/UpcomingEventsWidget";
 import useDocumentTitle from "@/hooks/use-document-title";
 import { useQuery } from "@apollo/client/react";
 import { GetMyFeedDocument } from "@/graphql/graphql-types";
@@ -79,8 +78,7 @@ function HomePage() {
       <aside className="hidden lg:block lg:w-[280px] xl:w-[330px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto">
         <div className="flex flex-col py-4 pr-4 gap-2">
           <GlobalSearchWidget />
-          <UserProgressWidget />
-          <UserActivityWidget />
+          <UpcomingEventsWidget />
           <MainFooter />
         </div>
       </aside>

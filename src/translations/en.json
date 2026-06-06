@@ -12,14 +12,8 @@
     "yourProfileAria": "Your profile"
   },
   "widgets": {
-    "yourActivity": "Your Activity",
-    "eventsThisWeek": "Events This Week",
-    "activeNearYou": "Active Near You",
-    "hotStreak": "Hot Streak",
-    "hotStreakValue": "5 days",
-    "progress": "Progress",
-    "level": "Level {level}",
-    "exp": "{count} EXP",
+    "comingUp": "Coming up",
+    "comingUpEmptyCta": "Find an event to join",
     "searchPlaceholder": "Search events, people, posts..."
   },
   "footer": {

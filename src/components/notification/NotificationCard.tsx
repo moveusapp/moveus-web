@@ -59,10 +59,8 @@ function NotificationCard({ notification }: NotificationCardProps) {
               <UserAvatar imageUrl={notification.user?.avatarUrl} className="w-11 shrink-0" />
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 grow min-w-0">
                 <p className="text-[14px] sm:text-[15px] leading-snug text-base-content/80 line-clamp-2 break-words">
-                  <span className="inline-flex items-center gap-1.5 align-middle font-bold text-base-content">
-                    {name}
-                    <UserBadge badge={notification.user?.badge} />
-                  </span>{" "}
+                  <b className="font-bold text-base-content">{name}</b>
+                  <UserBadge badge={notification.user?.badge} className="ml-1" />{" "}
                   {strings.notification.nowFollowing}
                 </p>
                 <span className="text-xs text-base-content/60 shrink-0 mt-1 sm:mt-0">{time}</span>

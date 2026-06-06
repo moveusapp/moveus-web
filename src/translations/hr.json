@@ -12,14 +12,8 @@
     "yourProfileAria": "Tvoj profil"
   },
   "widgets": {
-    "yourActivity": "Tvoja aktivnost",
-    "eventsThisWeek": "Događaji ovaj tjedan",
-    "activeNearYou": "Aktivno u tvojoj blizini",
-    "hotStreak": "Niz dana",
-    "hotStreakValue": "5 dana",
-    "progress": "Napredak",
-    "level": "Razina {level}",
-    "exp": "{count} EXP",
+    "comingUp": "Uskoro",
+    "comingUpEmptyCta": "Pronađi događaj za tebe",
     "searchPlaceholder": "Pretraži događaje, ljude, objave..."
   },
   "footer": {
