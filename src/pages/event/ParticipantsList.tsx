@@ -62,7 +62,7 @@ function ParticipantsList({ event }: ParticipantsListProps) {
                 className="flex items-center gap-3 rounded-xl px-2 py-1.5 transition-colors hover:bg-base-200"
               >
                 <UserAvatar
-                  imageUrl={member.user.profileImageUrl}
+                  imageUrl={member.user.avatarUrl}
                   className="h-10 w-10 shrink-0"
                 />
                 <span className="flex min-w-0 flex-1 items-center gap-1.5">

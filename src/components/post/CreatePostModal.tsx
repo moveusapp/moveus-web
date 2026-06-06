@@ -132,7 +132,7 @@ function CreatePostModal({
           <div className="flex items-start gap-3">
             {profile?.id != null && (
               <UserAvatar
-                imageUrl={profile.profileImageUrl}
+                imageUrl={profile.avatarUrl}
                 className="h-10 w-10 shrink-0"
               />
             )}

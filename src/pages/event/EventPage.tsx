@@ -183,7 +183,7 @@ function EventPage() {
             className="flex items-center gap-2 group text-sm text-muted-foreground hover:text-foreground transition-colors mt-2"
           >
             <UserAvatar
-              imageUrl={event.organizer?.user.profileImageUrl}
+              imageUrl={event.organizer?.user.avatarUrl}
               className="flex w-7 h-7"
             />
             <span className="flex items-center gap-1">
@@ -352,7 +352,7 @@ function EventPage() {
                   {event.members.slice(0, 5).map((member) => (
                     <UserAvatar
                       key={member.user.id}
-                      imageUrl={member.user.profileImageUrl}
+                      imageUrl={member.user.avatarUrl}
                       className="w-10 h-10"
                     />
                   ))}

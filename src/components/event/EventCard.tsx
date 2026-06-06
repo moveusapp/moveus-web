@@ -93,7 +93,7 @@ function EventCard({ event }: EventCardProps) {
       {/* Footer: organizer + capacity */}
       <div className="px-0.5 flex items-center justify-between gap-3 pt-1.5 border-t border-base-300">
         <div className="flex items-center gap-2 min-w-0">
-          <UserAvatar imageUrl={event.organizer?.user.profileImageUrl} className="w-6 h-6 shrink-0" />
+          <UserAvatar imageUrl={event.organizer?.user.avatarUrl} className="w-6 h-6 shrink-0" />
           <div className="min-w-0 flex items-center gap-1">
             <span className="text-xs text-muted-foreground">{strings.event.hostedBy}</span>
             <span className="text-xs font-medium text-foreground truncate">{organizerName}</span>

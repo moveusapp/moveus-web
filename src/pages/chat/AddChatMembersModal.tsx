@@ -27,7 +27,7 @@ interface FollowingUser {
   username: string;
   firstName: string;
   lastName: string;
-  profileImageUrl?: string | null;
+  avatarUrl?: string | null;
 }
 
 function AddChatMembersModal({
@@ -68,7 +68,7 @@ function AddChatMembersModal({
         username: u.username,
         firstName: u.firstName,
         lastName: u.lastName,
-        profileImageUrl: u.profileImageUrl,
+        avatarUrl: u.avatarUrl,
       }));
   }, [data, existingMemberIds]);
 
@@ -187,7 +187,7 @@ function AddChatMembersModal({
                         }`}
                       >
                         <div className="relative shrink-0">
-                          <UserAvatar imageUrl={u.profileImageUrl} className="w-10 h-10" />
+                          <UserAvatar imageUrl={u.avatarUrl} className="w-10 h-10" />
                           {selected && (
                             <span className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-primary text-primary-content flex items-center justify-center shadow-sm ring-2 ring-base-100">
                               <RiCheckLine className="w-3.5 h-3.5" />

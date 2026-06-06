@@ -30,7 +30,7 @@ function CommentCard({ comment, onReply }: CommentCardProps) {
     <div className="flex flex-col gap-1">
       <div className="flex gap-3">
         <Link to={`/user/${comment.user.username}`} className="flex-shrink-0">
-          <UserAvatar imageUrl={comment.user.profileImageUrl} className="w-8 h-8" />
+          <UserAvatar imageUrl={comment.user.avatarUrl} className="w-8 h-8" />
         </Link>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
@@ -97,7 +97,7 @@ function ReplyCard({ reply }: { reply: CommentFragment["replies"][number] }) {
   return (
     <div className="flex gap-3">
       <Link to={`/user/${reply.user.username}`} className="flex-shrink-0">
-        <UserAvatar imageUrl={reply.user.profileImageUrl} className="w-6 h-6" />
+        <UserAvatar imageUrl={reply.user.avatarUrl} className="w-6 h-6" />
       </Link>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">

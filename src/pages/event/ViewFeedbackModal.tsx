@@ -70,7 +70,7 @@ function ViewFeedbackModal({ isOpen, onClose, event }: ViewFeedbackModalProps) {
                     to={`/user/${member.user.username}`}
                     className="shrink-0"
                   >
-                    <UserAvatar imageUrl={member.user.profileImageUrl} className="h-8 w-8" />
+                    <UserAvatar imageUrl={member.user.avatarUrl} className="h-8 w-8" />
                   </Link>
                   <div className="min-w-0 flex-1">
                     <Link

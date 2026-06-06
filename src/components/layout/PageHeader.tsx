@@ -31,7 +31,7 @@ export function HeaderAvatar() {
           : ""
       }`}
     >
-      <UserAvatar imageUrl={profile.profileImageUrl} className="w-9 h-9" />
+      <UserAvatar imageUrl={profile.avatarUrl} className="w-9 h-9" />
     </Link>
   );
 }

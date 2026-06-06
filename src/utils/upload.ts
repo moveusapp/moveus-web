@@ -1,7 +1,7 @@
 import type { ApolloClient } from "@apollo/client";
 import {
+  GetAvatarUploadDocument,
   GetEventImageUploadDocument,
-  GetProfileImageUploadDocument,
   type UploadTicketFragment,
 } from "@/graphql/graphql-types";
 
@@ -36,11 +36,11 @@ export async function uploadProfilePicture(
   file: File,
 ): Promise<void> {
   const { data } = await apollo.query({
-    query: GetProfileImageUploadDocument,
+    query: GetAvatarUploadDocument,
     variables: { contentType: file.type },
     fetchPolicy: "network-only",
   });
-  const ticket = data?.profileImageUpload;
+  const ticket = data?.avatarUpload;
   if (!ticket) {
     throw new Error("Could not get upload ticket for profile picture.");
   }

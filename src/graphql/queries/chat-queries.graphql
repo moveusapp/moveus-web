@@ -13,7 +13,7 @@ query GetChat($chatId: Int!) {
         username
         firstName
         lastName
-        profileImageUrl
+        avatarUrl
       }
     }
     allMembers: members(includeFormer: true) {
@@ -23,7 +23,7 @@ query GetChat($chatId: Int!) {
         username
         firstName
         lastName
-        profileImageUrl
+        avatarUrl
       }
     }
   }

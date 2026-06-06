@@ -44,7 +44,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
 
   const genderOptions = enumToOptions(Gender, "enums.gender");
 
-  const initialAvatar = profile.profileImageUrl || defaultAvatar;
+  const initialAvatar = profile.avatarUrl || defaultAvatar;
   const [avatarSrc, setAvatarSrc] = useState(initialAvatar);
   const {
     inputRef: imageRef,

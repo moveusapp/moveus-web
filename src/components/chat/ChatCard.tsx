@@ -38,7 +38,7 @@ export interface ChatSummaryMember {
   lastName: string;
   nickname: string;
   lastOpen: Date | null;
-  profileImageUrl?: string | null;
+  avatarUrl?: string | null;
 }
 
 function memberName(m: ChatSummaryMember): string {
@@ -143,11 +143,11 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
         return (
           <div className="relative w-10 h-10 shrink-0">
             <StackedAvatar
-              imageUrl={stack[0].profileImageUrl}
+              imageUrl={stack[0].avatarUrl}
               className="w-7 h-7 top-0 left-0"
             />
             <StackedAvatar
-              imageUrl={stack[1].profileImageUrl}
+              imageUrl={stack[1].avatarUrl}
               className="w-7 h-7 bottom-0 right-0"
             />
           </div>
@@ -156,7 +156,7 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
       if (stack.length === 1) {
         return (
           <UserAvatar
-            imageUrl={stack[0].profileImageUrl}
+            imageUrl={stack[0].avatarUrl}
             className="w-10 h-10 shrink-0"
           />
         );
@@ -170,7 +170,7 @@ function ChatCard({ chat, onSelect, isActive }: ChatCardProps) {
     if (others.length > 0) {
       return (
         <UserAvatar
-          imageUrl={others[0].profileImageUrl}
+          imageUrl={others[0].avatarUrl}
           className="w-10 h-10 shrink-0"
         />
       );

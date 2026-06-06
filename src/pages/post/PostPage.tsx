@@ -113,7 +113,7 @@ function PostMain({ post }: { post: PostCardFragment }) {
     <>
       <header className="flex items-center gap-3">
         <Link to={`/user/${post.author?.username}`} className="shrink-0">
-          <UserAvatar imageUrl={post.author?.profileImageUrl} className="h-12 w-12" />
+          <UserAvatar imageUrl={post.author?.avatarUrl} className="h-12 w-12" />
         </Link>
         <div className="flex min-w-0 flex-col">
           <Link

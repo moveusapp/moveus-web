@@ -12,7 +12,7 @@ export type BubbleMember = {
     username: string;
     firstName: string;
     lastName: string;
-    profileImageUrl?: string | null;
+    avatarUrl?: string | null;
   };
 };
 
@@ -44,7 +44,7 @@ function MessageBubble({
       {!isOwn && (
         <div className="chat-image">
           <UserAvatar
-            imageUrl={author?.user.profileImageUrl}
+            imageUrl={author?.user.avatarUrl}
             className="w-8 h-8 rounded-full"
           />
         </div>

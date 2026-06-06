@@ -82,7 +82,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
               className="flex items-center gap-3 flex-1 min-w-0 group"
             >
               <UserAvatar
-                imageUrl={post?.author?.profileImageUrl}
+                imageUrl={post?.author?.avatarUrl}
                 className="w-10 h-10 flex-shrink-0"
               />
               <div className="flex flex-col min-w-0">
