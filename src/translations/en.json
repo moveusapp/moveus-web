@@ -9,7 +9,10 @@
     "createEvent": "Create Event",
     "openBeta": "Open beta",
     "viewProfileAria": "View your profile",
-    "yourProfileAria": "Your profile"
+    "yourProfileAria": "Your profile",
+    "openMenu": "Open menu",
+    "menuTitle": "Menu",
+    "logOut": "Log out"
   },
   "widgets": {
     "comingUp": "Coming up",

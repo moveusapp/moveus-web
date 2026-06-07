@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { ReactNode, useState } from "react";
 import UserAvatar from "@/components/user/UserAvatar";
 import { useProfile } from "@/context/profile-context";
+import MobileMenuDrawer from "@/components/routes/nav/MobileMenuDrawer";
 import strings from "@/translations/strings";
 
 type PageHeaderProps = {
@@ -13,26 +13,24 @@ type PageHeaderProps = {
 
 export function HeaderAvatar() {
   const { profile } = useProfile();
-  const { pathname } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   if (profile?.id == null) return null;
 
-  const isOnOwnProfile =
-    pathname === "/profile" ||
-    (profile.username != null && pathname === `/user/${profile.username}`);
-
   return (
-    <Link
-      to="/profile"
-      aria-label={strings.nav.yourProfileAria}
-      className={`md:hidden shrink-0 rounded-full ${
-        isOnOwnProfile
-          ? "ring-2 ring-primary ring-offset-2 ring-offset-base-100"
-          : ""
-      }`}
-    >
-      <UserAvatar imageUrl={profile.avatarUrl} className="w-9 h-9" />
-    </Link>
+    <>
+      <button
+        type="button"
+        onClick={() => setMenuOpen(true)}
+        aria-label={strings.nav.openMenu}
+        aria-haspopup="dialog"
+        aria-expanded={menuOpen}
+        className="md:hidden shrink-0 rounded-full outline-none transition-transform duration-150 focus-visible:ring-2 focus-visible:ring-primary/40 active:scale-95"
+      >
+        <UserAvatar imageUrl={profile.avatarUrl} className="w-9 h-9" />
+      </button>
+      <MobileMenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+    </>
   );
 }
 

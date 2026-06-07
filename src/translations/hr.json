@@ -9,7 +9,10 @@
     "createEvent": "Izradi događaj",
     "openBeta": "Otvorena beta",
     "viewProfileAria": "Pogledaj svoj profil",
-    "yourProfileAria": "Tvoj profil"
+    "yourProfileAria": "Tvoj profil",
+    "openMenu": "Otvori izbornik",
+    "menuTitle": "Izbornik",
+    "logOut": "Odjavi se"
   },
   "widgets": {
     "comingUp": "Uskoro",

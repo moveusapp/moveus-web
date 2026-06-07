@@ -1,63 +1,92 @@
-import {
-  HiOutlineHome,
-  HiOutlineBell,
-  HiOutlineCalendarDays,
-} from "react-icons/hi2";
+import { HiOutlineHome, HiOutlineBell, HiPlus } from "react-icons/hi2";
 import { HiOutlineChat, HiOutlineSearch } from "react-icons/hi";
+import { IconType } from "react-icons";
 import { Link, useLocation } from "react-router-dom";
 import strings from "@/translations/strings";
 
+interface NavItem {
+  label: string;
+  to: string;
+  icon: IconType;
+  badge?: string;
+}
+
 function MobileNav() {
   const location = useLocation();
+  const isActive = (to: string) => location.pathname === to;
 
-  const items = [
+  // Four destinations split around the central Create Event action. Calendar
+  // moved into the menu drawer; the old five-tab bar was too cramped to read.
+  const leftItems: NavItem[] = [
     { label: strings.nav.home, to: "/home", icon: HiOutlineHome },
     { label: strings.nav.search, to: "/search", icon: HiOutlineSearch },
-    { label: strings.nav.calendar, to: "/calendar", icon: HiOutlineCalendarDays },
+  ];
+  const rightItems: NavItem[] = [
     { label: strings.nav.notifications, to: "/notifications", icon: HiOutlineBell, badge: "" },
     { label: strings.nav.messages, to: "/chat", icon: HiOutlineChat, badge: "" },
   ];
 
-  const isNavItemActive = (to: string) => location.pathname === to;
+  const renderTab = (item: NavItem) => {
+    const Icon = item.icon;
+    const active = isActive(item.to);
+    return (
+      <Link
+        key={item.to}
+        to={item.to}
+        aria-label={item.label}
+        aria-current={active ? "page" : undefined}
+        className="relative flex flex-1 flex-col items-center justify-center gap-0.5 px-2 outline-none focus-visible:bg-base-300/50"
+      >
+        {active && (
+          <span className="absolute top-0 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-primary" />
+        )}
+        <span className="relative">
+          <Icon
+            size={22}
+            strokeWidth={active ? 2.5 : 2}
+            className={active ? "text-primary" : "text-base-content/60"}
+          />
+          {item.badge && (
+            <span className="absolute -top-1 -right-1.5 flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-error px-0.5 text-[9px] font-bold text-white">
+              {item.badge}
+            </span>
+          )}
+        </span>
+        <span
+          className={`w-full truncate text-center text-[10px] font-medium ${
+            active ? "text-primary" : "text-base-content/50"
+          }`}
+        >
+          {item.label}
+        </span>
+      </Link>
+    );
+  };
+
+  const createActive = isActive("/create-event");
 
   return (
     <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-base-200 border-t border-base-300 safe-area-pb">
-      <div className="flex items-center justify-around h-16">
-        {items.map((item) => {
-          const Icon = item.icon;
-          const isActive = isNavItemActive(item.to);
-          return (
-            <Link
-              key={item.label}
-              to={item.to}
-              className="flex flex-col items-center gap-0.5 py-1 px-2 relative min-w-0 flex-1"
-              aria-label={item.label}
-            >
-              {isActive && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-primary" />
-              )}
-              <span className="relative">
-                <Icon
-                  size={22}
-                  strokeWidth={isActive ? 2.5 : 2}
-                  className={isActive ? "text-primary" : "text-base-content/60"}
-                />
-                {item.badge && (
-                  <span className="absolute -top-1 -right-1.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full bg-error text-white text-[9px] font-bold px-0.5">
-                    {item.badge}
-                  </span>
-                )}
-              </span>
-              <span
-                className={`text-[10px] font-medium w-full text-center truncate ${
-                  isActive ? "text-primary" : "text-base-content/50"
-                }`}
-              >
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
+      <div className="relative flex h-16 items-stretch">
+        {leftItems.map(renderTab)}
+
+        {/* Reserve the center column; the FAB floats above it on the bar edge. */}
+        <div className="flex-1" aria-hidden="true" />
+
+        {rightItems.map(renderTab)}
+
+        <Link
+          to="/create-event"
+          aria-label={strings.nav.createEvent}
+          aria-current={createActive ? "page" : undefined}
+          className={`absolute left-1/2 top-0 flex h-14 w-14 -translate-x-1/2 -translate-y-5 items-center justify-center rounded-full ring-[6px] ring-base-200 outline-none transition-[transform,filter] duration-150 active:scale-95 focus-visible:ring-secondary/60 ${
+            createActive
+              ? "bg-primary text-secondary"
+              : "bg-secondary text-primary hover:brightness-95"
+          }`}
+        >
+          <HiPlus size={26} strokeWidth={2.5} />
+        </Link>
       </div>
     </nav>
   );
