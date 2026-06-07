@@ -5,12 +5,6 @@ import {
   type UploadTicketFragment,
 } from "@/graphql/graphql-types";
 
-/**
- * Uploads a file using a backend-issued upload ticket. The ticket dictates the
- * HTTP method and the exact headers to send (e.g. cache-control / content-type
- * the backend signed into the URL); a mismatch would break the signature, so we
- * never hardcode them here.
- */
 export async function uploadWithTicket(
   ticket: UploadTicketFragment,
   file: File,

@@ -2,6 +2,7 @@ import { useProfile } from "@/context/profile-context";
 import useDocumentTitle from "@/hooks/use-document-title";
 import useTheme from "@/hooks/use-theme";
 import { ReactNode, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   AlterPrivacySettingDocument,
   ContextProfileFragment,
@@ -9,6 +10,7 @@ import {
   PrivacySetting,
 } from "@/graphql/graphql-types";
 import {
+  HiOutlineAdjustmentsHorizontal,
   HiOutlineArrowRightOnRectangle,
   HiOutlineCake,
   HiOutlineMapPin,
@@ -49,6 +51,7 @@ function SettingsPage() {
   const { profile, setProfile } = useProfile();
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage } = useLanguage();
+  const navigate = useNavigate();
 
   const [alterPrivacySetting] = useMutation(AlterPrivacySettingDocument);
   const [logoutOpen, setLogoutOpen] = useState(false);
@@ -168,6 +171,25 @@ function SettingsPage() {
               value: language,
               options: enumToOptions(Locale, "enums.locale"),
               onChange: (value) => setLanguage(value as Locale),
+            }}
+          />
+        </div>
+
+        <div className="mt-3 mb-1">
+          <p className="text-md font-medium">{strings.settings.preferences}</p>
+          <p className="text-sm text-base-content/70">
+            {strings.settings.preferencesDesc}
+          </p>
+        </div>
+
+        <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
+          <SettingsOption
+            icon={<HiOutlineAdjustmentsHorizontal />}
+            title={strings.settings.activityPreferences}
+            description={strings.settings.activityPreferencesDesc}
+            control={{
+              kind: "action",
+              onClick: () => navigate("/survey/preferences"),
             }}
           />
         </div>

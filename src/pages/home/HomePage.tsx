@@ -11,6 +11,7 @@ import { useProfile } from "@/context/profile-context";
 import EventCardSkeleton from "@/components/event/EventCardSkeleton";
 import PageHeader from "@/components/layout/PageHeader";
 import FeedbackReminder from "@/pages/home/FeedbackReminder";
+import PreferencesReminder from "@/pages/home/PreferencesReminder";
 import CreatePostComposer from "@/pages/home/CreatePostComposer";
 import PostCard from "@/components/post/PostCard";
 import PostCardSkeleton from "@/components/post/PostCardSkeleton";
@@ -40,6 +41,7 @@ function HomePage() {
           title={strings.formatString(strings.home.greeting, { name: profileName }) as string}
         />
         <div className="flex flex-col w-full mx-auto gap-3 p-4 max-w-[700px]">
+          <PreferencesReminder />
           <FeedbackReminder />
           <CreatePostComposer />
           {loading ? (

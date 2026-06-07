@@ -9,6 +9,7 @@ import {
 } from "@/graphql/graphql-types";
 import RatingFaces from "@/components/event/RatingFaces";
 import LeaveFeedbackModal from "@/components/event/LeaveFeedbackModal";
+import useSessionDismissed from "@/hooks/use-session-dismissed";
 import { timeAgo } from "@/utils/time-utils";
 import duckHappy from "@/assets/duck/duck-happy.svg";
 import strings from "@/translations/strings";
@@ -26,7 +27,7 @@ function FeedbackReminder() {
   // instead of the list shifting under the user as it refetches.
   const [queue, setQueue] = useState<UnratedEvent[] | null>(null);
   const [index, setIndex] = useState(0);
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, dismiss] = useSessionDismissed("feedback-reminder");
   const [pendingScore, setPendingScore] = useState<EventRating | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -61,11 +62,11 @@ function FeedbackReminder() {
           <img
             src={duckHappy}
             alt=""
-            className="h-12 w-12 shrink-0 -rotate-6 select-none"
+            className="h-14 w-auto shrink-0 -rotate-6 select-none"
             draggable={false}
           />
           <div className="min-w-0 flex-1">
-            <h2 className="text-base font-bold leading-snug text-foreground text-balance">
+            <h2 className="text-base font-bold leading-snug text-base-content text-balance">
               {strings.home.feedbackHowWas}{" "}
               <Link
                 to={`/event/${event.id}`}
@@ -81,7 +82,7 @@ function FeedbackReminder() {
           </div>
           <button
             type="button"
-            onClick={() => setDismissed(true)}
+            onClick={dismiss}
             className="btn btn-xs btn-circle btn-ghost shrink-0 text-base-content/50"
             aria-label={strings.home.dismissFeedbackAria}
           >

@@ -720,6 +720,10 @@
     "darkModeDesc": "Easier on the eyes in low light.",
     "language": "Language",
     "langaugeDesc": "Display language of the app.",
+    "preferences": "Preferences",
+    "preferencesDesc": "Personalize how MoveUs works for you.",
+    "activityPreferences": "Activity preferences",
+    "activityPreferencesDesc": "Tell us how you like to move so events match you better.",
     "privacy": "Privacy",
     "privacyDesc": "Choose who can see each part of your profile.",
     "account": "Account",
@@ -787,7 +791,11 @@
     "feedbackHowWas": "How was",
     "feedbackWrappedUp": "Wrapped up {time}, drop a quick rating.",
     "dismissFeedbackAria": "Dismiss feedback reminder",
-    "queueProgress": "{index} of {total}"
+    "queueProgress": "{index} of {total}",
+    "preferencesTitle": "Get events made for you",
+    "preferencesBody": "Tell us how you like to move and we'll match you with the right events and people.",
+    "preferencesCta": "Set my preferences",
+    "dismissPreferencesAria": "Dismiss preferences reminder"
   },
   "landing": {
     "documentTitle": "MoveUs - Your Workout Wingman",

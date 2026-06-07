@@ -720,6 +720,10 @@
     "darkModeDesc": "Ugodnije za oči u mraku.",
     "language": "Jezik",
     "langaugeDesc": "Jezik prikaza aplikacije.",
+    "preferences": "Preferencije",
+    "preferencesDesc": "Prilagodi kako MoveUs radi za tebe.",
+    "activityPreferences": "Preferencije aktivnosti",
+    "activityPreferencesDesc": "Reci nam kako voliš biti aktivan da ti događaji bolje odgovaraju.",
     "privacy": "Privatnost",
     "privacyDesc": "Odaberi tko može vidjeti pojedine dijelove tvog profila.",
     "account": "Račun",
@@ -787,7 +791,11 @@
     "feedbackHowWas": "Kako je bilo na",
     "feedbackWrappedUp": "Događaj je završio {time}, ostavi brzu ocjenu.",
     "dismissFeedbackAria": "Odbaci podsjetnik za ocjenu",
-    "queueProgress": "{index} od {total}"
+    "queueProgress": "{index} od {total}",
+    "preferencesTitle": "Događaji po tvojoj mjeri",
+    "preferencesBody": "Reci nam kako voliš biti aktivan i povezat ćemo te s pravim događajima i ljudima.",
+    "preferencesCta": "Postavi preferencije",
+    "dismissPreferencesAria": "Odbaci podsjetnik za preferencije"
   },
   "landing": {
     "documentTitle": "MoveUs - Tvoj partner za trening",
