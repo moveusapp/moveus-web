@@ -7,7 +7,7 @@ import { useMutation } from "@apollo/client/react";
 import Button from "../ui/Button";
 import strings from "@/translations/strings";
 
-function FollowButton({ isFollowing: initialIsFollowing, userId }: FollowButtonProps) {
+function FollowButton({ isFollowing: initialIsFollowing, userId, className = "" }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -35,7 +35,7 @@ function FollowButton({ isFollowing: initialIsFollowing, userId }: FollowButtonP
         onClick={handleUnfollow}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className={`${isHovered ? "btn-error" : ""}`}
+        className={`${isHovered ? "btn-error" : ""} ${className}`}
       >
         {isHovered ? strings.user.unfollow : strings.user.following}
       </Button>
@@ -43,7 +43,7 @@ function FollowButton({ isFollowing: initialIsFollowing, userId }: FollowButtonP
   }
 
   return (
-    <Button loading={loading} onClick={handleFollow} className="btn-primary w-30">
+    <Button loading={loading} onClick={handleFollow} className={`btn-primary ${className}`}>
       {strings.user.follow}
     </Button>
   );
@@ -54,4 +54,5 @@ export default FollowButton;
 interface FollowButtonProps {
   isFollowing: boolean;
   userId: number;
+  className?: string;
 }

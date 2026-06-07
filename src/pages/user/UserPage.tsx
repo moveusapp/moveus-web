@@ -178,37 +178,39 @@ function UserPage() {
   return (
     <div className="flex flex-col m-4 gap-2">
       <div className="bg-base-200 rounded-2xl border border-base-300 p-5">
-        <div className="flex flex-row items-center gap-4">
-          <UserAvatar
-            imageUrl={user.avatarUrl}
-            className="flex-shrink-0 w-20 h-20"
-          />
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+          <div className="flex flex-row items-center gap-4 min-w-0 grow">
+            <UserAvatar
+              imageUrl={user.avatarUrl}
+              className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20"
+            />
 
-          <div className="flex flex-col grow min-w-0 gap-0.5">
-            <div className="flex flex-row gap-1.5 items-center">
-              <h1 className="font-bold text-2xl truncate">{name}</h1>
-              <UserBadge badge={user.badge} size={22} />
+            <div className="flex flex-col min-w-0 gap-0.5">
+              <div className="flex flex-row gap-1.5 items-center min-w-0">
+                <h1 className="font-bold text-xl sm:text-2xl truncate">{name}</h1>
+                <UserBadge badge={user.badge} size={22} />
+              </div>
+
+              <p className="text-sm text-base-content/60 truncate">
+                @{user.username}
+              </p>
             </div>
-
-            <p className="text-sm text-base-content/60 truncate">
-              @{user.username}
-            </p>
           </div>
 
           {isSelf ? (
             <Button
-              className="flex-shrink-0 self-start"
+              className="flex-shrink-0 w-full sm:w-auto"
               onClick={() => setShowEditModal(true)}
             >
               {strings.profile.editProfile}
             </Button>
           ) : (
             profile && (
-              <div className="flex flex-row gap-2 flex-shrink-0 self-start">
+              <div className="flex flex-row gap-2 w-full sm:w-auto flex-shrink-0">
                 {user.canMessage && (
                   <Link
                     to={`/chat?userId=${user.id}`}
-                    className="btn btn-square rounded-2xl"
+                    className="btn btn-square rounded-2xl flex-shrink-0"
                     aria-label={
                       strings.formatString(strings.profile.messageAria, {
                         name,
@@ -222,6 +224,7 @@ function UserPage() {
                 <FollowButton
                   userId={user.id!}
                   isFollowing={user.isFollowing ?? false}
+                  className="grow sm:grow-0 sm:w-30"
                 />
               </div>
             )
