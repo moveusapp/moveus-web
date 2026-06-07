@@ -206,12 +206,11 @@ function EventPage() {
                 href={d.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 hover:text-primary transition-colors"
+                className="flex items-center gap-1.5 font-medium text-primary underline decoration-primary/30 underline-offset-2 transition-colors hover:decoration-primary"
               >
-                <HiOutlineMapPin className="h-4 w-4 text-primary" />
-                <span className="underline-offset-2 hover:underline">
-                  {d.locationName || strings.event.locationTBD}
-                </span>
+                <HiOutlineMapPin className="h-4 w-4" />
+                <span>{d.locationName || strings.event.locationTBD}</span>
+                <HiOutlineArrowTopRightOnSquare className="h-3.5 w-3.5" />
               </a>
             ) : (
               <span className="flex items-center gap-1.5">
