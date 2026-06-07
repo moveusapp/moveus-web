@@ -129,6 +129,11 @@ function SurveyRunner<TVars extends AnyVars>({ survey }: Props<TVars>) {
     setIndex((i) => Math.max(0, i - 1));
   };
 
+  const handleSkip = () => {
+    if (loading || !survey.onSkippedRoute) return;
+    navigate(survey.onSkippedRoute);
+  };
+
   useEffect(() => {
     if (submitError && errorRef.current) {
       errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -203,6 +208,19 @@ function SurveyRunner<TVars extends AnyVars>({ survey }: Props<TVars>) {
           )}
         </button>
       </div>
+
+      {survey.onSkippedRoute && (
+        <div className="flex justify-center mt-6">
+          <button
+            type="button"
+            onClick={handleSkip}
+            disabled={loading}
+            className="btn btn-link btn-sm text-base-content/60 hover:text-base-content no-underline hover:underline disabled:opacity-40"
+          >
+            {strings.survey.skipForNow}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
