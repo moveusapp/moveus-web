@@ -43,7 +43,6 @@ fragment ContextProfile on ProfileType{
   email
   emailVerified
   lastLogin
-  isCapeable
   lastName
   badge
   avatarUrl
