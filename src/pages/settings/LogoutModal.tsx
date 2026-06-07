@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
 import { apolloClient } from "@/apollo/client";
@@ -37,7 +38,12 @@ function LogoutModal({ open, onClose }: LogoutModalProps) {
       .catch((_) => {});
   };
 
-  return (
+  // Rendered through a portal to document.body so the fixed-position modal
+  // isn't trapped by an ancestor that establishes a containing block (e.g. the
+  // backdrop-blurred PageHeader the MobileMenuDrawer lives in), which would
+  // otherwise position/animate it relative to that ancestor instead of the
+  // viewport.
+  return createPortal(
     <dialog ref={dialogRef} className="modal" onClose={onClose}>
       <div className="modal-box">
         <h3 className="font-bold text-lg">
@@ -65,7 +71,8 @@ function LogoutModal({ open, onClose }: LogoutModalProps) {
       <form method="dialog" className="modal-backdrop">
         <button>close</button>
       </form>
-    </dialog>
+    </dialog>,
+    document.body,
   );
 }
 

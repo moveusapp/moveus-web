@@ -99,7 +99,7 @@ function MobileMenuDrawer({ open, onClose }: MobileMenuDrawerProps) {
         <div
           onClick={onClose}
           aria-hidden="true"
-          className="absolute inset-0 bg-base-content/40 transition-opacity duration-300 ease-out motion-reduce:transition-none"
+          className="absolute inset-0 bg-black/40 transition-opacity duration-300 ease-out motion-reduce:transition-none"
           style={{ opacity: shown ? 1 : 0 }}
         />
 
