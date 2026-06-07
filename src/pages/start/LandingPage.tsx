@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client/react";
 import { HiArrowLeft, HiArrowRight, HiBeaker } from "react-icons/hi2";
-import SocialLinks from "@/components/misc/SocialLinks";
+import SiteFooter from "@/components/misc/SiteFooter";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
 import "./landing.css";
 import EventCard from "@/components/event/EventCard";
@@ -362,19 +362,7 @@ function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-base-200 border-t border-base-300">
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-8 flex flex-col items-center gap-5 text-sm text-base-content/60 sm:grid sm:grid-cols-3 sm:gap-4">
-          <img src={moveusLogo} alt={strings.common.brand} className="h-7 sm:justify-self-start" />
-          <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-self-center">
-            <Link to="/about" className="hover:text-primary transition-colors">{strings.footer.about}</Link>
-            <Link to="/contact" className="hover:text-primary transition-colors">{strings.landing.footerContact}</Link>
-            <Link to="/privacy" className="hover:text-primary transition-colors">{strings.footer.privacy}</Link>
-            <Link to="/terms" className="hover:text-primary transition-colors">{strings.footer.terms}</Link>
-            <SocialLinks />
-          </nav>
-          <p className="sm:justify-self-end">{strings.footer.copy}</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

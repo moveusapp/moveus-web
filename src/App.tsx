@@ -26,6 +26,7 @@ const CalendarPage = lazy(() => import("./pages/calendar/CalendarPage"));
 const PostPage = lazy(() => import("./pages/post/PostPage"));
 const InfoPageLayout = lazy(() => import("./pages/info/InfoPageLayout"));
 const AboutPage = lazy(() => import("./pages/info/AboutPage"));
+const HelpPage = lazy(() => import("./pages/info/HelpPage"));
 const TermsPage = lazy(() => import("./pages/info/TermsPage"));
 const PrivacyPage = lazy(() => import("./pages/info/PrivacyPage"));
 const CookiesPage = lazy(() => import("./pages/info/CookiesPage"));
@@ -39,6 +40,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route element={<InfoPageLayout />}>
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/help" element={<HelpPage />} />
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/cookies" element={<CookiesPage />} />

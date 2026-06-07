@@ -17,10 +17,11 @@
     "searchPlaceholder": "Search events, people, posts..."
   },
   "footer": {
+    "about": "About",
+    "help": "Help",
     "terms": "Terms",
     "privacy": "Privacy",
     "cookies": "Cookies",
-    "about": "About",
     "twitter": "MoveUs on X",
     "instagram": "MoveUs on Instagram",
     "copy": "MoveUs j.d.o.o. 2026"
@@ -42,6 +43,52 @@
       "valueTwoBody": "Turn a maybe into a plan. Events, times, places, no endless back-and-forth.",
       "valueThreeTitle": "Keep showing up",
       "valueThreeBody": "Streaks, reminders and a crew that notices when you skip leg day."
+    },
+    "help": {
+      "documentTitle": "Help",
+      "eyebrow": "Help & contact",
+      "title": "How can we help?",
+      "lede": "Answers to the questions we hear most. If yours isn't here, we're one email away.",
+      "faqs": [
+        {
+          "q": "Is MoveUs free?",
+          "a": "Yes, and the core of MoveUs will always be free. If we ever add paid extras down the line, the essentials stay free for everyone."
+        },
+        {
+          "q": "How do I find events near me?",
+          "a": "Allow location access and your home feed fills up with events happening nearby. You can also search for a specific sport or spot."
+        },
+        {
+          "q": "Is MoveUs available in my city?",
+          "a": "We're growing city by city during the beta. Allow location and you'll see what's already happening nearby; if it's quiet, be the one who kicks it off."
+        },
+        {
+          "q": "Do I have to organize events, or can I just join?",
+          "a": "Whatever suits you. Browse and join events other people have set up, or create your own and invite the crowd."
+        },
+        {
+          "q": "Do I need to be fit or experienced to join?",
+          "a": "Not even a little. MoveUs is for every level. Organizers usually note the pace, so you can pick something that fits and build from there."
+        },
+        {
+          "q": "How do I change or delete my account?",
+          "a": "Head to Settings for your account options. If you can't find what you need, email us and we'll sort it out."
+        },
+        {
+          "q": "How can I get verified?",
+          "a": "Verification is handled by hand for now. Email us at contact@moveusapp.com with a bit about who you are, and we'll take it from there."
+        },
+        {
+          "q": "What's with the duck?",
+          "a": "That's your workout wingman. It's here to nudge you off the couch and into the game."
+        },
+        {
+          "q": "I found a bug or have an idea. Where do I send it?",
+          "a": "Straight to our inbox below. Beta feedback genuinely shapes what we build next, so don't be shy."
+        }
+      ],
+      "contactTitle": "Still stuck?",
+      "contactBody": "We're a small team, so a reply might take a little while, but every message reaches a real person. Drop us a line:"
     }
   },
   "user": {
@@ -811,8 +858,7 @@
     "nextEvents": "Next events",
     "seeAllEvents": "See all events",
     "finalCtaHeadline": "The duck is waiting.",
-    "finalCtaBody": "Free while we're in beta. Sign up and stop ghosting your gym routine.",
-    "footerContact": "Contact"
+    "finalCtaBody": "Free to join, and the basics always will be. Sign up and stop ghosting your gym routine."
   },
   "welcome": {
     "documentTitle": "Welcome to MoveUs",

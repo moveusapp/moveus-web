@@ -17,10 +17,11 @@
     "searchPlaceholder": "Pretraži događaje, ljude, objave..."
   },
   "footer": {
+    "about": "O nama",
+    "help": "Pomoć",
     "terms": "Uvjeti",
     "privacy": "Privatnost",
     "cookies": "Kolačići",
-    "about": "O nama",
     "twitter": "MoveUs na X-u",
     "instagram": "MoveUs na Instagramu",
     "copy": "MoveUs j.d.o.o. 2026"
@@ -42,6 +43,52 @@
       "valueTwoBody": "Pretvori 'možda' u plan. Događaji, vremena, mjesta, bez beskonačnog dogovaranja.",
       "valueThreeTitle": "Nastavi se pojavljivati",
       "valueThreeBody": "Nizovi, podsjetnici i ekipa koja primijeti kad preskočiš dan nogu."
+    },
+    "help": {
+      "documentTitle": "Pomoć",
+      "eyebrow": "Pomoć i kontakt",
+      "title": "Kako ti možemo pomoći?",
+      "lede": "Odgovori na pitanja koja najčešće čujemo. Ako tvog nema, samo nam pošalji e-mail.",
+      "faqs": [
+        {
+          "q": "Je li MoveUs besplatan?",
+          "a": "Da, i srž MoveUsa uvijek će biti besplatna. Ako jednog dana dodamo plaćene dodatke, osnovno ostaje besplatno za sve."
+        },
+        {
+          "q": "Kako pronalazim događaje u blizini?",
+          "a": "Dopusti pristup lokaciji i tvoj se početni feed napuni događajima u blizini. Možeš i pretražiti određeni sport ili lokaciju."
+        },
+        {
+          "q": "Je li MoveUs dostupan u mom gradu?",
+          "a": "Rastemo grad po grad tijekom bete. Dopusti lokaciju i vidjet ćeš što se već događa u blizini; ako je mirno, budi taj koji će pokrenuti stvar."
+        },
+        {
+          "q": "Moram li organizirati događaje ili se mogu samo pridružiti?",
+          "a": "Kako ti odgovara. Pregledavaj i pridruži se događajima koje su drugi postavili ili stvori vlastiti i pozovi ekipu."
+        },
+        {
+          "q": "Moram li biti u formi ili iskusan da se pridružim?",
+          "a": "Ni najmanje. MoveUs je za sve razine. Organizatori obično navedu tempo pa možeš izabrati ono što ti odgovara i graditi od tamo."
+        },
+        {
+          "q": "Kako promijenim ili izbrišem račun?",
+          "a": "Otvori Postavke za opcije računa. Ako ne nađeš što trebaš, pošalji nam e-mail i riješit ćemo."
+        },
+        {
+          "q": "Kako se mogu verificirati?",
+          "a": "Verifikaciju za sada radimo ručno. Pošalji nam e-mail na contact@moveusapp.com s nekoliko riječi o sebi i krećemo od tamo."
+        },
+        {
+          "q": "Što je s patkom?",
+          "a": "To je tvoj partner za trening. Tu je da te digne s kauča i ubaci u igru."
+        },
+        {
+          "q": "Našao sam grešku ili imam ideju. Kamo to poslati?",
+          "a": "Ravno u naš inbox ispod. Povratne informacije iz bete stvarno oblikuju što gradimo sljedeće, pa ne budi sramežljiv."
+        }
+      ],
+      "contactTitle": "Još si zapeo?",
+      "contactBody": "Mali smo tim pa odgovor može malo potrajati, ali svaka poruka stigne do prave osobe. Piši nam:"
     }
   },
   "user": {
@@ -811,8 +858,7 @@
     "nextEvents": "Sljedeći događaji",
     "seeAllEvents": "Pogledaj sve događaje",
     "finalCtaHeadline": "Patka te čeka.",
-    "finalCtaBody": "Besplatno je dok smo u beti. Prijavi se i prestani preskakati odlazak u teretanu.",
-    "footerContact": "Kontakt"
+    "finalCtaBody": "Besplatno za pridruživanje, a osnovno uvijek i ostaje. Prijavi se i prestani preskakati odlazak u teretanu."
   },
   "welcome": {
     "documentTitle": "Dobrodošli u MoveUs",

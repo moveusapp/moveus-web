@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { HiArrowLeft } from "react-icons/hi2";
-import SocialLinks from "@/components/misc/SocialLinks";
+import SiteFooter from "@/components/misc/SiteFooter";
 import moveusLogo from "@/assets/logos/moveus-logo.svg";
 import strings from "@/translations/strings";
 import "./info.css";
@@ -23,7 +23,7 @@ function InfoPageLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-base-100">
       <header className="sticky top-0 z-40 border-b border-base-content/8 bg-base-100/85 backdrop-blur-md">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
+        <div className="mx-auto max-w-6xl px-6 sm:px-10 lg:px-8 h-14 flex items-center gap-3">
           <button
             type="button"
             onClick={goBack}
@@ -51,21 +51,7 @@ function InfoPageLayout() {
         <Outlet />
       </main>
 
-      <footer className="bg-base-200 border-t border-base-300">
-        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-8 flex flex-col items-center gap-5 text-sm text-base-content/60 sm:grid sm:grid-cols-3 sm:gap-4">
-          <Link to="/" className="sm:justify-self-start">
-            <img src={moveusLogo} alt={strings.common.brand} className="h-7" />
-          </Link>
-          <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-self-center">
-            <Link to="/about" className="hover:text-primary transition-colors">{strings.footer.about}</Link>
-            <Link to="/terms" className="hover:text-primary transition-colors">{strings.footer.terms}</Link>
-            <Link to="/privacy" className="hover:text-primary transition-colors">{strings.footer.privacy}</Link>
-            <Link to="/cookies" className="hover:text-primary transition-colors">{strings.footer.cookies}</Link>
-            <SocialLinks />
-          </nav>
-          <p className="sm:justify-self-end">{strings.footer.copy}</p>
-        </div>
-      </footer>
+      <SiteFooter gutterClassName="px-6 sm:px-10 lg:px-8" />
     </div>
   );
 }

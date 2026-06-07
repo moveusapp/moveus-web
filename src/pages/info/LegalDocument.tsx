@@ -31,7 +31,7 @@ function LegalDocument({
         containerClassName="max-w-6xl px-6 sm:px-10 lg:px-8"
       />
 
-      <div className="mx-auto max-w-6xl px-6 sm:px-10 lg:px-8 pt-12 sm:pt-14 pb-20">
+      <div className="mx-auto max-w-6xl px-6 sm:px-10 lg:px-8 pt-14 sm:pt-16 pb-20">
         <div className="lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-12">
           {/* ── Table of contents ── */}
           <aside className="lg:sticky lg:top-20 lg:self-start mb-8 lg:mb-0">

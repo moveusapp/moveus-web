@@ -20,11 +20,11 @@ function InfoHero({
   title,
   lede,
   meta,
-  containerClassName = "max-w-3xl px-6 sm:px-8",
+  containerClassName = "max-w-3xl px-6 sm:px-10",
 }: InfoHeroProps) {
   return (
     <header className="border-b border-base-300">
-      <div className={`mx-auto ${containerClassName} pt-16 pb-10 sm:pt-20 sm:pb-12`}>
+      <div className={`mx-auto ${containerClassName} pt-12 pb-8 sm:pt-16 sm:pb-10`}>
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-base-content/45">
           {eyebrow}
         </p>

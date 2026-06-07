@@ -16,7 +16,7 @@ function AboutPage() {
     <>
       <InfoHero eyebrow={t.eyebrow} title={t.title} lede={t.lede} />
 
-      <div className="mx-auto max-w-3xl px-6 sm:px-8 py-14 sm:py-16">
+      <div className="mx-auto max-w-3xl px-6 sm:px-10 py-14 sm:py-16">
         {/* Lead */}
         <section className="info-prose max-w-none">
           <p className="text-lg leading-relaxed text-base-content/80">
