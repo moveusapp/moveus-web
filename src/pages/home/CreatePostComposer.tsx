@@ -25,7 +25,7 @@ function CreatePostComposer() {
         {profile?.id != null && (
           <UserAvatar imageUrl={profile.avatarUrl} className="h-10 w-10 shrink-0" />
         )}
-        <span className="flex-1 truncate text-sm text-base-content/60 transition-colors group-hover:text-base-content">
+        <span className="flex-1 truncate text-sm text-base-content/70 transition-colors group-hover:text-base-content">
           {prompt}
         </span>
         <HiOutlinePencilSquare className="h-5 w-5 shrink-0 text-base-content/40 transition-colors group-hover:text-primary" />

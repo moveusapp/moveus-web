@@ -22,7 +22,7 @@ function PreferencesReminder() {
       <button
         type="button"
         onClick={dismiss}
-        className="btn btn-xs btn-circle btn-ghost absolute right-2.5 top-2.5 text-base-content/50"
+        className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-base-content/60"
         aria-label={strings.home.dismissPreferencesAria}
       >
         <HiXMark className="h-4 w-4" />
@@ -39,7 +39,7 @@ function PreferencesReminder() {
           <h2 className="text-base font-bold leading-snug text-base-content text-balance">
             {strings.home.preferencesTitle}
           </h2>
-          <p className="mt-0.5 text-sm text-base-content/60">
+          <p className="mt-0.5 text-sm text-base-content/70">
             {strings.home.preferencesBody}
           </p>
         </div>

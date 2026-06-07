@@ -680,10 +680,10 @@
   },
   "profile": {
     "loading": "Loading...",
-    "userNotFound": "No user with username '{username}' found.",
-    "editProfile": "Edit Profile",
+    "userNotFound": "We couldn't find anyone with the username {username}.",
+    "editProfile": "Edit profile",
     "messageAria": "Message {name}",
-    "noBio": "No written bio.",
+    "noBio": "No bio yet.",
     "yearsOld": "{age} years old",
     "followers": "Followers",
     "following": "Following",
@@ -784,7 +784,7 @@
     "tabEvents": "Events",
     "tabPeople": "People",
     "tabPosts": "Posts",
-    "noResults": "No results for query '{query}'"
+    "noResults": "No results for '{query}'"
   },
   "home": {
     "documentTitle": "Home",

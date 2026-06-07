@@ -181,7 +181,7 @@ function EventPage() {
 
           <Link
             to={`/user/${event.organizer?.user.username}`}
-            className="flex items-center gap-2 group text-sm text-muted-foreground hover:text-foreground transition-colors mt-2"
+            className="flex items-center gap-2 group text-sm text-base-content/60 hover:text-base-content transition-colors mt-2"
           >
             <UserAvatar
               imageUrl={event.organizer?.user.avatarUrl}
@@ -189,14 +189,14 @@ function EventPage() {
             />
             <span className="flex items-center gap-1">
               {strings.event.page.hostedBy}{" "}
-              <span className="text-foreground font-medium group-hover:text-primary">
+              <span className="text-base-content font-medium group-hover:text-primary">
                 {d.organizerName}
               </span>
               <UserBadge badge={event.organizer?.user.badge} size={16} />
             </span>
           </Link>
 
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-muted-foreground mt-3 lg:hidden">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-base-content/60 mt-3 lg:hidden">
             <span className="flex items-center gap-1.5">
               <HiOutlineCalendarDays className="h-4 w-4 text-primary" />
               {formatDate(event.startTime)} • {formatTime(event.startTime)}
@@ -220,7 +220,7 @@ function EventPage() {
             )}
           </div>
 
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-4 text-sm leading-relaxed text-base-content/60">
             {event.description}
           </p>
 
@@ -300,14 +300,14 @@ function EventPage() {
 
             <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
               <HiOutlineCalendarDays className="h-5 w-5 text-primary shrink-0" />
-              <p className="text-sm font-medium text-foreground">
+              <p className="text-sm font-medium text-base-content">
                 {formatDate(event.startTime)} • {formatTime(event.startTime)}
               </p>
             </div>
 
             <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
               <HiOutlineMapPin className="h-5 w-5 text-primary shrink-0" />
-              <p className="text-sm font-medium text-foreground flex-1 min-w-0 truncate">
+              <p className="text-sm font-medium text-base-content flex-1 min-w-0 truncate">
                 {d.locationName || strings.event.locationTBD}
               </p>
               {d.mapsUrl && (
@@ -327,7 +327,7 @@ function EventPage() {
               <div className="flex items-center justify-between gap-1">
                 <div className="flex min-w-0 items-center gap-2">
                   <HiOutlineUsers className="h-5 w-5 shrink-0 text-primary" />
-                  <p className="text-sm font-medium text-foreground">
+                  <p className="text-sm font-medium text-base-content">
                     {strings.event.page.participants}
                   </p>
                   <span className="text-xs tabular-nums text-base-content/50">

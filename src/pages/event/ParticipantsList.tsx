@@ -40,7 +40,7 @@ function ParticipantsList({ event }: ParticipantsListProps) {
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-base-200 text-base-content/40">
           <HiOutlineUsers className="h-6 w-6" />
         </span>
-        <p className="text-sm font-medium text-foreground">{strings.event.page.noOneYet}</p>
+        <p className="text-sm font-medium text-base-content">{strings.event.page.noOneYet}</p>
         <p className="text-sm text-base-content/60">
           {strings.event.page.beFirstToJoin}
         </p>

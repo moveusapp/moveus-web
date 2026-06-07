@@ -53,7 +53,7 @@ function EmptyState({
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="text-base font-medium text-foreground">{title}</p>
+        <p className="text-base font-medium text-base-content">{title}</p>
         {description && (
           <p className="mt-1.5 text-sm text-base-content/60">{description}</p>
         )}

@@ -25,8 +25,13 @@ function HomePage() {
     variables: { start: 0, end: 50 },
   });
 
+  // A fixed, representative mix of the two feed item shapes. Deterministic so
+  // the placeholder doesn't reshuffle on every render.
   const skeletonTypes = useMemo(
-    () => Array.from({ length: 12 }, () => (Math.random() < 0.5 ? "event" : "post")),
+    () =>
+      Array.from({ length: 12 }, (_, i) =>
+        i % 3 === 1 ? "event" : "post",
+      ),
     [],
   );
   const { profile } = useProfile();

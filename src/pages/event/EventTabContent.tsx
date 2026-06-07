@@ -50,7 +50,7 @@ function EventTabContent({
           </div>
         ) : (
           <div className="flex flex-col items-center gap-1 rounded-2xl border border-base-300 bg-base-200 px-6 py-10 text-center">
-            <p className="text-sm font-medium text-foreground">
+            <p className="text-sm font-medium text-base-content">
               {strings.event.page.quietHere}
             </p>
             <p className="text-sm text-base-content/60">

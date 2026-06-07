@@ -680,10 +680,10 @@
   },
   "profile": {
     "loading": "Učitavanje...",
-    "userNotFound": "Korisnik s korisničkim imenom '{username}' nije pronađen.",
+    "userNotFound": "Nismo pronašli nikoga s korisničkim imenom {username}.",
     "editProfile": "Uredi profil",
     "messageAria": "Pošalji poruku korisniku {name}",
-    "noBio": "Nema biografije.",
+    "noBio": "Još nema biografije.",
     "yearsOld": "{age} god.",
     "followers": "Pratitelji",
     "following": "Prati",
@@ -784,7 +784,7 @@
     "tabEvents": "Događaji",
     "tabPeople": "Ljudi",
     "tabPosts": "Objave",
-    "noResults": "Nema rezultata za pretragu '{query}'"
+    "noResults": "Nema rezultata za '{query}'"
   },
   "home": {
     "documentTitle": "Početna",

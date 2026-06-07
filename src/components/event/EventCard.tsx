@@ -46,7 +46,7 @@ function EventCard({ event }: EventCardProps) {
   return (
     <Link
       to={`/event/${event.id}`}
-      className="bg-base-200 w-full rounded-2xl border border-base-300 hover:border-primary/20 transition-all duration-200 group p-2.5 flex flex-col gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="bg-base-200 w-full rounded-2xl border border-base-300 hover:border-primary/20 transition-all duration-200 group p-4 flex flex-col gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
       {/* Thumbnail */}
       <div className="relative w-full aspect-video overflow-hidden rounded-xl bg-base-300">
@@ -70,14 +70,14 @@ function EventCard({ event }: EventCardProps) {
       </div>
 
       {/* Title */}
-      <h2 className={`px-0.5 font-semibold text-lg line-clamp-1 transition-colors duration-200 ${titleClass}`}>
+      <h2 className={`font-semibold text-lg line-clamp-1 transition-colors duration-200 ${titleClass}`}>
         {event.title}
       </h2>
 
       {/* When & where */}
       <div
-        className={`px-0.5 flex flex-col gap-1 text-sm ${
-          isInactive ? "text-base-content/45" : "text-base-content/60"
+        className={`flex flex-col gap-1 text-sm ${
+          isInactive ? "text-base-content/55" : "text-base-content/70"
         }`}
       >
         <div className="flex items-center gap-2">
@@ -91,12 +91,12 @@ function EventCard({ event }: EventCardProps) {
       </div>
 
       {/* Footer: organizer + capacity */}
-      <div className="px-0.5 flex items-center justify-between gap-3 pt-1.5 border-t border-base-300">
+      <div className="flex items-center justify-between gap-3 pt-1.5 border-t border-base-300">
         <div className="flex items-center gap-2 min-w-0">
           <UserAvatar imageUrl={event.organizer?.user.avatarUrl} className="w-6 h-6 shrink-0" />
           <div className="min-w-0 flex items-center gap-1">
-            <span className="text-xs text-muted-foreground">{strings.event.hostedBy}</span>
-            <span className="text-xs font-medium text-foreground truncate">{organizerName}</span>
+            <span className="text-xs text-base-content/70">{strings.event.hostedBy}</span>
+            <span className="text-xs font-medium text-base-content truncate">{organizerName}</span>
             <UserBadge badge={event.organizer?.user.badge} size={16} />
           </div>
         </div>

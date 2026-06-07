@@ -75,7 +75,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
             : ""
         }`}
       >
-        <div className="p-5 space-y-4">
+        <div className="p-4 space-y-4">
           <div className="flex items-start justify-between gap-3">
             <Link
               to={`/user/${post?.author?.username}`}
@@ -92,19 +92,19 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
                   </span>
                   <UserBadge badge={post?.author?.badge} size={16} />
                 </div>
-                <span className="text-xs text-base-content/60 truncate">
+                <span className="text-xs text-base-content/70 truncate">
                   @{post?.author?.username}
                 </span>
               </div>
             </Link>
 
-            <span className="text-xs text-base-content/60 whitespace-nowrap flex-shrink-0">
+            <span className="text-xs text-base-content/70 whitespace-nowrap flex-shrink-0">
               {timeAgo(post.timePosted)}
             </span>
           </div>
 
           {post.content && (
-            <p className="text-sm text-base-content/80 leading-relaxed">
+            <p className="text-sm text-base-content/80 leading-relaxed break-words">
               {post.content}
             </p>
           )}
@@ -140,7 +140,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
               onClick={handleLike}
               aria-label={liked ? strings.post.unlike : strings.post.like}
               aria-pressed={liked}
-              className="flex items-center gap-1.5 text-sm text-base-content/60 hover:text-error transition-colors"
+              className="flex items-center gap-1.5 py-1 -my-1 text-sm text-base-content/70 hover:text-error transition-colors"
             >
               {liked ? (
                 <HiHeart className="w-5 h-5 text-error" />
@@ -149,7 +149,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
               )}
               {likeCount > 0 && <span>{likeCount}</span>}
             </button>
-            <span className="flex items-center gap-1.5 text-sm text-base-content/60">
+            <span className="flex items-center gap-1.5 text-sm text-base-content/70">
               <HiOutlineChatBubbleLeft className="w-5 h-5" />
               {commentCount > 0 && <span>{commentCount}</span>}
             </span>

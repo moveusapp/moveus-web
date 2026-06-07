@@ -42,7 +42,7 @@ export function deriveEventState(event: Event) {
     ? "text-base-content/60 line-through decoration-error/50 decoration-2"
     : isFinished
       ? "text-base-content/80"
-      : "text-foreground";
+      : "text-base-content";
 
   const role = event.role ?? null;
   const isOrganizer = role === MemberRole.Organizer;

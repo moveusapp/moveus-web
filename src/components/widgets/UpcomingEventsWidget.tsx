@@ -101,7 +101,7 @@ function EventRow({
         <p className="text-sm font-medium text-base-content line-clamp-1 group-hover:text-primary transition-colors duration-200">
           {event.title}
         </p>
-        <p className="text-xs text-base-content/55 truncate">
+        <p className="text-xs text-base-content/70 truncate">
           {when} · {formatTime(start)} · {place}
         </p>
       </div>
@@ -133,7 +133,7 @@ function EmptyRail() {
         className="shrink-0 -rotate-6 text-base-content/30"
         aria-hidden
       />
-      <p className="text-sm text-base-content/55">
+      <p className="text-sm text-base-content/70">
         {strings.widgets.comingUpEmptyCta}
       </p>
     </div>

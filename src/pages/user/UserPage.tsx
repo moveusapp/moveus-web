@@ -177,7 +177,7 @@ function UserPage() {
 
   return (
     <div className="flex flex-col m-4 gap-2">
-      <div className="bg-base-200 rounded-2xl border border-base-300 p-5">
+      <div className="bg-base-200 rounded-2xl border border-base-300 p-5 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
           <div className="flex flex-row items-center gap-4 min-w-0 grow">
             <UserAvatar
@@ -191,7 +191,7 @@ function UserPage() {
                 <UserBadge badge={user.badge} size={22} />
               </div>
 
-              <p className="text-sm text-base-content/60 truncate">
+              <p className="text-sm text-base-content/70 truncate">
                 @{user.username}
               </p>
             </div>
@@ -231,16 +231,16 @@ function UserPage() {
           )}
         </div>
 
-        <p className="mt-4 max-w-prose text-sm leading-relaxed text-base-content/90">
+        <p className="mt-5 max-w-prose text-sm leading-relaxed text-base-content/90 break-words">
           {isBioEmpty() ? (
-            <span className="italic text-base-content/50">{strings.profile.noBio}</span>
+            <span className="italic text-base-content/60">{strings.profile.noBio}</span>
           ) : (
             user.bio
           )}
         </p>
 
         {facts.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
             {facts.map(({ icon: Icon, label }) => (
               <span
                 key={label}
@@ -254,13 +254,13 @@ function UserPage() {
         )}
 
         {showFollowers && (
-          <div className="mt-4 pt-4 border-t border-base-300 flex flex-row items-center gap-5 text-sm">
+          <div className="mt-5 pt-5 border-t border-base-300 flex flex-row items-center gap-6 text-sm">
             {user.followerCount != null && (
               <span>
                 <span className="font-bold text-base-content">
                   {user.followerCount}
                 </span>{" "}
-                <span className="text-base-content/60">{strings.profile.followers}</span>
+                <span className="text-base-content/70">{strings.profile.followers}</span>
               </span>
             )}
             {user.followingCount != null && (
@@ -268,7 +268,7 @@ function UserPage() {
                 <span className="font-bold text-base-content">
                   {user.followingCount}
                 </span>{" "}
-                <span className="text-base-content/60">{strings.profile.following}</span>
+                <span className="text-base-content/70">{strings.profile.following}</span>
               </span>
             )}
           </div>

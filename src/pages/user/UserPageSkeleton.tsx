@@ -3,7 +3,7 @@ import PostCardSkeleton from "@/components/post/PostCardSkeleton";
 function UserPageSkeleton() {
   return (
     <div className="flex flex-col m-4 gap-2">
-      <div className="bg-base-200 rounded-2xl border border-base-300 p-5">
+      <div className="bg-base-200 rounded-2xl border border-base-300 p-5 sm:p-6">
         <div className="flex flex-row items-center gap-4">
           <div className="skeleton rounded-full w-20 h-20 flex-shrink-0"/>
 

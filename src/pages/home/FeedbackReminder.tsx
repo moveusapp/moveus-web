@@ -76,14 +76,14 @@ function FeedbackReminder() {
               </Link>
               ?
             </h2>
-            <p className="text-sm text-base-content/60">
+            <p className="text-sm text-base-content/70">
               {strings.formatString(strings.home.feedbackWrappedUp, { time: timeAgo(event.endTime) })}
             </p>
           </div>
           <button
             type="button"
             onClick={dismiss}
-            className="btn btn-xs btn-circle btn-ghost shrink-0 text-base-content/50"
+            className="btn btn-sm btn-circle btn-ghost shrink-0 text-base-content/60"
             aria-label={strings.home.dismissFeedbackAria}
           >
             <HiXMark className="h-4 w-4" />
@@ -95,7 +95,7 @@ function FeedbackReminder() {
         </div>
 
         {queue.length > 1 && (
-          <p className="mt-2 text-right text-xs font-medium text-base-content/45">
+          <p className="mt-2 text-right text-xs font-medium text-base-content/70">
             {strings.formatString(strings.home.queueProgress, { index: index + 1, total: queue.length })}
           </p>
         )}

@@ -12,7 +12,7 @@ function SingleChoice<T>({
           onClick={() => setValue(option.value)}
           className={
             "text-left px-6 " +
-            (option.value === value ? "" : "text-foreground bg-block")
+            (option.value === value ? "" : "text-base-content bg-base-200")
           }
         >
           {option.name}

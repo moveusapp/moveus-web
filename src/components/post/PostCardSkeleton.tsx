@@ -1,7 +1,7 @@
 function PostCardSkeleton() {
   return (
     <article className="bg-base-200 w-full rounded-2xl border border-base-300 overflow-hidden">
-      <div className="p-5 space-y-4">
+      <div className="p-4 space-y-4">
         {/* Author row */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3 flex-1 min-w-0">

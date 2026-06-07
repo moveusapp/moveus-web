@@ -23,7 +23,7 @@ function EventScore({ score }: EventScoreProps) {
     >
       <RatingBadge score={index} size="md" />
       <p className="flex items-baseline gap-2 text-lg font-bold">
-        <span className="text-foreground">{word}</span>
+        <span className="text-base-content">{word}</span>
         <span className="tabular-nums text-primary">
           {score.toFixed(1)}
           <span className="text-sm font-bold text-base-content/40"> {strings.event.page.outOf5}</span>

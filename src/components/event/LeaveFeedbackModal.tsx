@@ -94,7 +94,7 @@ function LeaveFeedbackModal({
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           {/* Rating — the focal ritual */}
           <div className="text-center">
-            <h3 className="text-xl font-bold text-foreground">{strings.event.feedback.howWasIt}</h3>
+            <h3 className="text-xl font-bold text-base-content">{strings.event.feedback.howWasIt}</h3>
             <p className="mx-auto mt-1.5 max-w-xs text-sm text-base-content/60">
               {strings.event.feedback.helpsOrganizer}
             </p>
