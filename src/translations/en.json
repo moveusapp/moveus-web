@@ -25,6 +25,7 @@
     "terms": "Terms",
     "privacy": "Privacy",
     "cookies": "Cookies",
+    "youtube": "MoveUs on YouTube",
     "twitter": "MoveUs on X",
     "instagram": "MoveUs on Instagram",
     "copy": "MoveUs j.d.o.o. 2026"
@@ -486,6 +487,18 @@
     "changeCoverImage": "Change",
     "removeCoverImageAria": "Remove cover photo",
     "coverImagePreviewAlt": "Cover photo preview",
+    "form": {
+      "basicsTitle": "Basics",
+      "basicsDesc": "Name your event and tell people what to expect.",
+      "whenTitle": "Date & time",
+      "whenDesc": "When are you meeting up?",
+      "detailsTitle": "Activity & place",
+      "detailsDesc": "What you're doing and where.",
+      "whoTitle": "Who can join",
+      "whoDesc": "Set the limits, or leave them open to welcome everyone.",
+      "whoDescEdit": "Adjust how many people can join.",
+      "coverDesc": "Give your event a face. It shows on cards and the event page."
+    },
     "validation": {
       "needTitle": "Give your event a title.",
       "needStart": "Pick a start date and time.",
@@ -511,6 +524,7 @@
     "thumbnailAlt": "{title} event thumbnail",
     "locationTBD": "Location TBD",
     "hostedBy": "Hosted by",
+    "hosting": "Hosting an event",
     "full": "Full",
     "spotLeft": "{count} spot left",
     "spotsLeft": "{count} spots left",

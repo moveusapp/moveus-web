@@ -1,22 +1,26 @@
 import EventCardSkeleton from "@/components/event/EventCardSkeleton";
+import PageHeader from "@/components/layout/PageHeader";
+import strings from "@/translations/strings";
 
 function CalendarPageSkeleton() {
   return (
     <div className="h-full overflow-y-auto">
-      <div className="sticky top-0 z-20 flex items-center justify-between gap-3 flex-wrap px-4 sm:px-6 pt-4 sm:pt-5 pb-3 bg-base-100/85 backdrop-blur-md border-b border-base-content/8">
-        <div className="skeleton h-8 w-32" />
-        <div className="flex items-center gap-2 ml-auto">
-          <div className="skeleton h-9 w-9 rounded-full" />
-          <div className="skeleton h-6 w-40" />
-          <div className="skeleton h-9 w-9 rounded-full" />
-          <div className="skeleton h-8 w-20 rounded-full" />
-        </div>
-      </div>
+      <PageHeader
+        title={strings.calendar.title}
+        actions={
+          <div className="flex items-center gap-2">
+            <div className="skeleton h-9 w-9 rounded-full" />
+            <div className="skeleton h-6 w-40" />
+            <div className="skeleton h-9 w-9 rounded-full" />
+            <div className="skeleton h-8 w-20 rounded-full" />
+          </div>
+        }
+      />
 
       <div className="px-4 sm:px-6 pt-3 pb-2">
-        <div className="h-[calc(100dvh-220px)]">
+        <div className="h-[calc(100dvh-220px)] overflow-hidden rounded-2xl border border-base-300">
           <div
-            className="grid gap-px bg-base-content/8 h-full"
+            className="grid gap-px bg-base-300 h-full"
             style={{
               gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
               gridTemplateRows: "auto repeat(6, minmax(0, 1fr))",
@@ -25,7 +29,7 @@ function CalendarPageSkeleton() {
             {Array.from({ length: 7 }).map((_, i) => (
               <div
                 key={`h-${i}`}
-                className="bg-base-200/70 py-2 flex justify-center"
+                className="bg-base-200 py-2 flex justify-center"
               >
                 <div className="skeleton h-3 w-6" />
               </div>

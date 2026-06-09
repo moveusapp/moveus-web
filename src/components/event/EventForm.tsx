@@ -1,6 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { HiArrowRight, HiCheck } from "react-icons/hi";
-import { HiPhoto, HiXMark } from "react-icons/hi2";
+import {
+  HiOutlinePencilSquare,
+  HiOutlineCalendarDays,
+  HiOutlineMapPin,
+  HiOutlineUsers,
+  HiOutlinePhoto,
+  HiPhoto,
+  HiXMark,
+} from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import { useImageSelect } from "@/hooks/use-image-select";
 import Button from "@/components/ui/Button";
@@ -8,11 +16,13 @@ import { formatError } from "@/utils/format-error";
 import TextInput from "@/components/ui/TextInput";
 import TextArea from "@/components/ui/TextArea";
 import Dropdown from "@/components/ui/Dropdown";
+import SingleChoice from "@/components/ui/SingleChoice";
 import LocationAutocomplete, {
   type LocationData,
 } from "@/components/ui/LocationAutocomplete";
 import MultiChoice from "@/components/ui/MultiChoice";
 import FormError from "@/components/ui/FormError";
+import FormSection from "@/components/ui/FormSection";
 import {
   ActivityKind,
   GenderNoPnts,
@@ -57,6 +67,12 @@ const EMPTY: EventFormValues = {
   allowSpectators: true,
   thumbnail: null,
 };
+
+function FieldGroupLabel({ children }: { children: ReactNode }) {
+  return (
+    <p className="mb-2 text-sm font-medium text-base-content/70">{children}</p>
+  );
+}
 
 type Props = {
   mode: "create" | "edit";
@@ -133,63 +149,81 @@ function EventForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="bg-base-200 border border-base-300 rounded-2xl p-6 space-y-6">
-        <TextInput
-          label={strings.event.title}
-          placeholder={strings.event.titlePlaceholder}
-          value={values.title}
-          onChange={(e) => set("title", e.target.value)}
-          required
-        />
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="space-y-8">
+        <FormSection
+          icon={HiOutlinePencilSquare}
+          title={strings.event.form.basicsTitle}
+          description={strings.event.form.basicsDesc}
+        >
+          <TextInput
+            label={strings.event.title}
+            placeholder={strings.event.titlePlaceholder}
+            value={values.title}
+            onChange={(e) => set("title", e.target.value)}
+            required
+          />
 
-        <TextArea
-          label={strings.event.description}
-          placeholder={strings.event.descriptionPlaceholder}
-          value={values.description}
-          onChange={(e) => set("description", e.target.value)}
-        />
+          <TextArea
+            label={strings.event.description}
+            placeholder={strings.event.descriptionPlaceholder}
+            value={values.description}
+            onChange={(e) => set("description", e.target.value)}
+          />
+        </FormSection>
 
-        <div>
-          <h3 className="text-sm font-medium mb-3">{strings.event.startTime}</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <TextInput
-              label={strings.event.date}
-              type="date"
-              value={values.startDate}
-              onChange={(e) => set("startDate", e.target.value)}
-              required
-            />
-            <TextInput
-              label={strings.event.time}
-              type="time"
-              value={values.startTime}
-              onChange={(e) => set("startTime", e.target.value)}
-              required
-            />
+        <FormSection
+          divided
+          icon={HiOutlineCalendarDays}
+          title={strings.event.form.whenTitle}
+          description={strings.event.form.whenDesc}
+        >
+          <div>
+            <FieldGroupLabel>{strings.event.startTime}</FieldGroupLabel>
+            <div className="grid grid-cols-2 gap-4">
+              <TextInput
+                label={strings.event.date}
+                type="date"
+                value={values.startDate}
+                onChange={(e) => set("startDate", e.target.value)}
+                required
+              />
+              <TextInput
+                label={strings.event.time}
+                type="time"
+                value={values.startTime}
+                onChange={(e) => set("startTime", e.target.value)}
+                required
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h3 className="text-sm font-medium mb-3">{strings.event.endTime}</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <TextInput
-              label={strings.event.date}
-              type="date"
-              value={values.endDate}
-              onChange={(e) => set("endDate", e.target.value)}
-            />
-            <TextInput
-              label={strings.event.time}
-              type="time"
-              value={values.endTime}
-              onChange={(e) => set("endTime", e.target.value)}
-            />
+          <div>
+            <FieldGroupLabel>{strings.event.endTime}</FieldGroupLabel>
+            <div className="grid grid-cols-2 gap-4">
+              <TextInput
+                label={strings.event.date}
+                type="date"
+                value={values.endDate}
+                onChange={(e) => set("endDate", e.target.value)}
+              />
+              <TextInput
+                label={strings.event.time}
+                type="time"
+                value={values.endTime}
+                onChange={(e) => set("endTime", e.target.value)}
+              />
+            </div>
           </div>
-        </div>
+        </FormSection>
 
         {isCreate && (
-          <>
+          <FormSection
+            divided
+            icon={HiOutlineMapPin}
+            title={strings.event.form.detailsTitle}
+            description={strings.event.form.detailsDesc}
+          >
             <Dropdown
               label={strings.event.activity}
               value={values.activity}
@@ -199,13 +233,12 @@ function EventForm({
               required
             />
 
-            <Dropdown
+            <SingleChoice
+              variant="chips"
               label={strings.event.skillLevel}
               value={values.skillLevel}
-              setValue={(v) => set("skillLevel", v as SkillLevel | null)}
+              setValue={(v) => set("skillLevel", v)}
               options={enumToOptions(SkillLevel, "enums.skillLevel")}
-              placeholder={strings.event.selectSkillLevel}
-              required
             />
 
             <LocationAutocomplete
@@ -215,79 +248,87 @@ function EventForm({
               onChange={(v) => set("location", v)}
               required
             />
-          </>
+          </FormSection>
         )}
 
-        <TextInput
-          label={strings.event.maxParticipants}
-          type="number"
-          placeholder={strings.event.maxParticipantsPlaceholder}
-          value={values.maxParticipants}
-          onChange={(e) => set("maxParticipants", e.target.value)}
-        />
+        <FormSection
+          divided
+          icon={HiOutlineUsers}
+          title={strings.event.form.whoTitle}
+          description={
+            isCreate
+              ? strings.event.form.whoDesc
+              : strings.event.form.whoDescEdit
+          }
+        >
+          <TextInput
+            label={strings.event.maxParticipants}
+            type="number"
+            placeholder={strings.event.maxParticipantsPlaceholder}
+            value={values.maxParticipants}
+            onChange={(e) => set("maxParticipants", e.target.value)}
+          />
 
-        {isCreate && (
-          <>
-            <div>
-              <h3 className="text-sm font-medium mb-3">
-                {strings.event.ageConstraints}
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                <TextInput
-                  label={strings.event.minAge}
-                  type="number"
-                  placeholder={strings.event.minAgePlaceholder}
-                  value={values.minAge}
-                  onChange={(e) => set("minAge", e.target.value)}
-                />
-                <TextInput
-                  label={strings.event.maxAge}
-                  type="number"
-                  placeholder={strings.event.maxAgePlaceholder}
-                  value={values.maxAge}
-                  onChange={(e) => set("maxAge", e.target.value)}
-                />
+          {isCreate && (
+            <>
+              <div>
+                <FieldGroupLabel>
+                  {strings.event.ageConstraints}
+                </FieldGroupLabel>
+                <div className="grid grid-cols-2 gap-4">
+                  <TextInput
+                    label={strings.event.minAge}
+                    type="number"
+                    placeholder={strings.event.minAgePlaceholder}
+                    value={values.minAge}
+                    onChange={(e) => set("minAge", e.target.value)}
+                  />
+                  <TextInput
+                    label={strings.event.maxAge}
+                    type="number"
+                    placeholder={strings.event.maxAgePlaceholder}
+                    value={values.maxAge}
+                    onChange={(e) => set("maxAge", e.target.value)}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div>
-              <h3 className="text-sm font-medium mb-3">
-                {strings.event.allowedGenders}{" "}
-                <span className="text-xs text-base-content/60">
-                  {strings.event.leaveEmptyAll}
-                </span>
-              </h3>
               <MultiChoice
+                label={strings.event.allowedGenders}
+                helperText={strings.event.leaveEmptyAll}
                 options={enumToOptions(GenderNoPnts, "enums.genderNoPnts")}
-                setValue={(v) => set("acceptedGenders", v as GenderNoPnts[])}
+                setValue={(v) => set("acceptedGenders", v)}
                 value={values.acceptedGenders}
               />
-            </div>
 
-            <label className="flex items-center justify-between hover:cursor-pointer">
-              <div>
-                <h3 className="text-sm font-medium">{strings.event.allowSpectators}</h3>
-                <p className="text-xs text-base-content/60">
-                  {strings.event.allowSpectatorsDesc}
-                </p>
-              </div>
-              <input
-                type="checkbox"
-                checked={values.allowSpectators}
-                className="checkbox"
-                onChange={(e) => set("allowSpectators", e.target.checked)}
-              />
-            </label>
-          </>
-        )}
+              <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-base-content/20 px-4 py-3 transition-colors hover:border-primary/40">
+                <div>
+                  <p className="text-sm font-medium">
+                    {strings.event.allowSpectators}
+                  </p>
+                  <p className="text-xs text-base-content/60">
+                    {strings.event.allowSpectatorsDesc}
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={values.allowSpectators}
+                  className="toggle toggle-primary shrink-0"
+                  onChange={(e) => set("allowSpectators", e.target.checked)}
+                />
+              </label>
+            </>
+          )}
+        </FormSection>
 
-        <div>
-          <label className="text-sm font-medium mb-2 block">
-            {strings.event.coverImage}
-          </label>
-
+        <FormSection
+          divided
+          icon={HiOutlinePhoto}
+          title={strings.event.coverImage}
+          description={strings.event.form.coverDesc}
+        >
           {thumbnailSrc ? (
-            <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-base-300">
+            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-base-300">
               <img
                 src={thumbnailSrc}
                 alt={strings.event.coverImagePreviewAlt}
@@ -319,9 +360,9 @@ function EventForm({
             <button
               type="button"
               onClick={() => thumbnailRef.current?.click()}
-              className="flex aspect-video w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-base-content/20 text-center transition hover:border-primary/50 hover:bg-base-100"
+              className="flex aspect-video w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-base-content/20 text-center transition-colors hover:border-primary/50 hover:bg-primary/5"
             >
-              <HiPhoto className="mb-2 h-8 w-8 text-base-content/40" />
+              <HiOutlinePhoto className="mb-2 h-8 w-8 text-base-content/40" />
               <span className="text-sm font-medium text-base-content/70">
                 {strings.event.addCoverImage}
               </span>
@@ -338,7 +379,7 @@ function EventForm({
             onChange={onThumbnailSelect}
             className="hidden"
           />
-        </div>
+        </FormSection>
       </div>
 
       {error && (
@@ -355,7 +396,7 @@ function EventForm({
         />
       )}
 
-      <div className="flex flex-row gap-2">
+      <div className="sticky bottom-0 z-10 -mx-4 flex gap-2 border-t border-base-300 bg-base-100/85 px-4 py-4 backdrop-blur-md sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-none">
         {cancelHref && (
           <Link to={cancelHref} className="btn btn-ghost rounded-2xl flex-1">
             {strings.common.cancel}

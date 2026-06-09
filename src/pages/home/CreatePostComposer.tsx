@@ -20,7 +20,7 @@ function CreatePostComposer() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="group flex w-full items-center gap-3 rounded-2xl border border-base-300 bg-base-200 px-4 py-3 text-left transition-colors hover:bg-base-300"
+        className="group flex w-full items-center gap-3 px-4 sm:px-5 py-4 text-left transition-colors hover:bg-base-200/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
       >
         {profile?.id != null && (
           <UserAvatar imageUrl={profile.avatarUrl} className="h-10 w-10 shrink-0" />

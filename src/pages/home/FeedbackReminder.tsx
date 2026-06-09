@@ -57,7 +57,7 @@ function FeedbackReminder() {
 
   return (
     <>
-      <section className="rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:p-5">
+      <section className="rounded-2xl bg-primary/5 p-4">
         <div className="flex items-start gap-3">
           <img
             src={duckHappy}

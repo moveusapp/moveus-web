@@ -1,7 +1,6 @@
 import useDocumentTitle from "@/hooks/use-document-title";
 import GlobalSearchWidget from "@/components/widgets/GlobalSearchWidget";
-import UpcomingEventsWidget from "@/components/widgets/UpcomingEventsWidget";
-import MainFooter from "@/components/misc/MainFooter";
+import RightRail from "@/components/layout/RightRail";
 import PageHeader, { HeaderAvatar } from "@/components/layout/PageHeader";
 import { SearchItemsDocument } from "@/graphql/graphql-types";
 import { useLazyQuery } from "@apollo/client/react";
@@ -83,58 +82,59 @@ function SearchPage() {
             className="pt-3"
           />
         </PageHeader>
-        <div className="flex flex-col items-center gap-2 w-full mx-auto p-4 max-w-[700px]">
+        <div className="w-full mx-auto max-w-[600px]">
           {searchLoading ? (
-            <div className="loading loading-dots text-primary" />
+            <div className="flex justify-center p-8">
+              <span className="loading loading-dots text-primary" />
+            </div>
+          ) : hasResults() ? (
+            <div className="divide-y divide-base-300">
+              {searchData?.search?.map((item) => {
+                if (!canCreateCard(item?.__typename!)) {
+                  return;
+                }
+                switch (item?.__typename) {
+                  case "UserType":
+                    return (
+                      <UserCard
+                        key={`user-${item.id}`}
+                        user={item}
+                        isSelf={item.id === profile?.id}
+                      />
+                    );
+
+                  case "EventType":
+                    return (
+                      <EventCard
+                        key={`event-${item.id}`}
+                        event={item}
+                        variant="feed"
+                      />
+                    );
+
+                  case "PostType":
+                    return (
+                      <PostCard
+                        key={`post-${item.id}`}
+                        post={item}
+                        variant="feed"
+                      />
+                    );
+                }
+                return null;
+              })}
+            </div>
           ) : (
-            <>
-              {hasResults() ? (
-                <>
-                  {searchData?.search?.map((item) => {
-                    if (!canCreateCard(item?.__typename!)) {
-                      return;
-                    }
-                    switch (item?.__typename) {
-                      case "UserType":
-                        return (
-                          <UserCard
-                            key={`user-${item.id}`}
-                            user={item}
-                            isSelf={item.id === profile?.id}
-                          />
-                        );
-
-                      case "EventType":
-                        return (
-                          <EventCard key={`event-${item.id}`} event={item} />
-                        );
-
-                      case "PostType":
-                        return <PostCard key={`post-${item.id}`} post={item} />;
-                    }
-                    return <></>;
-                  })}
-                </>
-              ) : (
-                <>
-                  <p className="text-sm text-base-content/70">
-                    {searchParams.get("q") &&
-                      (strings.formatString(strings.search.noResults, {
-                        query: searchParams.get("q") ?? "",
-                      }) as string)}
-                  </p>
-                </>
-              )}
-            </>
+            <p className="p-4 text-sm text-base-content/70">
+              {searchParams.get("q") &&
+                (strings.formatString(strings.search.noResults, {
+                  query: searchParams.get("q") ?? "",
+                }) as string)}
+            </p>
           )}
         </div>
       </div>
-      <aside className="hidden lg:block lg:w-[280px] xl:w-[330px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto">
-        <div className="flex flex-col py-4 pr-4 gap-2">
-          <UpcomingEventsWidget />
-          <MainFooter />
-        </div>
-      </aside>
+      <RightRail showSearch={false} />
     </div>
   );
 }

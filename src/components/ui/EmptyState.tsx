@@ -15,22 +15,22 @@ type Props = {
   className?: string;
 };
 
-const variantStyles: Record<Variant, { bubble: string; icon: string }> = {
-  info: {
-    bubble: "bg-base-300",
-    icon: "text-base-content/60",
-  },
-  error: {
-    bubble: "bg-error/10",
-    icon: "text-error",
-  },
+const bubbleStyles: Record<Variant, string> = {
+  info: "bg-base-200 text-base-content/40",
+  error: "bg-error/10 text-error",
 };
 
 const defaultIcon: Record<Variant, ReactNode> = {
-  info: <HiOutlineSparkles className="h-5 w-5" />,
-  error: <HiOutlineExclamationTriangle className="h-5 w-5" />,
+  info: <HiOutlineSparkles className="h-6 w-6" />,
+  error: <HiOutlineExclamationTriangle className="h-6 w-6" />,
 };
 
+/**
+ * Centered, borderless empty / error state. Matches the app's in-feed empties
+ * (a soft icon circle over a short, capped-measure message) rather than sitting
+ * in a boxed card, so it belongs on any surface: a feed, a tab, a modal list,
+ * or a full not-found page.
+ */
 function EmptyState({
   variant = "info",
   icon,
@@ -39,30 +39,33 @@ function EmptyState({
   children,
   className = "",
 }: Props) {
-  const styles = variantStyles[variant];
-
   return (
     <div
-      className={`flex items-start gap-5 rounded-2xl border border-base-300 bg-base-200 px-6 py-8 ${className}`}
+      className={`flex flex-col items-center gap-3 px-6 py-10 text-center ${className}`}
     >
-      <div
-        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${styles.bubble} ${styles.icon}`}
+      <span
+        className={`flex h-12 w-12 items-center justify-center rounded-full ${bubbleStyles[variant]}`}
         aria-hidden
       >
         {icon ?? defaultIcon[variant]}
+      </span>
+
+      <div className="space-y-1.5">
+        <p className="text-base font-semibold text-base-content text-balance">
+          {title}
+        </p>
+        {description && (
+          <p className="mx-auto max-w-sm text-sm leading-relaxed text-base-content/60">
+            {description}
+          </p>
+        )}
       </div>
 
-      <div className="min-w-0 flex-1">
-        <p className="text-base font-medium text-base-content">{title}</p>
-        {description && (
-          <p className="mt-1.5 text-sm text-base-content/60">{description}</p>
-        )}
-        {children && (
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            {children}
-          </div>
-        )}
-      </div>
+      {children && (
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {children}
+        </div>
+      )}
     </div>
   );
 }

@@ -23,7 +23,7 @@ import { useHtmlDialog } from "@/hooks/use-html-dialog";
 import { uploadEventThumbnail } from "@/utils/upload";
 import { dayKey, formatTime } from "@/utils/time-utils";
 
-const pageWrap = "w-full mx-auto max-w-3xl p-4";
+const pageWrap = "px-4 py-6 sm:px-6";
 
 function EditEventPage() {
   useDocumentTitle(strings.editEvent.documentTitle);
@@ -155,13 +155,14 @@ function EditEventPage() {
 
   return (
     <div className="min-h-full shrink-0 flex flex-col">
-      <PageHeader title={strings.editEvent.title}>
-        <p className="pb-3 text-sm text-base-content/60 truncate">
-          {event.title}
-        </p>
-      </PageHeader>
+      <div className="w-full max-w-3xl">
+        <PageHeader title={strings.editEvent.title}>
+          <p className="pb-3 text-sm text-base-content/60 truncate">
+            {event.title}
+          </p>
+        </PageHeader>
 
-      <div className={pageWrap}>
+        <div className={pageWrap}>
         <EventForm
           mode="edit"
           initialValues={initialValues}
@@ -282,6 +283,7 @@ function EditEventPage() {
             onClick={() => !cancelling && setCancelOpen(false)}
           />
         </dialog>
+        </div>
       </div>
     </div>
   );

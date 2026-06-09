@@ -55,7 +55,7 @@ function renderInput(control: SettingsControl, ariaLabel: string) {
     return (
       <select
         aria-label={ariaLabel}
-        className="select rounded-2xl bg-base-100 w-32 shrink-0"
+        className="select rounded-2xl bg-base-100 min-h-12 w-36 sm:w-44 shrink-0"
         value={control.value}
         disabled={control.disabled}
         onChange={(e) => control.onChange(e.target.value)}

@@ -4,9 +4,7 @@ import { useQuery } from "@apollo/client/react";
 import NotificationCard from "@/components/notification/NotificationCard";
 import NotificationCardSkeleton from "@/components/notification/NotificationCardSkeleton";
 import PageHeader from "@/components/layout/PageHeader";
-import GlobalSearchWidget from "@/components/widgets/GlobalSearchWidget";
-import UpcomingEventsWidget from "@/components/widgets/UpcomingEventsWidget";
-import MainFooter from "@/components/misc/MainFooter";
+import RightRail from "@/components/layout/RightRail";
 import strings from "@/translations/strings";
 
 function NotificationsPage() {
@@ -21,30 +19,28 @@ function NotificationsPage() {
     <div className="flex flex-row h-full">
       <div className="flex flex-col mx-auto grow h-full overflow-y-auto min-w-0">
         <PageHeader title={strings.notification.title} />
-        <div className="flex flex-col px-4 sm:px-6 pt-3 pb-6 gap-2">
+        <div className="w-full mx-auto max-w-[600px]">
           {loading ? (
-            [...Array(10)].map((_, index) => (
-              <NotificationCardSkeleton key={`notif-skeleton-${index}`} />
-            ))
+            <div className="divide-y divide-base-300">
+              {[...Array(10)].map((_, index) => (
+                <NotificationCardSkeleton key={`notif-skeleton-${index}`} />
+              ))}
+            </div>
           ) : hasNotifications() ? (
-            data?.myNotifications?.filter((n): n is NonNullable<typeof n> => n != null).map((notification) => (
-              <NotificationCard
-                key={`notif-${notification.id}`}
-                notification={notification}
-              />
-            ))
+            <div className="divide-y divide-base-300">
+              {data?.myNotifications?.filter((n): n is NonNullable<typeof n> => n != null).map((notification) => (
+                <NotificationCard
+                  key={`notif-${notification.id}`}
+                  notification={notification}
+                />
+              ))}
+            </div>
           ) : (
-            <p className="text-sm text-base-content/70">{strings.notification.none}</p>
+            <p className="p-4 text-sm text-base-content/70">{strings.notification.none}</p>
           )}
         </div>
       </div>
-      <aside className="hidden lg:block lg:w-[280px] xl:w-[330px] flex-shrink-0 sticky top-0 h-screen overflow-y-auto">
-        <div className="flex flex-col py-4 pr-4 gap-2">
-          <GlobalSearchWidget />
-          <UpcomingEventsWidget />
-          <MainFooter />
-        </div>
-      </aside>
+      <RightRail />
     </div>
   );
 }

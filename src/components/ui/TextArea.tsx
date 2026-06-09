@@ -1,33 +1,33 @@
-import {  TextareaHTMLAttributes } from "react";
+import { TextareaHTMLAttributes } from "react";
+import Field from "./Field";
 
-interface TextAreaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className'> {
-  label: string;
+interface TextAreaProps
+  extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "className"> {
+  label?: string;
   error?: string;
+  helperText?: string;
   className?: string;
 }
 
-const TextArea = ({ 
-  label, 
+const TextArea = ({
+  label,
   error,
-  className = "", 
-  ...props 
-}: TextAreaProps) => {
-  const hasError = !!error;
-
-  return (
-    <fieldset className={`fieldset ${className}`}>
-      <legend className="fieldset-legend">{label}</legend>
-      <textarea
-        {...props}
-        className="textarea rounded-2xl w-full"
-      />
-      {hasError && (
-        <div className="fieldset-helper-text text-error">
-          {error}
-        </div>
-      )}
-    </fieldset>
-  );
-};
+  helperText,
+  className = "",
+  ...props
+}: TextAreaProps) => (
+  <Field
+    label={label}
+    error={error}
+    helperText={helperText}
+    className={className}
+  >
+    <textarea
+      {...props}
+      className="textarea w-full rounded-2xl resize-y leading-relaxed"
+      aria-invalid={!!error}
+    />
+  </Field>
+);
 
 export default TextArea;

@@ -1,3 +1,4 @@
+import Field from "./Field";
 import strings from "@/translations/strings";
 
 interface DropdownProps<T> {
@@ -21,26 +22,26 @@ function Dropdown<T = string>({
   error,
   helperText,
   className = "",
-  required = false
+  required = false,
 }: DropdownProps<T>) {
-  const hasError = !!error;
-
   return (
-    <fieldset className={`fieldset ${className}`}>
-      {label && <legend className="fieldset-legend">{label}</legend>}
+    <Field
+      label={label}
+      error={error}
+      helperText={helperText}
+      className={className}
+    >
       <select
         required={required}
-        className="rounded-2xl w-full select"
+        className="select w-full min-h-12 rounded-2xl"
         value={value !== null ? String(value) : ""}
         onChange={(e) => {
           const selectedOption = options.find(
-            (opt) => String(opt.value) === e.target.value
+            (opt) => String(opt.value) === e.target.value,
           );
-          if (selectedOption) {
-            onChange(selectedOption.value);
-          }
+          if (selectedOption) onChange(selectedOption.value);
         }}
-        aria-invalid={hasError}
+        aria-invalid={!!error}
       >
         <option value="" disabled>
           {placeholder}
@@ -51,13 +52,7 @@ function Dropdown<T = string>({
           </option>
         ))}
       </select>
-      {helperText && !hasError && (
-        <span className="fieldset-helper-text">{helperText}</span>
-      )}
-      {hasError && (
-        <span className="fieldset-helper-text text-error">{error}</span>
-      )}
-    </fieldset>
+    </Field>
   );
 }
 

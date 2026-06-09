@@ -1,3 +1,5 @@
+import PostCardSkeleton from "@/components/post/PostCardSkeleton";
+
 function EventPageSkeleton() {
   return (
     <div className="w-full mx-auto max-w-5xl px-4 py-6">
@@ -10,7 +12,7 @@ function EventPageSkeleton() {
 
           {/* Organizer */}
           <div className="flex items-center gap-2 mt-2">
-            <div className="skeleton rounded-full w-7 h-7" />
+            <div className="skeleton rounded-full w-9 h-9" />
             <div className="skeleton w-[40%] h-4" />
           </div>
 
@@ -34,29 +36,16 @@ function EventPageSkeleton() {
           </div>
 
           {/* Post skeletons */}
-          <div className="mt-4 flex flex-col gap-4 pb-6">
+          <div className="mt-4 divide-y divide-base-300 pb-6">
             {[...Array(2)].map((_, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-base-300 bg-base-200 p-4 flex flex-col gap-3"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="skeleton rounded-full w-8 h-8" />
-                  <div className="skeleton w-[30%] h-4" />
-                </div>
-                <div className="space-y-1.5">
-                  <div className="skeleton w-full h-4" />
-                  <div className="skeleton w-full h-4" />
-                  <div className="skeleton w-[45%] h-4" />
-                </div>
-              </div>
+              <PostCardSkeleton key={i} variant="feed" />
             ))}
           </div>
         </div>
 
         {/* Right sidebar */}
-        <aside className="w-full lg:w-[340px] xl:w-[380px] lg:flex-shrink-0 order-first lg:order-last">
-          <div className="lg:sticky lg:top-6 lg:self-start flex flex-col gap-4">
+        <aside className="w-full lg:w-[300px] lg:flex-shrink-0 order-first lg:order-last">
+          <div className="lg:sticky lg:top-6 lg:self-start flex flex-col gap-5">
             {/* Thumbnail */}
             <div className="skeleton rounded-2xl aspect-video w-full" />
 
@@ -66,23 +55,28 @@ function EventPageSkeleton() {
               <div className="skeleton w-12 h-12 rounded-2xl" />
             </div>
 
-            {/* Date & Time card */}
-            <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
-              <div className="skeleton w-[70%] h-4" />
-            </div>
-
-            {/* Location card */}
-            <div className="hidden lg:flex items-start gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
-              <div className="skeleton w-[60%] h-4" />
-            </div>
-
-            {/* Participants card */}
-            <div className="hidden lg:block rounded-2xl border border-base-300 bg-base-200 p-4">
-              <div className="skeleton w-[50%] h-4" />
-              <div className="flex -space-x-2 mt-3">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="skeleton rounded-full w-10 h-10" />
-                ))}
+            <div className="hidden lg:flex lg:flex-col gap-4 border-t border-base-300 pt-5">
+              <div className="flex items-center gap-3">
+                <div className="skeleton h-5 w-5 rounded shrink-0" />
+                <div className="skeleton h-4 w-[70%]" />
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="skeleton h-5 w-5 rounded shrink-0" />
+                <div className="skeleton h-4 w-[55%]" />
+              </div>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="skeleton h-5 w-5 rounded shrink-0" />
+                  <div className="skeleton h-4 w-[40%]" />
+                </div>
+                <div className="flex -space-x-3 pl-8">
+                  {[...Array(5)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="skeleton w-10 h-10 rounded-full ring-2 ring-base-100"
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>

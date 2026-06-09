@@ -19,7 +19,7 @@ function GlobalSearchWidget() {
     
   return (
     <form onSubmit={handleSearch}
-      className={`relative rounded-xl border transition-all ${
+      className={`relative rounded-2xl border transition-all ${
         searchFocused
           ? "border-primary bg-base-200 shadow-sm"
           : "border-base-300 bg-base-200"
@@ -35,7 +35,7 @@ function GlobalSearchWidget() {
         type="text"
         value={searchString}
         placeholder={strings.widgets.searchPlaceholder}
-        className="input w-full pl-10 pr-4 h-10 rounded-xl bg-transparent border-none focus:outline-none text-sm"
+        className="input w-full pl-10 pr-4 h-10 rounded-2xl bg-transparent border-none focus:outline-none text-sm"
         onFocus={() => setSearchFocused(true)}
         onBlur={() => setSearchFocused(false)}
         onChange={(e) => setSearchString(e.target.value)}

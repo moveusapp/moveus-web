@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
-import { useCallback, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client/react";
+import { useState } from "react";
+import { useQuery } from "@apollo/client/react";
 import {
   HiHeart,
   HiOutlineHeart,
@@ -21,6 +21,7 @@ import UserBadge from "@/components/user/UserBadge";
 import CommentSection from "@/components/comment/CommentSection";
 import { displayName } from "@/utils/display-name";
 import { timeAgo } from "@/utils/time-utils";
+import { useLikeToggle } from "@/hooks/use-like-toggle";
 import strings from "@/translations/strings";
 
 function PostPage() {
@@ -76,12 +77,15 @@ function PostBody({ post }: { post: PostCardFragment }) {
 }
 
 function PostMain({ post }: { post: PostCardFragment }) {
-  const [liked, setLiked] = useState(post.isLiked ?? false);
-  const [likeCount, setLikeCount] = useState(post.likes ?? 0);
-  const [showImageModal, setShowImageModal] = useState(false);
+  const { liked, likeCount, justLiked, toggle: handleLike } = useLikeToggle({
+    variables: { postId: post.id! },
+    initialLiked: post.isLiked ?? false,
+    initialCount: post.likes ?? 0,
+    likeDoc: LikePostDocument,
+    unlikeDoc: UnlikePostDocument,
+  });
 
-  const [likePost] = useMutation(LikePostDocument);
-  const [unlikePost] = useMutation(UnlikePostDocument);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   const authorName = displayName(
     post.author!.username,
@@ -90,24 +94,6 @@ function PostMain({ post }: { post: PostCardFragment }) {
   );
 
   const imageUrl = post.imageUrl ?? null;
-
-  const handleLike = useCallback(() => {
-    if (liked) {
-      setLiked(false);
-      setLikeCount((c) => c - 1);
-      unlikePost({ variables: { postId: post.id! } }).catch(() => {
-        setLiked(true);
-        setLikeCount((c) => c + 1);
-      });
-    } else {
-      setLiked(true);
-      setLikeCount((c) => c + 1);
-      likePost({ variables: { postId: post.id! } }).catch(() => {
-        setLiked(false);
-        setLikeCount((c) => c - 1);
-      });
-    }
-  }, [liked, post.id, likePost, unlikePost]);
 
   return (
     <>
@@ -171,7 +157,7 @@ function PostMain({ post }: { post: PostCardFragment }) {
           className="flex items-center gap-2 text-sm font-medium text-base-content/60 transition-colors hover:text-error"
         >
           {liked ? (
-            <HiHeart className="h-6 w-6 text-error" />
+            <HiHeart className={`h-6 w-6 text-error ${justLiked ? "animate-like-pop" : ""}`} />
           ) : (
             <HiOutlineHeart className="h-6 w-6" />
           )}

@@ -1,3 +1,5 @@
+import TextInput from "../TextInput";
+
 interface Props {
   value: string;
   onChange: (value: string) => void;
@@ -6,9 +8,8 @@ interface Props {
 
 function TextQuestion({ value, onChange, placeholder }: Props) {
   return (
-    <input
+    <TextInput
       type="text"
-      className="input rounded-2xl w-full min-h-12"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}

@@ -14,11 +14,16 @@ import ImageLightbox from "@/components/ui/ImageLightbox";
 import strings from "@/translations/strings";
 import { useLikeToggle } from "@/hooks/use-like-toggle";
 
-function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
+function PostCard({
+  post,
+  hideEventLink,
+  clickable = true,
+  variant = "default",
+}: PostCardProps) {
   const navigate = useNavigate();
   const [showImageModal, setShowImageModal] = useState(false);
 
-  const { liked, likeCount, toggle: handleLike } = useLikeToggle({
+  const { liked, likeCount, justLiked, toggle: handleLike } = useLikeToggle({
     variables: { postId: post.id! },
     initialLiked: post.isLiked ?? false,
     initialCount: post.likes ?? 0,
@@ -37,6 +42,22 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
   const commentCount = post.comments?.length ?? 0;
 
   const navigable = clickable && post.id != null;
+
+  // Feed variant: a borderless row for the unified home feed (separators come
+  // from the parent's `divide-y`). Default: the contained card used elsewhere.
+  const isFeed = variant === "feed";
+  const rootClass = isFeed
+    ? `group relative w-full px-4 sm:px-5 py-4 transition-colors ${
+        navigable
+          ? "cursor-pointer hover:bg-base-200/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
+          : ""
+      }`
+    : `bg-base-200 w-full rounded-2xl border border-base-300 overflow-hidden transition-all hover:border-primary/20 ${
+        navigable
+          ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+          : ""
+      }`;
+  const innerClass = isFeed ? "space-y-3" : "p-4 space-y-4";
 
   const openPost = useCallback(
     (e: MouseEvent | KeyboardEvent) => {
@@ -69,13 +90,9 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
         tabIndex={navigable ? 0 : undefined}
         onClick={navigable ? openPost : undefined}
         onKeyDown={navigable ? handleKeyDown : undefined}
-        className={`bg-base-200 w-full rounded-2xl border border-base-300 overflow-hidden transition-all hover:border-primary/20 ${
-          navigable
-            ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-            : ""
-        }`}
+        className={rootClass}
       >
-        <div className="p-4 space-y-4">
+        <div className={innerClass}>
           <div className="flex items-start justify-between gap-3">
             <Link
               to={`/user/${post?.author?.username}`}
@@ -135,7 +152,11 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
           )}
 
           {/* Action bar — comments live on the post page */}
-          <div className="flex items-center gap-4 pt-3 border-t border-base-300">
+          <div
+            className={`flex items-center gap-4 ${
+              isFeed ? "pt-1" : "pt-3 border-t border-base-300"
+            }`}
+          >
             <button
               onClick={handleLike}
               aria-label={liked ? strings.post.unlike : strings.post.like}
@@ -143,7 +164,7 @@ function PostCard({ post, hideEventLink, clickable = true }: PostCardProps) {
               className="flex items-center gap-1.5 py-1 -my-1 text-sm text-base-content/70 hover:text-error transition-colors"
             >
               {liked ? (
-                <HiHeart className="w-5 h-5 text-error" />
+                <HiHeart className={`w-5 h-5 text-error ${justLiked ? "animate-like-pop" : ""}`} />
               ) : (
                 <HiOutlineHeart className="w-5 h-5" />
               )}
@@ -171,6 +192,7 @@ interface PostCardProps {
   post: PostCardFragment;
   hideEventLink?: boolean;
   clickable?: boolean;
+  variant?: "default" | "feed";
 }
 
 export default PostCard;

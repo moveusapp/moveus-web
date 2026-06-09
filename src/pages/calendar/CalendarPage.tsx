@@ -10,6 +10,7 @@ import {
 } from "@/utils/time-utils";
 import { useMemo, useState } from "react";
 import {
+  HiOutlineCalendarDays,
   HiOutlineChevronLeft,
   HiOutlineChevronRight,
 } from "react-icons/hi2";
@@ -19,7 +20,7 @@ import PageHeader from "@/components/layout/PageHeader";
 import strings from "@/translations/strings";
 
 const navButtonClass =
-  "inline-flex items-center justify-center w-9 h-9 rounded-full text-base-content/70 hover:bg-base-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-colors";
+  "inline-flex items-center justify-center w-9 h-9 rounded-full text-base-content/70 hover:bg-base-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-[transform,background-color] duration-150 active:scale-95";
 
 function CalendarPage() {
   useDocumentTitle(strings.calendar.documentTitle);
@@ -125,6 +126,7 @@ function CalendarPage() {
 
       <div className="px-4 sm:px-6 pt-3 pb-2">
         <MonthGrid
+          key={`${monthDate.getFullYear()}-${monthDate.getMonth()}`}
           className="h-[calc(100dvh-220px)]"
           monthDate={monthDate}
           selectedDate={selectedDate}
@@ -163,7 +165,12 @@ function CalendarPage() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-base-content/55 italic">
+          <p className="flex items-center gap-2 py-3 text-sm text-base-content/55">
+            <HiOutlineCalendarDays
+              size={18}
+              className="shrink-0 text-base-content/35"
+              aria-hidden
+            />
             {emptyDayCopy(selectedDate, today, events.length === 0)}
           </p>
         )}
@@ -214,7 +221,7 @@ function MonthNavActions({
       <button
         type="button"
         onClick={onToday}
-        className="inline-flex items-center px-3 h-8 rounded-full text-sm font-medium text-base-content/80 bg-base-200 hover:bg-base-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-colors"
+        className="inline-flex items-center px-3 h-8 rounded-full text-sm font-medium text-base-content/80 bg-base-200 hover:bg-base-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 transition-[transform,background-color] duration-150 active:scale-95"
       >
         {strings.calendar.today}
       </button>

@@ -20,10 +20,14 @@ import {
   HiOutlineUserCircle,
   HiOutlineUserGroup,
   HiOutlineChatBubbleLeftRight,
+  HiOutlineSwatch,
+  HiOutlineSparkles,
+  HiOutlineLockClosed,
   HiLanguage,
 } from "react-icons/hi2";
 import { useMutation } from "@apollo/client/react";
 import PageHeader from "@/components/layout/PageHeader";
+import FormSection from "@/components/ui/FormSection";
 import SettingsOption from "./SettingsOption";
 import LogoutModal from "./LogoutModal";
 import DeleteAccountModal from "./DeleteAccountModal";
@@ -139,125 +143,130 @@ function SettingsPage() {
       .finally(() => setPendingSetting(null));
   };
 
+  const cardClass =
+    "bg-base-200 border border-base-300 rounded-2xl divide-y divide-base-300 overflow-hidden";
+
   return (
-    <div className="h-full overflow-y-auto flex flex-col">
-      <PageHeader title={strings.settings.title} />
+    <div className="min-h-full shrink-0 flex flex-col">
+      <div className="w-full max-w-3xl">
+        <PageHeader title={strings.settings.title} />
 
-      <div className="flex flex-col grow gap-2 m-4">
-        <div className="mb-1">
-          <p className="text-md font-medium">{strings.settings.appearance}</p>
-          <p className="text-sm text-base-content/70">
-            {strings.settings.appearanceDesc}
-          </p>
-        </div>
+        <div className="px-4 py-6 sm:px-6 space-y-8">
+          <FormSection
+            icon={HiOutlineSwatch}
+            title={strings.settings.appearance}
+            description={strings.settings.appearanceDesc}
+          >
+            <div className={cardClass}>
+              <SettingsOption
+                icon={<HiOutlineMoon />}
+                title={strings.settings.darkMode}
+                description={strings.settings.darkModeDesc}
+                control={{
+                  kind: "toggle",
+                  checked: theme === "dark",
+                  onChange: () => toggleTheme(),
+                }}
+              />
+              <SettingsOption
+                icon={<HiLanguage />}
+                title={strings.settings.language}
+                description={strings.settings.langaugeDesc}
+                control={{
+                  kind: "dropdown",
+                  value: language,
+                  options: enumToOptions(Locale, "enums.locale"),
+                  onChange: (value) => setLanguage(value as Locale),
+                }}
+              />
+            </div>
+          </FormSection>
 
-        <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
-          <SettingsOption
-            icon={<HiOutlineMoon />}
-            title={strings.settings.darkMode}
-            description={strings.settings.darkModeDesc}
-            control={{
-              kind: "toggle",
-              checked: theme === "dark",
-              onChange: () => toggleTheme(),
-            }}
-          />
-          <SettingsOption
-            icon={<HiLanguage />}
-            title={strings.settings.language}
-            description={strings.settings.langaugeDesc}
-            control={{
-              kind: "dropdown",
-              value: language,
-              options: enumToOptions(Locale, "enums.locale"),
-              onChange: (value) => setLanguage(value as Locale),
-            }}
-          />
-        </div>
+          <FormSection
+            icon={HiOutlineSparkles}
+            title={strings.settings.preferences}
+            description={strings.settings.preferencesDesc}
+          >
+            <div className={cardClass}>
+              <SettingsOption
+                icon={<HiOutlineAdjustmentsHorizontal />}
+                title={strings.settings.activityPreferences}
+                description={strings.settings.activityPreferencesDesc}
+                control={{
+                  kind: "action",
+                  onClick: () => navigate("/survey/preferences"),
+                }}
+              />
+            </div>
+          </FormSection>
 
-        <div className="mt-3 mb-1">
-          <p className="text-md font-medium">{strings.settings.preferences}</p>
-          <p className="text-sm text-base-content/70">
-            {strings.settings.preferencesDesc}
-          </p>
-        </div>
+          <FormSection
+            icon={HiOutlineLockClosed}
+            title={strings.settings.privacy}
+            description={strings.settings.privacyDesc}
+          >
+            <div className={cardClass}>
+              {privacySettingConfig.map((config) => {
+                const label =
+                  settingOptions.find((m) => m.value === config.setting)
+                    ?.label ?? "";
+                return (
+                  <SettingsOption
+                    key={config.setting}
+                    icon={config.icon}
+                    title={label}
+                    description={config.description}
+                    error={
+                      erroredSetting === config.setting
+                        ? strings.settings.couldntSave
+                        : undefined
+                    }
+                    controlLabel={
+                      strings.formatString(strings.settings.whoCanSee, {
+                        field: label.toLowerCase(),
+                      }) as string
+                    }
+                    control={{
+                      kind: "dropdown",
+                      value: scopeFor(config.setting),
+                      options: scopeOptions,
+                      disabled: pendingSetting === config.setting,
+                      onChange: (value) =>
+                        handlePrivacyChange(config.setting, value),
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </FormSection>
 
-        <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
-          <SettingsOption
-            icon={<HiOutlineAdjustmentsHorizontal />}
-            title={strings.settings.activityPreferences}
-            description={strings.settings.activityPreferencesDesc}
-            control={{
-              kind: "action",
-              onClick: () => navigate("/survey/preferences"),
-            }}
-          />
-        </div>
-
-        <div className="mt-3 mb-1">
-          <p className="text-md font-medium">{strings.settings.privacy}</p>
-          <p className="text-sm text-base-content/70">
-            {strings.settings.privacyDesc}
-          </p>
-        </div>
-
-        <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
-          {privacySettingConfig.map((config) => {
-            const label =
-              settingOptions.find((m) => m.value === config.setting)?.label ?? "";
-            return (
-            <SettingsOption
-              key={config.setting}
-              icon={config.icon}
-              title={label}
-              description={config.description}
-              error={
-                erroredSetting === config.setting
-                  ? strings.settings.couldntSave
-                  : undefined
-              }
-              controlLabel={
-                strings.formatString(strings.settings.whoCanSee, {
-                  field: label.toLowerCase(),
-                }) as string
-              }
-              control={{
-                kind: "dropdown",
-                value: scopeFor(config.setting),
-                options: scopeOptions,
-                disabled: pendingSetting === config.setting,
-                onChange: (value) => handlePrivacyChange(config.setting, value),
-              }}
-            />
-            );
-          })}
-        </div>
-
-        <div className="mt-3 mb-1">
-          <p className="text-md font-medium">{strings.settings.account}</p>
-        </div>
-
-        <div className="bg-base-200 rounded-2xl border border-base-300 divide-y divide-base-300 overflow-hidden">
-          <SettingsOption
-            icon={<HiOutlineArrowRightOnRectangle />}
-            title={strings.settings.logOut}
-            description={strings.settings.logOutDesc}
-            control={{
-              kind: "action",
-              tone: "danger",
-              onClick: () => setLogoutOpen(true),
-            }}
-          />
-          <SettingsOption
-            icon={<HiOutlineTrash />}
-            title={strings.settings.deleteAccount}
-            description={strings.settings.deleteAccountDesc}
-            control={{
-              kind: "action",
-              tone: "danger",
-              onClick: () => setDeleteOpen(true),
-            }}
-          />
+          <FormSection
+            icon={HiOutlineUserCircle}
+            title={strings.settings.account}
+          >
+            <div className={cardClass}>
+              <SettingsOption
+                icon={<HiOutlineArrowRightOnRectangle />}
+                title={strings.settings.logOut}
+                description={strings.settings.logOutDesc}
+                control={{
+                  kind: "action",
+                  tone: "danger",
+                  onClick: () => setLogoutOpen(true),
+                }}
+              />
+              <SettingsOption
+                icon={<HiOutlineTrash />}
+                title={strings.settings.deleteAccount}
+                description={strings.settings.deleteAccountDesc}
+                control={{
+                  kind: "action",
+                  tone: "danger",
+                  onClick: () => setDeleteOpen(true),
+                }}
+              />
+            </div>
+          </FormSection>
         </div>
       </div>
 

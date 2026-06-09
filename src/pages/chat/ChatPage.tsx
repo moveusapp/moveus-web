@@ -6,10 +6,11 @@ import ChatCard, { ChatSummary, ChatSummaryMember } from "@/components/chat/Chat
 import ChatCardSkeleton from "@/components/chat/ChatCardSkeleton";
 import ChatView from "@/pages/chat/ChatView";
 import { HiOutlineChatBubbleLeftRight, HiOutlinePencilSquare } from "react-icons/hi2";
-import { useSearchParams } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 import PageHeader from "@/components/layout/PageHeader";
 import CreateGroupChatModal from "@/pages/chat/CreateGroupChatModal";
 import { useProfile } from "@/context/profile-context";
+import type { NavOutletContext } from "@/components/routes/nav/NavRoutes";
 import strings from "@/translations/strings";
 
 function parseMessageKind(raw: unknown): ChatMessageKind {
@@ -37,6 +38,14 @@ function ChatPage() {
   const [isNewGroupOpen, setIsNewGroupOpen] = useState(false);
 
   const [createDirectChat] = useMutation(CreateDirectChatDocument);
+
+  // Tell the shell when a conversation is open so it can hide the mobile tab
+  // bar (its composer sits where the bar would). The bar stays on the list.
+  const navContext = useOutletContext<NavOutletContext | null>();
+  useEffect(() => {
+    navContext?.setChatViewOpen(selectedChatId != null);
+  }, [selectedChatId, navContext]);
+  useEffect(() => () => navContext?.setChatViewOpen(false), [navContext]);
 
   const processEvent = useCallback(
     (event: WsMyChatUpdateType) => {
@@ -196,41 +205,45 @@ function ChatPage() {
   const hasChats = hasReceivedData && chats.length > 0;
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-[100dvh] overflow-hidden">
       <div
-        className={`flex-1 min-w-0 flex-col ${
+        className={`flex-1 min-w-0 ${
           selectedChatId ? "flex" : "hidden lg:flex"
         }`}
       >
-        {selectedChatId ? (
-          <ChatView
-            key={selectedChatId}
-            chatId={selectedChatId}
-            onBack={() => setSelectedChatId(null)}
-            onLeft={(leftId) => {
-              setSelectedChatId(null);
-              setChatsMap((prev) => {
-                if (!prev.has(leftId)) return prev;
-                const next = new Map(prev);
-                next.delete(leftId);
-                return next;
-              });
-            }}
-          />
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center gap-3 text-base-content/40">
-            <HiOutlineChatBubbleLeftRight className="text-5xl" />
-            <p className="text-base font-medium">
-              {strings.chat.pickAChat}
-            </p>
-          </div>
-        )}
+        {/* Same fixed, centered middle width as the home feed, so the chat
+            pane lines up with every other route. */}
+        <div className="flex w-full max-w-[600px] mx-auto flex-col min-h-0">
+          {selectedChatId ? (
+            <ChatView
+              key={selectedChatId}
+              chatId={selectedChatId}
+              onBack={() => setSelectedChatId(null)}
+              onLeft={(leftId) => {
+                setSelectedChatId(null);
+                setChatsMap((prev) => {
+                  if (!prev.has(leftId)) return prev;
+                  const next = new Map(prev);
+                  next.delete(leftId);
+                  return next;
+                });
+              }}
+            />
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-base-content/40">
+              <HiOutlineChatBubbleLeftRight className="text-5xl" />
+              <p className="text-base font-medium">
+                {strings.chat.pickAChat}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       <aside
         className={`${
           selectedChatId ? "hidden lg:flex" : "flex"
-        } flex-col w-full lg:w-[300px] xl:w-[340px] lg:flex-shrink-0 lg:border-l border-base-300 overflow-y-auto h-full`}
+        } flex-col w-full lg:w-[300px] lg:flex-shrink-0 lg:border-l border-base-300 overflow-y-auto h-full`}
       >
         <PageHeader
           title={strings.chat.title}
@@ -245,7 +258,7 @@ function ChatPage() {
             </button>
           }
         />
-        <div className="flex flex-col px-1 pt-2 pb-4">
+        <div className="flex flex-col px-1 pt-2 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-4">
           {!hasReceivedData ? (
             [...Array(8)].map((_, i) => (
               <ChatCardSkeleton key={`skeleton-${i}`} />

@@ -118,10 +118,6 @@ function MobileMenuDrawer({ open, onClose }: MobileMenuDrawerProps) {
               aria-hidden="true"
               className="h-9 w-auto"
             />
-            <span className="absolute left-1/2 inline-flex -translate-x-1/2 items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-accent">
-              <HiBeaker className="h-3 w-3 shrink-0" aria-hidden="true" />
-              {strings.nav.openBeta}
-            </span>
             <button
               type="button"
               onClick={onClose}
@@ -141,7 +137,7 @@ function MobileMenuDrawer({ open, onClose }: MobileMenuDrawerProps) {
               className={`group flex items-center gap-3 rounded-2xl border p-3 transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                 isProfileActive
                   ? "border-primary/30 bg-primary/10"
-                  : "border-base-300 bg-base-200 hover:bg-base-300/60 active:bg-base-300/60"
+                  : "border-base-300 bg-base-200 hover:bg-base-300/50 active:bg-base-300/50"
               }`}
             >
               <UserAvatar

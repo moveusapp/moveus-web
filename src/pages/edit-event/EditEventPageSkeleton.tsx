@@ -4,11 +4,12 @@ import strings from "@/translations/strings";
 function EditEventPageSkeleton() {
   return (
     <div className="min-h-full shrink-0 flex flex-col">
-      <PageHeader title={strings.editEvent.title}>
-        <div className="skeleton h-4 w-56 rounded mb-3" />
-      </PageHeader>
+      <div className="w-full max-w-3xl">
+        <PageHeader title={strings.editEvent.title}>
+          <div className="skeleton h-4 w-56 rounded mb-3" />
+        </PageHeader>
 
-      <div className="w-full mx-auto max-w-3xl p-4">
+        <div className="px-4 py-6 sm:px-6">
         <div className="bg-base-200 border border-base-300 rounded-2xl p-6 space-y-6">
           <SkeletonField />
           <SkeletonField rows={3} />
@@ -36,6 +37,7 @@ function EditEventPageSkeleton() {
           <div className="skeleton h-12 flex-1 rounded-2xl" />
           <div className="skeleton h-12 flex-1 rounded-2xl" />
         </div>
+      </div>
       </div>
     </div>
   );

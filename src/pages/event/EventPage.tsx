@@ -17,8 +17,6 @@ import { useEvent } from "@/hooks/use-event";
 import {
   HiOutlineMapPin,
   HiOutlineCalendarDays,
-  HiOutlineNewspaper,
-  HiOutlineChatBubbleOvalLeft,
   HiOutlineArrowTopRightOnSquare,
   HiOutlineUsers,
   HiChevronRight,
@@ -134,7 +132,6 @@ function EventPage() {
     value: "posts",
     label: (
       <span className="inline-flex items-center gap-1.5">
-        <HiOutlineNewspaper size={16} className="opacity-70" />
         <span>{strings.ui.posts}</span>
         <span className="text-xs opacity-50 tabular-nums">{d.postCount}</span>
       </span>
@@ -144,7 +141,6 @@ function EventPage() {
     value: "comments",
     label: (
       <span className="inline-flex items-center gap-1.5">
-        <HiOutlineChatBubbleOvalLeft size={16} className="opacity-70" />
         <span>{strings.ui.comments}</span>
         <span className="text-xs opacity-50 tabular-nums">{d.commentCount}</span>
       </span>
@@ -154,7 +150,6 @@ function EventPage() {
     value: "participants",
     label: (
       <span className="inline-flex items-center gap-1.5">
-        <HiOutlineUsers size={16} className="opacity-70" />
         <span>{strings.event.page.participants}</span>
         <span className="text-xs opacity-50 tabular-nums">
           {d.participantCount}
@@ -167,68 +162,72 @@ function EventPage() {
     <div className="w-full mx-auto max-w-5xl px-4 py-6">
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1 min-w-0 flex flex-col">
-          <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-              {d.activity}
-            </p>
-            <EventPhaseBadge phase={event.phase} />
-          </div>
-          <h1
-            className={`text-xl sm:text-2xl lg:text-3xl font-bold text-balance mt-1 ${d.titleClass}`}
-          >
-            {event.title}
-          </h1>
+          {/* Header shares the same content inset as the tabs and feed below
+              (page padding + content padding), so the whole column lines up. */}
+          <div className="px-4 sm:px-5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                {d.activity}
+              </p>
+              <EventPhaseBadge phase={event.phase} />
+            </div>
+            <h1
+              className={`text-xl sm:text-2xl lg:text-3xl font-bold text-balance mt-1 ${d.titleClass}`}
+            >
+              {event.title}
+            </h1>
 
-          <Link
-            to={`/user/${event.organizer?.user.username}`}
-            className="flex items-center gap-2 group text-sm text-base-content/60 hover:text-base-content transition-colors mt-2"
-          >
-            <UserAvatar
-              imageUrl={event.organizer?.user.avatarUrl}
-              className="flex w-7 h-7"
-            />
-            <span className="flex items-center gap-1">
-              {strings.event.page.hostedBy}{" "}
-              <span className="text-base-content font-medium group-hover:text-primary">
-                {d.organizerName}
+            <Link
+              to={`/user/${event.organizer?.user.username}`}
+              className="flex items-center gap-2 group text-sm text-base-content/60 hover:text-base-content transition-colors mt-2"
+            >
+              <UserAvatar
+                imageUrl={event.organizer?.user.avatarUrl}
+                className="w-9 h-9 shrink-0"
+              />
+              <span className="flex items-center gap-1">
+                {strings.event.page.hostedBy}{" "}
+                <span className="text-base-content font-medium group-hover:text-primary">
+                  {d.organizerName}
+                </span>
+                <UserBadge badge={event.organizer?.user.badge} size={16} />
               </span>
-              <UserBadge badge={event.organizer?.user.badge} size={16} />
-            </span>
-          </Link>
+            </Link>
 
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-base-content/60 mt-3 lg:hidden">
-            <span className="flex items-center gap-1.5">
-              <HiOutlineCalendarDays className="h-4 w-4 text-primary" />
-              {formatDate(event.startTime)} • {formatTime(event.startTime)}
-            </span>
-            {d.mapsUrl ? (
-              <a
-                href={d.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 font-medium text-primary underline decoration-primary/30 underline-offset-2 transition-colors hover:decoration-primary"
-              >
-                <HiOutlineMapPin className="h-4 w-4" />
-                <span>{d.locationName || strings.event.locationTBD}</span>
-                <HiOutlineArrowTopRightOnSquare className="h-3.5 w-3.5" />
-              </a>
-            ) : (
+            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-base-content/60 mt-3 lg:hidden">
               <span className="flex items-center gap-1.5">
-                <HiOutlineMapPin className="h-4 w-4 text-primary" />
-                {strings.event.locationTBD}
+                <HiOutlineCalendarDays className="h-4 w-4 text-primary" />
+                {formatDate(event.startTime)} • {formatTime(event.startTime)}
               </span>
+              {d.mapsUrl ? (
+                <a
+                  href={d.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 font-medium text-primary underline decoration-primary/30 underline-offset-2 transition-colors hover:decoration-primary"
+                >
+                  <HiOutlineMapPin className="h-4 w-4" />
+                  <span>{d.locationName || strings.event.locationTBD}</span>
+                  <HiOutlineArrowTopRightOnSquare className="h-3.5 w-3.5" />
+                </a>
+              ) : (
+                <span className="flex items-center gap-1.5">
+                  <HiOutlineMapPin className="h-4 w-4 text-primary" />
+                  {strings.event.locationTBD}
+                </span>
+              )}
+            </div>
+
+            <p className="mt-4 text-sm leading-relaxed text-base-content/60 whitespace-pre-line break-words">
+              {event.description}
+            </p>
+
+            {d.showScore && (
+              <div className="lg:hidden mt-4">
+                <EventScore score={event.score!} />
+              </div>
             )}
           </div>
-
-          <p className="mt-4 text-sm leading-relaxed text-base-content/60">
-            {event.description}
-          </p>
-
-          {d.showScore && (
-            <div className="lg:hidden mt-4">
-              <EventScore score={event.score!} />
-            </div>
-          )}
 
           <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4">
             {actionBar}
@@ -252,7 +251,11 @@ function EventPage() {
             />
           </div>
 
-          <div className="hidden lg:block mt-4 pb-6">
+          <div
+            className={`hidden lg:block pb-6 ${
+              desktopActiveTab === "posts" ? "" : "mt-4"
+            }`}
+          >
             <EventTabContent
               tab={desktopActiveTab}
               event={event}
@@ -262,7 +265,11 @@ function EventPage() {
             />
           </div>
 
-          <div className="lg:hidden mt-4 pb-6">
+          <div
+            className={`lg:hidden pb-6 ${
+              mobileActiveTab === "posts" ? "" : "mt-4"
+            }`}
+          >
             <EventTabContent
               tab={mobileActiveTab}
               event={event}
@@ -273,8 +280,8 @@ function EventPage() {
           </div>
         </div>
 
-        <aside className="w-full lg:w-[340px] xl:w-[380px] lg:flex-shrink-0 order-first lg:order-last">
-          <div className="lg:sticky lg:top-6 lg:self-start flex flex-col gap-4">
+        <aside className="w-full lg:w-[300px] lg:flex-shrink-0 order-first lg:order-last">
+          <div className="lg:sticky lg:top-6 lg:self-start flex flex-col gap-5">
             <div className="relative rounded-2xl overflow-hidden bg-base-300">
               <EventThumbnail
                 imageUrl={event.imageUrl}
@@ -298,79 +305,84 @@ function EventPage() {
 
             <div className="hidden lg:block">{actionBar}</div>
 
-            <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
-              <HiOutlineCalendarDays className="h-5 w-5 text-primary shrink-0" />
-              <p className="text-sm font-medium text-base-content">
-                {formatDate(event.startTime)} • {formatTime(event.startTime)}
-              </p>
-            </div>
+            <div className="hidden lg:flex lg:flex-col gap-4 border-t border-base-300 pt-5">
+              <div className="flex items-center gap-3">
+                <HiOutlineCalendarDays className="h-5 w-5 text-primary shrink-0" />
+                <p className="text-sm font-medium text-base-content">
+                  {formatDate(event.startTime)} • {formatTime(event.startTime)}
+                </p>
+              </div>
 
-            <div className="hidden lg:flex items-center gap-3 rounded-2xl border border-base-300 bg-base-200 p-4">
-              <HiOutlineMapPin className="h-5 w-5 text-primary shrink-0" />
-              <p className="text-sm font-medium text-base-content flex-1 min-w-0 truncate">
-                {d.locationName || strings.event.locationTBD}
-              </p>
-              {d.mapsUrl && (
-                <a
-                  href={d.mapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={strings.event.page.openInMapsAria}
-                  className="shrink-0 rounded-full p-1.5 -m-1.5 text-base-content/40 hover:text-primary hover:bg-base-300 transition-colors"
-                >
-                  <HiOutlineArrowTopRightOnSquare className="h-4 w-4" />
-                </a>
-              )}
-            </div>
-
-            <div className="hidden lg:block rounded-2xl border border-base-300 bg-base-200 p-4">
-              <div className="flex items-center justify-between gap-1">
-                <div className="flex min-w-0 items-center gap-2">
-                  <HiOutlineUsers className="h-5 w-5 shrink-0 text-primary" />
-                  <p className="text-sm font-medium text-base-content">
-                    {strings.event.page.participants}
-                  </p>
-                  <span className="text-xs tabular-nums text-base-content/50">
-                    {event.members.length}
-                    {event.maxParticipants ? `/${event.maxParticipants}` : ""}
-                  </span>
-                </div>
-                {event.members.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setShowParticipants(true)}
-                    className="-mr-2 flex shrink-0 items-center gap-0.5 rounded-lg px-2 py-1 text-xs font-semibold text-primary outline-none transition-colors hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary/40"
+              <div className="flex items-center gap-3">
+                <HiOutlineMapPin className="h-5 w-5 text-primary shrink-0" />
+                {d.mapsUrl ? (
+                  <a
+                    href={d.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex min-w-0 flex-1 items-center gap-1.5 text-sm font-medium text-base-content transition-colors hover:text-primary"
                   >
-                    {strings.common.seeAll}
-                    <HiChevronRight className="h-4 w-4" />
-                  </button>
+                    <span className="truncate">
+                      {d.locationName || strings.event.locationTBD}
+                    </span>
+                    <HiOutlineArrowTopRightOnSquare className="h-3.5 w-3.5 shrink-0 text-base-content/40 transition-colors group-hover:text-primary" />
+                  </a>
+                ) : (
+                  <p className="text-sm font-medium text-base-content flex-1 min-w-0 truncate">
+                    {d.locationName || strings.event.locationTBD}
+                  </p>
                 )}
               </div>
 
-              {event.members.length > 0 ? (
-                <div className="avatar-group -space-x-4 mt-3 [&_.avatar]:border-base-200!">
-                  {event.members.slice(0, 5).map((member) => (
-                    <UserAvatar
-                      key={member.user.id}
-                      imageUrl={member.user.avatarUrl}
-                      className="w-10 h-10"
-                    />
-                  ))}
-                  {event.members.length > 5 && (
-                    <div className="avatar avatar-placeholder">
-                      <div className="bg-neutral text-neutral-content w-10 rounded-full">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <HiOutlineUsers className="h-5 w-5 shrink-0 text-primary" />
+                  <p className="flex items-center gap-2 text-sm font-medium text-base-content">
+                    {strings.event.page.participants}
+                    <span className="text-xs tabular-nums text-base-content/50">
+                      {event.members.length}
+                      {event.maxParticipants ? `/${event.maxParticipants}` : ""}
+                    </span>
+                  </p>
+                  {event.members.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setShowParticipants(true)}
+                      className="ml-auto -mr-2 flex shrink-0 items-center gap-0.5 rounded-lg px-2 py-1 text-xs font-semibold text-primary outline-none transition-colors hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary/40"
+                    >
+                      {strings.common.seeAll}
+                      <HiChevronRight className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+
+                {event.members.length > 0 ? (
+                  <div className="flex -space-x-3 pl-8">
+                    {event.members.slice(0, 5).map((member) => (
+                      <div
+                        key={member.user.id}
+                        className="rounded-full ring-2 ring-base-100"
+                      >
+                        <UserAvatar
+                          imageUrl={member.user.avatarUrl}
+                          className="w-10 h-10"
+                        />
+                      </div>
+                    ))}
+                    {event.members.length > 5 && (
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral text-neutral-content ring-2 ring-base-100">
                         <span className="text-xs font-medium">
                           +{event.members.length - 5}
                         </span>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <p className="mt-3 text-sm text-base-content/50">
-                  {strings.event.page.noOneJoined}
-                </p>
-              )}
+                    )}
+                  </div>
+                ) : (
+                  <p className="pl-8 text-sm text-base-content/50">
+                    {strings.event.page.noOneJoined}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </aside>

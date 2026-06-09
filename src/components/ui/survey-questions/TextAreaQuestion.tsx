@@ -1,3 +1,5 @@
+import TextArea from "../TextArea";
+
 interface Props {
   value: string;
   onChange: (value: string) => void;
@@ -6,8 +8,7 @@ interface Props {
 
 function TextAreaQuestion({ value, onChange, placeholder }: Props) {
   return (
-    <textarea
-      className="textarea rounded-2xl w-full resize-none leading-relaxed"
+    <TextArea
       rows={7}
       value={value}
       onChange={(e) => onChange(e.target.value)}

@@ -25,6 +25,7 @@
     "terms": "Uvjeti",
     "privacy": "Privatnost",
     "cookies": "Kolačići",
+    "youtube": "MoveUs na YouTubeu",
     "twitter": "MoveUs na X-u",
     "instagram": "MoveUs na Instagramu",
     "copy": "MoveUs j.d.o.o. 2026"
@@ -486,6 +487,18 @@
     "changeCoverImage": "Promijeni",
     "removeCoverImageAria": "Ukloni naslovnu sliku",
     "coverImagePreviewAlt": "Pregled naslovne slike",
+    "form": {
+      "basicsTitle": "Osnovno",
+      "basicsDesc": "Imenuj događaj i reci ljudima što ih čeka.",
+      "whenTitle": "Datum i vrijeme",
+      "whenDesc": "Kad se nalazite?",
+      "detailsTitle": "Aktivnost i mjesto",
+      "detailsDesc": "Što radite i gdje.",
+      "whoTitle": "Tko se može pridružiti",
+      "whoDesc": "Postavi ograničenja ili ih ostavi otvorenima za sve.",
+      "whoDescEdit": "Podesi koliko se ljudi može pridružiti.",
+      "coverDesc": "Daj događaju lice. Prikazuje se na karticama i stranici događaja."
+    },
     "validation": {
       "needTitle": "Unesi naslov događaja.",
       "needStart": "Odaberi datum i vrijeme početka.",
@@ -511,6 +524,7 @@
     "thumbnailAlt": "{title} sličica događaja",
     "locationTBD": "Lokacija će biti naknadno određena",
     "hostedBy": "Domaćin:",
+    "hosting": "Organizira događaj",
     "full": "Popunjeno",
     "spotLeft": "Preostalo {count} mjesto",
     "spotsLeft": "Preostalo {count} mjesta",

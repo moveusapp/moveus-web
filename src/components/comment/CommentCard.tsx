@@ -13,7 +13,7 @@ import strings from "@/translations/strings";
 import { useLikeToggle } from "@/hooks/use-like-toggle";
 
 function CommentCard({ comment, onReply }: CommentCardProps) {
-  const { liked, likeCount, toggle: handleLike } = useLikeToggle({
+  const { liked, likeCount, justLiked, toggle: handleLike } = useLikeToggle({
     variables: { commentId: comment.id! },
     initialLiked: comment.isLiked ?? false,
     initialCount: comment.likes ?? 0,
@@ -56,7 +56,7 @@ function CommentCard({ comment, onReply }: CommentCardProps) {
               className="flex items-center gap-1 text-xs text-base-content/60 hover:text-error transition-colors"
             >
               {liked ? (
-                <HiHeart className="w-3.5 h-3.5 text-error" />
+                <HiHeart className={`w-3.5 h-3.5 text-error ${justLiked ? "animate-like-pop" : ""}`} />
               ) : (
                 <HiOutlineHeart className="w-3.5 h-3.5" />
               )}
@@ -88,7 +88,7 @@ function CommentCard({ comment, onReply }: CommentCardProps) {
 }
 
 function ReplyCard({ reply }: { reply: CommentFragment["replies"][number] }) {
-  const { liked, likeCount, toggle: handleLike } = useLikeToggle({
+  const { liked, likeCount, justLiked, toggle: handleLike } = useLikeToggle({
     variables: { commentId: reply.id! },
     initialLiked: reply.isLiked ?? false,
     initialCount: reply.likes ?? 0,

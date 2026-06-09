@@ -37,17 +37,13 @@ function LeftSidebar() {
   const navItemClass = (active: boolean) =>
     `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
       active
-        ? "bg-primary text-primary-content shadow-sm"
-        : "text-base-content/70 hover:bg-base-100 hover:text-base-content"
+        ? "bg-primary text-primary-content font-semibold"
+        : "text-base-content/70 hover:bg-base-200 hover:text-base-content"
     }`;
 
   return (
     <div className="flex flex-col h-full w-full py-6 px-4">
       <div className="flex flex-col gap-1.5 px-3 mb-8">
-        <span className="inline-flex items-center gap-1.5 self-start text-[11px] font-bold uppercase tracking-wide text-accent">
-          <HiBeaker className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-          {strings.nav.openBeta}
-        </span>
         <Link to="/home" aria-label={strings.common.brand} className="contents">
           <img
             src={moveusLogo}
@@ -115,10 +111,10 @@ function LeftSidebar() {
         to="/profile"
         aria-current={isProfileActive ? "page" : undefined}
         aria-label={strings.nav.viewProfileAria}
-        className={`group flex items-center gap-3 p-2.5 rounded-xl border transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+        className={`group flex items-center gap-3 p-2.5 rounded-xl transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
           isProfileActive
-            ? "bg-primary/10 border-primary/30"
-            : "bg-base-100 border-base-300 hover:bg-base-200 hover:border-base-300"
+            ? "bg-primary/10"
+            : "hover:bg-base-200"
         }`}
       >
         <UserAvatar imageUrl={profile?.avatarUrl} className="w-9 h-9 shrink-0" />
@@ -133,7 +129,7 @@ function LeftSidebar() {
             </span>
             <UserBadge badge={profile?.badge} size={16} />
           </span>
-          <span className="text-xs text-base-content/60 truncate">
+          <span className="text-xs text-base-content/70 truncate">
             @{profile?.username}
           </span>
         </div>

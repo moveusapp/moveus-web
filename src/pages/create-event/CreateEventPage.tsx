@@ -77,16 +77,18 @@ function CreateEventPage() {
 
   return (
     <div className="min-h-full shrink-0 flex flex-col">
-      <PageHeader title={strings.createEvent.title} />
+      <div className="w-full max-w-3xl">
+        <PageHeader title={strings.createEvent.title} />
 
-      <div className="w-full mx-auto max-w-3xl p-4">
-        <EventForm
-          mode="create"
-          submitLabel={strings.createEvent.submit}
-          loading={loading}
-          apiError={apiError}
-          onSubmit={handleSubmit}
-        />
+        <div className="px-4 py-6 sm:px-6">
+          <EventForm
+            mode="create"
+            submitLabel={strings.createEvent.submit}
+            loading={loading}
+            apiError={apiError}
+            onSubmit={handleSubmit}
+          />
+        </div>
       </div>
     </div>
   );

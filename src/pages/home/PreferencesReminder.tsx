@@ -1,27 +1,19 @@
 import { Link } from "react-router-dom";
 import { HiArrowRight, HiXMark } from "react-icons/hi2";
-import { useProfile } from "@/context/profile-context";
-import useSessionDismissed from "@/hooks/use-session-dismissed";
 import duckDefault from "@/assets/duck/duck-default.svg";
 import strings from "@/translations/strings";
 
 /**
- * Nudges users who skipped the preferences survey to fill it in. Shown only
- * while `profile.preferences` is unset, so it disappears the moment the survey
- * is completed. Dismissal is session-only (matches FeedbackReminder); the
- * permanent way in lives in Settings.
+ * Nudges users who skipped the preferences survey to fill it in. Visibility and
+ * priority (vs the feedback prompt) are owned by HomeReminders; this component
+ * is purely presentational and calls `onDismiss` when closed.
  */
-function PreferencesReminder() {
-  const { profile } = useProfile();
-  const [dismissed, dismiss] = useSessionDismissed("preferences-reminder");
-
-  if (dismissed || !profile || profile.preferences) return null;
-
+function PreferencesReminder({ onDismiss }: { onDismiss: () => void }) {
   return (
-    <section className="relative rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:p-5">
+    <section className="relative rounded-2xl bg-primary/5 p-4">
       <button
         type="button"
-        onClick={dismiss}
+        onClick={onDismiss}
         className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-base-content/60"
         aria-label={strings.home.dismissPreferencesAria}
       >

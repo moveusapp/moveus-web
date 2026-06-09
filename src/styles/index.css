@@ -11,10 +11,10 @@
   --color-secondary: oklch(0.955 0.022 245);
   --color-accent: oklch(0.702 0.152 52);
   --color-neutral: oklch(0.552 0.035 256);
-  --color-base-100: oklch(0.964 0.006 245);
-  --color-base-200: oklch(0.995 0.0025 245);
-  --color-base-300: oklch(0.912 0.012 250);
-  --color-base-content: oklch(0.27 0.035 257);
+  --color-base-100: oklch(0.99 0.003 245);
+  --color-base-200: oklch(0.965 0.005 245);
+  --color-base-300: oklch(0.91 0.011 248);
+  --color-base-content: #303b70;
   --color-info: oklch(0.555 0.205 264);
   --color-success: oklch(0.621 0.148 243);
   --color-warning: oklch(0.787 0.158 70);
@@ -31,7 +31,7 @@
   --color-secondary-content: oklch(0.93 0.02 245);
   --color-accent: oklch(0.72 0.15 52);
   --color-accent-content: oklch(0.20 0.03 50);
-  --color-neutral: oklch(0.40 0.02 245);
+  --color-neutral: oklch(.40 0.02 245);
   --color-neutral-content: oklch(0.93 0.01 245);
   --color-base-100: oklch(0.22 0.02 245);
   --color-base-200: oklch(0.26 0.022 245);
@@ -72,7 +72,7 @@
 }
 
 html, body, #root {
-  height: 50%;
+  height: 100%;
 }
 
 body {
@@ -114,6 +114,29 @@ body {
 
 @utility animate-survey-question {
   animation: survey-question-enter 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Heart pop: fires once when a user likes, settling back to rest with no
+   under-bounce (a pop, not an elastic spring). */
+@keyframes like-pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.32); }
+  100% { transform: scale(1); }
+}
+
+@utility animate-like-pop {
+  animation: like-pop 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Calendar month change: a quick, flat fade-and-settle so flipping months
+   feels alive without distracting from scanning the grid. */
+@keyframes calendar-month-enter {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@utility animate-calendar-month {
+  animation: calendar-month-enter 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes welcome-rise {
@@ -174,6 +197,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .animate-welcome-rise,
   .animate-welcome-float,
+  .animate-like-pop,
+  .animate-calendar-month,
   .animate-survey-question,
   .animate-toast-in,
   .animate-toast-out,

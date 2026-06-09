@@ -202,7 +202,7 @@ function EditProfileModal({ isOpen, onClose, profile }: EditProfileModalProps) {
             rows={4}
           />
 
-          <DateOfBirth label={strings.editProfile.dateOfBirth} dob={dob} setDob={setDob} />
+          <DateOfBirth label={strings.editProfile.dateOfBirth} value={dob} onChange={setDob} />
 
           <Dropdown<Gender>
             label={strings.editProfile.gender}

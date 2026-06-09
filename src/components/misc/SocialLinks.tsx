@@ -1,4 +1,4 @@
-import { RiTwitterXLine, RiInstagramLine } from "react-icons/ri";
+import { RiYoutubeLine, RiTwitterXLine, RiInstagramLine } from "react-icons/ri";
 import strings from "@/translations/strings";
 
 interface SocialLinksProps {
@@ -8,6 +8,11 @@ interface SocialLinksProps {
 function SocialLinks({ className }: SocialLinksProps) {
   // Built inside the component so labels refresh on language change.
   const links = [
+    {
+      href: "https://www.youtube.com/@themoveusapp",
+      label: strings.footer.youtube,
+      Icon: RiYoutubeLine
+    },
     {
       href: "https://x.com/themoveusapp",
       label: strings.footer.twitter,

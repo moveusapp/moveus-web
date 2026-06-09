@@ -28,9 +28,11 @@ function MonthGrid({
   const weekdays = strings.calendar.weekdays;
 
   return (
-    <div className={className}>
+    <div
+      className={`${className} animate-calendar-month overflow-hidden rounded-2xl border border-base-300`}
+    >
       <div
-        className="grid gap-px bg-base-content/8 h-full"
+        className="grid gap-px bg-base-300 h-full"
         style={{
           gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
           gridTemplateRows: "auto repeat(6, minmax(0, 1fr))",
@@ -39,7 +41,7 @@ function MonthGrid({
         {weekdays.map((d) => (
           <div
             key={d}
-            className="bg-base-200/70 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.08em] text-base-content/55"
+            className="bg-base-200 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.08em] text-base-content/55"
           >
             {d}
           </div>
@@ -147,7 +149,7 @@ function dayNumberClass(
 
 function badgeClass(hosting: boolean, selected: boolean): string {
   const base =
-    "block w-full truncate rounded px-1 py-0.5 text-[10px] sm:text-[11px] font-semibold leading-tight";
+    "block w-full truncate rounded-md px-1 py-0.5 text-[10px] sm:text-[11px] font-semibold leading-tight";
 
   if (selected) {
     return `${base} bg-primary-content/25 text-primary-content`;

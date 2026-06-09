@@ -16,12 +16,12 @@ function UpcomingEventsWidget() {
   const { profile } = useProfile();
 
   return (
-    <div className="bg-base-200 rounded-2xl border border-base-300 p-4">
-      <h3 className="text-xs font-bold uppercase tracking-wider text-neutral mb-3">
+    <section>
+      <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-base-content/55">
         {strings.widgets.comingUp}
       </h3>
       <WidgetBody profile={profile} />
-    </div>
+    </section>
   );
 }
 
@@ -60,7 +60,7 @@ function WidgetBody({
       {upcoming.length > DISPLAY_LIMIT && (
         <Link
           to="/calendar"
-          className="mt-1.5 -mx-2 px-2 py-1.5 rounded-lg text-xs font-semibold text-primary hover:bg-base-300/60 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="mt-1.5 -mx-2 px-2 py-1.5 rounded-xl text-xs font-semibold text-primary hover:bg-base-200 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           {strings.common.seeAll}
         </Link>
@@ -94,7 +94,7 @@ function EventRow({
   return (
     <Link
       to={`/event/${event.id}`}
-      className="group flex items-center gap-3 -mx-2 px-2 py-1.5 rounded-xl hover:bg-base-300/60 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="group flex items-center gap-3 -mx-2 px-2 py-1.5 rounded-xl hover:bg-base-200 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
       <CalendarTile date={start} locale={locale} />
       <div className="flex-1 min-w-0">

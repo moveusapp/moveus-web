@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { HiPlus, HiSearch, HiX } from "react-icons/hi";
 import { enumToOptions } from "@/utils/enum-to-options";
+import { chipClass } from "../choice-styles";
+import SingleChoice from "../SingleChoice";
 import strings from "@/translations/strings";
 import type { ActivityRatingValue } from "@/surveys/types";
 
@@ -60,10 +62,8 @@ function ActivityRatingQuestion({
   return (
     <div className="flex flex-col gap-5">
       <div
-        className={`relative rounded-xl border transition-colors duration-150 ${
-          searchFocused
-            ? "border-primary bg-base-100"
-            : "border-base-300 bg-base-200"
+        className={`relative rounded-2xl border bg-base-100 transition-colors duration-150 ${
+          searchFocused ? "border-primary" : "border-base-content/20"
         }`}
       >
         <HiSearch
@@ -77,7 +77,7 @@ function ActivityRatingQuestion({
           value={query}
           placeholder={strings.survey.preferences.activitiesSearchPlaceholder}
           aria-label={strings.common.search}
-          className="w-full h-12 pl-11 pr-11 bg-transparent rounded-xl text-base focus:outline-none"
+          className="w-full h-12 pl-11 pr-11 bg-transparent rounded-2xl text-base focus:outline-none"
           onFocus={() => setSearchFocused(true)}
           onBlur={() => setSearchFocused(false)}
           onChange={(e) => setQuery(e.target.value)}
@@ -120,31 +120,13 @@ function ActivityRatingQuestion({
                   <HiX className="text-lg" />
                 </button>
               </div>
-              <div
-                role="radiogroup"
-                aria-label={labelFor(entry.activity)}
-                className="flex flex-wrap gap-1.5"
-              >
-                {skillOptions.map((skill) => {
-                  const isActive = skill.value === entry.skillLevel;
-                  return (
-                    <button
-                      key={skill.value}
-                      type="button"
-                      role="radio"
-                      aria-checked={isActive}
-                      onClick={() => setSkill(entry.activity, skill.value)}
-                      className={`min-h-10 px-3.5 rounded-full text-xs font-medium border transition-colors duration-150 ${
-                        isActive
-                          ? "bg-primary text-primary-content border-primary"
-                          : "bg-base-100 text-base-content/70 border-base-300 hover:border-primary/40 hover:text-base-content"
-                      }`}
-                    >
-                      {skill.label}
-                    </button>
-                  );
-                })}
-              </div>
+              <SingleChoice
+                variant="chips"
+                ariaLabel={labelFor(entry.activity)}
+                value={entry.skillLevel}
+                setValue={(v) => setSkill(entry.activity, v)}
+                options={skillOptions}
+              />
             </div>
           ))}
         </section>
@@ -164,9 +146,9 @@ function ActivityRatingQuestion({
                 key={option.value}
                 type="button"
                 onClick={() => addActivity(option.value)}
-                className="inline-flex items-center gap-1.5 min-h-11 px-4 py-2 rounded-full text-sm font-medium border bg-base-200 text-base-content border-base-300 hover:border-primary/40 hover:bg-base-100 transition-colors duration-150"
+                className={chipClass(false)}
               >
-                <HiPlus className="text-base shrink-0 opacity-50" />
+                <HiPlus className="text-base shrink-0 opacity-60" />
                 {option.label}
               </button>
             ))}

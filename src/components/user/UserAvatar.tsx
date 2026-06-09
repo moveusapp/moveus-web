@@ -6,18 +6,16 @@ function UserAvatar({ imageUrl, className }: UserImageProps) {
   const [image, setImage] = useState(imageUrl || defaultAvatar);
 
   return (
-    <div className={className}> {/* Wrapped in 2 divs because of some daisyUI bull */}
-      <div className="avatar rounded-full">
-        <div className="rounded-full">
-          <img
-            src={image}
-            className="aspect-square"
-            alt={strings.user.avatarAlt}
-            onError={() => {
-              setImage(defaultAvatar);
-            }}
-          />
-        </div>
+    <div className={className}>
+      <div className="w-full aspect-square overflow-hidden rounded-full bg-base-300">
+        <img
+          src={image}
+          className="h-full w-full object-cover"
+          alt={strings.user.avatarAlt}
+          onError={() => {
+            setImage(defaultAvatar);
+          }}
+        />
       </div>
     </div>
   );

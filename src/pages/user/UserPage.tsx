@@ -26,6 +26,7 @@ import EventCard from "../../components/event/EventCard";
 import PostCard from "@/components/post/PostCard";
 import TabButtons from "@/components/ui/TabButtons";
 import EmptyState from "@/components/ui/EmptyState";
+import RightRail from "@/components/layout/RightRail";
 import { ReactNode, useState } from "react";
 import UserPageSkeleton from "./UserPageSkeleton";
 import EditProfileModal from "./EditProfileModal";
@@ -62,10 +63,9 @@ function genderLabel(g: Gender): string | undefined {
 
 type ProfileTab = "posts" | "attending" | "organizing";
 
-function tabLabel(Icon: IconType, text: string, count: number): ReactNode {
+function tabLabel(text: string, count: number): ReactNode {
   return (
     <span className="inline-flex items-center gap-1.5">
-      <Icon size={16} className="opacity-70" />
       <span>{text}</span>
       <span className="text-xs opacity-50 tabular-nums">{count}</span>
     </span>
@@ -155,12 +155,11 @@ function UserPage() {
   const tabs: { value: ProfileTab; label: ReactNode }[] = [
     {
       value: "posts",
-      label: tabLabel(HiOutlineNewspaper, strings.ui.posts, posts.length),
+      label: tabLabel(strings.ui.posts, posts.length),
     },
     {
       value: "attending",
       label: tabLabel(
-        HiOutlineCalendar,
         strings.profile.attendingTab,
         user.attendingEvents?.length ?? 0,
       ),
@@ -168,189 +167,213 @@ function UserPage() {
     {
       value: "organizing",
       label: tabLabel(
-        HiOutlineStar,
         strings.profile.organizingTab,
         user.organizingEvents?.length ?? 0,
       ),
     },
   ];
 
-  return (
-    <div className="flex flex-col m-4 gap-2">
-      <div className="bg-base-200 rounded-2xl border border-base-300 p-5 sm:p-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-          <div className="flex flex-row items-center gap-4 min-w-0 grow">
-            <UserAvatar
-              imageUrl={user.avatarUrl}
-              className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20"
-            />
+  const actionButtons = isSelf ? (
+    <Button
+      className="w-full sm:w-auto"
+      onClick={() => setShowEditModal(true)}
+    >
+      {strings.profile.editProfile}
+    </Button>
+  ) : profile ? (
+    <div className="flex flex-row gap-2">
+      {user.canMessage && (
+        <Link
+          to={`/chat?userId=${user.id}`}
+          className="btn btn-square rounded-2xl shrink-0"
+          aria-label={
+            strings.formatString(strings.profile.messageAria, {
+              name,
+            }) as string
+          }
+        >
+          <HiOutlineChat size={18} />
+        </Link>
+      )}
 
-            <div className="flex flex-col min-w-0 gap-0.5">
-              <div className="flex flex-row gap-1.5 items-center min-w-0">
-                <h1 className="font-bold text-xl sm:text-2xl truncate">{name}</h1>
-                <UserBadge badge={user.badge} size={22} />
+      <FollowButton
+        userId={user.id!}
+        isFollowing={user.isFollowing ?? false}
+        className="grow sm:grow-0 sm:w-30"
+      />
+    </div>
+  ) : null;
+
+  return (
+    <div className="flex flex-row">
+      <div className="flex flex-col grow min-w-0">
+        <div className="w-full mx-auto max-w-[600px]">
+          {/* Borderless identity header: avatar + action top, then name,
+              handle, bio, facts and follow counts, like a feed profile. */}
+          <header className="px-4 sm:px-5 pt-5 pb-4">
+            <div className="flex items-start gap-4">
+              <UserAvatar
+                imageUrl={user.avatarUrl}
+                className="w-20 h-20 sm:w-24 sm:h-24 shrink-0"
+              />
+
+              <div className="min-w-0 flex-1 self-center">
+                <div className="flex flex-row gap-1.5 items-center min-w-0">
+                  <h1 className="font-bold text-xl sm:text-2xl truncate">
+                    {name}
+                  </h1>
+                  <UserBadge badge={user.badge} size={22} />
+                </div>
+                <p className="text-sm text-base-content/70 truncate">
+                  @{user.username}
+                </p>
               </div>
 
-              <p className="text-sm text-base-content/70 truncate">
-                @{user.username}
-              </p>
+              {/* Action sits inline beside the name on desktop; on mobile it
+                  drops to a full-width row below so the name keeps its room. */}
+              <div className="hidden sm:block shrink-0">{actionButtons}</div>
             </div>
+
+            {actionButtons && (
+              <div className="sm:hidden mt-4">{actionButtons}</div>
+            )}
+
+            <p className="mt-4 max-w-prose text-sm leading-relaxed text-base-content/90 break-words">
+              {isBioEmpty() ? (
+                <span className="italic text-base-content/60">
+                  {strings.profile.noBio}
+                </span>
+              ) : (
+                user.bio
+              )}
+            </p>
+
+            {facts.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+                {facts.map(({ icon: Icon, label }) => (
+                  <span
+                    key={label}
+                    className="inline-flex items-center gap-1.5 text-sm text-base-content/70"
+                  >
+                    <Icon className="h-4 w-4 text-primary" />
+                    {label}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {showFollowers && (
+              <div className="mt-4 flex flex-row items-center gap-6 text-sm">
+                {user.followerCount != null && (
+                  <span>
+                    <span className="font-bold text-base-content">
+                      {user.followerCount}
+                    </span>{" "}
+                    <span className="text-base-content/70">
+                      {strings.profile.followers}
+                    </span>
+                  </span>
+                )}
+                {user.followingCount != null && (
+                  <span>
+                    <span className="font-bold text-base-content">
+                      {user.followingCount}
+                    </span>{" "}
+                    <span className="text-base-content/70">
+                      {strings.profile.following}
+                    </span>
+                  </span>
+                )}
+              </div>
+            )}
+          </header>
+
+          <div className="border-b border-base-300">
+            <TabButtons
+              tabs={tabs}
+              activeTab={activeTab}
+              onChange={setActiveTab}
+            />
           </div>
 
-          {isSelf ? (
-            <Button
-              className="flex-shrink-0 w-full sm:w-auto"
-              onClick={() => setShowEditModal(true)}
-            >
-              {strings.profile.editProfile}
-            </Button>
-          ) : (
-            profile && (
-              <div className="flex flex-row gap-2 w-full sm:w-auto flex-shrink-0">
-                {user.canMessage && (
-                  <Link
-                    to={`/chat?userId=${user.id}`}
-                    className="btn btn-square rounded-2xl flex-shrink-0"
-                    aria-label={
-                      strings.formatString(strings.profile.messageAria, {
-                        name,
-                      }) as string
-                    }
-                  >
-                    <HiOutlineChat size={18} />
-                  </Link>
-                )}
-
-                <FollowButton
-                  userId={user.id!}
-                  isFollowing={user.isFollowing ?? false}
-                  className="grow sm:grow-0 sm:w-30"
+          {activeTab === "posts" &&
+            (posts.length > 0 ? (
+              <div className="divide-y divide-base-300">
+                {posts.map((post) => (
+                  <PostCard key={post.id} post={post} variant="feed" />
+                ))}
+              </div>
+            ) : (
+              <div className="p-4">
+                <EmptyState
+                  icon={<HiOutlineNewspaper className="h-6 w-6" />}
+                  title={
+                    isSelf
+                      ? strings.profile.noPostsSelf
+                      : (strings.formatString(strings.profile.noPostsOther, {
+                          name,
+                        }) as string)
+                  }
+                  description={
+                    isSelf
+                      ? strings.profile.noPostsSelfDesc
+                      : strings.profile.noPostsOtherDesc
+                  }
                 />
               </div>
-            )
-          )}
-        </div>
-
-        <p className="mt-5 max-w-prose text-sm leading-relaxed text-base-content/90 break-words">
-          {isBioEmpty() ? (
-            <span className="italic text-base-content/60">{strings.profile.noBio}</span>
-          ) : (
-            user.bio
-          )}
-        </p>
-
-        {facts.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
-            {facts.map(({ icon: Icon, label }) => (
-              <span
-                key={label}
-                className="inline-flex items-center gap-1.5 text-sm text-base-content/70"
-              >
-                <Icon className="h-4 w-4 text-primary" />
-                {label}
-              </span>
             ))}
-          </div>
-        )}
 
-        {showFollowers && (
-          <div className="mt-5 pt-5 border-t border-base-300 flex flex-row items-center gap-6 text-sm">
-            {user.followerCount != null && (
-              <span>
-                <span className="font-bold text-base-content">
-                  {user.followerCount}
-                </span>{" "}
-                <span className="text-base-content/70">{strings.profile.followers}</span>
-              </span>
-            )}
-            {user.followingCount != null && (
-              <span>
-                <span className="font-bold text-base-content">
-                  {user.followingCount}
-                </span>{" "}
-                <span className="text-base-content/70">{strings.profile.following}</span>
-              </span>
-            )}
-          </div>
-        )}
-      </div>
-
-      <div className="border-b border-base-300">
-        <TabButtons
-          tabs={tabs}
-          activeTab={activeTab}
-          onChange={setActiveTab}
-        />
-      </div>
-
-      {activeTab === "posts" &&
-        (posts.length > 0 ? (
-          <div className="columns-1 md:columns-2 gap-3">
-            {posts.map((post) => (
-              <div key={post.id} className="mb-3 break-inside-avoid">
-                <PostCard post={post} />
+          {activeTab === "attending" &&
+            (hasAttendingEvents() ? (
+              <div className="divide-y divide-base-300">
+                {sortByStartTimeDesc(user.attendingEvents).map((event) => (
+                  <EventCard key={event?.id} event={event!} variant="feed" />
+                ))}
+              </div>
+            ) : (
+              <div className="p-4">
+                <EmptyState
+                  icon={<HiOutlineCalendar className="h-6 w-6" />}
+                  title={strings.profile.noCalendar}
+                  description={
+                    isSelf
+                      ? strings.profile.noAttendingSelfDesc
+                      : (strings.formatString(
+                          strings.profile.noAttendingOtherDesc,
+                          { name },
+                        ) as string)
+                  }
+                />
               </div>
             ))}
-          </div>
-        ) : (
-          <EmptyState
-            icon={<HiOutlineNewspaper className="h-5 w-5" />}
-            title={
-              isSelf
-                ? strings.profile.noPostsSelf
-                : (strings.formatString(strings.profile.noPostsOther, {
-                    name,
-                  }) as string)
-            }
-            description={
-              isSelf
-                ? strings.profile.noPostsSelfDesc
-                : strings.profile.noPostsOtherDesc
-            }
-          />
-        ))}
 
-      {activeTab === "attending" &&
-        (hasAttendingEvents() ? (
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
-            {sortByStartTimeDesc(user.attendingEvents).map((event) => (
-              <EventCard key={event?.id} event={event!} />
+          {activeTab === "organizing" &&
+            (hasOrganizingEvents() ? (
+              <div className="divide-y divide-base-300">
+                {sortByStartTimeDesc(user.organizingEvents).map((event) => (
+                  <EventCard key={event?.id} event={event!} variant="feed" />
+                ))}
+              </div>
+            ) : (
+              <div className="p-4">
+                <EmptyState
+                  icon={<HiOutlineStar className="h-6 w-6" />}
+                  title={strings.profile.noOrganized}
+                  description={
+                    isSelf
+                      ? strings.profile.noOrganizingSelfDesc
+                      : (strings.formatString(
+                          strings.profile.noOrganizingOtherDesc,
+                          { name },
+                        ) as string)
+                  }
+                />
+              </div>
             ))}
-          </div>
-        ) : (
-          <EmptyState
-            icon={<HiOutlineCalendar className="h-5 w-5" />}
-            title={strings.profile.noCalendar}
-            description={
-              isSelf
-                ? strings.profile.noAttendingSelfDesc
-                : (strings.formatString(strings.profile.noAttendingOtherDesc, {
-                    name,
-                  }) as string)
-            }
-          />
-        ))}
+        </div>
+      </div>
 
-      {activeTab === "organizing" &&
-        (hasOrganizingEvents() ? (
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
-            {sortByStartTimeDesc(user.organizingEvents).map((event) => (
-              <EventCard key={event?.id} event={event!} />
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            icon={<HiOutlineStar className="h-5 w-5" />}
-            title={strings.profile.noOrganized}
-            description={
-              isSelf
-                ? strings.profile.noOrganizingSelfDesc
-                : (strings.formatString(strings.profile.noOrganizingOtherDesc, {
-                    name,
-                  }) as string)
-            }
-          />
-        ))}
+      <RightRail />
 
       {isSelf && profile && (
         <EditProfileModal

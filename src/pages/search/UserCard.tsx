@@ -15,31 +15,30 @@ function UserCard({ user, tags, isSelf }: UserCardProps) {
   return (
     <Link
       key={user.id}
-      className="bg-base-200 w-full rounded-2xl border border-base-300 p-4 hover:border-primary/25 transition-all"
       to={`/user/${user?.username}`}
+      className="group flex items-center gap-3 px-4 sm:px-5 py-4 transition-colors hover:bg-base-200/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
     >
-      <div className="flex flex-row gap-2">
-        <UserAvatar imageUrl={user.avatarUrl} className="w-12" />
-        <div className="flex flex-col w-full justify-between">
-          <div className="flex flex-row justify-between">
-            <div className="flex flex-row items-center gap-1">
-              <b>{name}</b>
-              <UserBadge badge={user.badge} />
-            </div>
-            <div className="flex flex-row gap-1">
-              {tags?.map((tag) => (
-                <span
-                  key={`tag-${tag.text}`}
-                  className={`badge ${tag.className ?? ""}`}
-                >
-                  {tag.text}
-                </span>
-              ))}
-            </div>
-          </div>
-          <p className="text-base-content/70 text-sm">@{user.username}</p>
+      <UserAvatar imageUrl={user.avatarUrl} className="w-10 h-10 shrink-0" />
+      <div className="flex flex-col min-w-0 flex-1">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-sm font-semibold text-base-content truncate group-hover:text-primary transition-colors">
+            {name}
+          </span>
+          <UserBadge badge={user.badge} size={16} />
         </div>
+        <span className="text-xs text-base-content/70 truncate">
+          @{user.username}
+        </span>
       </div>
+      {tags && tags.length > 0 && (
+        <div className="flex items-center gap-1 shrink-0">
+          {tags.map((tag) => (
+            <span key={`tag-${tag.text}`} className={`badge ${tag.className ?? ""}`}>
+              {tag.text}
+            </span>
+          ))}
+        </div>
+      )}
     </Link>
   );
 }

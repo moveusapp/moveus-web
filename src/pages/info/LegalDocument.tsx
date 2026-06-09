@@ -55,7 +55,7 @@ function LegalDocument({
                       <a
                         href={`#${s.id}`}
                         onClick={() => setMobileTocOpen(false)}
-                        className="flex gap-2 px-2 py-2 rounded-xl text-base-content/70 hover:bg-base-300/60"
+                        className="flex gap-2 px-2 py-2 rounded-xl text-base-content/70 hover:bg-base-300/50"
                       >
                         <span className="text-base-content/40 tabular-nums">
                           {String(i + 1).padStart(2, "0")}

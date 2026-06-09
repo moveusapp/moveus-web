@@ -1,5 +1,6 @@
 import { HiCheck } from "react-icons/hi";
 import { enumToOptions } from "@/utils/enum-to-options";
+import { choiceSurface } from "../choice-styles";
 import type { AvailabilityValue } from "@/surveys/types";
 
 interface Props {
@@ -68,11 +69,7 @@ function AvailabilityQuestion({
                       aria-pressed={active}
                       aria-label={`${day.label} ${time.label}`}
                       onClick={() => toggle(day.value, time.value)}
-                      className={`flex items-center justify-center w-full h-11 rounded-xl border transition-colors duration-150 ${
-                        active
-                          ? "bg-primary border-primary text-primary-content"
-                          : "bg-base-200 border-base-300 hover:border-primary/40 hover:bg-base-100"
-                      }`}
+                      className={`flex items-center justify-center w-full h-11 rounded-xl border ${choiceSurface(active)}`}
                     >
                       <HiCheck
                         className={`text-lg transition-opacity duration-150 ${

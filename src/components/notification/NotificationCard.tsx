@@ -8,11 +8,10 @@ import UserAvatar from "../user/UserAvatar";
 import UserBadge from "../user/UserBadge";
 import strings from "@/translations/strings";
 
-const cardChassis =
-  "block bg-base-200 rounded-2xl border border-base-300 p-3 sm:p-4 " +
-  "transition-colors duration-150 ease-out " +
-  "hover:border-primary/30 hover:bg-base-200/60 " +
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary/40";
+const rowChassis =
+  "block px-4 sm:px-5 py-4 " +
+  "transition-colors duration-150 ease-out hover:bg-base-200/50 " +
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50";
 
 type Tone = "accent" | "primary" | "warning";
 
@@ -52,7 +51,7 @@ function NotificationCard({ notification }: NotificationCardProps) {
         return (
           <Link
             key={notification.id}
-            className={cardChassis}
+            className={rowChassis}
             to={`/user/${notification.user?.username}`}
           >
             <div className="flex flex-row items-center gap-3">
@@ -83,7 +82,7 @@ function NotificationCard({ notification }: NotificationCardProps) {
       status: string,
       to: string = `/event/${eventId}`,
     ) => (
-      <Link key={notification.id} className={cardChassis} to={to}>
+      <Link key={notification.id} className={rowChassis} to={to}>
         <div className="flex flex-row items-center gap-3">
           <EventIconTile Icon={icon} tone={tone} />
           <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-3 grow min-w-0">
