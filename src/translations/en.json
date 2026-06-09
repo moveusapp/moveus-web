@@ -582,7 +582,8 @@
       "onlyYouCanSee": "Only you can see these ratings.",
       "noFeedbackYet": "No feedback yet",
       "feedbackWillShow": "Ratings from attendees will show up here once they weigh in.",
-      "noCommentLeft": "No comment left"
+      "noCommentLeft": "No comment left",
+      "until": "until"
     },
     "ratingFaces": {
       "VERY_BAD": "Rough",

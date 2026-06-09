@@ -10,7 +10,6 @@ import {
   MemberRole,
 } from "@/graphql/graphql-types";
 import EventPhaseBadge from "@/components/event/EventPhaseBadge";
-import { formatDate, formatTime } from "@/utils/time-utils";
 import { formatError } from "@/utils/format-error";
 import { useToast } from "@/context/toast-context";
 import { useMutation } from "@apollo/client/react";
@@ -31,6 +30,7 @@ import LeaveFeedbackModal from "@/components/event/LeaveFeedbackModal";
 import ViewFeedbackModal from "@/pages/event/ViewFeedbackModal";
 import ParticipantsModal from "@/pages/event/ParticipantsModal";
 import EventScore from "@/pages/event/EventScore";
+import EventWhen from "@/pages/event/EventWhen";
 import EventActionBar from "@/pages/event/EventActionBar";
 import EventTabContent, { EventTabId } from "@/pages/event/EventTabContent";
 import { deriveEventState } from "@/pages/event/derive-event-state";
@@ -219,9 +219,9 @@ function EventPage() {
             </Link>
 
             <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-base-content/60 mt-3 lg:hidden">
-              <span className="flex items-center gap-1.5">
-                <HiOutlineCalendarDays className="h-4 w-4 text-primary" />
-                {formatDate(event.startTime)} • {formatTime(event.startTime)}
+              <span className="flex items-start gap-1.5">
+                <HiOutlineCalendarDays className="h-4 w-4 shrink-0 text-primary" />
+                <EventWhen when={d.when} />
               </span>
               {d.mapsUrl ? (
                 <a
@@ -330,10 +330,10 @@ function EventPage() {
             <div className="hidden lg:block">{actionBar}</div>
 
             <div className="hidden lg:flex lg:flex-col gap-4 border-t border-base-300 pt-5">
-              <div className="flex items-center gap-3">
+              <div className="flex items-start gap-3">
                 <HiOutlineCalendarDays className="h-5 w-5 text-primary shrink-0" />
                 <p className="text-sm font-medium text-base-content">
-                  {formatDate(event.startTime)} • {formatTime(event.startTime)}
+                  <EventWhen when={d.when} />
                 </p>
               </div>
 

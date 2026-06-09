@@ -5,6 +5,12 @@ import {
 } from "@/graphql/graphql-types";
 import { displayName } from "@/utils/display-name";
 import { getActivityLabel } from "@/utils/activity-label";
+import {
+  ensureDateObject,
+  formatDate,
+  formatTime,
+  parseDateOrNull,
+} from "@/utils/time-utils";
 import strings from "@/translations/strings";
 
 type Event = NonNullable<GetEventQueryResult["event"]>;
@@ -61,6 +67,28 @@ export function deriveEventState(event: Event) {
   const commentCount = event.comments?.length ?? 0;
   const participantCount = event.members?.length ?? 0;
 
+  // endTime is nullable in practice (the generated schema mislabels it as
+  // non-null), so it's only surfaced when the organizer actually set one.
+  // A multi-day span renders both endpoints in full; a same-day end collapses
+  // to a time range under the single start date.
+  const start = ensureDateObject(event.startTime);
+  const end = parseDateOrNull(event.endTime);
+  const hasEndTime = end != null && end.getTime() > start.getTime();
+  const isMultiDay =
+    hasEndTime &&
+    (start.getFullYear() !== end.getFullYear() ||
+      start.getMonth() !== end.getMonth() ||
+      start.getDate() !== end.getDate());
+
+  const when = {
+    hasEndTime,
+    isMultiDay,
+    startDate: formatDate(start),
+    startTime: formatTime(start),
+    endDate: hasEndTime ? formatDate(end) : null,
+    endTime: hasEndTime ? formatTime(end) : null,
+  };
+
   const locationName = event.location?.name;
   const mapsUrl =
     event.location?.latitude != null && event.location?.longitude != null
@@ -86,6 +114,7 @@ export function deriveEventState(event: Event) {
     canViewFeedback,
     canEnd,
     showScore,
+    when,
     postCount,
     commentCount,
     participantCount,

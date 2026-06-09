@@ -582,7 +582,8 @@
       "onlyYouCanSee": "Samo ti možeš vidjeti ove ocjene.",
       "noFeedbackYet": "Još nema povratnih informacija",
       "feedbackWillShow": "Ocjene sudionika prikazat će se ovdje kada ih podijele.",
-      "noCommentLeft": "Bez komentara"
+      "noCommentLeft": "Bez komentara",
+      "until": "do"
     },
     "ratingFaces": {
       "VERY_BAD": "Loše",
