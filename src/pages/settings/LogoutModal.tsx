@@ -44,7 +44,7 @@ function LogoutModal({ open, onClose }: LogoutModalProps) {
       onClose={onClose}
       aria-label={strings.settings.logoutModalTitle}
     >
-      <div className="modal-box max-w-sm">
+      <div className="modal-box max-w-md">
         <button
           type="button"
           onClick={onClose}

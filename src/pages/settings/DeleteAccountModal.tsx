@@ -66,7 +66,7 @@ function DeleteAccountModal({
       onClose={handleClose}
       aria-label={strings.settings.deleteAccountModalTitle}
     >
-      <div className="modal-box max-w-sm">
+      <div className="modal-box max-w-md">
         <button
           type="button"
           onClick={handleClose}
