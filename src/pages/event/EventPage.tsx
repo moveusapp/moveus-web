@@ -183,8 +183,8 @@ function EventPage() {
   };
 
   return (
-    <div className="w-full mx-auto max-w-5xl px-4 py-6">
-      <div className="flex flex-col lg:flex-row gap-6">
+    <div className="w-full mx-auto max-w-5xl py-5 lg:px-3 lg:py-8">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
         <div className="flex-1 min-w-0 flex flex-col">
           {/* Header shares the same content inset as the tabs and feed below
               (page padding + content padding), so the whole column lines up. */}
@@ -196,14 +196,14 @@ function EventPage() {
               <EventPhaseBadge phase={event.phase} />
             </div>
             <h1
-              className={`text-xl sm:text-2xl lg:text-3xl font-bold text-balance mt-1 ${d.titleClass}`}
+              className={`text-xl sm:text-2xl lg:text-3xl font-bold text-balance mt-1.5 ${d.titleClass}`}
             >
               {event.title}
             </h1>
 
             <Link
               to={`/user/${event.organizer?.user.username}`}
-              className="flex items-center gap-2 group text-sm text-base-content/60 hover:text-base-content transition-colors mt-2"
+              className="flex items-center gap-2 group text-sm text-base-content/60 hover:text-base-content transition-colors mt-3"
             >
               <UserAvatar
                 imageUrl={event.organizer?.user.avatarUrl}
@@ -218,7 +218,7 @@ function EventPage() {
               </span>
             </Link>
 
-            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-base-content/60 mt-3 lg:hidden">
+            <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-base-content/60 mt-4 lg:hidden">
               <span className="flex items-start gap-1.5">
                 <HiOutlineCalendarDays className="h-4 w-4 shrink-0 text-primary" />
                 <EventWhen when={d.when} />
@@ -242,22 +242,22 @@ function EventPage() {
               )}
             </div>
 
-            <p className="mt-4 text-sm leading-relaxed text-base-content/60 whitespace-pre-line break-words">
+            <p className="mt-5 text-sm leading-relaxed text-base-content/60 whitespace-pre-line break-words">
               {event.description}
             </p>
 
             {d.showScore && (
-              <div className="lg:hidden mt-4">
+              <div className="lg:hidden mt-5">
                 <EventScore score={event.score!} />
               </div>
             )}
           </div>
 
-          <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 py-3 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-4">
+          <div className="lg:hidden sticky top-0 z-20 px-4 sm:px-5 py-3.5 bg-base-100/80 backdrop-blur-lg border-b border-base-300 mt-6">
             {actionBar}
           </div>
 
-          <div className="hidden lg:block border-b border-base-300 mt-4">
+          <div className="hidden lg:block border-b border-base-300 mt-6">
             <TabButtons
               tabs={[postsTab, commentsTab]}
               activeTab={desktopActiveTab}
@@ -267,7 +267,7 @@ function EventPage() {
             />
           </div>
 
-          <div className="lg:hidden border-b border-base-300 mt-4">
+          <div className="lg:hidden border-b border-base-300 mt-6">
             <TabButtons
               tabs={[postsTab, commentsTab, participantsTab]}
               activeTab={mobileActiveTab}
@@ -304,8 +304,8 @@ function EventPage() {
           </div>
         </div>
 
-        <aside className="w-full lg:w-[300px] lg:flex-shrink-0 order-first lg:order-last">
-          <div className="lg:sticky lg:top-6 lg:self-start flex flex-col gap-5">
+        <aside className="w-full px-4 lg:px-0 lg:w-[280px] lg:flex-shrink-0 order-first lg:order-last">
+          <div className="lg:sticky lg:top-8 lg:self-start flex flex-col gap-6">
             <div className="relative rounded-2xl overflow-hidden bg-base-300">
               <EventThumbnail
                 imageUrl={event.imageUrl}
@@ -329,7 +329,7 @@ function EventPage() {
 
             <div className="hidden lg:block">{actionBar}</div>
 
-            <div className="hidden lg:flex lg:flex-col gap-4 border-t border-base-300 pt-5">
+            <div className="hidden lg:flex lg:flex-col gap-4 border-t border-base-300 pt-6">
               <div className="flex items-start gap-3">
                 <HiOutlineCalendarDays className="h-5 w-5 text-primary shrink-0" />
                 <p className="text-sm font-medium text-base-content">

@@ -80,11 +80,13 @@ function EventTabContent({
 
   if (tab === "comments") {
     return (
-      <CommentSection
-        entityType="event"
-        entityId={eventId}
-        comments={(event.comments ?? []).filter(Boolean) as any}
-      />
+      <div className="px-4 sm:px-5">
+        <CommentSection
+          entityType="event"
+          entityId={eventId}
+          comments={(event.comments ?? []).filter(Boolean) as any}
+        />
+      </div>
     );
   }
 
