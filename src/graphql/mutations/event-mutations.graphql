@@ -2,7 +2,7 @@ mutation CreateEvent(
   $title: String!
   $description: String
   $startTime: DateTime!
-  $endTime: DateTime!
+  $endTime: DateTime
   $locationName: String
   $locationAddressLine1: String
   $locationAddressLine2: String
@@ -94,6 +94,12 @@ mutation AlterEvent(
 
 mutation DeleteEvent($eventId: Int!) {
   deleteEvent(eventId: $eventId) {
+    success
+  }
+}
+
+mutation FinishEvent($eventId: Int!) {
+  finishEvent(eventId: $eventId) {
     success
   }
 }

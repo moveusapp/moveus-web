@@ -21,7 +21,7 @@ function CreateEventPage() {
     const endDateTime =
       values.endDate && values.endTime
         ? new Date(`${values.endDate}T${values.endTime}`)
-        : new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000);
+        : null;
 
     try {
       const result = await createEvent({

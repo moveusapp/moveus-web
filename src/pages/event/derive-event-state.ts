@@ -26,6 +26,7 @@ export function deriveEventState(event: Event) {
 
   const isCancelled = event.phase === EventPhase.Cancelled;
   const isFinished = event.phase === EventPhase.Finished;
+  const isInProgress = event.phase === EventPhase.InProgress;
   const isLocked = event.phase !== EventPhase.Scheduled;
 
   const isFull = !!(
@@ -53,6 +54,7 @@ export function deriveEventState(event: Event) {
     [MemberRole.Organizer, MemberRole.Moderator].includes(role);
   const canRate = isFinished && isAttendee;
   const canViewFeedback = isFinished && isOrganizer;
+  const canEnd = isInProgress && isOrganizer;
   const showScore = isFinished && event.score != null && event.score >= 1;
 
   const postCount = event.posts?.length ?? 0;
@@ -72,6 +74,7 @@ export function deriveEventState(event: Event) {
     activity,
     isCancelled,
     isFinished,
+    isInProgress,
     isLocked,
     isFull,
     isOrganizer,
@@ -81,6 +84,7 @@ export function deriveEventState(event: Event) {
     canCreatePost,
     canRate,
     canViewFeedback,
+    canEnd,
     showScore,
     postCount,
     commentCount,

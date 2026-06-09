@@ -4,6 +4,7 @@ import UserAvatar from "@/components/user/UserAvatar";
 import UserBadge from "@/components/user/UserBadge";
 import {
   EventPhase,
+  FinishEventDocument,
   JoinEventDocument,
   LeaveEventDocument,
   MemberRole,
@@ -33,6 +34,9 @@ import EventScore from "@/pages/event/EventScore";
 import EventActionBar from "@/pages/event/EventActionBar";
 import EventTabContent, { EventTabId } from "@/pages/event/EventTabContent";
 import { deriveEventState } from "@/pages/event/derive-event-state";
+import { useHtmlDialog } from "@/hooks/use-html-dialog";
+import Button from "@/components/ui/Button";
+import { HiOutlineFlag } from "react-icons/hi2";
 import strings from "@/translations/strings";
 
 function EventPage() {
@@ -51,10 +55,14 @@ function EventPage() {
   const [showLeaveFeedback, setShowLeaveFeedback] = useState(false);
   const [showViewFeedback, setShowViewFeedback] = useState(false);
   const [showParticipants, setShowParticipants] = useState(false);
+  const [showEndConfirm, setShowEndConfirm] = useState(false);
+  const { dialogRef: endDialogRef } = useHtmlDialog(showEndConfirm);
 
   const [joinEvent, { loading: joinLoading }] = useMutation(JoinEventDocument);
   const [leaveEvent, { loading: leaveLoading }] =
     useMutation(LeaveEventDocument);
+  const [finishEvent, { loading: endLoading, error: endError }] =
+    useMutation(FinishEventDocument);
 
   const toast = useToast();
 
@@ -95,6 +103,19 @@ function EventPage() {
     }
   };
 
+  const handleEnd = async () => {
+    try {
+      const result = await finishEvent({ variables: { eventId: id } });
+      if (result.data?.finishEvent?.success) {
+        setShowEndConfirm(false);
+        await refetch();
+        toast.success(strings.toast.eventEnded);
+      }
+    } catch (err) {
+      toast.error(formatError(err));
+    }
+  };
+
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -117,14 +138,17 @@ function EventPage() {
       isFull={d.isFull}
       canRate={d.canRate}
       canViewFeedback={d.canViewFeedback}
+      canEnd={d.canEnd}
       lockedLabel={d.lockedLabel}
       joinLoading={joinLoading}
       leaveLoading={leaveLoading}
+      endLoading={endLoading}
       onJoin={handleJoin}
       onLeave={handleLeave}
       onShare={handleShare}
       onRate={() => setShowLeaveFeedback(true)}
       onViewFeedback={() => setShowViewFeedback(true)}
+      onEnd={() => setShowEndConfirm(true)}
     />
   );
 
@@ -414,6 +438,52 @@ function EventPage() {
         onClose={() => setShowParticipants(false)}
         event={event}
       />
+
+      <dialog
+        ref={endDialogRef}
+        className="modal"
+        onClose={() => setShowEndConfirm(false)}
+      >
+        <div className="modal-box rounded-2xl">
+          <h3 className="flex items-center gap-2 text-lg font-bold">
+            <HiOutlineFlag className="h-5 w-5 text-primary" />
+            {strings.event.page.endModalTitle}
+          </h3>
+          <p className="py-3 text-sm text-base-content/70">
+            {strings.formatString(strings.event.page.endModalBody, {
+              title: event.title ?? "",
+            })}
+          </p>
+
+          {endError && (
+            <p className="mb-2 text-sm text-error">{formatError(endError)}</p>
+          )}
+
+          <div className="modal-action">
+            <Button
+              onClick={() => setShowEndConfirm(false)}
+              disabled={endLoading}
+              className="btn-ghost"
+            >
+              {strings.event.page.endModalKeep}
+            </Button>
+            <Button
+              onClick={handleEnd}
+              loading={endLoading}
+              className="btn-primary"
+            >
+              <HiOutlineFlag className="h-4 w-4" />
+              {strings.event.page.endEvent}
+            </Button>
+          </div>
+        </div>
+        <button
+          type="button"
+          className="modal-backdrop"
+          aria-label={strings.common.close}
+          onClick={() => !endLoading && setShowEndConfirm(false)}
+        />
+      </dialog>
     </div>
   );
 }

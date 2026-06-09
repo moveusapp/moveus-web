@@ -3,6 +3,7 @@ import {
   HiArrowUpTray,
   HiOutlineChartBar,
   HiOutlineChatBubbleLeftRight,
+  HiOutlineFlag,
   HiOutlinePencilSquare,
   HiOutlineStar,
 } from "react-icons/hi2";
@@ -19,14 +20,17 @@ interface EventActionBarProps {
   isFull: boolean;
   canRate: boolean;
   canViewFeedback: boolean;
+  canEnd: boolean;
   lockedLabel: string;
   joinLoading: boolean;
   leaveLoading: boolean;
+  endLoading: boolean;
   onJoin: () => void;
   onLeave: () => void;
   onShare: () => void;
   onRate: () => void;
   onViewFeedback: () => void;
+  onEnd: () => void;
 }
 
 function EventActionBar({
@@ -39,14 +43,17 @@ function EventActionBar({
   isFull,
   canRate,
   canViewFeedback,
+  canEnd,
   lockedLabel,
   joinLoading,
   leaveLoading,
+  endLoading,
   onJoin,
   onLeave,
   onShare,
   onRate,
   onViewFeedback,
+  onEnd,
 }: EventActionBarProps) {
   return (
     <div className="flex flex-col gap-2">
@@ -58,14 +65,17 @@ function EventActionBar({
           isFull={isFull}
           canRate={canRate}
           canViewFeedback={canViewFeedback}
+          canEnd={canEnd}
           lockedLabel={lockedLabel}
           joinLoading={joinLoading}
           leaveLoading={leaveLoading}
+          endLoading={endLoading}
           eventId={eventId}
           onJoin={onJoin}
           onLeave={onLeave}
           onRate={onRate}
           onViewFeedback={onViewFeedback}
+          onEnd={onEnd}
         />
 
         <button
@@ -99,14 +109,17 @@ function PrimaryAction({
   isFull,
   canRate,
   canViewFeedback,
+  canEnd,
   lockedLabel,
   joinLoading,
   leaveLoading,
+  endLoading,
   eventId,
   onJoin,
   onLeave,
   onRate,
   onViewFeedback,
+  onEnd,
 }: Omit<EventActionBarProps, "onShare" | "organizerId" | "organizerCanMessage">) {
   if (canRate) {
     return (
@@ -131,6 +144,19 @@ function PrimaryAction({
         <HiOutlineChartBar className="h-4 w-4" />
         {strings.event.page.viewFeedback}
       </button>
+    );
+  }
+
+  if (canEnd) {
+    return (
+      <Button
+        onClick={onEnd}
+        loading={endLoading}
+        className="btn btn-primary flex-1"
+      >
+        <HiOutlineFlag className="h-4 w-4" />
+        {strings.event.page.endEvent}
+      </Button>
     );
   }
 
