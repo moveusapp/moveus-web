@@ -673,10 +673,14 @@
   },
   "comment": {
     "writeAComment": "Write a comment...",
+    "writeAReply": "Write a reply...",
     "post": "Post",
     "reply": "Reply",
-    "cancelReply": "Cancel reply",
-    "replyingTo": "Replying to"
+    "viewReplies": "View {count} reply",
+    "viewRepliesPlural": "View {count} replies",
+    "hideReplies": "Hide replies",
+    "noComments": "No comments yet",
+    "beTheFirst": "Be the first to say something!"
   },
   "post": {
     "documentTitle": "Post",

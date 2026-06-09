@@ -673,10 +673,14 @@
   },
   "comment": {
     "writeAComment": "Napiši komentar...",
+    "writeAReply": "Napiši odgovor...",
     "post": "Objavi",
     "reply": "Odgovori",
-    "cancelReply": "Odustani od odgovora",
-    "replyingTo": "Odgovaraš korisniku"
+    "viewReplies": "Prikaži {count} odgovor",
+    "viewRepliesPlural": "Prikaži {count} odgovora",
+    "hideReplies": "Sakrij odgovore",
+    "noComments": "Još nema komentara",
+    "beTheFirst": "Budi prvi koji će nešto reći!"
   },
   "post": {
     "documentTitle": "Objava",

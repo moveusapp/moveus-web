@@ -41,36 +41,47 @@ function PostPage() {
   const notFound = validId ? !loading && !post : true;
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-6 xl:max-w-5xl">
+    <>
       {loading && !post && <PostPageSkeleton />}
 
       {notFound && (
-        <EmptyState
-          title={strings.post.notFound}
-          description={strings.post.notFoundDesc}
-        >
-          <Link to="/home" className="btn btn-primary rounded-2xl">
-            {strings.post.backHome}
-          </Link>
-        </EmptyState>
+        <div className="mx-auto w-full max-w-[600px] px-4 py-6">
+          <EmptyState
+            title={strings.post.notFound}
+            description={strings.post.notFoundDesc}
+          >
+            <Link to="/home" className="btn btn-primary rounded-2xl">
+              {strings.post.backHome}
+            </Link>
+          </EmptyState>
+        </div>
       )}
 
       {post && <PostBody post={post} />}
-    </div>
+    </>
   );
 }
 
 function PostBody({ post }: { post: PostCardFragment }) {
   return (
-    <div className="flex flex-col gap-6 xl:flex-row xl:gap-0">
-      <article className="min-w-0 flex-1 xl:pr-8">
-        <PostMain post={post} />
-      </article>
+    <div className="flex flex-col lg:flex-row">
+      <div className="flex min-w-0 grow flex-col">
+        <article className="mx-auto w-full max-w-[600px] px-4 py-6">
+          <PostMain post={post} />
+
+          <div className="mt-8 border-t border-base-300 pt-6 lg:hidden">
+            <PostComments post={post} />
+          </div>
+        </article>
+      </div>
+
       <aside
         aria-label={strings.ui.comments}
-        className="w-full border-t border-base-300 pt-6 xl:w-[360px] xl:shrink-0 xl:border-l xl:border-t-0 xl:pt-0 xl:pl-8"
+        className="sticky top-0 hidden h-screen flex-shrink-0 overflow-y-auto border-l border-base-300 lg:block lg:w-[360px]"
       >
-        <PostComments post={post} />
+        <div className="p-4">
+          <PostComments post={post} />
+        </div>
       </aside>
     </div>
   );
@@ -204,7 +215,29 @@ function PostComments({ post }: { post: PostCardFragment }) {
 
 function PostPageSkeleton() {
   return (
-    <div className="flex max-w-2xl flex-col">
+    <div className="flex flex-col lg:flex-row" aria-hidden="true">
+      <div className="flex min-w-0 grow flex-col">
+        <div className="mx-auto w-full max-w-[600px] px-4 py-6">
+          <PostMainSkeleton />
+
+          <div className="mt-8 border-t border-base-300 pt-6 lg:hidden">
+            <CommentsSkeleton />
+          </div>
+        </div>
+      </div>
+
+      <aside className="sticky top-0 hidden h-screen flex-shrink-0 overflow-y-auto border-l border-base-300 lg:block lg:w-[360px]">
+        <div className="p-4">
+          <CommentsSkeleton />
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+function PostMainSkeleton() {
+  return (
+    <>
       <div className="flex items-center gap-3">
         <div className="skeleton h-12 w-12 rounded-full" />
         <div className="flex flex-col gap-2">
@@ -217,7 +250,35 @@ function PostPageSkeleton() {
         <div className="skeleton h-5 w-full" />
         <div className="skeleton h-5 w-2/3" />
       </div>
-      <div className="skeleton mt-4 h-60 w-full rounded-2xl" />
+      <div className="skeleton mt-4 h-72 w-full rounded-2xl" />
+      <div className="skeleton mt-6 h-6 w-24 rounded-full" />
+    </>
+  );
+}
+
+function CommentsSkeleton() {
+  return (
+    <div>
+      <div className="skeleton mb-4 h-5 w-24" />
+
+      <div className="flex items-end gap-2.5">
+        <div className="skeleton h-9 w-9 shrink-0 rounded-full" />
+        <div className="skeleton h-10 flex-1 rounded-2xl" />
+        <div className="skeleton h-10 w-10 shrink-0 rounded-full" />
+      </div>
+
+      <div className="mt-5 flex flex-col gap-5">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="flex gap-3">
+            <div className="skeleton h-9 w-9 shrink-0 rounded-full" />
+            <div className="flex-1 space-y-2">
+              <div className="skeleton h-3.5 w-32" />
+              <div className="skeleton h-3.5 w-full" />
+              <div className="skeleton h-3.5 w-3/4" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
