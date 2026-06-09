@@ -67,10 +67,6 @@ export function deriveEventState(event: Event) {
   const commentCount = event.comments?.length ?? 0;
   const participantCount = event.members?.length ?? 0;
 
-  // endTime is nullable in practice (the generated schema mislabels it as
-  // non-null), so it's only surfaced when the organizer actually set one.
-  // A multi-day span renders both endpoints in full; a same-day end collapses
-  // to a time range under the single start date.
   const start = ensureDateObject(event.startTime);
   const end = parseDateOrNull(event.endTime);
   const hasEndTime = end != null && end.getTime() > start.getTime();
