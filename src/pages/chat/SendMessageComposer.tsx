@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useCallback, useRef, useState } from "react";
 import { HiPaperAirplane, HiPhoto, HiXMark } from "react-icons/hi2";
 import strings from "@/translations/strings";
+import { prepareImageForUpload } from "@/utils/image";
 import type { SendInput, SendOutcome } from "./use-chat-messages";
 
 interface SendMessageComposerProps {
@@ -14,8 +15,9 @@ function SendMessageComposer({ onSend }: SendMessageComposerProps) {
   const [submitting, setSubmitting] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
-  const onImageChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.currentTarget.files?.[0] ?? null;
+  const onImageChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
+    const picked = e.currentTarget.files?.[0] ?? null;
+    const file = picked ? await prepareImageForUpload(picked) : null;
     setImage(file);
     setImagePreview((prev) => {
       if (prev) URL.revokeObjectURL(prev);
