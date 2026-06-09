@@ -37,8 +37,8 @@ export type EventFormValues = {
   description: string;
   startDate: string;
   startTime: string;
-  endDate: string;
-  endTime: string;
+  endDate: string | undefined;
+  endTime: string | undefined;
   activity: ActivityKind | null;
   skillLevel: SkillLevel | null;
   location: LocationData | null;
@@ -55,8 +55,8 @@ const EMPTY: EventFormValues = {
   description: "",
   startDate: "",
   startTime: "",
-  endDate: null,
-  endTime: null,
+  endDate: undefined,
+  endTime: undefined,
   activity: null,
   skillLevel: null,
   location: null,
