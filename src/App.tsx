@@ -1,12 +1,11 @@
 import { lazy, Suspense } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ProtectedRoutes } from "./components/routes/ProtectedRoutes";
+import { ScrollToTop } from "./components/routes/ScrollToTop";
 import { NavRoutes } from "./components/routes/nav/NavRoutes";
 import { AuthRoutes } from "./components/routes/AuthRoutes";
 import LandingPage from "./pages/start/LandingPage";
 
-// LandingPage stays eager — it's the unauthenticated entry point and lazy-loading
-// it would add a blank flash on first visit.
 const HomePage = lazy(() => import("./pages/home/HomePage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
@@ -35,6 +34,7 @@ function App() {
   return (
     <main>
       <Router>
+        <ScrollToTop />
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
