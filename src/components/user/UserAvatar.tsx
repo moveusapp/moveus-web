@@ -3,17 +3,20 @@ import { useState } from "react";
 import strings from "@/translations/strings";
 
 function UserAvatar({ imageUrl, className }: UserImageProps) {
-  const [image, setImage] = useState(imageUrl || defaultAvatar);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const image =
+    imageUrl && imageUrl !== failedUrl ? imageUrl : defaultAvatar;
 
   return (
     <div className={className}>
       <div className="w-full aspect-square overflow-hidden rounded-full bg-base-300">
         <img
+          key={imageUrl ?? "default"}
           src={image}
           className="h-full w-full object-cover"
           alt={strings.user.avatarAlt}
           onError={() => {
-            setImage(defaultAvatar);
+            setFailedUrl(imageUrl ?? null);
           }}
         />
       </div>
