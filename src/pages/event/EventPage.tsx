@@ -304,7 +304,7 @@ function EventPage() {
           </div>
         </div>
 
-        <aside className="w-full px-4 lg:px-0 lg:w-[280px] lg:flex-shrink-0 order-first lg:order-last">
+        <aside className="w-full px-4 lg:px-0 lg:w-[320px] lg:flex-shrink-0 order-first lg:order-last">
           <div className="lg:sticky lg:top-8 lg:self-start flex flex-col gap-6">
             <div className="relative rounded-2xl overflow-hidden bg-base-300">
               <EventThumbnail

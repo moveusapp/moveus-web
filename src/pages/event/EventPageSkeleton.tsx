@@ -48,7 +48,7 @@ function EventPageSkeleton() {
         </div>
 
         {/* Right sidebar */}
-        <aside className="w-full px-4 lg:px-0 lg:w-[280px] lg:flex-shrink-0 order-first lg:order-last">
+        <aside className="w-full px-4 lg:px-0 lg:w-[320px] lg:flex-shrink-0 order-first lg:order-last">
           <div className="lg:sticky lg:top-8 lg:self-start flex flex-col gap-6">
             {/* Thumbnail */}
             <div className="skeleton rounded-2xl aspect-video w-full" />
