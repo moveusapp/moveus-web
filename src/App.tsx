@@ -23,6 +23,7 @@ const EditEventPage = lazy(() => import("./pages/edit-event/EditEventPage"));
 const WelcomePage = lazy(() => import("./pages/onboarding/WelcomePage"));
 const CalendarPage = lazy(() => import("./pages/calendar/CalendarPage"));
 const PostPage = lazy(() => import("./pages/post/PostPage"));
+const EventsPage = lazy(() => import("./pages/events/EventsPage"));
 const InfoPageLayout = lazy(() => import("./pages/info/InfoPageLayout"));
 const AboutPage = lazy(() => import("./pages/info/AboutPage"));
 const HelpPage = lazy(() => import("./pages/info/HelpPage"));
@@ -38,6 +39,7 @@ function App() {
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/events" element={<EventsPage />} />
             <Route element={<InfoPageLayout />}>
               <Route path="/about" element={<AboutPage />} />
               <Route path="/help" element={<HelpPage />} />

@@ -812,6 +812,21 @@
     "tabPosts": "Posts",
     "noResults": "No results for '{query}'"
   },
+  "events": {
+    "documentTitle": "Events near you - MoveUs",
+    "kicker": "Browse without an account",
+    "titlePrefix": "Happening",
+    "titleHighlight": "near you",
+    "lede": "Real plans close by. Pick one, join in, show up. Have a look around.",
+    "logIn": "Log in",
+    "getStarted": "Get started",
+    "backToApp": "Back to app",
+    "gridAriaLabel": "Events near you",
+    "emptyTitle": "Nothing nearby just yet",
+    "emptyBody": "We couldn't find events around you right now. New plans pop up all the time, so check back soon.",
+    "ctaTitle": "Ready to move?",
+    "ctaBody": "Create a free account to join these events and meet the crew you'll keep showing up with."
+  },
   "home": {
     "documentTitle": "Home",
     "greeting": "Hello, {name}",

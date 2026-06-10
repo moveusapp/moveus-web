@@ -812,6 +812,21 @@
     "tabPosts": "Objave",
     "noResults": "Nema rezultata za '{query}'"
   },
+  "events": {
+    "documentTitle": "Događaji u blizini - MoveUs",
+    "kicker": "Razgledaj bez računa",
+    "titlePrefix": "Događa se",
+    "titleHighlight": "u blizini",
+    "lede": "Pravi planovi blizu tebe. Izaberi, pridruži se, pojavi se.",
+    "logIn": "Prijavi se",
+    "getStarted": "Kreni",
+    "backToApp": "Natrag u app",
+    "gridAriaLabel": "Događaji u blizini",
+    "emptyTitle": "Trenutno ništa u blizini",
+    "emptyBody": "Zasad nismo našli događaje oko tebe. Novi planovi stalno niču, pa svrati uskoro.",
+    "ctaTitle": "Spreman za pokret?",
+    "ctaBody": "Otvori besplatan račun, pridruži se događajima i upoznaj ekipu s kojom ćeš se stalno pojavljivati."
+  },
   "home": {
     "documentTitle": "Početna",
     "greeting": "Bok, {name}",
