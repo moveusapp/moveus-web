@@ -48,9 +48,6 @@ function PageHeader({
         className ?? ""
       }`}
     >
-      {/* Fixed-height row: the avatar's vertical center stays identical on every
-          route, independent of whether the row holds a title, a search box, or
-          actions of differing heights. */}
       <div className="relative flex items-center gap-x-3 px-4 sm:px-6 h-16">
         <HeaderAvatar />
 
