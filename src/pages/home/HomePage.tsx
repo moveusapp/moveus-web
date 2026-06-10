@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/client/react";
 import { GetMyFeedDocument } from "@/graphql/graphql-types";
 import strings from "@/translations/strings";
 import EventCardSkeleton from "@/components/event/EventCardSkeleton";
-import { HeaderAvatar } from "@/components/layout/PageHeader";
+import PageHeader from "@/components/layout/PageHeader";
 import { Link } from "react-router-dom";
 import moveusIcon from "@/assets/logos/moveus-icon.svg";
 import HomeReminders from "@/pages/home/HomeReminders";
@@ -36,19 +36,21 @@ function HomePage() {
   return (
     <div className="flex flex-row">
       <div className="flex flex-col grow min-w-0">
-        {/* Mobile-only top bar: the drawer trigger lives here (no sidebar on
-            mobile), with the brand mark for wayfinding. Desktop needs no header
-            since the left sidebar carries identity and nav. */}
-        <header className="md:hidden sticky top-0 z-20 flex items-center gap-3 border-b border-base-300 bg-base-100/85 px-4 py-2.5 backdrop-blur-md">
-          <HeaderAvatar />
-          <Link
-            to="/home"
-            aria-label={strings.common.brand}
-            className="absolute left-1/2 -translate-x-1/2"
-          >
-            <img src={moveusIcon} alt={strings.common.brand} className="h-8 w-8" />
-          </Link>
-        </header>
+        {/* Mobile-only top bar: the drawer trigger (avatar) lives here with the
+            brand mark for wayfinding. Desktop needs no header since the left
+            sidebar carries identity and nav. */}
+        <PageHeader
+          className="md:hidden"
+          center={
+            <Link to="/home" aria-label={strings.common.brand}>
+              <img
+                src={moveusIcon}
+                alt={strings.common.brand}
+                className="h-8 w-8"
+              />
+            </Link>
+          }
+        />
         <div className="w-full mx-auto max-w-[600px]">
           <div className="p-4 empty:hidden">
             <HomeReminders />

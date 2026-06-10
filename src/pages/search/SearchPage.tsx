@@ -1,7 +1,7 @@
 import useDocumentTitle from "@/hooks/use-document-title";
 import GlobalSearchWidget from "@/components/widgets/GlobalSearchWidget";
 import RightRail from "@/components/layout/RightRail";
-import PageHeader, { HeaderAvatar } from "@/components/layout/PageHeader";
+import PageHeader from "@/components/layout/PageHeader";
 import { SearchItemsDocument } from "@/graphql/graphql-types";
 import { useLazyQuery } from "@apollo/client/react";
 import { useEffect, useState } from "react";
@@ -68,18 +68,11 @@ function SearchPage() {
   return (
     <div className="flex flex-row">
       <div className="flex flex-col mx-auto grow">
-        <PageHeader>
-          <div className="flex items-center gap-3">
-            <HeaderAvatar />
-            <div className="grow min-w-0">
-              <GlobalSearchWidget />
-            </div>
-          </div>
+        <PageHeader title={<GlobalSearchWidget />}>
           <TabButtons
             tabs={tabs}
             activeTab={activeTab}
             onChange={setActiveTab}
-            className="pt-3"
           />
         </PageHeader>
         <div className="w-full mx-auto max-w-[600px]">

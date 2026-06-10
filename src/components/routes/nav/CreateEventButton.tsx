@@ -3,17 +3,10 @@ import { HiPlus } from "react-icons/hi2";
 import strings from "@/translations/strings";
 
 interface CreateEventButtonProps {
-  /** Dismiss the drawer on navigate; unused in the always-visible sidebar. */
   onClick?: () => void;
-  /** Spacing from the preceding nav, supplied by the caller. */
   className?: string;
 }
 
-/**
- * Full-width secondary-accent action shared by the desktop LeftSidebar and the
- * mobile drawer. The bottom MobileNav renders Create Event as a FAB instead, so
- * it does not use this.
- */
 function CreateEventButton({ onClick, className }: CreateEventButtonProps) {
   const active = useLocation().pathname === "/create-event";
 

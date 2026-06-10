@@ -16,8 +16,8 @@ function NotificationsPage() {
     data && data.myNotifications && data.myNotifications.length > 0;
 
   return (
-    <div className="flex flex-row h-full">
-      <div className="flex flex-col mx-auto grow h-full overflow-y-auto min-w-0">
+    <div className="flex flex-row">
+      <div className="flex flex-col mx-auto grow min-w-0">
         <PageHeader title={strings.notification.title} />
         <div className="w-full mx-auto max-w-[600px]">
           {loading ? (

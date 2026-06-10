@@ -7,11 +7,12 @@ import strings from "@/translations/strings";
 type PageHeaderProps = {
   title?: ReactNode;
   actions?: ReactNode;
+  center?: ReactNode;
   children?: ReactNode;
   className?: string;
 };
 
-export function HeaderAvatar() {
+function HeaderAvatar() {
   const { profile } = useProfile();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -34,40 +35,47 @@ export function HeaderAvatar() {
   );
 }
 
-function PageHeader({ title, actions, children, className }: PageHeaderProps) {
-  const hasTitleRow = Boolean(title || actions);
-
+function PageHeader({
+  title,
+  actions,
+  center,
+  children,
+  className,
+}: PageHeaderProps) {
   return (
     <header
       className={`sticky top-0 z-20 bg-base-100/85 backdrop-blur-md border-b border-base-content/8 ${
         className ?? ""
       }`}
     >
-      {hasTitleRow && (
-        <div className="flex items-center flex-wrap gap-x-3 gap-y-2 px-4 sm:px-6 pt-4 sm:pt-5 pb-3">
-          <HeaderAvatar />
+      {/* Fixed-height row: the avatar's vertical center stays identical on every
+          route, independent of whether the row holds a title, a search box, or
+          actions of differing heights. */}
+      <div className="relative flex items-center gap-x-3 px-4 sm:px-6 h-16">
+        <HeaderAvatar />
 
-          {title && (
-            <h1 className="text-2xl font-bold leading-tight truncate min-w-0">
-              {title}
-            </h1>
-          )}
+        {center && (
+          <div className="md:hidden absolute left-1/2 -translate-x-1/2">
+            {center}
+          </div>
+        )}
 
-          {actions && (
-            <div className="ml-auto flex items-center gap-2 shrink-0 min-w-0">
-              {actions}
-            </div>
-          )}
-        </div>
-      )}
+        {typeof title === "string" ? (
+          <h1 className="text-2xl font-bold leading-tight truncate min-w-0">
+            {title}
+          </h1>
+        ) : (
+          title && <div className="grow min-w-0">{title}</div>
+        )}
 
-      {children && (
-        <div
-          className={`px-4 sm:px-6 ${hasTitleRow ? "" : "pt-4 sm:pt-5"}`}
-        >
-          {children}
-        </div>
-      )}
+        {actions && (
+          <div className="ml-auto flex items-center gap-2 shrink-0 min-w-0">
+            {actions}
+          </div>
+        )}
+      </div>
+
+      {children && <div className="px-4 sm:px-6">{children}</div>}
     </header>
   );
 }

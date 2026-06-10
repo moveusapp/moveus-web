@@ -7,9 +7,6 @@ function MobileNav() {
   const location = useLocation();
   const isActive = (to: string) => location.pathname === to;
 
-  // Four destinations split around the central Create Event FAB, drawn from the
-  // shared nav list. Calendar lives in the menu drawer; the old five-tab bar was
-  // too cramped to read, so it is intentionally omitted here.
   const items = getNavItems();
   const pick = (to: string) => items.find((item) => item.to === to)!;
   const leftItems: NavItem[] = [pick("/home"), pick("/search")];

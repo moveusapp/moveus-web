@@ -11,18 +11,9 @@ export interface NavItem {
   label: string;
   to: string;
   icon: IconType;
-  /** Unread/count pill. Empty string renders nothing; wire to real counts later. */
   badge?: string;
 }
 
-/**
- * The single source of truth for primary navigation destinations: same order,
- * same icons, everywhere nav is rendered (desktop LeftSidebar, mobile drawer,
- * and the bottom MobileNav tab bar, which selects a subset by route).
- *
- * Called inside render (never at module scope) so labels refresh on language
- * change. Mirrors the getFooterLinks() convention.
- */
 export function getNavItems(): NavItem[] {
   const t = strings.nav;
   return [
