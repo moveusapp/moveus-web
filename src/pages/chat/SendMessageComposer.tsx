@@ -61,6 +61,8 @@ function SendMessageComposer({ onSend }: SendMessageComposerProps) {
     [text, image, submitting, onSend, clearImage],
   );
 
+  const iconBtn = "h-10 min-h-10 w-10";
+
   return (
     <div className="flex flex-col gap-2">
       {imagePreview && (
@@ -81,7 +83,7 @@ function SendMessageComposer({ onSend }: SendMessageComposerProps) {
         </div>
       )}
       <form
-        className="bg-base-200 rounded-2xl p-2 flex items-center gap-2"
+        className="bg-base-200 border border-base-300 rounded-2xl p-2 flex items-center gap-2"
         onSubmit={handleSubmit}
       >
         <input
@@ -94,27 +96,32 @@ function SendMessageComposer({ onSend }: SendMessageComposerProps) {
         />
         <button
           type="button"
-          className="btn btn-ghost btn-sm btn-circle"
+          className={`btn btn-ghost btn-circle shrink-0 ${iconBtn}`}
           onClick={() => imageInputRef.current?.click()}
           aria-label={strings.chat.selectedAttachmentAlt}
         >
-          <HiPhoto className="text-lg text-base-content/50" />
+          <HiPhoto className="h-5 w-5 text-base-content/50" />
         </button>
         <input
           type="text"
           name="message"
           value={text}
           onChange={(e) => setText(e.currentTarget.value)}
-          className="input input-ghost border-0 flex-1 focus:outline-none"
+          className="input flex-1"
           placeholder={strings.chat.typeAMessage}
           autoComplete="off"
         />
         <button
           type="submit"
-          className="btn btn-primary btn-sm btn-circle"
+          className={`btn btn-primary btn-circle shrink-0 ${iconBtn}`}
           disabled={submitting || (!text.trim() && !image)}
+          aria-label={strings.common.send}
         >
-          <HiPaperAirplane className="text-base" />
+          {submitting ? (
+            <span className="loading loading-spinner loading-xs" />
+          ) : (
+            <HiPaperAirplane className="h-5 w-5" />
+          )}
         </button>
       </form>
     </div>

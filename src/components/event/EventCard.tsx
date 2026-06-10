@@ -48,13 +48,7 @@ function EventCard({ event, variant = "default" }: EventCardProps) {
     title: event.title ?? "",
   }) as string;
 
-  // Feed variant: a borderless row for the unified home feed. Separators come
-  // from the parent container (`divide-y`). Stays media-led so it reads
-  // unmistakably as an event next to text-led posts; the organizer header
-  // matches the post author header so the feed scans consistently.
   if (variant === "feed") {
-    // Capacity only earns a spot in the feed row once an event is filling up;
-    // roomy events keep the row light. Full detail lives on the event page.
     const showCapacity =
       isScheduled &&
       !!event.maxParticipants &&
@@ -62,9 +56,6 @@ function EventCard({ event, variant = "default" }: EventCardProps) {
 
     return (
       <article className="group relative px-4 sm:px-5 py-4">
-        {/* Eyebrow: names the post type up front so an event reads as an event
-            before the eye reaches the card below. Present tense, so it only
-            shows while the event is still scheduled. */}
         {isScheduled && (
           <p className="flex items-center gap-1.5 mb-2 text-xs font-medium text-base-content/55">
             <HiOutlineMegaphone size={14} className="shrink-0 text-primary" aria-hidden />
@@ -72,8 +63,6 @@ function EventCard({ event, variant = "default" }: EventCardProps) {
           </p>
         )}
 
-        {/* Organizer header — mirrors the post author header: avatar, then the
-            display name (with badge) stacked over the @handle. */}
         <div className="flex items-start justify-between gap-3">
           <Link
             to={`/user/${event.organizer?.user.username}`}
@@ -104,13 +93,9 @@ function EventCard({ event, variant = "default" }: EventCardProps) {
           </span>
         </div>
 
-        {/* The event renders as a self-contained object embedded in the row —
-            media-led, then title and when/where — so it reads unmistakably as
-            an event next to text-led posts. The row itself stays borderless;
-            this contained card is the one bounded element in it. */}
         <Link
           to={`/event/${event.id}`}
-          className="group/card mt-3 block overflow-hidden rounded-2xl border border-base-300 bg-base-200 transition-colors hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="card-pushable group/card mt-3 block overflow-hidden rounded-2xl border border-base-300 bg-base-200 hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <div className="relative w-full aspect-video bg-base-300">
             <EventThumbnail
@@ -163,7 +148,7 @@ function EventCard({ event, variant = "default" }: EventCardProps) {
   return (
     <Link
       to={`/event/${event.id}`}
-      className="bg-base-200 w-full rounded-2xl border border-base-300 hover:border-primary/20 transition-all duration-200 group/card p-4 flex flex-col gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="card-pushable bg-base-200 w-full rounded-2xl border border-base-300 hover:border-primary/40 group/card p-4 flex flex-col gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
       {/* Thumbnail */}
       <div className="relative w-full aspect-video overflow-hidden rounded-xl bg-base-300">
