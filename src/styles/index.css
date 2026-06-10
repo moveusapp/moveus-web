@@ -43,9 +43,6 @@
   --color-error: oklch(0.66 0.18 25);
 }
 
-:root { --depth-darken: 18%; }
-[data-theme="dark"] { --depth-darken: 44%; }
-
 * {
   scrollbar-width: thin;
 }
@@ -59,46 +56,39 @@
   @apply rounded-2xl;
 }
 
+/* Calm-flat buttons: solid fill, a whisper soft shadow (no hard shelf), and
+   hover/press conveyed by darkening the fill in place. No transform on press. */
 @utility btn {
   @apply rounded-2xl;
-  --btn-lift: 0.125rem;
-  --btn-edge: color-mix(in oklch, var(--color-base-200), black var(--depth-darken));
-  --btn-sheen: rgb(255 255 255 / 0.18);
+  font-weight: 600;
   transition:
-    transform 100ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 100ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 150ms ease-out;
+    background-color 130ms ease-out,
+    border-color 130ms ease-out,
+    color 130ms ease-out,
+    filter 130ms ease-out,
+    box-shadow 130ms ease-out;
 }
 
-
-.btn-primary   { --btn-edge: color-mix(in oklch, var(--color-primary),   black var(--depth-darken)); }
-.btn-secondary { --btn-edge: color-mix(in oklch, var(--color-secondary), black var(--depth-darken)); }
-.btn-accent    { --btn-edge: color-mix(in oklch, var(--color-accent),    black var(--depth-darken)); }
-.btn-neutral   { --btn-edge: color-mix(in oklch, var(--color-neutral),   black var(--depth-darken)); }
-.btn-info      { --btn-edge: color-mix(in oklch, var(--color-info),      black var(--depth-darken)); }
-.btn-success   { --btn-edge: color-mix(in oklch, var(--color-success),   black var(--depth-darken)); }
-.btn-warning   { --btn-edge: color-mix(in oklch, var(--color-warning),   black var(--depth-darken)); }
-.btn-error     { --btn-edge: color-mix(in oklch, var(--color-error),     black var(--depth-darken)); }
-
-.btn:not(:is(.btn-ghost, .btn-link, .btn-soft, .btn-dash)) {
-  box-shadow: 0 var(--btn-lift) 0 0 var(--btn-edge);
-}
-
+/* Filled variants (everything except the borderless/text styles) sit on a
+   whisper blue-tinted shadow so even the near-white secondary lifts off the
+   page. Press darkens the fill in place via brightness, never moves it. */
 .btn:not(:is(.btn-ghost, .btn-outline, .btn-link, .btn-soft, .btn-dash)) {
-  box-shadow:
-    0 var(--btn-lift) 0 0 var(--btn-edge),
-    inset 0 1px 0 0 var(--btn-sheen);
+  box-shadow: 0 1px 2px -1px color-mix(in oklch, var(--color-base-content), transparent 80%);
+}
+.btn:not(:is(.btn-ghost, .btn-outline, .btn-link, .btn-soft, .btn-dash)):hover:not(:disabled, .btn-disabled) {
+  filter: brightness(0.96);
+}
+.btn:not(:is(.btn-ghost, .btn-outline, .btn-link, .btn-soft, .btn-dash)):active:not(:disabled, .btn-disabled) {
+  filter: brightness(0.92);
+}
+.btn:is(:disabled, [disabled], .btn-disabled) {
+  box-shadow: none;
+  filter: none;
 }
 
-.btn:not(:is(.btn-ghost, .btn-link, .btn-soft, .btn-dash)):active:not(:disabled, .btn-disabled) {
-  transform: translateY(var(--btn-lift));
-  box-shadow: 0 0 0 0 var(--btn-edge);
-}
-
-.btn:not(:is(.btn-ghost, .btn-link, .btn-soft, .btn-dash)):is(:disabled, [disabled], .btn-disabled) {
-  --btn-edge: color-mix(in oklch, var(--color-base-300), black 6%);
-  box-shadow: 0 var(--btn-lift) 0 0 var(--btn-edge);
-  transform: none;
+.btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .btn-ghost:not([class*="bg-"]):hover:not(:disabled, .btn-disabled) {
@@ -107,14 +97,6 @@
 .btn-ghost:not([class*="bg-"]):active:not(:disabled, .btn-disabled) {
   background-color: color-mix(in oklch, var(--color-primary), transparent 84%);
 }
-.btn-ghost:active:not(:disabled, .btn-disabled) {
-  transform: translateY(var(--btn-lift));
-}
-
-.btn-xs { --btn-lift: 0.0625rem; }
-.btn-sm { --btn-lift: 0.0625rem; }
-.btn-lg { --btn-lift: 0.1875rem; }
-.btn-xl { --btn-lift: 0.25rem; }
 
 .btn-arrow svg {
   transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -123,25 +105,25 @@
   transform: translateX(2px);
 }
 
+/* Calm-flat controls: a single hairline border defines them; focus swaps the
+   border to primary and adds a soft ring. No bottom shelf. */
 @utility input {
   @apply rounded-2xl;
-  box-shadow: 0 2px 0 0 var(--color-base-300);
+  border-color: color-mix(in oklch, var(--color-base-content), transparent 78%);
 }
 @utility textarea {
   @apply rounded-2xl;
-  box-shadow: 0 2px 0 0 var(--color-base-300);
+  border-color: color-mix(in oklch, var(--color-base-content), transparent 78%);
 }
 @utility select {
   @apply rounded-2xl;
-  box-shadow: 0 2px 0 0 var(--color-base-300);
+  border-color: color-mix(in oklch, var(--color-base-content), transparent 78%);
 }
 
 .input:focus,
 .textarea:focus,
 .select:focus {
-  box-shadow:
-    0 2px 0 0 var(--color-primary),
-    0 0 0 3px color-mix(in oklch, var(--color-primary), transparent 76%);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-primary), transparent 76%);
   border-color: var(--color-primary);
   outline: none;
 }
@@ -149,15 +131,12 @@
 .input[aria-invalid="true"],
 .textarea[aria-invalid="true"],
 .select[aria-invalid="true"] {
-  box-shadow: 0 2px 0 0 var(--color-error);
   border-color: var(--color-error);
 }
 .input[aria-invalid="true"]:focus,
 .textarea[aria-invalid="true"]:focus,
 .select[aria-invalid="true"]:focus {
-  box-shadow:
-    0 2px 0 0 var(--color-error),
-    0 0 0 3px color-mix(in oklch, var(--color-error), transparent 76%);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-error), transparent 76%);
 }
 
 .input:disabled,
@@ -166,47 +145,27 @@
   box-shadow: none;
 }
 
-.choice-pushable {
-  --choice-lift: 0.125rem;
-  --choice-edge: color-mix(in oklch, var(--color-base-100), black var(--depth-darken));
-  box-shadow: 0 var(--choice-lift) 0 0 var(--choice-edge);
+/* Calm-flat choice (chips, option cards): border + fill define state, not a
+   shelf. Selected state is carried by utility classes in choiceSurface(); this
+   only owns the transition timing. */
+.choice-control {
   transition:
-    transform 100ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 100ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 150ms ease-out,
-    border-color 150ms ease-out,
-    color 150ms ease-out;
-}
-.choice-pushable.is-selected {
-  --choice-edge: color-mix(in oklch, var(--color-primary), black var(--depth-darken));
-  box-shadow:
-    0 var(--choice-lift) 0 0 var(--choice-edge),
-    inset 0 1px 0 0 var(--btn-sheen, rgb(255 255 255 / 0.18));
-}
-.choice-pushable:active:not(:disabled) {
-  transform: translateY(var(--choice-lift));
-  box-shadow: 0 0 0 0 var(--choice-edge);
-}
-.choice-pushable:disabled {
-  box-shadow: none;
-  transform: none;
+    background-color 130ms ease-out,
+    border-color 130ms ease-out,
+    color 130ms ease-out,
+    box-shadow 130ms ease-out;
 }
 
-.card-pushable {
-  --card-lift: 0.1875rem;
-  box-shadow: 0 var(--card-lift) 0 0 color-mix(in oklch, var(--color-base-200), black var(--depth-darken));
+/* Calm-flat interactive card: the border (and its hover/focus shift, set by the
+   consumer) does the work. This only owns the transition timing; no shelf, no
+   press transform. Resting shadow is reserved for true overlays. */
+.card-interactive {
   transition:
-    transform 120ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 120ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 200ms ease-out,
     border-color 200ms ease-out;
 }
-.card-pushable:active {
-  transform: translateY(var(--card-lift));
-  box-shadow: 0 0 0 0 color-mix(in oklch, var(--color-base-200), black var(--depth-darken));
-}
 
-/* Toggle: aligned to the app surfaces without the pushable treatment (a hard
-   bottom-edge that compresses on press reads as odd on a sliding control). The
+/* Toggle: a sliding control, so depth lives in the track, not a press. The
    track is a recessed well (L2 base-300) with an inset lip; the knob is a white
    control surface (L-top) floating on a soft shadow. Checked fills the track
    with the control's accent (--input-color, primary in practice). */
@@ -374,8 +333,8 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .btn,
-  .choice-pushable,
-  .card-pushable,
+  .choice-control,
+  .card-interactive,
   .toggle {
     transition: none;
   }

@@ -95,7 +95,7 @@ function EventCard({ event, variant = "default" }: EventCardProps) {
 
         <Link
           to={`/event/${event.id}`}
-          className="card-pushable group/card mt-3 block overflow-hidden rounded-2xl border border-base-300 bg-base-200 hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="card-interactive group/card mt-3 block overflow-hidden rounded-2xl border border-base-300 bg-base-200 hover:border-primary/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           <div className="relative w-full aspect-video bg-base-300">
             <EventThumbnail
@@ -148,7 +148,7 @@ function EventCard({ event, variant = "default" }: EventCardProps) {
   return (
     <Link
       to={`/event/${event.id}`}
-      className="card-pushable bg-base-200 w-full rounded-2xl border border-base-300 hover:border-primary/40 group/card p-4 flex flex-col gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="card-interactive bg-base-200 w-full rounded-2xl border border-base-300 hover:border-primary/40 group/card p-4 flex flex-col gap-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
       {/* Thumbnail */}
       <div className="relative w-full aspect-video overflow-hidden rounded-xl bg-base-300">

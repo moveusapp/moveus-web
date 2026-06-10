@@ -15,10 +15,10 @@ function CreateEventButton({ onClick, className }: CreateEventButtonProps) {
       to="/create-event"
       onClick={onClick}
       aria-current={active ? "page" : undefined}
-      className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 ${
+      className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold outline-none transition-[filter,background-color] duration-150 ease-out hover:brightness-95 active:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
         active
-          ? "bg-primary text-secondary"
-          : "bg-secondary text-primary hover:brightness-95 active:brightness-90"
+          ? "bg-primary text-primary-content"
+          : "bg-secondary text-primary"
       } ${className ?? ""}`}
     >
       <HiPlus size={20} strokeWidth={2.5} />

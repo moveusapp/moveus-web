@@ -1,6 +1,6 @@
 export function choiceSurface(isSelected: boolean): string {
   const base =
-    "choice-pushable outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary";
+    "choice-control outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary";
   const state = isSelected
     ? "is-selected bg-primary text-primary-content border-primary"
     : "bg-base-100 text-base-content border-base-content/20 hover:border-primary/40 hover:bg-base-200";
