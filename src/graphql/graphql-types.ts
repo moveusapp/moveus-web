@@ -46,6 +46,7 @@ export enum ActivityKind {
   Hiking = 'HIKING',
   Kayaking = 'KAYAKING',
   MartialArts = 'MARTIAL_ARTS',
+  Padel = 'PADEL',
   Pilates = 'PILATES',
   Rugby = 'RUGBY',
   Running = 'RUNNING',
