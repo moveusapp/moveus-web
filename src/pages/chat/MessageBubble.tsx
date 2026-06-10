@@ -1,7 +1,9 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { RiCheckDoubleLine, RiCheckLine } from "react-icons/ri";
+import ImageLightbox from "@/components/ui/ImageLightbox";
 import UserAvatar from "@/components/user/UserAvatar";
 import UserBadge from "@/components/user/UserBadge";
+import strings from "@/translations/strings";
 import { displayName } from "@/utils/display-name";
 import { formatTime } from "@/utils/time-utils";
 import type { UserBadge as UserBadgeType } from "@/graphql/graphql-types";
@@ -34,6 +36,7 @@ function MessageBubble({
   author,
   hasBeenRead,
 }: MessageBubbleProps) {
+  const [showLightbox, setShowLightbox] = useState(false);
   const alignment = isOwn ? "chat-end" : "chat-start";
   const bubbleClass = isOwn
     ? "chat-bubble-primary"
@@ -66,17 +69,31 @@ function MessageBubble({
       <div className={`chat-bubble wrap-break-word ${roundedClass} ${bubbleClass}`}>
         {message.textContent && <p>{message.textContent}</p>}
         {message.attachmentUrl && (
-          <img
-            src={message.attachmentUrl}
-            alt=""
-            className="rounded-xl max-w-xs mt-1"
-          />
+          <button
+            type="button"
+            onClick={() => setShowLightbox(true)}
+            className="mt-1 block max-w-[16rem] cursor-pointer overflow-hidden rounded-xl transition-opacity hover:opacity-90"
+          >
+            <img
+              src={message.attachmentUrl}
+              alt={strings.chat.attachmentAlt}
+              className="block h-auto max-h-80 w-full object-cover"
+            />
+          </button>
         )}
       </div>
       <div className="chat-footer text-xs text-base-content/40 mt-0.5 flex items-center gap-1">
         <span>{formatTime(message.timeSent)}</span>
         {isOwn && <StatusIcon message={message} hasBeenRead={hasBeenRead} />}
       </div>
+      {message.attachmentUrl && (
+        <ImageLightbox
+          open={showLightbox}
+          src={message.attachmentUrl}
+          alt={strings.chat.attachmentAlt}
+          onClose={() => setShowLightbox(false)}
+        />
+      )}
     </div>
   );
 }

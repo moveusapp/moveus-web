@@ -624,6 +624,7 @@
     "emptyChatSubtitle1on1": "Send the first message to break the ice.",
     "emptyChatSubtitleGroup": "Be the first to say something.",
     "sentAttachment": "Sent an attachment",
+    "attachmentAlt": "Attachment",
     "members": "{count} members",
     "membersTitle": "Members",
     "viewMembersAria": "View group members",

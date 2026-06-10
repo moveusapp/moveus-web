@@ -624,6 +624,7 @@
     "emptyChatSubtitle1on1": "Pošalji prvu poruku i probij led.",
     "emptyChatSubtitleGroup": "Budi prvi koji će nešto reći.",
     "sentAttachment": "Šalje privitak",
+    "attachmentAlt": "Privitak",
     "members": "{count} člana",
     "membersTitle": "Članovi",
     "viewMembersAria": "Pogledaj članove grupe",
