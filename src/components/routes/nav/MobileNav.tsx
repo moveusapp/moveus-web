@@ -65,10 +65,10 @@ function MobileNav() {
           to="/create-event"
           aria-label={strings.nav.createEvent}
           aria-current={createActive ? "page" : undefined}
-          className={`absolute left-1/2 top-0 flex h-14 w-14 -translate-x-1/2 -translate-y-5 items-center justify-center rounded-full ring-[6px] ring-base-200 outline-none transition-[transform,filter] duration-150 active:scale-95 focus-visible:ring-secondary/60 ${
+          className={`absolute left-1/2 top-0 flex h-14 w-14 -translate-x-1/2 -translate-y-5 items-center justify-center rounded-full ring-[6px] outline-none transition-[transform,filter] duration-150 active:scale-95 focus-visible:ring-primary/50 ${
             createActive
-              ? "bg-primary text-secondary"
-              : "bg-secondary text-primary hover:brightness-95"
+              ? "bg-base-100 text-primary border-2 border-primary ring-base-200"
+              : "bg-primary text-[oklch(0.98_0.02_245)] ring-base-200 hover:brightness-105"
           }`}
         >
           <HiPlus size={26} strokeWidth={2.5} />
