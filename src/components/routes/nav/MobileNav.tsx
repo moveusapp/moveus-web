@@ -1,30 +1,19 @@
-import { HiOutlineHome, HiOutlineBell, HiPlus } from "react-icons/hi2";
-import { HiOutlineChat, HiOutlineSearch } from "react-icons/hi";
-import { IconType } from "react-icons";
+import { HiPlus } from "react-icons/hi2";
 import { Link, useLocation } from "react-router-dom";
 import strings from "@/translations/strings";
-
-interface NavItem {
-  label: string;
-  to: string;
-  icon: IconType;
-  badge?: string;
-}
+import { getNavItems, NavItem } from "./nav-items";
 
 function MobileNav() {
   const location = useLocation();
   const isActive = (to: string) => location.pathname === to;
 
-  // Four destinations split around the central Create Event action. Calendar
-  // moved into the menu drawer; the old five-tab bar was too cramped to read.
-  const leftItems: NavItem[] = [
-    { label: strings.nav.home, to: "/home", icon: HiOutlineHome },
-    { label: strings.nav.search, to: "/search", icon: HiOutlineSearch },
-  ];
-  const rightItems: NavItem[] = [
-    { label: strings.nav.notifications, to: "/notifications", icon: HiOutlineBell, badge: "" },
-    { label: strings.nav.messages, to: "/chat", icon: HiOutlineChat, badge: "" },
-  ];
+  // Four destinations split around the central Create Event FAB, drawn from the
+  // shared nav list. Calendar lives in the menu drawer; the old five-tab bar was
+  // too cramped to read, so it is intentionally omitted here.
+  const items = getNavItems();
+  const pick = (to: string) => items.find((item) => item.to === to)!;
+  const leftItems: NavItem[] = [pick("/home"), pick("/search")];
+  const rightItems: NavItem[] = [pick("/notifications"), pick("/chat")];
 
   const renderTab = (item: NavItem) => {
     const Icon = item.icon;
