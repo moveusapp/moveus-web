@@ -1,4 +1,11 @@
-import { ChangeEvent, FormEvent, useCallback, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  KeyboardEvent,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import { HiPaperAirplane, HiPhoto, HiXMark } from "react-icons/hi2";
 import strings from "@/translations/strings";
 import { prepareImageForUpload } from "@/utils/image";
@@ -14,6 +21,15 @@ function SendMessageComposer({ onSend }: SendMessageComposerProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Grow the field to fit its content, capped by max-height (then it scrolls).
+  const resize = useCallback(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, []);
 
   const onImageChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
     const picked = e.currentTarget.files?.[0] ?? null;
@@ -34,31 +50,47 @@ function SendMessageComposer({ onSend }: SendMessageComposerProps) {
     });
   }, []);
 
-  const handleSubmit = useCallback(
-    async (e: FormEvent) => {
-      e.preventDefault();
-      if (submitting) return;
-      if (!text.trim() && !image) return;
+  const submit = useCallback(async () => {
+    if (submitting) return;
+    if (!text.trim() && !image) return;
 
-      const snapshotText = text;
-      const snapshotImage = image;
+    const snapshotText = text;
+    const snapshotImage = image;
 
-      setText("");
-      clearImage();
-      setSubmitting(true);
+    setText("");
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
+    clearImage();
+    setSubmitting(true);
 
-      const outcome = await onSend({ text: snapshotText, image: snapshotImage });
+    const outcome = await onSend({ text: snapshotText, image: snapshotImage });
 
-      if (outcome !== "ok") {
-        setText(snapshotText);
-        if (snapshotImage) {
-          setImage(snapshotImage);
-          setImagePreview(URL.createObjectURL(snapshotImage));
-        }
+    if (outcome !== "ok") {
+      setText(snapshotText);
+      if (snapshotImage) {
+        setImage(snapshotImage);
+        setImagePreview(URL.createObjectURL(snapshotImage));
       }
-      setSubmitting(false);
+      requestAnimationFrame(resize);
+    }
+    setSubmitting(false);
+  }, [text, image, submitting, onSend, clearImage, resize]);
+
+  const handleSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      void submit();
     },
-    [text, image, submitting, onSend, clearImage],
+    [submit],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        void submit();
+      }
+    },
+    [submit],
   );
 
   const iconBtn = "h-10 min-h-10 w-10";
@@ -83,7 +115,7 @@ function SendMessageComposer({ onSend }: SendMessageComposerProps) {
         </div>
       )}
       <form
-        className="bg-base-200 border border-base-300 rounded-2xl p-2 flex items-center gap-2"
+        className="bg-base-200 border border-base-300 rounded-2xl p-2 flex items-end gap-2"
         onSubmit={handleSubmit}
       >
         <input
@@ -102,12 +134,15 @@ function SendMessageComposer({ onSend }: SendMessageComposerProps) {
         >
           <HiPhoto className="h-5 w-5 text-base-content/50" />
         </button>
-        <input
-          type="text"
+        <textarea
+          ref={textareaRef}
           name="message"
           value={text}
           onChange={(e) => setText(e.currentTarget.value)}
-          className="input flex-1"
+          onInput={resize}
+          onKeyDown={handleKeyDown}
+          rows={1}
+          className="textarea flex-1 min-w-0 resize-none min-h-10 max-h-32 py-2 leading-snug"
           placeholder={strings.chat.typeAMessage}
           autoComplete="off"
         />

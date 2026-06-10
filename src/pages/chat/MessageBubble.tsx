@@ -66,7 +66,7 @@ function MessageBubble({
           <UserBadge badge={author.user.badge} />
         </div>
       )}
-      <div className={`chat-bubble wrap-break-word ${roundedClass} ${bubbleClass}`}>
+      <div className={`chat-bubble wrap-anywhere ${roundedClass} ${bubbleClass}`}>
         {message.textContent && <p>{message.textContent}</p>}
         {message.attachmentUrl && (
           <button
