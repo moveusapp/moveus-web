@@ -10,6 +10,8 @@ import { useOutletContext, useSearchParams } from "react-router-dom";
 import PageHeader from "@/components/layout/PageHeader";
 import CreateGroupChatModal from "@/pages/chat/CreateGroupChatModal";
 import { useProfile } from "@/context/profile-context";
+import { useToast } from "@/context/toast-context";
+import { formatError } from "@/utils/format-error";
 import type { NavOutletContext } from "@/components/routes/nav/NavRoutes";
 import strings from "@/translations/strings";
 
@@ -38,6 +40,7 @@ function ChatPage() {
   const [isNewGroupOpen, setIsNewGroupOpen] = useState(false);
 
   const [createDirectChat] = useMutation(CreateDirectChatDocument);
+  const toast = useToast();
 
   // Tell the shell when a conversation is open so it can hide the mobile tab
   // bar (its composer sits where the bar would). The bar stays on the list.
@@ -185,7 +188,7 @@ function ChatPage() {
         if (chatId) setSelectedChatId(chatId);
       })
       .catch((error) => {
-        console.error("createDirectChat failed:", error);
+        toast.error(formatError(error));
       })
       .finally(() => {
         setSearchParams({}, { replace: true });

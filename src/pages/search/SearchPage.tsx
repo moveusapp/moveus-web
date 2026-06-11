@@ -11,6 +11,8 @@ import UserCard from "./UserCard";
 import { useProfile } from "@/context/profile-context";
 import PostCard from "@/components/post/PostCard";
 import TabButtons from "@/components/ui/TabButtons";
+import { useToast } from "@/context/toast-context";
+import { formatError } from "@/utils/format-error";
 import strings from "@/translations/strings";
 
 type SearchTab = "all" | "events" | "people" | "posts";
@@ -29,12 +31,17 @@ function SearchPage() {
 
   const [searchParams] = useSearchParams();
   const { profile } = useProfile();
+  const toast = useToast();
 
-  const [searchItems, { loading: searchLoading, data: searchData }] =
+  const [searchItems, { loading: searchLoading, data: searchData, error: searchError }] =
     useLazyQuery(SearchItemsDocument, {
       fetchPolicy: "no-cache",
       nextFetchPolicy: "no-cache",
     });
+
+  useEffect(() => {
+    if (searchError) toast.error(formatError(searchError));
+  }, [searchError, toast]);
 
   useEffect(() => {
     const query = searchParams.get("q");

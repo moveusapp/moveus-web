@@ -5,11 +5,14 @@ import {
 } from "@/graphql/graphql-types";
 import { useMutation } from "@apollo/client/react";
 import Button from "../ui/Button";
+import { useToast } from "@/context/toast-context";
+import { formatError } from "@/utils/format-error";
 import strings from "@/translations/strings";
 
 function FollowButton({ isFollowing: initialIsFollowing, userId, className = "" }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isHovered, setIsHovered] = useState(false);
+  const toast = useToast();
 
   const [followUser, { loading: followLoading }] = useMutation(FollowUserDocument);
   const [unfollowUser, { loading: unfollowLoading }] = useMutation(UnfollowUserDocument);
@@ -19,14 +22,14 @@ function FollowButton({ isFollowing: initialIsFollowing, userId, className = "" 
   const handleFollow = useCallback(() => {
     followUser({ variables: { userId } })
       .then(() => setIsFollowing(true))
-      .catch(() => {});
-  }, [followUser, userId]);
+      .catch((err) => toast.error(formatError(err)));
+  }, [followUser, userId, toast]);
 
   const handleUnfollow = useCallback(() => {
     unfollowUser({ variables: { userId } })
       .then(() => setIsFollowing(false))
-      .catch(() => {});
-  }, [unfollowUser, userId]);
+      .catch((err) => toast.error(formatError(err)));
+  }, [unfollowUser, userId, toast]);
 
   if (isFollowing) {
     return (
