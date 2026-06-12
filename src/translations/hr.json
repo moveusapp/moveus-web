@@ -378,7 +378,8 @@
     },
     "locale": {
       "en": "English (Engleski)",
-      "hr": "Hrvatski"
+      "hr": "Hrvatski",
+      "sv": "Svenska (Švedski)"
     }
   },
   "toast": {

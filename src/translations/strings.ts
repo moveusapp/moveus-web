@@ -5,6 +5,7 @@ import type EnContent from "./en.json";
 export enum Locale {
   EN = "en",
   HR = "hr",
+  SV = "sv",
 }
 
 const STORAGE_KEY = "moveus-language";
@@ -15,6 +16,7 @@ type LocaleContent = typeof EnContent;
 const loaders: Record<Locale, () => Promise<LocaleContent>> = {
   [Locale.EN]: () => import("./en.json").then((m) => m.default as LocaleContent),
   [Locale.HR]: () => import("./hr.json").then((m) => m.default as LocaleContent),
+  [Locale.SV]: () => import("./sv.json").then((m) => m.default as LocaleContent),
 };
 
 const loaded: Partial<Record<Locale, LocaleContent>> = {};
@@ -25,7 +27,7 @@ const strings = new LocalizedStrings<LocaleContent>({ en: {} as LocaleContent })
 export function getStoredLocale(): Locale {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === Locale.EN || stored === Locale.HR) return stored;
+    if (stored === Locale.EN || stored === Locale.HR || stored === Locale.SV) return stored;
   } catch {
     // storage unavailable
   }
