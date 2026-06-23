@@ -8,7 +8,7 @@ import strings from "@/translations/strings";
 import EventCardSkeleton from "@/components/event/EventCardSkeleton";
 import PageHeader from "@/components/layout/PageHeader";
 import { Link } from "react-router-dom";
-import moveusIcon from "@/assets/logos/moveus-icon.svg";
+import moveusLogoHorizontal from "@/assets/logos/moveus-logo-horizontal.svg";
 import HomeReminders from "@/pages/home/HomeReminders";
 import CreatePostComposer from "@/pages/home/CreatePostComposer";
 import PostCard from "@/components/post/PostCard";
@@ -44,9 +44,9 @@ function HomePage() {
           center={
             <Link to="/home" aria-label={strings.common.brand}>
               <img
-                src={moveusIcon}
+                src={moveusLogoHorizontal}
                 alt={strings.common.brand}
-                className="h-8 w-8"
+                className="h-24 w-24"
               />
             </Link>
           }

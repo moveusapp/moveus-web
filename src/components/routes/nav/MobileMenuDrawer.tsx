@@ -118,11 +118,10 @@ function MobileMenuDrawer({ open, onClose }: MobileMenuDrawerProps) {
               onClick={onClose}
               aria-current={isProfileActive ? "page" : undefined}
               aria-label={strings.nav.viewProfileAria}
-              className={`group flex items-center gap-3 rounded-2xl border p-3 transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
-                isProfileActive
+              className={`group flex items-center gap-3 rounded-2xl border p-3 transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${isProfileActive
                   ? "border-primary/30 bg-primary/10"
                   : "border-base-300 bg-base-200 hover:bg-base-300/50 active:bg-base-300/50"
-              }`}
+                }`}
             >
               <UserAvatar
                 imageUrl={profile.avatarUrl}
