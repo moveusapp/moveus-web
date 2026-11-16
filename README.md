@@ -1,4 +1,4 @@
-# MoveUs
+# MoveUs Web
 
 Web frontend for MoveUs.
 
