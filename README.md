@@ -1,23 +1,24 @@
-## Available Scripts
+# MoveUs
 
-```
+Web frontend for MoveUs.
+
+## Local development
+
+```bash
+npm install
 npm run dev
 ```
 
-Runs the app in the development mode.
-Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+Open [localhost:5173](http://localhost:5173). The app uses `localhost:8000` by default. Set `VITE_API_HOST` to use a different host.
 
----
+## Production
 
-```
-npm run build
-```
-Builds the app for production to the build folder.
+Upon pushing to `main`, a Cloudfare Worker starts which automatically deploys the latest commit to production.
 
----
+## Commands
 
-```
-npm run graphql
-```
-
-Generates GraphQL code.
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start development mode |
+| `npm run build` | Create a production build (you'll probably never need to use this directly) |
+| `npm run graphql` | Generate GraphQL types |
