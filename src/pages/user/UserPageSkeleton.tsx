@@ -1,7 +1,10 @@
 import PostCardSkeleton from "@/components/post/PostCardSkeleton";
 import RightRail from "@/components/layout/RightRail";
+import { useProfile } from "@/context/profile-context";
 
 function UserPageSkeleton() {
+  const { profile } = useProfile();
+
   return (
     <div className="flex flex-row">
       <div className="flex flex-col grow min-w-0">
@@ -38,7 +41,10 @@ function UserPageSkeleton() {
         </div>
       </div>
 
-      <RightRail />
+      {profile && (
+        <RightRail />
+      )}
+
     </div>
   );
 }

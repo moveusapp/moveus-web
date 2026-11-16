@@ -373,7 +373,9 @@ function UserPage() {
         </div>
       </div>
 
-      <RightRail />
+      {profile && (
+        <RightRail />
+      )}
 
       {isSelf && profile && (
         <EditProfileModal
